@@ -63,7 +63,7 @@ class SplashScreenActivity : AppCompatActivity(),DialogUtils.DialogUtilsListener
     private fun showDialogExit() {
         val dialogExit = DialogUtils(this)
         dialogExit
-            .setTitle(R.string.dialog_root_title)
+            .setTitles(R.string.dialog_root_title)
             .setMessage(R.string.dialog_root_subtitle)
             .setPositiveButtonLabel(R.string.dialog_yes)
             .setListener(this)

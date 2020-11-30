@@ -20,24 +20,17 @@ class DialogUtils {
         fun onNegativeButton()
     }
 
-    var context: Context
+    private var context: Context
     private var theme = 0
-    var title = 0
-        private set
-    var message = 0
-        private set
+    private var title = 0
+    private var message = 0
     private var positiveButtonLabel: Int? = null
     private var negativeButtonLabel: Int? = null
-    var listener: DialogUtilsListener? = null
-        private set
-    var isPositiveButton = false
-        private set
-    var isNegativeButton = false
-        private set
-    var isCanceable = false
-        private set
-    var builder: AlertDialog.Builder? = null
-        private set
+    private var listener: DialogUtilsListener? = null
+    private var isPositiveButton = false
+    private var isNegativeButton = false
+    private var isCanceable = false
+    private var builder: AlertDialog.Builder? = null
     private var dialogView: View? = null
     private var inflater: LayoutInflater? = null
     private var dialog: AlertDialog? = null
@@ -68,7 +61,7 @@ class DialogUtils {
         }
     }
 
-    fun setTitle(title: Int): DialogUtils {
+    fun setTitles(title: Int): DialogUtils {
         this.title = title
         builder!!.setTitle(title)
         return this
@@ -101,13 +94,15 @@ class DialogUtils {
             builder!!.setPositiveButton(null, null)
             isPositiveButton = false
         } else {
-            builder!!.setPositiveButton(positiveButtonLabel, object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, which: Int) {
-                    if (isPositiveButton && listener != null) {
-                        listener!!.onPositiveButton()
+            builder!!.setPositiveButton(
+                positiveButtonLabel,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, which: Int) {
+                        if (isPositiveButton && listener != null) {
+                            listener!!.onPositiveButton()
+                        }
                     }
-                }
-            })
+                })
             isPositiveButton = true
         }
         return this
@@ -123,13 +118,15 @@ class DialogUtils {
             builder!!.setNegativeButton(null, null)
             isNegativeButton = false
         } else {
-            builder!!.setNegativeButton(negativeButtonLabel, object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, which: Int) {
-                    if (isNegativeButton && listener != null) {
-                        listener!!.onNegativeButton()
+            builder!!.setNegativeButton(
+                negativeButtonLabel,
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, which: Int) {
+                        if (isNegativeButton && listener != null) {
+                            listener!!.onNegativeButton()
+                        }
                     }
-                }
-            })
+                })
             isNegativeButton = true
         }
         return this

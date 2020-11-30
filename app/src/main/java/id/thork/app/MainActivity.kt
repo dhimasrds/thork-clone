@@ -7,6 +7,7 @@ import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.di.ApiKey
 import id.thork.app.di.LibraryKey
+import id.thork.app.di.PreferenceManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var context: Context
 
+    @Inject
+    lateinit var preferencesManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,5 +34,11 @@ class MainActivity : AppCompatActivity() {
         Log.d("Here","baseurl " + baseUrl)
         Log.d("Here","baseurl2 " + baseUrl2)
         Log.d("Context", "$context")
+        Log.d("PreferenceManager", "$preferencesManager")
+
+        preferencesManager.putString("H1", "PERTAMA")
+        Log.d("PreferenceManager H1", "${preferencesManager.getString("H1")}")
+
+
     }
 }

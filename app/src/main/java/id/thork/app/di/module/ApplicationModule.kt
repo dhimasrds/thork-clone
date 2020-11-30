@@ -2,12 +2,14 @@ package id.thork.app.di.module
 
 import android.app.Application
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import id.thork.app.BuildConfig
+import id.thork.app.R
 import id.thork.app.di.ApiKey
 import id.thork.app.di.LibraryKey
 import okhttp3.Cache
@@ -23,7 +25,7 @@ class ApplicationModule {
     @Singleton
     @Provides
     fun provideContext(application: Application) = application.baseContext
-
+    
     @Singleton
     @Provides
     fun provideMoshi() = Moshi.Builder().build()
