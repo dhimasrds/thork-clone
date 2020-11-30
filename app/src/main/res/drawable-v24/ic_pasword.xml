@@ -1,0 +1,30 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector android:height="16dp" android:viewportHeight="15.576"
+    android:viewportWidth="12.056" android:width="12dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#00000000"
+        android:pathData="M3.0439,4.8982v-1.6a2.8,2.8 0,1 1,5.6 0v1.6"
+        android:strokeColor="#707070" android:strokeLineCap="round"
+        android:strokeLineJoin="bevel" android:strokeWidth="1"/>
+    <path android:fillColor="#fff"
+        android:pathData="M2,6.104L10.056,6.104A2,2 0,0 1,12.056 8.104L12.056,13.577A2,2 0,0 1,10.056 15.577L2,15.577A2,2 0,0 1,0 13.577L0,8.104A2,2 0,0 1,2 6.104z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M2,6.604L10.056,6.604A1.5,1.5 0,0 1,11.556 8.104L11.556,13.577A1.5,1.5 0,0 1,10.056 15.077L2,15.077A1.5,1.5 0,0 1,0.5 13.577L0.5,8.104A1.5,1.5 0,0 1,2 6.604z"
+        android:strokeColor="#707070" android:strokeWidth="1"/>
+    <path android:fillColor="#707070" android:pathData="M5.8,11.226L5.8,10.053a0.683,0.683 0,1 1,0.455 0L6.255,11.226Z"/>
+</vector>

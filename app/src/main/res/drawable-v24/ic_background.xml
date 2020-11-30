@@ -1,0 +1,29 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector android:height="24dp" android:viewportHeight="182.224"
+    android:viewportWidth="248.248" android:width="24dp"
+    xmlns:aapt="http://schemas.android.com/aapt" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:pathData="M4.099,173.3a20.872,20.872 0,0 1,-4.1 -1.927L-0.001,0h241.248a0.241,0.241 0,0 0,-0.071 0.15c-0.541,8.167 -3.705,16.232 -9.4,23.975 -7.611,10.337 -19.7,19.979 -35.936,28.655a138.576,138.576 0,0 1,-33.956 13.183,115.079 115.079,0 0,1 -26.859,3c-4.809,0 -9.319,-0.238 -13.9,-0.5l-0.788,-0.047c-4.048,-0.233 -7.871,-0.451 -11.522,-0.451 -8.052,0 -16.7,0.908 -25.373,7.5 -12.746,9.686 -15.718,27.007 -18.592,43.76 -1.476,8.6 -3,17.486 -5.821,25.3a48.978,48.978 0,0 1,-5.389 10.884,34.53 34.53,0 0,1 -8.354,8.745 61.455,61.455 0,0 1,-16.439 8.78,41.735 41.735,0 0,1 -13.343,2.291A33.672,33.672 0,0 1,4.099 173.3ZM88.999,105.5c0,-7.455 6.491,-13.5 14.5,-13.5s14.5,6.046 14.5,13.5 -6.491,13.5 -14.5,13.5S88.999,112.956 88.999,105.5Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:endX="120.62299" android:endY="175.24597"
+                android:startX="120.62299" android:startY="0" android:type="linear">
+                <item android:color="#FFA5F2FF" android:offset="0"/>
+                <item android:color="#FF166FB8" android:offset="1"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

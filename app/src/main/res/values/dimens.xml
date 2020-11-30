@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<resources>
+    <!-- Base Text-->
+    <dimen name="base_text_size">12dp</dimen>
+
+
+    <!-- Settings -->
+    <dimen name="settings_start_margin">10dp</dimen>
+    <dimen name="settings_left_margin">22dp</dimen>
+    <dimen name="settings_right_margin">22dp</dimen>
+
+    <dimen name="settings_left_padding">22dp</dimen>
+    <dimen name="settings_right_padding">10dp</dimen>
+    <dimen name="settings_title_top_padding">3dp</dimen>
+    <dimen name="settings_title_bottom_padding">3dp</dimen>
+    <dimen name="settings_top_padding">6dp</dimen>
+    <dimen name="settings_bottom_padding">6dp</dimen>
+    <dimen name="settings_blank_space">5dp</dimen>
+
+    <dimen name="settings_start_logout">30dp</dimen>
+    <dimen name="settings_button_min_height">40dp</dimen>
+
+    <!-- slide walkthrough -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="dots_height">30dp</dimen>
+    <dimen name="dots_margin_bottom">20dp</dimen>
+    <dimen name="img_width_height">120dp</dimen>
+    <dimen name="slide_title">30dp</dimen>
+    <dimen name="slide_desc">16dp</dimen>
+    <dimen name="desc_padding">40dp</dimen>
+
+    <dimen name="padding_settings_language">10dp</dimen>
+
+    <!-- dialog disconnect padding -->
+    <dimen name="dialog_margin_left">40dp</dimen>
+    <dimen name="dialog_margin_right">40dp</dimen>
+    <dimen name="dialog_margin_top">173dp</dimen>
+    <dimen name="dialog_margin_bottom">118dp</dimen>
+    <dimen name="dialog_corner_radius">20dp</dimen>
+    <dimen name="dialog_text_margin_left">20dp</dimen>
+    <dimen name="dialog_text_margin_right">20dp</dimen>
+    <dimen name="dialog_size_text_top">20sp</dimen>
+    <dimen name="dialog_size_text_bottom">14sp</dimen>
+    <dimen name="dialog_image_top_bottom">10dp</dimen>
+
+    <!-- -->
+    <dimen name= "activity_login_container_hor_margin">40dp</dimen>
+    <dimen name= "activity_login_container_ver_margin">50dp</dimen>
+    <dimen name= "activity_login_hor_margin">20dp</dimen>
+    <dimen name= "activity_login_ver_margin">40dp</dimen>
+
+    <!--Menu WorkOrder -->
+    <dimen name="menu_wo_text_size">20dp</dimen>
+    <dimen name="menu_wo_margin_bottom">20dp</dimen>
+    <dimen name="menu_wo_padding">20dp</dimen>
+
+    <!-- About -->
+    <dimen name="margin_about">24dp</dimen>
+
+    <!-- Attachment -->
+    <dimen name="margin_attachment">10dp</dimen>
+    <dimen name="padding_attachment">10dp</dimen>
+
+    <!-- Login Pattern -->
+    <dimen name="layout_login_pattern">280dp</dimen>
+
+    <!-- Intro Slider -->
+    <dimen name="margin_left_repot">10dp</dimen>
+    <dimen name="margin_top_repot">10dp</dimen>
+    <dimen name="margin_bottom_repot">10dp</dimen>
+    <dimen name="margin_start_repot">10dp</dimen>
+
+    <!-- Workorder Detail -->
+    <dimen name="margin_left_wo_detail">16dp</dimen>
+    <dimen name="text_size_wo_detail_16">16sp</dimen>
+    <dimen name="text_size_wo_detail_20">20dp</dimen>
+
+    <!--Card Task -->
+    <dimen name="margin_task">5dp</dimen>
+
+    <!-- Scanner -->
+    <dimen name="text_size_scanner">16sp</dimen>
+
+    <!-- Dialog Estdur -->
+    <dimen name="text_size_dialog_estdur">20sp</dimen>
+
+    <!-- Fragment  Activity -->
+    <dimen name="text_size_fragment_activity">10dp</dimen>
+
+    <!-- Welcome Layout -->
+    <dimen name="layout_margin_welcome_layout">10dp</dimen>
+    <dimen name="text_size_welcome_layout">18sp</dimen>
+
+    <!-- List Item Material -->
+    <dimen name="text_size_item_material">20sp</dimen>
+
+    <!-- List Item WO -->
+    <dimen name="text_size_item_wo">8pt</dimen>
+
+    <!-- Dialog Change Pattern -->
+    <dimen name="text_size_change_pattern">25dp</dimen>
+
+</resources>
