@@ -2,6 +2,7 @@ package id.thork.app.pages
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import id.thork.app.BuildConfig
 import id.thork.app.R
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -9,5 +10,6 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        BuildConfig.VERSION_NAME
     }
 }
