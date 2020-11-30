@@ -1,0 +1,53 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+    <item>
+
+            <shape>
+                <padding
+                    android:bottom="1dp"
+                    android:left="1dp"
+                    android:right="1dp"
+                    android:top="1dp" />
+
+                <solid android:color="#D3D3D3" />
+
+                <corners android:radius="35dp" />
+            </shape>
+
+    </item>
+
+    <item>
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+            android:width="60dp"
+            android:height="60dp"
+            android:viewportWidth="60"
+            android:viewportHeight="60">
+            <path
+                android:fillColor="@color/blue_nav"
+                android:pathData="M 30 0 C 46.5685424949 0 60 13.4314575051 60 30 C 60 46.5685424949 46.5685424949 60 30 60 C 13.4314575051 60 0 46.5685424949 0 30 C 0 13.4314575051 13.4314575051 0 30 0 Z" />
+            <path
+                android:fillColor="#ffffff"
+                android:pathData="M34.6667 30C38 30 40.6667 32.6667 40.6667 36C40.6667 37.1733 40.3333 38.28 39.7467 39.2L43.8533 43.3333L42 45.1867L37.84 41.0933C36.92 41.6667 35.8267 42 34.6667 42C31.3333 42 28.6667 39.3333 28.6667 36C28.6667 32.6667 31.3333 30 34.6667 30ZM34.6667 32.6667C33.7826 32.6667 32.9348 33.0179 32.3096 33.643C31.6845 34.2681 31.3333 35.1159 31.3333 36C31.3333 36.8841 31.6845 37.7319 32.3096 38.357C32.9348 38.9821 33.7826 39.3333 34.6667 39.3333C35.5507 39.3333 36.3986 38.9821 37.0237 38.357C37.6488 37.7319 38 36.8841 38 36C38 35.1159 37.6488 34.2681 37.0237 33.643C36.3986 33.0179 35.5507 32.6667 34.6667 32.6667ZM20.6667 18H39.3333C40.8133 18 42 19.1867 42 20.6667V31.3733C41.3333 30.3067 40.4133 29.3867 39.3333 28.6667V20.6667H20.6667V39.3333H26.6667C27.08 40.3333 27.68 41.2267 28.4133 42H20.6667C19.1867 42 18 40.8133 18 39.3333V20.6667C18 19.1867 19.1867 18 20.6667 18ZM23.3333 23.3333H36.6667V26H23.3333V23.3333ZM23.3333 28.6667H30.04C28.9733 29.3333 28.0533 30.2533 27.3333 31.3333H23.3333V28.6667ZM23.3333 34H26.2267C26.08 34.6667 26 35.3333 26 36V36.6667H23.3333V34Z" />
+
+        </vector>
+    </item>
+
+
+
+
+</layer-list>

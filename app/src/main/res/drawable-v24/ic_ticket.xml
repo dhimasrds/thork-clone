@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="18dp"
+    android:viewportWidth="20"
+    android:viewportHeight="18">
+
+    <path
+        android:fillColor="#AEAEAE"
+        android:pathData="M4.44444 5.55599H15.5556V12.2227H4.44444V5.55599ZM18.3333 8.88932C18.3333 9.80981 19.0795 10.556 20 10.556V13.8893C20 14.8098 19.2538 15.556 18.3333 15.556H1.66667C0.746181 15.556 0 14.8098 0 13.8893V10.556C0.920486 10.556 1.66667 9.80981 1.66667 8.88932C1.66667 7.96884 0.920486 7.22266 0 7.22266V3.88932C0 2.96884 0.746181 2.22266 1.66667 2.22266H18.3333C19.2538 2.22266 20 2.96884 20 3.88932V7.22266C19.0795 7.22266 18.3333 7.96884 18.3333 8.88932ZM16.6667 5.27821C16.6667 4.81797 16.2936 4.44488 15.8333 4.44488H4.16667C3.70642 4.44488 3.33333 4.81797 3.33333 5.27821V12.5004C3.33333 12.9607 3.70642 13.3338 4.16667 13.3338H15.8333C16.2936 13.3338 16.6667 12.9607 16.6667 12.5004V5.27821Z" />
+</vector>
