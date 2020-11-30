@@ -8,7 +8,7 @@ import com.scottyab.rootbeer.RootBeer
  * Jakarta, Indonesia.
  */
 
-class RootBeerUtils(context: Context?) : RootBeer(context) {
+class RootUtils(context: Context?) : RootBeer(context) {
     val isRootedWithoutTestKey: Boolean
         get() = (detectRootManagementApps() || detectPotentiallyDangerousApps()
                 || checkForRWPaths() || checkForBinary("busybox")

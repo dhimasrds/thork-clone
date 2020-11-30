@@ -7,4 +7,66 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#ffff</color>
+    <color name="colorPrimaryDark">#ecf0f1</color>
+    <color name="colorPrimaryBackground">#1463ff</color>
+    <color name="colorAccent">#AAAAAA</color>
+    <color name="blue">#1463FF</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlue">#47BACD</color>
+    <color name="colorGray">#AAAAAA</color>
+
+    <color name="colorBlueDispatch">#1463FF</color>
+    <color name="bgStatusDispatch">#331463FF</color>
+
+    <color name="colorRed">#FF3A20</color>
+    <color name="bgStatusAcc">#33FF3A20</color>
+
+    <color name="colorYellow">#FFC700</color>
+    <color name="bgStatusArrive">#33FFC700</color>
+
+    <color name="colorGreen">#0C733B</color>
+    <color name="bgStatusInprg">#330C733B</color>
+
+    <color name="colorGreenComp">#06D6A0</color>
+
+    <color name="colorGray2">#A8A8A8</color>
+    <color name="bgStatusWsupp">#33A8A8A8</color>
+
+
+    <array name="dot_on_page_active">
+        <item>#B71C1C</item>
+        <item>#8BC34A</item>
+        <item>#4A148C</item>
+
+    </array>
+
+    <array name="dot_on_page_not_active">
+        <item>#FF5252</item>
+        <item>#CCFF90</item>
+        <item>#E040FB</item>
+    </array>
+
+    <!-- Settings menu ripple effect -->
+    <color name="colorRipple">#e8ebec</color>
+
+    <color name="colorBlackTrans">#d6000000</color>
+
+    <color name="colorBlueNew">#1463FF</color>
+    <color name="colorBlueSwitch">#3F7FFF</color>
+
+    <color name="transparant">#00000000</color>
+    <color name="green_username">#4E4AFF</color>
+    <color name="green_username_bg">#70448AFF</color>
+
+
+    <!-- Bottom Navigation    -->
+    <color name="blue_nav">#1463FF</color>
+    <color name="grey_nav">#AEAEAE</color>
+
+    <color name="colorBlueRadioBt">#3F7FFF</color>
 </resources>
+
+
