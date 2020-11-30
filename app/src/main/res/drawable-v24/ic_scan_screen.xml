@@ -1,0 +1,26 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector android:autoMirrored="true" android:height="640dp"
+    android:viewportHeight="640" android:viewportWidth="360"
+    android:width="360dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillAlpha="0.7" android:fillColor="#000000"
+        android:pathData="M0,0V640H360V0H0ZM322.5,462.5H36.5V176.5H322.5V462.5Z" android:strokeAlpha="0.7"/>
+    <path android:fillColor="#1463FF" android:pathData="M41,269.52H32V176.52C31.999,175.929 32.114,175.343 32.34,174.796C32.565,174.25 32.897,173.753 33.315,173.335C33.733,172.917 34.23,172.586 34.776,172.36C35.323,172.134 35.909,172.019 36.5,172.02H130.5V181.02H41V269.52Z"/>
+    <path android:fillColor="#1463FF" android:pathData="M327,271.5H318V181H230.43V172H322.5C323.092,171.999 323.677,172.114 324.224,172.34C324.77,172.566 325.267,172.897 325.685,173.315C326.103,173.733 326.435,174.23 326.66,174.776C326.886,175.323 327.002,175.909 327,176.5V271.5Z"/>
+    <path android:fillColor="#1463FF" android:pathData="M320.54,467H226.54V458H316V369.48H325V462.48C325.004,463.07 324.892,463.654 324.67,464.201C324.448,464.747 324.12,465.244 323.706,465.664C323.292,466.083 322.799,466.417 322.256,466.647C321.713,466.876 321.13,466.996 320.54,467V467Z"/>
+    <path android:fillColor="#1463FF" android:pathData="M128.57,467H36.5C35.909,467.001 35.323,466.886 34.776,466.66C34.23,466.434 33.733,466.103 33.315,465.685C32.897,465.267 32.565,464.77 32.34,464.224C32.114,463.677 31.999,463.091 32,462.5V367.5H41V458H128.57V467Z"/>
+</vector>

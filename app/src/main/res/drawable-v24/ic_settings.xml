@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M 24 0 C 35.0456949966 0 44 8.95430500338 44 20 C 44 31.0456949966 35.0456949966 40 24 40 C 12.9543050034 40 4 31.0456949966 4 20 C 4 8.95430500338 12.9543050034 0 24 0 Z" />
+    <path
+        android:fillColor="#404041"
+        android:pathData="M15 26H33V24H15V26ZM15 21H33V19H15V21ZM15 14V16H33V14H15Z" />
+</vector>

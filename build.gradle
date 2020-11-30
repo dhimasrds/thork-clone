@@ -20,6 +20,10 @@ allprojects {
         jcenter()
     }
 }
+ext{
+    //rootBeer
+    rootBeerVersion = '0.0.7'
+}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

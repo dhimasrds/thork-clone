@@ -6,6 +6,10 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
+    viewBinding {
+        enabled = true
+    }
+
 
     defaultConfig {
         applicationId "id.thork.app"
@@ -34,6 +38,7 @@ android {
 
 dependencies {
 
+    implementation "com.scottyab:rootbeer-lib:$rootProject.rootBeerVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -42,4 +47,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
 }

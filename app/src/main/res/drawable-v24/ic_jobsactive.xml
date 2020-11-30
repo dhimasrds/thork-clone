@@ -1,0 +1,28 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M3,10.85L3,9.47a2,2 0,0 1,2 -2L9.113,7.47c0,-0.006 0,-0.011 0,-0.017L9.113,5.75a2,2 0,0 1,2 -2h1.7a2,2 0,0 1,2 2L14.813,7.45c0,0.006 0,0.011 0,0.017L19,7.467a2,2 0,0 1,2 2L21,10.85ZM13.187,7.471v-0.48a1,1 0,0 0,-1 -1L11.743,5.991a1,1 0,0 0,-1 1v0.48Z"
+      android:fillColor="#166fb8"/>
+  <path
+      android:pathData="M19,19.846L5,19.846a2,2 0,0 1,-2 -2L3,11.971a0,0 0,0 1,-0 -0L21,11.971a0,0 0,0 1,-0 -0L21,17.846A2,2 0,0 1,19 19.846Z"
+      android:fillColor="#166fb8"/>
+</vector>

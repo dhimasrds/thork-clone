@@ -1,0 +1,32 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector android:autoMirrored="true" android:height="296dp"
+    android:viewportHeight="296" android:viewportWidth="296"
+    android:width="296dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#00000000"
+        android:pathData="M99.027,5H5V98.024"
+        android:strokeColor="#1463FF" android:strokeLineJoin="round" android:strokeWidth="9"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M291,100.003L291,5L198.932,5"
+        android:strokeColor="#1463FF" android:strokeLineJoin="round" android:strokeWidth="9"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M195.014,291L289.041,291L289.041,197.976"
+        android:strokeColor="#1463FF" android:strokeLineJoin="round" android:strokeWidth="9"/>
+    <path android:fillColor="#00000000"
+        android:pathData="M5,195.997L5,291L97.068,291"
+        android:strokeColor="#1463FF" android:strokeLineJoin="round" android:strokeWidth="9"/>
+</vector>
