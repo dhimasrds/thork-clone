@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import id.thork.app.data.model.Person
 import kotlinx.coroutines.Dispatchers
 
 abstract class LiveCoroutinesViewModel: ViewModel() {

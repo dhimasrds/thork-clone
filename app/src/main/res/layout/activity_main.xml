@@ -22,6 +22,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHANGE"/>
+            android:text="CHANGE"
+            android:onClick="onChange"/>
     </LinearLayout>
 </layout>

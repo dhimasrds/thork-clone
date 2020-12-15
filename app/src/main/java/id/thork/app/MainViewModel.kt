@@ -1,21 +1,25 @@
 package id.thork.app
 
-import androidx.hilt.Assisted
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.repository.LoginRepository
-import java.lang.reflect.Member
 
-class MainViewModel @AssistedInject constructor(loginRepository: LoginRepository,
-@Assisted private val name: String) : LiveCoroutinesViewModel() {
+class MainViewModel @AssistedInject constructor(
+    private val loginRepository: LoginRepository,
+    @Assisted private val name: String
+) : LiveCoroutinesViewModel() {
+
     val memberInfo: LiveData<UserResponse>
-
     init {
-        memberInfo =  launchOnViewModelScope {
-            loginRepository.loginByPerson(select=name, where = "",
-                onSuccess = { print("success")},
+        memberInfo = launchOnViewModelScope {
+            loginRepository.loginByPerson(select = "", where = "",
+                onSuccess = { print("success") },
                 onError = { it }).asLiveData()
         }
     }
@@ -26,13 +30,13 @@ class MainViewModel @AssistedInject constructor(loginRepository: LoginRepository
     }
 
     companion object {
-        fun provideFactory (
+        fun provideFactory(
             assistedFactory: AssistedFactory,
-            name: String
+            pokemonName: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @SuppressWarnings("UNCHECKED_CAST")
+            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return assistedFactory.create(name) as T
+                return assistedFactory.create(pokemonName) as T
             }
         }
     }
