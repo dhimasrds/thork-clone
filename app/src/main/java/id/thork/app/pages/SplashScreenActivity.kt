@@ -1,7 +1,7 @@
 package id.thork.app.pages
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.databinding.ActivitySplashScreenBinding
