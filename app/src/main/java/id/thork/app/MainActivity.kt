@@ -1,6 +1,5 @@
 package id.thork.app
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,9 +7,6 @@ import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
-import id.thork.app.di.ApiKey
-import id.thork.app.di.LibraryKey
-import id.thork.app.di.PreferenceManager
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -1,10 +1,12 @@
 package id.thork.app.pages
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.databinding.ActivitySplashScreenBinding
+import id.thork.app.pages.server.ServerActivity
 
 class SplashScreenActivity : AppCompatActivity(),DialogUtils.DialogUtilsListener {
     private lateinit var binding: ActivitySplashScreenBinding
@@ -28,7 +30,7 @@ class SplashScreenActivity : AppCompatActivity(),DialogUtils.DialogUtilsListener
                 override fun run() {
                     try {
                         sleep(1200)
-//                        val intent: Intent
+                        val intent = Intent(applicationContext, ServerActivity::class.java)
 //                        intent = if () {
 //                            Intent(applicationContext, IntroActivity::class.java)
 //                        } else {

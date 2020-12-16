@@ -6,6 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import id.thork.app.BuildConfig
 import id.thork.app.di.ApiKey
 import id.thork.app.di.LibraryKey
@@ -16,8 +18,8 @@ import javax.inject.Singleton
 
 
 @Module
-@InstallIn(ApplicationComponent::class)
-class ApplicationModule {
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
 
     @Singleton
     @Provides

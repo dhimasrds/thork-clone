@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<resources>
+
+    <string name="app_name">This</string>
+    <string name="hello_world">Halo Dunia!</string>
+    <string name="user_name">Nama Pengguna</string>
+    <string name="password">Kata Sandi</string>
+    <string name="log_in">Masuk ke THIS</string>
+    <string name="username_error">Nama pengguna tidak boleh kosong</string>
+    <string name="username_invalid">Nama pengguna tidak valid</string>
+    <string name="password_error">Kata sandi tidak boleh kosong</string>
+    <string name="connection_available">Koneksi tersedit</string>
+    <string name="connection_not_available">Koneksi tidak tersedia</string>
+    <string name="connection_slow">Koneksi sedikit lambat</string>
+    <string name="connection_switch_online">Ganti ke mode ONLINE</string>
+    <string name="connection_switch_offline">Ganti ke mode OFFLINE</string>
+    <string name="connection_switch_online_message">Aplikasi diganti ke mode ONLINE</string>
+    <string name="connection_switch_offline_message">Aplikasi diganti ke mode OFLINE</string>
+    <string name="dismiss">ABAIKAN</string>
+
+    <!-- Intro Slider -->
+    <string name="next">BERIKUTNYA</string>
+    <string name="skip">LEWATKAN</string>
+    <string name="start">MULAI</string>
+
+    <!-- Action menu bar -->
+    <string name="action_notifications">Notifikasi</string>
+    <string name="action_settings">Pengaturan</string>
+    <string name="action_detail">Detail</string>
+    <string name="action_scan">Memindai Kode</string>
+    <string name="action_report">Melaporkan</string>
+
+    <!-- Menu base bottom navigation bar-->
+    <!--Title Bottom Navigation-->
+    <string name="title_home">Tambah</string>
+    <string name="title_jobs"></string>
+    <string name="title_activity">Rekap</string>
+
+    <!-- Common Crew -->
+    <string name="field_crew">Kru Lapangan</string>
+
+    <!-- MENU: Login -->
+    <!-- Yes No Dialog -->
+    <string name="dialog_yes">Ya</string>
+    <string name="dialog_no">Tidak</string>
+    <string name="dialog_repeat">Ulangi</string>
+    <string name="dialog_reset">Setel ulang</string>
+    <string name="dialog_cancel">Batal</string>
+
+    <string name="login_title">Login</string>
+
+    <!-- Login Failed Dialog -->
+    <string name="login_failed">Login Gagal</string>
+    <string name="login_massege">Username atau password salah, silahkan coba lagi</string>
+
+    <!-- Logout Dialog -->
+    <string name="logout_title">Keluar</string>
+    <string name="logout_qustion">Anda yakin ingin keluar?</string>
+
+    <!-- Change Language Dialog -->
+    <string name="change_language_dialog">Ubah Bahasa</string>
+    <string name="change_language_question">Apakah anda yakin merubah bahasa?</string>
+
+    <!-- Change Pattern Dialog -->
+    <string name="change_pattern_dialog">Ganti Pola</string>
+    <string name="change_pattern_dialog_question">Apakah kamu ingin mengganti pola?</string>
+
+    <!-- Input Pattern -->
+    <string name="input_pattern">Masukan Pola Saat ini!</string>
+
+    <!-- Change Switch Pattern Dialog -->
+    <string name="change_switch_dialog">Aktifkan Pola</string>
+    <string name="change_switch_dialog_question">Apakah kamu ingin mengaktifkan pola?</string>
+
+    <!-- Ip Config Dialog -->
+    <string name="server_next">Berikutnya</string>
+    <string name="server_try_again">Coba lagi</string>
+    <string name="server_title">Kesalahan</string>
+    <string name="server_error_message">Alamat IP anda salah, silahkan coba lagi!</string>
+    <string name="server_address">Server Address</string>
+    <string name="server">Server</string>
+    <string name="later">Later</string>
+
+
+    <!-- Pattern Activity Dialog -->
+    <string name="pattern_qustion">Apakah anda ingin mengaktifkan fitur pola?</string>
+    <string name="pattern_title">Informasi</string>
+    <string name="reinput_pattern_message">Silakan masukan pola lagi!</string>
+    <string name="reinput_pattern_failed">Pola tidak cocok!</string>
+
+    <!-- Maps Activity -->
+    <string name="maps_gps_is_enable">GPS aktif</string>
+    <string name="maps_gps_is_disable">GPS tidak aktif</string>
+    <string name="maps_permissions_granted">Semua Izin Sistem diaktifkan</string>
+
+    <!-- Settings Menu -->
+    <string name="settings_password">Kata Sandi</string>
+    <string name="settings_change_password">Ubah Kata Sandi</string>
+    <string name="settings_pattern">Pola Sandi</string>
+    <string name="settings_change_pattern">Ubah Pola Sandi</string>
+    <string name="settings_enable_pattern">Aktifkan Pola Sandi</string>
+    <string name="settings_about">Tentang</string>
+    <string name="settings_about_this">Tentang This</string>
+    <string name="settings_language">Bahasa</string>
+    <string name="settings_logout">Keluar</string>
+    <string name="settings_user">Pengguna</string>
+    <string name="settings_change_pattern_success">Ganti Pola Berhasil</string>
+    <string name="settings_change_pattern_activity">Masukan Pola Saat Ini</string>
+
+    <!-- MENU: Tentang -->
+    <string name="about_this_description">
+        \t \t Dalam aktivitas para pekerja di lapangan, setiap pekerja mengolah serangkaian informasi yang diperoleh dalam menyelesaikan pekerjaan di lapangan baik dari pekerjaan harian (scheduler task) sampai dengan pelaporan status pekerjaan ke atasan.
+        \n \n
+        \t \t Dengan menggunakan aplikasi THIS ini akan memudahkan para pekerja untuk mendapatkan informasi terkait dengan pekerjaan mereka serta memudahkan dalam melaporkan apa yang telah ia lakukan. Aplikasi THIS bisa memajukan pekerjaan untuk keperluan operasi atau pelaporan Kepada pelanggan atau kepada manajemen terkait.
+        \n \n
+        Apa yang kita lakukan?
+            \n Kami menawarkan kemudahan dalam pengelolaan data yang bersumber dari :
+            \n
+        \n- Eksternal : Pelanggan, IoT, dan servis layanan penghubung
+        \n- internal : ticketing, atau pemeliharaan, perbaikan dan operasi MRO, manajemen produk life cycle, manajemen project long-cycle, dan sistem manajemen aset
+    </string>
+
+    <!-- MENU: Workorder -->
+    <string name="workorder">Perintah kerja</string>
+    <string name="desc">Deskripsi</string>
+    <string name="longdesc">Long Description</string>
+    <string name="date">Tanggal</string>
+    <string name="period">Periode</string>
+    <string name="time">Waktu</string>
+    <string name="clock">00 : 00</string>
+    <string name="strip"> - </string>
+    <string name="serviceleader">Pemimpin Layanan</string>
+    <string name="name">Nama</string>
+    <string name="tools">Alat</string>
+    <string name="rooms">Ruangan</string>
+    <string name="location">Lokasi</string>
+    <string name="QR">Kode QR</string>
+    <string name="lines">--------------------</string>
+    <string name="stat">Status</string>
+    <string name="line">---</string>
+    <string name="worktype">Tipe Kerja</string>
+    <string name="priority">Prioritas</string>
+    <string name="normal">Biasa</string>
+    <string name="medium">Sedang</string>
+    <string name="high">Tinggi</string>
+    <string name="estimatedwork">Perkiraan Waktu Kerja</string>
+    <string name="hourminute">Jam : Menit</string>
+    <string name="attachments">Lampiran</string>
+    <string name="image">Gambar</string>
+    <string name="reportDate">Tanggal Laporan</string>
+    <string name="create">Buat</string>
+    <string name="estimatedhour">Tanggal Pelaporan</string>
+    <string name="estimatedminute">Tolong Masukkan estimasi menit</string>
+    <string name="estimatedhour_estimatedminute">Tolong masukkan estimasi jam dan estimasi menit! </string>
+    <string name="estHour"> Jam</string>
+    <string name="estMinute"> Menit</string>
+    <string name="workorder_update_success">Workorder berhasil diupdate</string>
+    <string name="workorder_update_failed">Workorder gagal diupdate</string>
+    <string name="workorder_upload_failed">Lampiran Workorder berhasil diupload</string>
+    <string name="service_request_create">Create Service Request</string>
+    <string name="service_request_cancel">Apakah kamu ingin membatalkan Service Request?</string>
+    <string name="workorder_create_success">Service Request berhasil disimpan</string>
+    <string name="workorder_create_failed">Service Request gagal disimpan</string>
+
+    <!-- flash light  -->
+    <string name="turn_off_flashlight">Matikan</string>
+    <string name="turn_on_flashlight">Hidupkan</string>
+
+    <!-- Message -->
+    <string name="message_qr">Kunjungi QR poin yang sesuai dengan lokasi yang akan anda kerjakan lalu scan QR kode yang ada.</string>
+    <string name="massege_note_report">Masukkan Keterangan dan keluhan, jika diperlukan.</string>
+
+    <!-- Text Intro Slider -->
+    <string name="slide_1">Selamat Datang</string>
+    <string name="slide_2">Kelola Permintaan</string>
+    <string name="slide_2_desc">Tanda Terima Permintaan Pekerjaan dari berbagai sumber</string>
+    <string name="slide_3">Rencanakan Kerja</string>
+    <string name="slide_3_desc">Perimbangan beban kerja dan prioritas yang dijadwalkan</string>
+    <string name="slide_4">Informatif</string>
+    <string name="slide_4_desc">Menginformasikan dan mengaktifkan teknisi</string>
+
+    <!-- Tab Job fragment-->
+    <string name="job_Pending">Menunggu</string>
+    <string name="job_Approve">Disetujui</string>
+
+    <!--Text Notif untuk Tab Pekerjaan-->
+    <string name="data">Tidak Ada Data yang Ditampilkan</string>
+    <string name="koneksi">Tidak Ada Koneksi Data</string>
+    <string name="koneksi_desc">Mohon periksa kembali koneksi anda</string>
+
+    <!-- Text Details -->
+    <string name="Example">Contoh</string>
+    <string name="Note">Catatan</string>
+    <string name="Photo">Foto</string>
+
+
+    <!--days -->
+    <string name="Today">Hari ini</string>
+    <string name="Yesterday">Kemarin</string>
+    <string name="LastWeek">Minggu lalu</string>
+
+    <!-- Exit application -->
+    <string name="exit_application">Silakan klik KEMBALI lagi untuk keluar</string>
+
+    <!--Home Maps-->
+    <string name="gps_enabled">Layanan GPS anda tersedia</string>
+
+    <!--Toolbar-->
+    <string name="list_wo">Daftar Pekerjaan</string>
+    <string name="create_wo">Work Order</string>
+    <string name="history_work">Riwayat Pekerjaan</string>
+
+    <!--Dialog update status-->
+    <string name="status_title">Konfirmasi Perubahan</string>
+    <string name="status_message"><b>Apakah anda yakin akan merubah status dari</b> </string>
+
+    <!-- Confirm Pattern -->
+    <string name="confim_pattern">"Konfirmasi Pola Baru"</string>
+    <string name="change_pattern">"Masukkan Pola Baru"</string>
+
+
+    <string-array name="status_wo">
+        <item>DISPATCH</item>
+        <item>ACCEPT</item>
+        <item>ARRIVE</item>
+    </string-array>
+
+    <!-- Dialog disconneted -->
+    <string name="dialog_disconnected_title">Whopss...</string>
+    <string name="dialog_disconnected_subtitle">Koneksimu terputus</string>
+    <string name="dialog_disconneted_desc">Oops... Kamu tidak punya jaringan</string>
+    <string name="dialog_disconneted_subdesc">Tolong cek internet koneksimu</string>
+    <string name="dialogButton">Coba lagi</string>
+    <string name="flash_on">Hidupkan Flash</string>
+    <string name="flash_off">Matikan Flash</string>
+
+    <!-- Dialog Root -->
+    <string name="dialog_root_title">Perhatian!</string>
+    <string name="dialog_root_subtitle">Ponsel Anda terdeteksi rooted. Untuk alasan keamanan data, This saat ini belum dapat dijalankan di ponsel Anda</string>
+
+    <!-- List Item WO -->
+    <string name="responden_name">Nama Responden</string>
+    <string name="num_wo">8569</string>
+    <string name="dispatched">Dispatched</string>
+    <string name="priorityy">Prioritas : 1</string>
+    <string name="accepted">Accepted</string>
+    <string name="arrived">Arrived</string>
+    <string name="progress">In Progress</string>
+    <string name="reassign">Reassign</string>
+    <string name="WSUPP">WSUPP</string>
+    <string name="complete">Complete</string>
+
+    <!-- Layout Welcome 1-->
+    <string name="layout_welcome_1">Empower and Enable field crew to \naccept and manage Work Order</string>
+
+    <!-- Layout Welcome 2-->
+    <string name="layout_welcome_2">Workload balanceing\nand scheduled prioritization</string>
+
+    <!-- Layout Welcome 3-->
+    <string name="layout_welcome_3">Streamlined the field\nservice management</string>
+
+    <!-- Layout Welcome 4-->
+    <string name="layout_welcome_4"></string>
+
+    <!-- Button Layout Welcome -->
+    <string name="button_layout_next">Next</string>
+    <string name="button_layout_skip">Skip</string>
+
+    <!-- Dialog View Image -->
+    <string name="dialog_view_image">Deskripsi :</string>
+
+    <!-- Dialog Estdur -->
+    <string name="dialog_estdur">Perkiraan Waktu Kerja</string>
+    <string name="hour">Jam</string>
+    <string name="minute">Menit</string>
+    <string name="button_estdur_save">Simpan</string>
+
+    <!-- Card WO -->
+    <string name="number_wo">No Order Pekerjaan :</string>
+    <string name="stripp">----------------</string>
+
+    <!-- WO detail -->
+    <string name="wo_detail">Detail Order Pekerjaan</string>
+    <string name="wo_distance">0 km</string>
+    <string name="wo_hours">0 hours</string>
+    <string name="wo_picture">Gambar</string>
+    <string name="wo_take_pic">Ambil Gambar</string>
+    <string name="wo_reported_date">Tanggal Laporan</string>
+    <string name="service_address">Alamat layanan</string>
+    <string name="wo_category">Work Category</string>
+    <string name="wo_scan_material">Pindai Material</string>
+    <string name="wo_address">Alamat</string>
+    <string name="wo_title">Original Address</string>
+    <string name="wo_info">Original Address</string>
+
+    <!-- Splash Screen -->
+    <string name="powered">POWERED BY</string>
+
+    <!-- List Material -->
+    <string name="hastag">#####</string>
+    <string name="start_scan">Mulai Scan</string>
+
+    <!-- History WO -->
+    <string name="history_wo">Hari ini tidak ada order pekerjaan untuk mu</string>
+    <string name="stat_complete">Status has completed!</string>
+
+    <!-- Attachment -->
+    <string name="add_image">+ Add Image</string>
+    <string name="delete">Hapus</string>
+    <string name="delete_image">Apakah ingin menghapus gambar ini?</string>
+    <string name="delete_image1">Klik ya untuk menghapus!</string>
+    <string name="delete_dialog_positive">Ya</string>
+    <string name="delete_dialog_negative">Tidak</string>
+    <string name="failed_load_image">Gagal memuat gambar</string>
+    <string name="create_workorder">Apakah kamu ingin membuat work order?</string>
+    <string name="information">Informasi</string>
+    <string name="next_step">Apakah kamu ingin memperbarui wo ini?</string>
+
+    <string-array name="work_type_wo">
+        <item>ORR</item>
+    </string-array>
+</resources>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ /**
   ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
   ~  * <BR>
@@ -89,10 +88,10 @@
     <string name="change_switch_dialog_question">Do you want to active pattern?</string>
 
     <!-- Ip Config Dialog -->
-    <string name="ip_config_next">Next</string>
-    <string name="ip_config_try_again">Try again</string>
-    <string name="ip_config_title">Error</string>
-    <string name="ip_config_message">Your IP Address not correct, please input again!</string>
+    <string name="server_next">Next</string>
+    <string name="server_try_again">Try again</string>
+    <string name="server_title">Error</string>
+    <string name="server_error_message">Your IP Address not correct, please input again!</string>
     <string name="server_address">Server Address</string>
     <string name="server">Service Address</string>
     <string name="later">Later</string>
