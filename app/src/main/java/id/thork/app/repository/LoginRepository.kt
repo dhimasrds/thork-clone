@@ -6,6 +6,7 @@ import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.login.LoginClient
 import id.thork.app.network.model.user.UserResponse
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 class LoginRepository @Inject constructor(
     private val loginClient: LoginClient
-) : Repository {
+) : BaseRepository {
 
     @WorkerThread
     suspend fun loginByPerson(

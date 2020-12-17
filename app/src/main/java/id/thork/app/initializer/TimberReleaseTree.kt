@@ -15,7 +15,7 @@ package id.thork.app.initializer
 import android.util.Log
 import timber.log.Timber
 
-class ReleaseTree : Timber.Tree() {
+class TimberReleaseTree : Timber.Tree() {
     override fun isLoggable(tag: String?, priority: Int): Boolean {
         return when (priority) {
             Log.VERBOSE, Log.DEBUG -> false

@@ -13,10 +13,7 @@
 package id.thork.app.initializer
 
 import android.content.Context
-import android.util.Log
 import id.thork.app.BuildConfig
-import id.thork.app.base.BaseApplication
-import io.objectbox.BoxStore
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -32,7 +29,7 @@ object TimberInitializer {
             })
 
         } else {
-            Timber.plant(ReleaseTree())
+            Timber.plant(TimberReleaseTree())
         }
     }
 
