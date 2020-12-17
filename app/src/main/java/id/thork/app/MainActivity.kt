@@ -30,13 +30,13 @@ class MainActivity : BaseActivity() {
             vm = viewModel
         }
 
-        Log.d("output ya", "OK");
-        Log.d("output ya", "${viewModel.memberInfo}")
+        Log.d("onCreate()", "OK");
+        Log.d("onCreate()", "${viewModel.memberInfo}")
 
     }
 
     fun onChange(view: View) {
-        Log.d("onChange ya", "OK");
+        Log.d("onChange()", "OK");
         Timber.d("onChange")
     }
 
