@@ -32,11 +32,11 @@ class MainViewModel @AssistedInject constructor(
     companion object {
         fun provideFactory(
             assistedFactory: AssistedFactory,
-            pokemonName: String
+            name: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return assistedFactory.create(pokemonName) as T
+                return assistedFactory.create(name) as T
             }
         }
     }
