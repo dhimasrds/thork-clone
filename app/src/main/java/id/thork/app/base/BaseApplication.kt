@@ -13,7 +13,8 @@ package id.thork.app.base
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import id.thork.app.persistence.ObjectBox
+import id.thork.app.initializer.ObjectBox
+import id.thork.app.initializer.TimberInitializer
 
 @HiltAndroidApp
 class BaseApplication:Application() {
@@ -30,6 +31,7 @@ class BaseApplication:Application() {
 //        }
 
         super.onCreate()
+        TimberInitializer.init(this)
         ObjectBox.init(this)
     }
 

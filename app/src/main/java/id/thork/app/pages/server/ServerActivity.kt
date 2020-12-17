@@ -14,10 +14,14 @@ package id.thork.app.pages.server
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import id.thork.app.R
+import id.thork.app.base.BaseActivity
+import timber.log.Timber
 
-class ServerActivity : AppCompatActivity() {
+class ServerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_server)
+
+        Timber.d("onCreate()")
     }
 }

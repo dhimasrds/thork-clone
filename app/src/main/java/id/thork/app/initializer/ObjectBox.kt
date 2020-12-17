@@ -10,7 +10,7 @@
  * permission of This.ID.
  */
 
-package id.thork.app.persistence
+package id.thork.app.initializer
 
 import android.content.Context
 import android.util.Log
@@ -20,6 +20,7 @@ import id.thork.app.persistence.model.MyObjectBox
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
 import io.objectbox.sync.Sync
+import timber.log.Timber
 
 object ObjectBox {
     lateinit var boxStore: BoxStore
@@ -36,7 +37,8 @@ object ObjectBox {
                 "Using ObjectBox ${BoxStore.getVersion()} (${BoxStore.getVersionNative()}, sync $syncAvailable)")
             // Enable Data Browser on debug builds.
             // https://docs.objectbox.io/data-browser
-            AndroidObjectBrowser(boxStore).start(context.applicationContext)
+            val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
+            Timber.tag(BaseApplication.TAG).i("init() object browser started: %s", started)
         }
 
     }
