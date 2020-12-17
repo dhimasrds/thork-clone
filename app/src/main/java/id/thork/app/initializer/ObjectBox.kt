@@ -32,9 +32,11 @@ object ObjectBox {
             .build()
 
         if (BuildConfig.DEBUG) {
-            var syncAvailable = if (Sync.isAvailable()) "available" else "unavailable"
-            Log.d(BaseApplication.TAG,
-                "Using ObjectBox ${BoxStore.getVersion()} (${BoxStore.getVersionNative()}, sync $syncAvailable)")
+            Timber.tag(BaseApplication.TAG).i(
+                "Started..: %s ObjectBox version: %s",
+                true,
+                BoxStore.getVersion() + " (" + BoxStore.getVersionNative() + ")"
+            )
             // Enable Data Browser on debug builds.
             // https://docs.objectbox.io/data-browser
             val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)

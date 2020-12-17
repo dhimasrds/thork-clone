@@ -11,17 +11,18 @@
  */
 package id.thork.app.pages.server
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import timber.log.Timber
 
 class ServerActivity : BaseActivity() {
+    val TAG = ServerActivity::class.java.name
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_server)
 
-        Timber.d("onCreate()")
+        Timber.tag(TAG).i("onCreate()")
     }
 }

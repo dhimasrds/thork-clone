@@ -30,11 +30,7 @@ object TimberInitializer {
                     return super.createStackElementTag(element) + " >> " + element.lineNumber
                 }
             })
-            Timber.tag(BaseApplication.TAG).i(
-                "Started..: %s ObjectBox version: %s",
-                true,
-                BoxStore.getVersion() + " (" + BoxStore.getVersionNative() + ")"
-            )
+
         } else {
             Timber.plant(ReleaseTree())
         }

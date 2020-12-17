@@ -18,7 +18,7 @@ import timber.log.Timber
 class ReleaseTree : Timber.Tree() {
     override fun isLoggable(tag: String?, priority: Int): Boolean {
         return when (priority) {
-            Log.VERBOSE, Log.DEBUG, Log.INFO -> false
+            Log.VERBOSE, Log.DEBUG -> false
             else -> //Only Log Warn, Error, WTF
                 true
         }
