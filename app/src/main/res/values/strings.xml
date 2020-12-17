@@ -337,6 +337,8 @@
     <string name="create_workorder">Do you want to create work order?</string>
     <string name="information">Information</string>
     <string name="next_step">Do you want to update this wo?</string>
+    <string name="ip_config_Server">Service Address</string>
+    <string name="ip_config_next">Next</string>
 
 
     <string-array name="work_type_wo">
