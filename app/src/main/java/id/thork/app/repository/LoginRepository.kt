@@ -18,6 +18,7 @@ import javax.inject.Inject
 class LoginRepository @Inject constructor(
     private val loginClient: LoginClient
 ) : BaseRepository {
+    val TAG = LoginRepository::class.java.name
 
     @WorkerThread
     suspend fun loginByPerson(
@@ -26,11 +27,13 @@ class LoginRepository @Inject constructor(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) = flow<UserResponse> {
+        Timber.tag(TAG).i("loginByPerson() select: %s where: %s", select, where)
         val response = loginClient.loginByPerson(select, where)
+        Timber.tag(TAG).i("loginByPerson() response: %s", response)
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 var userResponses = response.member
-                Timber.d(userResponses.toString())
+                Timber.tag(TAG).i("loginByPerson() user response: %s", userResponses.toString())
                 onSuccess()
             }
         }

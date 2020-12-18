@@ -13,82 +13,91 @@
   ~
   ~
   -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_this_pattern"
-    android:fillViewport="true"
-    tools:context=".pages.server.ServerActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <data>
+        <variable
+            name="vm"
+            type="id.thork.app.pages.server.ServerActivityViewModel" />
+    </data>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:progressDrawable="@drawable/ic_progress_bar" />
+        android:layout_height="match_parent"
+        android:background="@drawable/background_this_pattern"
+        android:fillViewport="true"
+        tools:context=".pages.server.ServerActivity">
 
         <RelativeLayout
-            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/mainLayout"
-            android:layout_alignParentTop="true">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:progressDrawable="@drawable/ic_progress_bar" />
+
+            <RelativeLayout
+                android:id="@+id/headerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="center_horizontal">
+                android:layout_above="@+id/mainLayout"
+                android:layout_alignParentTop="true">
 
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:src="@drawable/ic_logo_gradient" />
-
-            </LinearLayout>
-        </RelativeLayout>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/mainLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/base_margin"
-            android:layout_marginBottom="20dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:weightSum="3">
-
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/opensans_bold"
-                    android:gravity="center"
-                    android:text="@string/server_address"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="18sp" />
+                    android:layout_centerVertical="true"
+                    android:gravity="center_horizontal">
 
-                <include
-                    layout="@layout/activity_server_content"
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_logo_gradient" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="@dimen/base_margin"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    android:layout_margin="20dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:weightSum="3">
 
-    </RelativeLayout>
-</ScrollView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/opensans_bold"
+                        android:gravity="center"
+                        android:text="@string/server_address"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp" />
+
+                    <include
+                        layout="@layout/activity_server_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+    </ScrollView>
+</layout>

@@ -20,7 +20,7 @@ import timber.log.Timber.DebugTree
 
 object TimberInitializer {
 
-    fun init(context: Context) {
+    fun init() {
         if (BuildConfig.DEBUG) {
             Timber.plant(object : DebugTree() {
                 override fun createStackElementTag(element: StackTraceElement): String? {

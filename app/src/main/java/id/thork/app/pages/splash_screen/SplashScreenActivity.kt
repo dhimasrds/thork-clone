@@ -18,14 +18,10 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.databinding.ActivitySplashScreenBinding
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.RootUtils

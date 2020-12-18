@@ -12,17 +12,27 @@
 package id.thork.app.pages.server
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.databinding.ActivityServerBinding
 import timber.log.Timber
 
+@AndroidEntryPoint
 class ServerActivity : BaseActivity() {
     val TAG = ServerActivity::class.java.name
 
+    val viewModel: ServerActivityViewModel by viewModels()
+    private val binding: ActivityServerBinding by binding(R.layout.activity_server)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_server)
 
-        Timber.tag(TAG).i("onCreate()")
+        binding.apply {
+            lifecycleOwner = this@ServerActivity
+        }
+        Timber.tag(TAG).i("onCreate() view model: %s", viewModel)
+        viewModel.fetchApi()
     }
 }

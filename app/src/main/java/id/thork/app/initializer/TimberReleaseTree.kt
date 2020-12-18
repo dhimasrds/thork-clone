@@ -44,6 +44,7 @@ class TimberReleaseTree : Timber.Tree() {
                     val end =
                         Math.min(newline, i + MAX_LOG_LENGTH)
                     val part = message.substring(i, end)
+                    Timber.d(part)
                     //                    Crashlytics.log(priority, tag, part);
                     i = end
                 } while (i < newline)

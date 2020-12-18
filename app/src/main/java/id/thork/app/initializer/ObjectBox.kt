@@ -13,18 +13,15 @@
 package id.thork.app.initializer
 
 import android.content.Context
-import android.util.Log
 import id.thork.app.BuildConfig
 import id.thork.app.base.BaseApplication
-import id.thork.app.persistence.model.MyObjectBox
+import id.thork.app.persistence.entity.MyObjectBox
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
-import io.objectbox.sync.Sync
 import timber.log.Timber
 
 object ObjectBox {
     lateinit var boxStore: BoxStore
-        private set
 
     fun init(context: Context) {
         boxStore = MyObjectBox.builder()
@@ -42,7 +39,6 @@ object ObjectBox {
             val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
             Timber.tag(BaseApplication.TAG).i("init() object browser started: %s", started)
         }
-
     }
 
 }

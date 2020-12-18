@@ -12,5 +12,13 @@
 
 package id.thork.app.persistence.dao
 
-class UserDao {
+import id.thork.app.persistence.entity.UserEntity
+import io.objectbox.android.ObjectBoxLiveData
+
+interface UserDao {
+    fun createUserSession(userEntity: UserEntity): ObjectBoxLiveData<UserEntity>
+    fun findUserByPersonUID(personUID: Int): ObjectBoxLiveData<UserEntity>
+    fun findActiveSessionUser(): ObjectBoxLiveData<UserEntity>
+    fun save(userEntity: UserEntity)
+    fun delete(userEntity: UserEntity)
 }

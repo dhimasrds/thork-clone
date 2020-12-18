@@ -31,7 +31,7 @@ class BaseApplication:Application() {
 //        }
 
         super.onCreate()
-        TimberInitializer.init(this)
+        TimberInitializer.init()
         ObjectBox.init(this)
     }
 
