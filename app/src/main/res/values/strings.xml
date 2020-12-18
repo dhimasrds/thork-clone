@@ -93,7 +93,7 @@
     <string name="server_title">Error</string>
     <string name="server_error_message">Your IP Address not correct, please input again!</string>
     <string name="server_address">Server Address</string>
-    <string name="server">Service Address</string>
+    <string name="server">Server Address</string>
     <string name="later">Later</string>
 
     <!-- Pattern Activity Dialog -->
@@ -337,7 +337,7 @@
     <string name="create_workorder">Do you want to create work order?</string>
     <string name="information">Information</string>
     <string name="next_step">Do you want to update this wo?</string>
-    <string name="ip_config_Server">Service Address</string>
+    <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
 
 
