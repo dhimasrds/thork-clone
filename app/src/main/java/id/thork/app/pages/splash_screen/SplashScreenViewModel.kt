@@ -12,14 +12,18 @@
 
 package id.thork.app.pages.splash_screen
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.network.HttpRequestInterceptor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SplashScreenViewModel : LiveCoroutinesViewModel() {
+class SplashScreenViewModel @ViewModelInject constructor(
+    private val httpRequestInterceptor: HttpRequestInterceptor,
+    ) : LiveCoroutinesViewModel() {
     val liveData: LiveData<SplashState>
         get() = mutableLiveData
     private
@@ -34,6 +38,7 @@ class SplashScreenViewModel : LiveCoroutinesViewModel() {
         }
         GlobalScope.launch {
             delay(3000)
+            httpRequestInterceptor.setHost("www.rejaluo.com")
             mutableLiveData.postValue(SplashState.MainActivity())
         }
     }

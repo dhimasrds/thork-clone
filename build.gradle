@@ -24,6 +24,7 @@ buildscript {
         archCompomentVersion = "2.1.0"
 
         objectboxVersion = "2.8.1"
+        scalarVersion = "2.9.0"
     }
 
     repositories {

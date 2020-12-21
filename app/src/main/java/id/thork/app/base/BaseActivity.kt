@@ -12,6 +12,7 @@
 
 package id.thork.app.base
 
+import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -21,4 +22,26 @@ abstract class BaseActivity: AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> binding (
         @LayoutRes resId: Int
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupView()
+        setupListener()
+        setupObserver()
+    }
+
+    open fun setupView() {
+    }
+
+    open fun setupListener() {
+    }
+
+    open fun setupObserver() {
+    }
+
+    open fun onSuccess() {
+    }
+
+    open fun onError() {
+    }
 }

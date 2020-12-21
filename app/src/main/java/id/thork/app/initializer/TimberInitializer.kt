@@ -12,7 +12,6 @@
 
 package id.thork.app.initializer
 
-import android.content.Context
 import id.thork.app.BuildConfig
 import timber.log.Timber
 import timber.log.Timber.DebugTree

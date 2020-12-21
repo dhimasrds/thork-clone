@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
-import id.thork.app.pages.splash_screen.SplashScreenViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class MainActivity : BaseActivity() {
         }
 
         Log.d("onCreate()", "OK");
-        Log.d("onCreate()", "${viewModel.memberInfo}")
+//        Log.d("onCreate()", "${viewModel.memberInfo}")
 
     }
 

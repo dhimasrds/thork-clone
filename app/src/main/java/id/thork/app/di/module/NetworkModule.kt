@@ -35,7 +35,7 @@ object NetworkModule {
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         val httpLoggingInterceptor = HttpLoggingInterceptor(object: HttpLoggingInterceptor.Logger{
             override fun log(message: String) {
-                Timber.d(message);
+                Timber.d("Interceptor Log: $message")
             }
         })
 
@@ -49,9 +49,16 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideHttpRequestInterceptor(): HttpRequestInterceptor {
+        return HttpRequestInterceptor()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HttpRequestInterceptor())
+            .addInterceptor(httpLoggingInterceptor)
             .build()
     }
 
@@ -60,7 +67,7 @@ object NetworkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("http://147.139.139.145:9080/")
+            .baseUrl("https://www.this.id")
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
             .build()

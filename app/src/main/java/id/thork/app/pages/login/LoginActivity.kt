@@ -10,15 +10,15 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.intro
+package id.thork.app.pages.login
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.R
 
-class IntroActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+        setContentView(R.layout.activity_login)
     }
 }

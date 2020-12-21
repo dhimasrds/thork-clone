@@ -9,6 +9,8 @@ class LoginClient @Inject constructor(
     suspend fun loginByPerson(select: String, where: String) =
         loginApi.loginByPerson(LEAN, select, where)
 
+    suspend fun getTodo(id: Int) = loginApi.getTodo(id)
+
     companion object {
         private const val LEAN = 1
     }

@@ -11,28 +11,84 @@
  */
 package id.thork.app.pages.server
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityServerBinding
+import id.thork.app.pages.DialogUtils
+import id.thork.app.pages.login.LoginActivity
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
+
 @AndroidEntryPoint
-class ServerActivity : BaseActivity() {
+class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     val TAG = ServerActivity::class.java.name
 
     val viewModel: ServerActivityViewModel by viewModels()
     private val binding: ActivityServerBinding by binding(R.layout.activity_server)
 
+    private lateinit var dialogUtils: DialogUtils
+    private lateinit var tryAgain: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
 
+    override fun setupView() {
         binding.apply {
             lifecycleOwner = this@ServerActivity
         }
         Timber.tag(TAG).i("onCreate() view model: %s", viewModel)
-        viewModel.fetchApi()
+
+        setupDialog()
+    }
+
+    override fun setupListener() {
+        super.setupListener()
+        binding.includeServerContent.serverNext.setOnClickListener {
+            viewModel.validateUrl(binding.includeServerContent.serverUrl.text.toString())
+        }
+        tryAgain.setOnClickListener {
+            dialogUtils.dismiss()
+        }
+    }
+
+    override fun setupObserver() {
+        viewModel._state.observe(this, Observer {
+            if (CommonUtils.isTrue(it)) {
+                onSuccess()
+            } else {
+                onError()
+            }
+        })
+    }
+
+    override fun onSuccess() {
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onError() {
+        dialogUtils.show()
+        dialogUtils.setRounded(true)
+    }
+
+    override fun onPositiveButton() {
+    }
+
+    override fun onNegativeButton() {
+    }
+
+    fun setupDialog() {
+        dialogUtils = DialogUtils(this)
+        dialogUtils.setInflater(R.layout.activity_server_dialog, null, layoutInflater)
+        tryAgain = dialogUtils.setViewId(R.id.try_again)
     }
 }

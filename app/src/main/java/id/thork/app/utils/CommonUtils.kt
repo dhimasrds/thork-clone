@@ -10,15 +10,15 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.intro
+package id.thork.app.utils
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import id.thork.app.R
+import id.thork.app.base.BaseParam
 
-class IntroActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+object CommonUtils {
+    fun isTrue(input: Int): Boolean {
+        if (input.equals(BaseParam.APP_TRUE)) {
+            return true
+        }
+        return false
     }
 }

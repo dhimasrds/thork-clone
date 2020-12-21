@@ -26,6 +26,10 @@ import androidx.appcompat.app.AlertDialog
  */
 
 class DialogUtils {
+    companion object {
+        private val TAG = DialogUtils::class.java.name
+    }
+
     interface DialogUtilsListener {
         fun onPositiveButton()
         fun onNegativeButton()
@@ -41,57 +45,59 @@ class DialogUtils {
     private var isPositiveButton = false
     private var isNegativeButton = false
     private var isCanceable = false
-    private var builder: AlertDialog.Builder? = null
-    private var dialogView: View? = null
+    private var builder: AlertDialog.Builder
+    private lateinit var dialogView: View
     private var inflater: LayoutInflater? = null
-    private var dialog: AlertDialog? = null
+    private lateinit var dialog: AlertDialog
 
     constructor(context: Context) {
         this.context = context
-        if (builder == null) {
-            builder = AlertDialog.Builder(context)
-        }
+        builder = AlertDialog.Builder(context)
+        
     }
 
     constructor(context: Context, theme: Int) {
         this.context = context
         this.theme = theme
-        if (builder == null) {
-            builder = AlertDialog.Builder(context, theme)
-        }
+        builder = AlertDialog.Builder(context, theme)
     }
 
     fun show() {
-//        Timber.tag(TAG).i("DialogUtils.show()")
-        dialog = builder!!.show()
+        dialog = builder.show()
     }
 
     fun setRounded(rounded: Boolean) {
         if (rounded) {
-            dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
 
     fun setTitles(title: Int): DialogUtils {
         this.title = title
-        builder!!.setTitle(title)
+        builder.setTitle(title)
         return this
     }
 
     fun setViewId(id: Int): View {
-        return dialogView!!.findViewById(id)
+        return dialogView.findViewById(id)
     }
 
     fun setInflater(resource: Int, root: ViewGroup?, layoutInflater: LayoutInflater?): DialogUtils {
         inflater = layoutInflater
         dialogView = inflater!!.inflate(resource, root)
-        builder!!.setView(dialogView)
+        if (dialogView.parent != null) {
+            if (dialogView.parent is ViewGroup) {
+                val viewGroup = dialogView.parent as ViewGroup
+                viewGroup.removeView(dialogView)
+            }
+        }
+        builder.setView(dialogView)
         return this
     }
 
     fun setMessage(message: Int): DialogUtils {
         this.message = message
-        builder!!.setMessage(message)
+        builder.setMessage(message)
         return this
     }
 
@@ -102,10 +108,10 @@ class DialogUtils {
     fun setPositiveButtonLabel(positiveButtonLabel: Int?): DialogUtils {
         this.positiveButtonLabel = positiveButtonLabel
         if (positiveButtonLabel == null) {
-            builder!!.setPositiveButton(null, null)
+            builder.setPositiveButton(null, null)
             isPositiveButton = false
         } else {
-            builder!!.setPositiveButton(
+            builder.setPositiveButton(
                 positiveButtonLabel,
                 object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface, which: Int) {
@@ -126,10 +132,10 @@ class DialogUtils {
     fun setNegativeButtonLabel(negativeButtonLabel: Int?): DialogUtils {
         this.negativeButtonLabel = negativeButtonLabel
         if (negativeButtonLabel == null) {
-            builder!!.setNegativeButton(null, null)
+            builder.setNegativeButton(null, null)
             isNegativeButton = false
         } else {
-            builder!!.setNegativeButton(
+            builder.setNegativeButton(
                 negativeButtonLabel,
                 object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface, which: Int) {
@@ -150,16 +156,13 @@ class DialogUtils {
 
     fun setCanceable(canceable: Boolean): DialogUtils {
         isCanceable = canceable
-        builder!!.setCancelable(false)
+        builder.setCancelable(false)
         return this
     }
 
     fun dismiss(): DialogUtils {
-        dialog!!.dismiss()
+        dialog.dismiss()
         return this
     }
 
-    companion object {
-        private val TAG = DialogUtils::class.java.name
-    }
 }

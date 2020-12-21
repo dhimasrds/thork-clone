@@ -19,6 +19,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -27,6 +28,7 @@ import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.RootUtils
 import id.thork.app.pages.server.ServerActivity
 
+@AndroidEntryPoint
 class SplashScreenActivity : BaseActivity(),
     DialogUtils.DialogUtilsListener {
     private val splashScreenViewModel: SplashScreenViewModel by viewModels()

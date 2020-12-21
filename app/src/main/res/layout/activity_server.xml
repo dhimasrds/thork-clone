@@ -91,6 +91,7 @@
                         android:textSize="18sp" />
 
                     <include
+                        android:id="@+id/include_server_content"
                         layout="@layout/activity_server_content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
