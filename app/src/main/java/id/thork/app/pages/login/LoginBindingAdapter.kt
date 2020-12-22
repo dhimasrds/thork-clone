@@ -13,10 +13,7 @@
 package id.thork.app.pages.login
 
 import android.view.View
-import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
-import id.thork.app.base.BaseApplication
-import timber.log.Timber
 
 @BindingAdapter("visible")
 fun View.bindVisible(visible: Boolean?) {

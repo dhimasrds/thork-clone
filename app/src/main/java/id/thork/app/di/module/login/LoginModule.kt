@@ -26,7 +26,6 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)

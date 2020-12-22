@@ -15,14 +15,11 @@ package id.thork.app.pages.server
 import android.webkit.URLUtil
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.network.HttpRequestInterceptor
 import id.thork.app.network.model.Todo
 import id.thork.app.repository.LoginRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import timber.log.Timber
 

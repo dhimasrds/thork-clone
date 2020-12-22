@@ -12,12 +12,11 @@
 
 package id.thork.app.pages.login
 
-import android.content.Intent
-import android.os.Handler
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import id.thork.app.R
-import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
@@ -27,9 +26,9 @@ import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
@@ -85,17 +84,25 @@ class LoginViewModel @ViewModelInject constructor(
     private fun fetchUserData(headerParam: String, selectQuery: String, whereQuery: String) {
         Timber.tag(TAG).i("fetchUserData()")
         var userResponse: UserResponse = UserResponse()
+        val date1:Date = Date()
+        var date2:Date = Date()
         viewModelScope.launch(Dispatchers.IO) {
             loginRepository.loginPerson(headerParam, selectQuery, whereQuery,
                 onSuccess = {
                     Timber.tag(TAG).i("fetchUserData() success: %s", it.member.toString())
                     userResponse = it
+                    date2 = Date()
                 },
                 onError = { Timber.tag(TAG).i("fetchUserData() error: %s", it) })
             _progressVisible.postValue(false)
 
             if (userResponse != null) {
                 _success.postValue("SUCCESS")
+
+                val diff: Long = date1.getTime() - date2.getTime()
+                val seconds = diff / 1000
+                val minutes = seconds / 60
+                Timber.tag(TAG).i("fetchUserData() interval minute: %s second: %s millisecond: %s", minutes, seconds, diff)
             }
         }
         _success.postValue("ON LOADING")

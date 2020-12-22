@@ -7,9 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.BuildConfig
-import id.thork.app.network.api.LoginClient
 import id.thork.app.network.HttpRequestInterceptor
-import id.thork.app.network.api.LoginApi
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

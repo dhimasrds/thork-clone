@@ -12,7 +12,6 @@
 
 package id.thork.app.pages.dummy
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -21,8 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityDummyBinding
-import id.thork.app.databinding.ActivityLoginBinding
-import id.thork.app.pages.login.LoginViewModel
 
 @AndroidEntryPoint
 class DummyActivity : BaseActivity() {

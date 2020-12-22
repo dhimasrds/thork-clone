@@ -19,7 +19,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import id.thork.app.pages.server.ServerActivityViewModel
 
 /**
  * Created by Dhimas Saputra on 30/11/20
@@ -28,7 +27,7 @@ import id.thork.app.pages.server.ServerActivityViewModel
 
 class DialogUtils {
     val TAG = DialogUtils::class.java.name
-    
+
     interface DialogUtilsListener {
         fun onPositiveButton()
         fun onNegativeButton()
