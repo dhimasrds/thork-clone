@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_login_hor_margin"
+    android:layout_marginTop="@dimen/activity_login_ver_margin"
+    android:layout_marginRight="@dimen/activity_login_hor_margin"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/ip_bg"
+        android:elevation="2dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/on_focus"
+            android:fontFamily="@font/opensans_regular"
+            android:drawablePadding="10dp"
+            android:hint="@string/user_name"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            android:background="@drawable/rectangle_white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:passwordToggleEnabled="true"
+        android:layout_marginTop="10dp"
+        app:passwordToggleContentDescription="@string/desc"
+        app:passwordToggleDrawable="@drawable/ic_eyes"
+        app:passwordToggleTint="@color/password_toggle_color"
+        android:background="@drawable/ip_bg"
+        android:elevation="2dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/opensans_regular"
+            android:drawableStart="@drawable/on_focus_pass"
+            android:hint="@string/password"
+            android:drawablePadding="10dp"
+            android:textSize="14sp"
+            android:inputType="textPassword"
+            android:background="@drawable/rectangle_white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/ic_rectangle_blue"
+        android:fontFamily="@font/opensans_bold"
+        android:text="@string/login_title"
+        android:textAllCaps="false"
+        android:textColor="@color/white" />
+
+</LinearLayout>
+
