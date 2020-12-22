@@ -1,54 +1,44 @@
 package id.thork.app.repository
 
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
+import androidx.lifecycle.LiveData
+import com.skydoves.sandwich.*
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullWith
 import id.thork.app.base.BaseRepository
-import id.thork.app.di.module.login.LoginClient
+import id.thork.app.network.api.LoginClient
+import id.thork.app.network.model.user.UserResponse
+import id.thork.app.persistence.dao.UserDao
+import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 import javax.inject.Inject
 
 class LoginRepository @Inject constructor(
-    private val loginClient: LoginClient
+    private val loginClient: LoginClient,
+    private val userDao: UserDao
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
-//    @WorkerThread
-//    suspend fun loginByPerson(
-//        select: String,
-//        where: String,
-//        onSuccess: () -> Unit,
-//        onError: (String) -> Unit
-//    ) = flow<UserResponse> {
-//        Timber.tag(TAG).i("loginByPerson() select: %s where: %s", select, where)
-//        val response = loginClient.loginByPerson(select, where)
-//        Timber.tag(TAG).i("loginByPerson() response: %s", response)
-//        response.suspendOnSuccess {
-//            data.whatIfNotNull { response ->
-//                var userResponses = response.member
-//                Timber.tag(TAG).i("loginByPerson() user response: %s", userResponses.toString())
-//                onSuccess()
-//            }
-//        }
-//        .onError {
-//            Timber.tag(TAG).i("loginByPerson() error: %s", message())
-//            onError(message())
-//        }
-//        .onException {
-//            Timber.tag(TAG).i("loginByPerson() exception: %s", message())
-//            onError(message())
-//        }
-//    }.flowOn(Dispatchers.IO)
+    fun findActiveSession(): List<UserEntity> {
+        return userDao.findActiveSessionUser()
+    }
 
     suspend fun loginPerson(
+        headerParam: String,
         select: String,
         where: String,
-        onSuccess: () -> Unit,
+        onSuccess: (UserResponse) -> Unit,
         onError: (String) -> Unit
     ) {
-        loginClient.loginByPerson(select, where)
+        val response = loginClient.loginByPerson(headerParam, select, where)
+        response.suspendOnSuccess {
+            data.whatIfNotNull {response->
+                //TODO
+                //Save user session into local cache
+                onSuccess(response)
+            }
+        }
             .onError {
-                Timber.tag(TAG).i("loginByPerson() error: %s", message())
+                Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode, message())
                 onError(message())
             }
             .onException {

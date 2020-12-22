@@ -24,7 +24,6 @@
         android:layout_marginRight="@dimen/activity_login_hor_margin"
         android:orientation="vertical">
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
@@ -60,6 +59,5 @@
             android:text="@string/ip_config_next"
             android:textAllCaps="false"
             android:textColor="@color/white" />
-
     </LinearLayout>
 </layout>

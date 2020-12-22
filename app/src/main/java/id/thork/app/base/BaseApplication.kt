@@ -12,14 +12,20 @@
 package id.thork.app.base
 
 import android.app.Application
+import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.TimberInitializer
 
 @HiltAndroidApp
-class BaseApplication:Application() {
+class BaseApplication : Application() {
     companion object Constants {
         const val TAG = "This-FSM"
+        lateinit var context: Context
+
+        fun getAppContext(): Context {
+            return context
+        }
     }
 
     override fun onCreate() {
@@ -31,8 +37,10 @@ class BaseApplication:Application() {
 //        }
 
         super.onCreate()
+        context = applicationContext
         TimberInitializer.init()
         ObjectBox.init(this)
     }
+
 
 }

@@ -8,8 +8,8 @@ import javax.inject.Singleton
 
 @Singleton
 class HttpRequestInterceptor: Interceptor {
-    var url: String = "www.this.id"
-    var urlPort: Int = 80
+    var url: String = "147.139.139.145"
+    var urlPort: Int = 9080
     var headers: Map<String, String> = HashMap()
 
     fun setHost(url: String) {

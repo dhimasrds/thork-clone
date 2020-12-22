@@ -39,12 +39,9 @@ class UserDaoImp : UserDao {
         return userEntityLiveData
     }
 
-    override fun findActiveSessionUser(): ObjectBoxLiveData<UserEntity> {
+    override fun findActiveSessionUser(): List<UserEntity> {
         userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
-        userEntityLiveData = ObjectBoxLiveData(
-            userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build()
-        )
-        return userEntityLiveData
+        return userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build().find()
     }
 
     override fun save(userEntity: UserEntity) {

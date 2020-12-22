@@ -12,4 +12,6 @@ data class UserResponse(
     val member: List<Member>,
     @Json(name = "responseInfo")
     val responseInfo: ResponseInfo
-)
+) {
+    constructor() : this(href = "", member = emptyList(), responseInfo = ResponseInfo(""))
+}

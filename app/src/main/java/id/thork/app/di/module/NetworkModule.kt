@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.BuildConfig
-import id.thork.app.di.module.login.LoginClient
+import id.thork.app.network.api.LoginClient
 import id.thork.app.network.HttpRequestInterceptor
 import id.thork.app.network.api.LoginApi
 import okhttp3.Cache
@@ -67,21 +67,21 @@ object NetworkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://www.this.id")
+            .baseUrl("http://147.139.139.145:9080")
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideLoginApi(retrofit: Retrofit): LoginApi {
-        return retrofit.create(LoginApi::class.java)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideLoginApi(retrofit: Retrofit): LoginApi {
+//        return retrofit.create(LoginApi::class.java)
+//    }
 
-    @Provides
-    @Singleton
-    fun provideLoginClient(loginApi: LoginApi): LoginClient {
-        return LoginClient(loginApi)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideLoginClient(loginApi: LoginApi): LoginClient {
+//        return LoginClient(loginApi)
+//    }
 }

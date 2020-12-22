@@ -21,6 +21,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityServerBinding
 import id.thork.app.pages.DialogUtils
+import id.thork.app.pages.dummy.DummyActivity
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
@@ -41,6 +42,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun setupView() {
+        super.setupView()
         binding.apply {
             lifecycleOwner = this@ServerActivity
         }
@@ -65,11 +67,13 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun onSuccess() {
+        super.onSuccess()
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
     }
 
     override fun onError() {
+        super.onError()
         showDialog()
     }
 
