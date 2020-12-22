@@ -11,6 +11,7 @@
  */
 package id.thork.app.pages
 
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
@@ -36,6 +37,8 @@ class DialogUtils {
     }
 
     private var context: Context
+    private var resource: Int? = null
+    private var root: ViewGroup? = null
     private var theme = 0
     private var title = 0
     private var message = 0
@@ -49,32 +52,54 @@ class DialogUtils {
     private lateinit var dialogView: View
     private var inflater: LayoutInflater? = null
     private lateinit var dialog: AlertDialog
+    private var childView: Int? = null
+    private var useTheme: Boolean = false
 
     constructor(context: Context) {
         this.context = context
+        this.useTheme = false
         builder = AlertDialog.Builder(context)
-        
     }
 
     constructor(context: Context, theme: Int) {
         this.context = context
+        this.useTheme = true
         this.theme = theme
         builder = AlertDialog.Builder(context, theme)
     }
 
-    fun show() {
+    fun create(): DialogUtils {
+        if (useTheme) {
+            builder = AlertDialog.Builder(context, theme)
+        } else {
+            builder = AlertDialog.Builder(context)
+        }
+        if (title != 0) {
+            builder.setTitle(title)
+        }
+        if (message != 0) {
+            builder.setMessage(message)
+        }
+        dialogView = inflater!!.inflate(resource!!, root)
+        builder.setView(dialogView)
+        builder.setCancelable(false)
         dialog = builder.show()
+        return this
     }
 
-    fun setRounded(rounded: Boolean) {
+    fun show() {
+        dialog.show()
+    }
+
+    fun setRounded(rounded: Boolean): DialogUtils {
         if (rounded) {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
+        return this
     }
 
     fun setTitles(title: Int): DialogUtils {
         this.title = title
-        builder.setTitle(title)
         return this
     }
 
@@ -84,20 +109,13 @@ class DialogUtils {
 
     fun setInflater(resource: Int, root: ViewGroup?, layoutInflater: LayoutInflater?): DialogUtils {
         inflater = layoutInflater
-        dialogView = inflater!!.inflate(resource, root)
-        if (dialogView.parent != null) {
-            if (dialogView.parent is ViewGroup) {
-                val viewGroup = dialogView.parent as ViewGroup
-                viewGroup.removeView(dialogView)
-            }
-        }
-        builder.setView(dialogView)
+        this.resource = resource
+        this.root = root
         return this
     }
 
     fun setMessage(message: Int): DialogUtils {
         this.message = message
-        builder.setMessage(message)
         return this
     }
 
@@ -156,7 +174,6 @@ class DialogUtils {
 
     fun setCanceable(canceable: Boolean): DialogUtils {
         isCanceable = canceable
-        builder.setCancelable(false)
         return this
     }
 

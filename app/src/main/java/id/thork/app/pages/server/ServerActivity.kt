@@ -46,17 +46,12 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             lifecycleOwner = this@ServerActivity
         }
         Timber.tag(TAG).i("onCreate() view model: %s", viewModel)
-
-        setupDialog()
     }
 
     override fun setupListener() {
         super.setupListener()
         binding.includeServerContent.serverNext.setOnClickListener {
             viewModel.validateUrl(binding.includeServerContent.serverUrl.text.toString())
-        }
-        tryAgain.setOnClickListener {
-            dialogUtils.dismiss()
         }
     }
 
@@ -76,8 +71,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun onError() {
-        dialogUtils.show()
-        dialogUtils.setRounded(true)
+        showDialog()
     }
 
     override fun onPositiveButton() {
@@ -86,9 +80,15 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     override fun onNegativeButton() {
     }
 
-    fun setupDialog() {
+    fun showDialog() {
         dialogUtils = DialogUtils(this)
         dialogUtils.setInflater(R.layout.activity_server_dialog, null, layoutInflater)
+            .create()
+            .setRounded(true)
         tryAgain = dialogUtils.setViewId(R.id.try_again)
+        tryAgain.setOnClickListener {
+            dialogUtils.dismiss()
+        }
+        dialogUtils.show()
     }
 }
