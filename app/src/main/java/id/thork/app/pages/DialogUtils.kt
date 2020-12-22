@@ -11,7 +11,6 @@
  */
 package id.thork.app.pages
 
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
@@ -42,8 +41,6 @@ class DialogUtils {
     private var theme = 0
     private var title = 0
     private var message = 0
-    private var positiveButtonLabel: Int? = null
-    private var negativeButtonLabel: Int? = null
     private var listener: DialogUtilsListener? = null
     private var isPositiveButton = false
     private var isNegativeButton = false
@@ -52,8 +49,10 @@ class DialogUtils {
     private lateinit var dialogView: View
     private var inflater: LayoutInflater? = null
     private lateinit var dialog: AlertDialog
-    private var childView: Int? = null
     private var useTheme: Boolean = false
+
+    var positiveButtonLabel: Int? = null
+    var negativeButtonLabel: Int? = null
 
     constructor(context: Context) {
         this.context = context
@@ -119,10 +118,6 @@ class DialogUtils {
         return this
     }
 
-    fun getPositiveButtonLabel(): Int {
-        return positiveButtonLabel!!
-    }
-
     fun setPositiveButtonLabel(positiveButtonLabel: Int?): DialogUtils {
         this.positiveButtonLabel = positiveButtonLabel
         if (positiveButtonLabel == null) {
@@ -141,10 +136,6 @@ class DialogUtils {
             isPositiveButton = true
         }
         return this
-    }
-
-    fun getNegativeButtonLabel(): Int {
-        return negativeButtonLabel!!
     }
 
     fun setNegativeButtonLabel(negativeButtonLabel: Int?): DialogUtils {
