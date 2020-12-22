@@ -19,7 +19,7 @@ object CommonUtils {
         if (input.equals(BaseParam.APP_TRUE)) {
             return true
         }
-        
+
         return false
     }
 }
