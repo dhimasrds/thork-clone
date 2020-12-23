@@ -15,6 +15,6 @@ package id.thork.app.network
 object ApiParam {
     const val LOGIN_SELECT_ENDPOINT = "*";
     const val LOGIN_WHERE_ENDPOINT = "spi:maxuser{spi:loginid=";
-
+    
 
 }

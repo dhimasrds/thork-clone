@@ -19,8 +19,16 @@ class LoginRepository @Inject constructor(
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
-    fun findActiveSession(): List<UserEntity> {
+    fun findActiveSession(): UserEntity? {
         return userDao.findActiveSessionUser()
+    }
+
+    fun findUserByPersonUID(personUID: Int): UserEntity? {
+        return userDao.findUserByPersonUID(personUID)
+    }
+
+    fun createUserSession(userEntity: UserEntity): UserEntity {
+        return userDao.createUserSession(userEntity)
     }
 
     suspend fun loginPerson(
@@ -39,7 +47,7 @@ class LoginRepository @Inject constructor(
             }
         }
             .onError {
-                Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode, message())
+                Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode.code, message())
                 onError(message())
             }
             .onException {

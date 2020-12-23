@@ -12,36 +12,41 @@
 
 package id.thork.app.persistence.dao
 
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.persistence.entity.UserEntity_
 import io.objectbox.Box
-import io.objectbox.android.ObjectBoxLiveData
 import io.objectbox.kotlin.equal
 
 class UserDaoImp : UserDao {
-    lateinit var userEntityLiveData: ObjectBoxLiveData<UserEntity>
     lateinit var userEntityBox: Box<UserEntity>
 
-    override fun createUserSession(userEntity: UserEntity): ObjectBoxLiveData<UserEntity> {
+    override fun createUserSession(userEntity: UserEntity): UserEntity {
         userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         userEntityBox.put(userEntity)
-        userEntityLiveData =
-            ObjectBoxLiveData(userEntityBox.query().equal(UserEntity_.id, userEntity.id).build())
-        return userEntityLiveData
+        return userEntity
     }
 
-    override fun findUserByPersonUID(personUID: Int): ObjectBoxLiveData<UserEntity> {
+    override fun findUserByPersonUID(personUID: Int): UserEntity? {
         userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
-        userEntityLiveData =
-            ObjectBoxLiveData(userEntityBox.query().equal(UserEntity_.personUID, personUID).build())
-        return userEntityLiveData
+        val userEntities: List<UserEntity> =
+            userEntityBox.query().equal(UserEntity_.personUID, personUID).build().find()
+        userEntities.whatIfNotNullOrEmpty(
+            whatIf = { return it.get(0) }
+        )
+        return null
     }
 
-    override fun findActiveSessionUser(): List<UserEntity> {
+    override fun findActiveSessionUser(): UserEntity? {
         userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
-        return userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build().find()
+        val userEntities: List<UserEntity> =
+            userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build().find()
+        userEntities.whatIfNotNullOrEmpty(
+            whatIf = { return it.get(0) }
+        )
+        return null
     }
 
     override fun save(userEntity: UserEntity) {

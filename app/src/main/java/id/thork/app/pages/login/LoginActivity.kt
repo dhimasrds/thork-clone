@@ -20,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.MainActivity
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityLoginBinding
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
@@ -46,25 +47,40 @@ class LoginActivity : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
         binding.includeLoginContent.loginbt.setOnClickListener {
-            viewModel.validateCredentials(binding.includeLoginContent.username.text.toString(),
-            binding.includeLoginContent.password.text.toString())
+            viewModel.validateCredentials(
+                binding.includeLoginContent.username.text.toString(),
+                binding.includeLoginContent.password.text.toString()
+            )
         }
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        viewModel._success.observe(this, Observer {success ->
+        viewModel._success.observe(this, Observer { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
-            if (success.equals("SUCCESS")) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
             CommonUtils.showToast(success)
         })
 
         viewModel._error.observe(this, Observer { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
             CommonUtils.showToast(error)
+        })
+
+        viewModel._firstLogin.observe(this, Observer { firstLogin ->
+            Timber.tag(TAG).i("setupObserver() first login: %s", firstLogin)
+            if (firstLogin) {
+                // Ask to activate Pattern Login
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            } else {
+                // Go to Home
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+        })
+
+        viewModel._state.observe(this, Observer { state ->
+            Timber.tag(TAG).i("setupObserver() state: %s", state)
         })
     }
 }
