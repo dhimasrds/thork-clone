@@ -83,6 +83,7 @@ dependencies {
 
     // RootBeer
     implementation "com.scottyab:rootbeer-lib:$rootBeerVersion"
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 
     // Essentials
     implementation "org.greenrobot:essentials:$essentialsVersion"
