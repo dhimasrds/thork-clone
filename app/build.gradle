@@ -81,10 +81,13 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
 
+    // RootBeer
     implementation "com.scottyab:rootbeer-lib:$rootBeerVersion"
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 
+    // Essentials
+    implementation "org.greenrobot:essentials:$essentialsVersion"
     implementation "com.github.skydoves:whatif:$whatIfVersion"
-
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"

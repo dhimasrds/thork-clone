@@ -14,7 +14,6 @@ package id.thork.app.pages.server
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,21 +41,17 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun setupView() {
+        super.setupView()
         binding.apply {
             lifecycleOwner = this@ServerActivity
         }
         Timber.tag(TAG).i("onCreate() view model: %s", viewModel)
-
-        setupDialog()
     }
 
     override fun setupListener() {
         super.setupListener()
         binding.includeServerContent.serverNext.setOnClickListener {
             viewModel.validateUrl(binding.includeServerContent.serverUrl.text.toString())
-        }
-        tryAgain.setOnClickListener {
-            dialogUtils.dismiss()
         }
     }
 
@@ -71,13 +66,14 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun onSuccess() {
+        super.onSuccess()
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
     }
 
     override fun onError() {
-        dialogUtils.show()
-        dialogUtils.setRounded(true)
+        super.onError()
+        showDialog()
     }
 
     override fun onPositiveButton() {
@@ -86,9 +82,15 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     override fun onNegativeButton() {
     }
 
-    fun setupDialog() {
+    fun showDialog() {
         dialogUtils = DialogUtils(this)
         dialogUtils.setInflater(R.layout.activity_server_dialog, null, layoutInflater)
+            .create()
+            .setRounded(true)
         tryAgain = dialogUtils.setViewId(R.id.try_again)
+        tryAgain.setOnClickListener {
+            dialogUtils.dismiss()
+        }
+        dialogUtils.show()
     }
 }

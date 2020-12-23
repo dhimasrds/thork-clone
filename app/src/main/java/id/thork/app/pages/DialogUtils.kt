@@ -26,9 +26,7 @@ import androidx.appcompat.app.AlertDialog
  */
 
 class DialogUtils {
-    companion object {
-        private val TAG = DialogUtils::class.java.name
-    }
+    val TAG = DialogUtils::class.java.name
 
     interface DialogUtilsListener {
         fun onPositiveButton()
@@ -36,11 +34,11 @@ class DialogUtils {
     }
 
     private var context: Context
+    private var resource: Int? = null
+    private var root: ViewGroup? = null
     private var theme = 0
     private var title = 0
     private var message = 0
-    private var positiveButtonLabel: Int? = null
-    private var negativeButtonLabel: Int? = null
     private var listener: DialogUtilsListener? = null
     private var isPositiveButton = false
     private var isNegativeButton = false
@@ -49,32 +47,56 @@ class DialogUtils {
     private lateinit var dialogView: View
     private var inflater: LayoutInflater? = null
     private lateinit var dialog: AlertDialog
+    private var useTheme: Boolean = false
+
+    var positiveButtonLabel: Int? = null
+    var negativeButtonLabel: Int? = null
 
     constructor(context: Context) {
         this.context = context
+        this.useTheme = false
         builder = AlertDialog.Builder(context)
-        
     }
 
     constructor(context: Context, theme: Int) {
         this.context = context
+        this.useTheme = true
         this.theme = theme
         builder = AlertDialog.Builder(context, theme)
     }
 
-    fun show() {
+    fun create(): DialogUtils {
+        if (useTheme) {
+            builder = AlertDialog.Builder(context, theme)
+        } else {
+            builder = AlertDialog.Builder(context)
+        }
+        if (title != 0) {
+            builder.setTitle(title)
+        }
+        if (message != 0) {
+            builder.setMessage(message)
+        }
+        dialogView = inflater!!.inflate(resource!!, root)
+        builder.setView(dialogView)
+        builder.setCancelable(false)
         dialog = builder.show()
+        return this
     }
 
-    fun setRounded(rounded: Boolean) {
+    fun show() {
+        dialog.show()
+    }
+
+    fun setRounded(rounded: Boolean): DialogUtils {
         if (rounded) {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
+        return this
     }
 
     fun setTitles(title: Int): DialogUtils {
         this.title = title
-        builder.setTitle(title)
         return this
     }
 
@@ -84,25 +106,14 @@ class DialogUtils {
 
     fun setInflater(resource: Int, root: ViewGroup?, layoutInflater: LayoutInflater?): DialogUtils {
         inflater = layoutInflater
-        dialogView = inflater!!.inflate(resource, root)
-        if (dialogView.parent != null) {
-            if (dialogView.parent is ViewGroup) {
-                val viewGroup = dialogView.parent as ViewGroup
-                viewGroup.removeView(dialogView)
-            }
-        }
-        builder.setView(dialogView)
+        this.resource = resource
+        this.root = root
         return this
     }
 
     fun setMessage(message: Int): DialogUtils {
         this.message = message
-        builder.setMessage(message)
         return this
-    }
-
-    fun getPositiveButtonLabel(): Int {
-        return positiveButtonLabel!!
     }
 
     fun setPositiveButtonLabel(positiveButtonLabel: Int?): DialogUtils {
@@ -123,10 +134,6 @@ class DialogUtils {
             isPositiveButton = true
         }
         return this
-    }
-
-    fun getNegativeButtonLabel(): Int {
-        return negativeButtonLabel!!
     }
 
     fun setNegativeButtonLabel(negativeButtonLabel: Int?): DialogUtils {
@@ -156,7 +163,6 @@ class DialogUtils {
 
     fun setCanceable(canceable: Boolean): DialogUtils {
         isCanceable = canceable
-        builder.setCancelable(false)
         return this
     }
 

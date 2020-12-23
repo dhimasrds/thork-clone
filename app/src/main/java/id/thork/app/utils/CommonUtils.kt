@@ -12,6 +12,10 @@
 
 package id.thork.app.utils
 
+
+import android.util.Base64
+import android.widget.Toast
+import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 
 object CommonUtils {
@@ -21,5 +25,13 @@ object CommonUtils {
         }
 
         return false
+    }
+
+    fun encodeToBase64(originalText:String): String {
+        return Base64.encodeToString(originalText.toByteArray(), Base64.NO_WRAP);
+    }
+
+    fun showToast(message:String) {
+        Toast.makeText(BaseApplication.getAppContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

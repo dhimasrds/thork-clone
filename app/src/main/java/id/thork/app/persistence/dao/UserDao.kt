@@ -18,7 +18,7 @@ import io.objectbox.android.ObjectBoxLiveData
 interface UserDao {
     fun createUserSession(userEntity: UserEntity): ObjectBoxLiveData<UserEntity>
     fun findUserByPersonUID(personUID: Int): ObjectBoxLiveData<UserEntity>
-    fun findActiveSessionUser(): ObjectBoxLiveData<UserEntity>
+    fun findActiveSessionUser(): List<UserEntity>
     fun save(userEntity: UserEntity)
     fun delete(userEntity: UserEntity)
 }

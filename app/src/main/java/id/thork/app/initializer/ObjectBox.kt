@@ -13,6 +13,7 @@
 package id.thork.app.initializer
 
 import android.content.Context
+import android.util.Log
 import id.thork.app.BuildConfig
 import id.thork.app.base.BaseApplication
 import id.thork.app.persistence.entity.MyObjectBox
@@ -37,6 +38,7 @@ object ObjectBox {
             // Enable Data Browser on debug builds.
             // https://docs.objectbox.io/data-browser
             val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
+            Log.d("Objectbox here", started.toString())
             Timber.tag(BaseApplication.TAG).i("init() object browser started: %s", started)
         }
     }

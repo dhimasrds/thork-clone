@@ -12,13 +12,59 @@
 
 package id.thork.app.pages.login
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import dagger.hilt.android.AndroidEntryPoint
+import id.thork.app.MainActivity
 import id.thork.app.R
+import id.thork.app.base.BaseActivity
+import id.thork.app.databinding.ActivityLoginBinding
+import id.thork.app.utils.CommonUtils
+import timber.log.Timber
 
-class LoginActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class LoginActivity : BaseActivity() {
+    val TAG = LoginActivity::class.java.name
+
+    val viewModel: LoginViewModel by viewModels()
+    private val binding: ActivityLoginBinding by binding(R.layout.activity_login)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+    }
+
+    override fun setupView() {
+        super.setupView()
+        binding.apply {
+            lifecycleOwner = this@LoginActivity
+            vm = viewModel
+        }
+    }
+
+    override fun setupListener() {
+        super.setupListener()
+        binding.includeLoginContent.loginbt.setOnClickListener {
+            viewModel.validateCredentials(binding.includeLoginContent.username.text.toString(),
+            binding.includeLoginContent.password.text.toString())
+        }
+    }
+
+    override fun setupObserver() {
+        super.setupObserver()
+        viewModel._success.observe(this, Observer {success ->
+            Timber.tag(TAG).i("setupObserver() success: %s", success)
+            if (success.equals("SUCCESS")) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+            CommonUtils.showToast(success)
+        })
+
+        viewModel._error.observe(this, Observer { error ->
+            Timber.tag(TAG).i("setupObserver() error: %s", error)
+            CommonUtils.showToast(error)
+        })
     }
 }
