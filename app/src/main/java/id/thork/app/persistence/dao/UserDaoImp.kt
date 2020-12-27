@@ -12,6 +12,7 @@
 
 package id.thork.app.persistence.dao
 
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.UserEntity
@@ -35,16 +36,22 @@ class UserDaoImp : UserDao {
         return userEntity
     }
 
-    override fun findUserByPersonUID(personUID: Int): UserEntity {
+    override fun findUserByPersonUID(personUID: Int): UserEntity? {
         val userEntities: List<UserEntity> =
             userEntityBox.query().equal(UserEntity_.personUID, personUID).build().find()
-        return userEntities[0]
+        userEntities.whatIfNotNullOrEmpty(
+            whatIf = { return userEntities[0] },
+        )
+        return null
     }
 
-    override fun findActiveSessionUser(): UserEntity {
+    override fun findActiveSessionUser(): UserEntity? {
         val userEntities: List<UserEntity> =
             userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build().find()
-        return userEntities[0]
+        userEntities.whatIfNotNullOrEmpty(
+            whatIf = { return userEntities[0] },
+        )
+        return null
     }
 
     override fun save(userEntity: UserEntity) {

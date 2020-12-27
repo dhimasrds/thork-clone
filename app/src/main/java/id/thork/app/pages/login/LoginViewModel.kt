@@ -21,6 +21,8 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
@@ -36,7 +38,9 @@ import java.util.*
 
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val preferenceManager: PreferenceManager,
+    private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
@@ -50,6 +54,8 @@ class LoginViewModel @ViewModelInject constructor(
 
     init {
         Timber.tag(TAG).i("init()")
+
+        Timber.tag(TAG).i("init() appSession: %s appSession name: %s", appSession, appSession.userHash)
     }
 
     fun validateCredentials(username: String, password: String) {
@@ -110,6 +116,7 @@ class LoginViewModel @ViewModelInject constructor(
                     val isFirstLogin = userIsFirstLogin(member, username, userHash)
                     _firstLogin.postValue(isFirstLogin)
                     _state.postValue(BaseParam.APP_TRUE)
+                    appSession.reinitUser()
                 },
                 whatIfNot = { _state.postValue(BaseParam.APP_FALSE) }
             )

@@ -10,14 +10,9 @@
  * permission of This.ID.
  */
 
-package id.thork.app.persistence.dao
+package id.thork.app.extensions.helper
 
-import id.thork.app.persistence.entity.UserEntity
-
-interface UserDao {
-    fun createUserSession(userEntity: UserEntity): UserEntity
-    fun findUserByPersonUID(personUID: Int): UserEntity?
-    fun findActiveSessionUser(): UserEntity?
-    fun save(userEntity: UserEntity)
-    fun delete(userEntity: UserEntity)
-}
+class UserLogin constructor(
+    var firstLogin: Boolean = false,
+    var language: String? = null
+)

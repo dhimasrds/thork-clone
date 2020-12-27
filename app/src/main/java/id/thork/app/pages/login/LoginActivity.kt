@@ -28,7 +28,7 @@ import timber.log.Timber
 class LoginActivity : BaseActivity() {
     val TAG = LoginActivity::class.java.name
 
-    val viewModel: LoginViewModel by viewModels()
+    val loginViewModel: LoginViewModel by viewModels()
     private val binding: ActivityLoginBinding by binding(R.layout.activity_login)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +39,14 @@ class LoginActivity : BaseActivity() {
         super.setupView()
         binding.apply {
             lifecycleOwner = this@LoginActivity
-            vm = viewModel
+            vm = loginViewModel
         }
     }
 
     override fun setupListener() {
         super.setupListener()
         binding.includeLoginContent.loginbt.setOnClickListener {
-            viewModel.validateCredentials(
+            loginViewModel.validateCredentials(
                 binding.includeLoginContent.username.text.toString(),
                 binding.includeLoginContent.password.text.toString()
             )
@@ -55,19 +55,20 @@ class LoginActivity : BaseActivity() {
 
     override fun setupObserver() {
         super.setupObserver()
-        viewModel._success.observe(this, Observer { success ->
+        loginViewModel._success.observe(this, Observer { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
             CommonUtils.showToast(success)
         })
 
-        viewModel._error.observe(this, Observer { error ->
+        loginViewModel._error.observe(this, Observer { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
             CommonUtils.showToast(error)
         })
 
-        viewModel._firstLogin.observe(this, Observer { firstLogin ->
+        loginViewModel._firstLogin.observe(this, Observer { firstLogin ->
             Timber.tag(TAG).i("setupObserver() first login: %s", firstLogin)
             if (firstLogin) {
+                // TODO
                 // Ask to activate Pattern Login
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -78,7 +79,7 @@ class LoginActivity : BaseActivity() {
             }
         })
 
-        viewModel._state.observe(this, Observer { state ->
+        loginViewModel._state.observe(this, Observer { state ->
             Timber.tag(TAG).i("setupObserver() state: %s", state)
         })
     }

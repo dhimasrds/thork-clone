@@ -11,9 +11,10 @@ import id.thork.app.network.model.user.UserResponse
 import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
-import javax.inject.Inject
+import javax.inject.Singleton
 
-class LoginRepository @Inject constructor(
+@Singleton
+class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao
 ) : BaseRepository {
