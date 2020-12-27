@@ -12,12 +12,12 @@
 
 package id.thork.app.persistence.dao
 
-import id.thork.app.persistence.entity.UserEntity
+import id.thork.app.persistence.entity.LogEntity
 
-interface UserDao {
-    fun createUserSession(userEntity: UserEntity): UserEntity
-    fun findUserByPersonUID(personUID: Int): UserEntity
-    fun findActiveSessionUser(): UserEntity
-    fun save(userEntity: UserEntity)
-    fun delete(userEntity: UserEntity)
+interface LogDao {
+    fun findLogs(): List<LogEntity>
+    fun findLog(id: String): LogEntity
+    fun save(logEntity: LogEntity, username: String): LogEntity
+    fun save(trxId: String, message: String, username: String): LogEntity
+    fun removeAll()
 }

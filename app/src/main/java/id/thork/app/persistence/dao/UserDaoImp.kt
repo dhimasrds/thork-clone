@@ -12,7 +12,6 @@
 
 package id.thork.app.persistence.dao
 
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.UserEntity
@@ -21,41 +20,38 @@ import io.objectbox.Box
 import io.objectbox.kotlin.equal
 
 class UserDaoImp : UserDao {
-    lateinit var userEntityBox: Box<UserEntity>
+    val TAG = UserDaoImp::class.java
+    var userEntityBox: Box<UserEntity>
+    var logDao: LogDaoImp
+
+    init {
+        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
+        logDao = LogDaoImp()
+    }
 
     override fun createUserSession(userEntity: UserEntity): UserEntity {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         userEntityBox.put(userEntity)
+//        logDao.save()
         return userEntity
     }
 
-    override fun findUserByPersonUID(personUID: Int): UserEntity? {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
+    override fun findUserByPersonUID(personUID: Int): UserEntity {
         val userEntities: List<UserEntity> =
             userEntityBox.query().equal(UserEntity_.personUID, personUID).build().find()
-        userEntities.whatIfNotNullOrEmpty(
-            whatIf = { return it.get(0) }
-        )
-        return null
+        return userEntities[0]
     }
 
-    override fun findActiveSessionUser(): UserEntity? {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
+    override fun findActiveSessionUser(): UserEntity {
         val userEntities: List<UserEntity> =
             userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build().find()
-        userEntities.whatIfNotNullOrEmpty(
-            whatIf = { return it.get(0) }
-        )
-        return null
+        return userEntities[0]
     }
 
     override fun save(userEntity: UserEntity) {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         userEntityBox.put(userEntity)
     }
 
     override fun delete(userEntity: UserEntity) {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         userEntityBox.remove(userEntity)
     }
 }

@@ -10,14 +10,17 @@
  * permission of This.ID.
  */
 
-package id.thork.app.persistence.dao
+package id.thork.app.persistence.entity
 
-import id.thork.app.persistence.entity.UserEntity
+import io.objectbox.annotation.Entity
 
-interface UserDao {
-    fun createUserSession(userEntity: UserEntity): UserEntity
-    fun findUserByPersonUID(personUID: Int): UserEntity
-    fun findActiveSessionUser(): UserEntity
-    fun save(userEntity: UserEntity)
-    fun delete(userEntity: UserEntity)
+@Entity
+class LogEntity: BaseEntity {
+    var trxId: String? = null
+    var message: String? = null
+    constructor()
+    constructor(trxId: String?, message: String?) : super() {
+        this.trxId = trxId
+        this.message = message
+    }
 }

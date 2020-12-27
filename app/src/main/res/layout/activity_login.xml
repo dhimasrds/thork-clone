@@ -14,7 +14,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="id.thork.app.pages.login.LoginViewModel" />
@@ -91,15 +90,6 @@
                 android:src="@drawable/infinity_bar"
                 android:elevation="10dp"
                 app:visible="@{vm.progressVisible}"/>
-
-<!--            <ProgressBar-->
-<!--                android:id="@+id/progress"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_centerInParent="true"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:elevation="10dp"-->
-<!--                app:visible="@{vm.progressVisible}" />-->
         </RelativeLayout>
     </ScrollView>
 </layout>

@@ -109,9 +109,7 @@ class LoginViewModel @ViewModelInject constructor(
                 whatIf = {
                     member = userResponse.member[0]
                     val isFirstLogin = userIsFirstLogin(member, username, userHash)
-                    whatIf(isFirstLogin) {
-                        _firstLogin.postValue(isFirstLogin)
-                    }
+                    _firstLogin.postValue(isFirstLogin)
                     _state.postValue(BaseParam.APP_TRUE)
                 },
                 whatIfNot = { _state.postValue(BaseParam.APP_FALSE) }
