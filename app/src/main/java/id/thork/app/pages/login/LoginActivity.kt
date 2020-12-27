@@ -20,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.MainActivity
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityLoginBinding
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber

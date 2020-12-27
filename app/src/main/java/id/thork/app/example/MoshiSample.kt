@@ -14,7 +14,6 @@ package id.thork.app.example
 
 import com.squareup.moshi.*
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
-import org.json.JSONObject
 import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.ArrayList
