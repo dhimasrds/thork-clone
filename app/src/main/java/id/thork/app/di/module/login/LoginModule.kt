@@ -35,6 +35,7 @@ object LoginModule {
     @Provides
     @ActivityRetainedScoped
     fun provideLoginApi(retrofit: Retrofit, okHttpClient: OkHttpClient, preferenceManager: PreferenceManager):LoginApi {
+        Timber.tag(TAG).i("provideLoginApi() init")
         var serverUrl = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
         if (serverUrl.isNullOrEmpty()) {
             serverUrl = BaseParam.BASE_SERVER_URL

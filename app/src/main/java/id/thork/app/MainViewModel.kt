@@ -1,5 +1,6 @@
 package id.thork.app
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +12,9 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.repository.LoginRepository
 import timber.log.Timber
 
-class MainViewModel constructor(
-) : LiveCoroutinesViewModel() {
+class MainViewModel @ViewModelInject constructor(
+    private val loginRepository: LoginRepository,
+    ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
     val quote: LiveData<String> get() = _quote
