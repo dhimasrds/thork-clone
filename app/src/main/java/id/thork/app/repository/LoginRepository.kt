@@ -11,16 +11,25 @@ import id.thork.app.network.model.user.UserResponse
 import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
-import javax.inject.Inject
+import javax.inject.Singleton
 
-class LoginRepository @Inject constructor(
+@Singleton
+class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
-    fun findActiveSession(): List<UserEntity> {
+    fun findActiveSession(): UserEntity? {
         return userDao.findActiveSessionUser()
+    }
+
+    fun findUserByPersonUID(personUID: Int): UserEntity? {
+        return userDao.findUserByPersonUID(personUID)
+    }
+
+    fun createUserSession(userEntity: UserEntity): UserEntity {
+        return userDao.createUserSession(userEntity)
     }
 
     suspend fun loginPerson(
@@ -39,7 +48,7 @@ class LoginRepository @Inject constructor(
             }
         }
             .onError {
-                Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode, message())
+                Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode.code, message())
                 onError(message())
             }
             .onException {

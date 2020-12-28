@@ -10,11 +10,17 @@
  * permission of This.ID.
  */
 
-package id.thork.app.network
+package id.thork.app.persistence.entity
 
-object ApiParam {
-    const val LOGIN_SELECT_ENDPOINT = "*";
-    const val LOGIN_WHERE_ENDPOINT = "spi:maxuser{spi:loginid=";
-    
+import io.objectbox.annotation.Entity
 
+@Entity
+class LogEntity: BaseEntity {
+    var trxId: String? = null
+    var message: String? = null
+    constructor()
+    constructor(trxId: String?, message: String?) : super() {
+        this.trxId = trxId
+        this.message = message
+    }
 }

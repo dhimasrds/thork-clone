@@ -10,11 +10,14 @@
  * permission of This.ID.
  */
 
-package id.thork.app.network
+package id.thork.app.persistence.dao
 
-object ApiParam {
-    const val LOGIN_SELECT_ENDPOINT = "*";
-    const val LOGIN_WHERE_ENDPOINT = "spi:maxuser{spi:loginid=";
-    
+import id.thork.app.persistence.entity.LogEntity
 
+interface LogDao {
+    fun findLogs(): List<LogEntity>
+    fun findLog(id: String): LogEntity
+    fun save(logEntity: LogEntity, username: String): LogEntity
+    fun save(trxId: String, message: String, username: String): LogEntity
+    fun removeAll()
 }

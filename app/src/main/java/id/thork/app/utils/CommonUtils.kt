@@ -34,4 +34,6 @@ object CommonUtils {
     fun showToast(message:String) {
         Toast.makeText(BaseApplication.getAppContext(), message, Toast.LENGTH_SHORT).show()
     }
+
+
 }

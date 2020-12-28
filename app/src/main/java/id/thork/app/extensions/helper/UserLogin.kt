@@ -10,11 +10,9 @@
  * permission of This.ID.
  */
 
-package id.thork.app.network
+package id.thork.app.extensions.helper
 
-object ApiParam {
-    const val LOGIN_SELECT_ENDPOINT = "*";
-    const val LOGIN_WHERE_ENDPOINT = "spi:maxuser{spi:loginid=";
-    
-
-}
+class UserLogin constructor(
+    var firstLogin: Boolean = false,
+    var language: String? = null
+)

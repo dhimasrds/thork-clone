@@ -40,6 +40,7 @@ class SplashScreenActivity : BaseActivity(),
 
         binding.apply {
             lifecycleOwner = this@SplashScreenActivity
+            vm = splashScreenViewModel
         }
         setupVersion()
 
@@ -47,6 +48,8 @@ class SplashScreenActivity : BaseActivity(),
     }
 
     private fun goToIntroActivity() {
+        //TODO
+        //Change into IntroActivity
         finish()
         startActivity(Intent(this, ServerActivity::class.java))
     }
@@ -79,45 +82,10 @@ class SplashScreenActivity : BaseActivity(),
     }
 
     private fun setupLoadIntroPage() {
-        splashScreenViewModel.liveData.observe(this, Observer {
-            when (it) {
-                is SplashState.MainActivity -> {
-                    goToServerActivity()
-                }
-                is SplashState.ServerActivity -> {
-                    goToServerActivity()
-                }
-            }
-        })
-
         if (isDeviceRooted()) {
             //we found indication of root
             showDialogExit()
-        } else {
-            val thread: Thread = object : Thread() {
-                override fun run() {
-                    try {
-                        sleep(1200)
-                        val intent = Intent(applicationContext, ServerActivity::class.java)
-//                        intent = if () {
-//                            Intent(applicationContext, IntroActivity::class.java)
-//                        } else {
-//                            Intent(applicationContext, IpConfigActivity::class.java)
-//                        }
-                        //get active user language
-//                        if () {
-
-//                        }
-//                        else {
-                        startActivity(intent)
-                        finish()
-//                        }
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-            thread.start()
+            return
         }
     }
 
@@ -141,10 +109,15 @@ class SplashScreenActivity : BaseActivity(),
             .show()
     }
 
-    private fun setupObserve() {
-        splashScreenViewModel.liveData.observe(this, Observer {
+    override fun setupObserver() {
+        super.setupObserver()
+        setupLoadIntroPage()
+        splashScreenViewModel.splashState.observe(this, Observer {
             when (it) {
-                is SplashState.MainActivity -> {
+                is SplashState.IntroActivity -> {
+                    goToIntroActivity()
+                }
+                is SplashState.ServerActivity -> {
                     goToServerActivity()
                 }
             }
