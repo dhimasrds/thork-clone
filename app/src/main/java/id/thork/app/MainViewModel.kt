@@ -1,5 +1,7 @@
 package id.thork.app
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.inject.assisted.Assisted
@@ -9,31 +11,17 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.repository.LoginRepository
 import timber.log.Timber
 
-class MainViewModel @AssistedInject constructor(
-    private val loginRepository: LoginRepository,
-    private val appSession: AppSession,
-    @Assisted private val name: String
+class MainViewModel constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
-    init {
-        Timber.tag(TAG).i("init() appSession: %s username: %s", appSession, appSession.userEntity.username)
+    val quote: LiveData<String> get() = _quote
+    val _quote: MutableLiveData<String> = MutableLiveData()
+
+    fun changeRandomQuotes() {
+        val rnd = (0 until 999).random()
+        val rnd2 = (0 until 999).random()
+        _quote.value = "Keep Learning $rnd DAN ATAU DENGAN $rnd2"
     }
 
-    @AssistedInject.Factory
-    interface AssistedFactory {
-        fun create(name: String): MainViewModel
-    }
-
-    companion object {
-        fun provideFactory(
-            assistedFactory: AssistedFactory,
-            name: String
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return assistedFactory.create(name) as T
-            }
-        }
-    }
 }
