@@ -5,20 +5,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppSession
 import id.thork.app.repository.LoginRepository
+import timber.log.Timber
 
 class MainViewModel @AssistedInject constructor(
     private val loginRepository: LoginRepository,
+    private val appSession: AppSession,
     @Assisted private val name: String
 ) : LiveCoroutinesViewModel() {
+    val TAG = MainViewModel::class.java.name
 
-//    val memberInfo: LiveData<UserResponse>
     init {
-//        memberInfo = launchOnViewModelScope {
-//            loginRepository.loginPerson(select = "", where = "",
-//                onSuccess = { print("success") },
-//                onError = { it }).asLiveData()
-//        }
+        Timber.tag(TAG).i("init() appSession: %s username: %s", appSession, appSession.userEntity.username)
     }
 
     @AssistedInject.Factory
