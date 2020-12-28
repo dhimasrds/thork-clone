@@ -112,22 +112,12 @@ class SplashScreenActivity : BaseActivity(),
     override fun setupObserver() {
         super.setupObserver()
         setupLoadIntroPage()
-        splashScreenViewModel.liveData.observe(this, Observer {
+        splashScreenViewModel.splashState.observe(this, Observer {
             when (it) {
                 is SplashState.IntroActivity -> {
                     goToIntroActivity()
                 }
                 is SplashState.ServerActivity -> {
-                    goToServerActivity()
-                }
-            }
-        })
-    }
-
-    private fun setupObserve() {
-        splashScreenViewModel.liveData.observe(this, Observer {
-            when (it) {
-                is SplashState.IntroActivity -> {
                     goToServerActivity()
                 }
             }

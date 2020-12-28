@@ -32,11 +32,11 @@ class SplashScreenViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = SplashScreenViewModel::class.java.name
 
-    val liveData: LiveData<SplashState>
-        get() = mutableLiveData
+    val splashState: LiveData<SplashState>
+        get() = _splashState
 
-    private
-    val mutableLiveData = MutableLiveData<SplashState>()
+    private val _splashState = MutableLiveData<SplashState>()
+    private val _defaultLang = MutableLiveData<String>()
 
     init {
         validateFirstLaunch()
@@ -46,7 +46,7 @@ class SplashScreenViewModel @ViewModelInject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             delay(1200)
             var firstLaunch = false
-            var language = BaseParam.APP_DEFAULT_LANG
+            val language = BaseParam.APP_DEFAULT_LANG
 
             preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH).whatIf(
                 whatIf = {
@@ -58,7 +58,10 @@ class SplashScreenViewModel @ViewModelInject constructor(
                 whatIf = {
                     it.language.whatIfNotNull(
                         whatIf = {
-                            language = it
+                            _defaultLang.postValue(it)
+                        },
+                        whatIfNot = {
+                            _defaultLang.postValue(language)
                         }
                     )
                 },
@@ -66,17 +69,17 @@ class SplashScreenViewModel @ViewModelInject constructor(
 
             firstLaunch.whatIf(
                 whatIf = {
-                    mutableLiveData.postValue(SplashState.ServerActivity())
+                    _splashState.postValue(SplashState.ServerActivity())
                 },
                 whatIfNot = {
-                    mutableLiveData.postValue(SplashState.IntroActivity())
+                    _splashState.postValue(SplashState.IntroActivity())
                 }
             )
         }
     }
 }
 
-sealed class SplashState() {
+sealed class SplashState {
     class IntroActivity : SplashState()
     class ServerActivity : SplashState()
 }

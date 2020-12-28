@@ -55,17 +55,17 @@ class LoginActivity : BaseActivity() {
 
     override fun setupObserver() {
         super.setupObserver()
-        loginViewModel._success.observe(this, Observer { success ->
+        loginViewModel.success.observe(this, Observer { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
             CommonUtils.showToast(success)
         })
 
-        loginViewModel._error.observe(this, Observer { error ->
+        loginViewModel.error.observe(this, Observer { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
             CommonUtils.showToast(error)
         })
 
-        loginViewModel._firstLogin.observe(this, Observer { firstLogin ->
+        loginViewModel.firstLogin.observe(this, Observer { firstLogin ->
             Timber.tag(TAG).i("setupObserver() first login: %s", firstLogin)
             if (firstLogin) {
                 // TODO
@@ -79,8 +79,8 @@ class LoginActivity : BaseActivity() {
             }
         })
 
-        loginViewModel._state.observe(this, Observer { state ->
-            Timber.tag(TAG).i("setupObserver() state: %s", state)
+        loginViewModel.loginState.observe(this, Observer { loginState ->
+            Timber.tag(TAG).i("setupObserver() state: %s", loginState)
         })
     }
 }

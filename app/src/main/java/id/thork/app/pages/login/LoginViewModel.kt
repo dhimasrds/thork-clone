@@ -44,12 +44,16 @@ class LoginViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
-    val _progressVisible = MutableLiveData<Boolean>(false)
     val progressVisible: LiveData<Boolean> get() = _progressVisible
+    val success: LiveData<String> get() = _success
+    val error: LiveData<String> get() = _error
+    val loginState: LiveData<Int> get() = _loginState
+    val firstLogin: LiveData<Boolean> get() = _firstLogin
 
-    val _success = MutableLiveData<String>()
-    val _error = MutableLiveData<String>()
-    val _state = MutableLiveData<Int>()
+    private val _progressVisible = MutableLiveData<Boolean>(false)
+    private val _success = MutableLiveData<String>()
+    private val _error = MutableLiveData<String>()
+    private val _loginState = MutableLiveData<Int>()
     val _firstLogin = MutableLiveData<Boolean>()
 
     init {
@@ -115,10 +119,10 @@ class LoginViewModel @ViewModelInject constructor(
                     member = userResponse.member[0]
                     val isFirstLogin = userIsFirstLogin(member, username, userHash)
                     _firstLogin.postValue(isFirstLogin)
-                    _state.postValue(BaseParam.APP_TRUE)
+                    _loginState.postValue(BaseParam.APP_TRUE)
                     appSession.reinitUser()
                 },
-                whatIfNot = { _state.postValue(BaseParam.APP_FALSE) }
+                whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
             )
 
             // When user founded and stored into cache, then hide progressbar
