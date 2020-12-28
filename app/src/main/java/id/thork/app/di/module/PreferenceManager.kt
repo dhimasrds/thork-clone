@@ -14,12 +14,16 @@ package id.thork.app.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import id.thork.app.base.BaseParam
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
+@Module
+@InstallIn(SingletonComponent::class)
 class PreferenceManager @Inject constructor(context: Context) {
     private val TAG: String = PreferenceManager::class.java.getName()
 

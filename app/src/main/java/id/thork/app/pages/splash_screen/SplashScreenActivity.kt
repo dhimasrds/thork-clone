@@ -43,8 +43,6 @@ class SplashScreenActivity : BaseActivity(),
             vm = splashScreenViewModel
         }
         setupVersion()
-
-        setupLoadIntroPage()
     }
 
     private fun goToIntroActivity() {
@@ -75,10 +73,6 @@ class SplashScreenActivity : BaseActivity(),
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
         }
-    }
-
-    private fun setUpViews() {
-
     }
 
     private fun setupLoadIntroPage() {
