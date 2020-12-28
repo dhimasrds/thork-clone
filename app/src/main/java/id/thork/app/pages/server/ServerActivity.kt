@@ -26,7 +26,6 @@ import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 
-@AndroidEntryPoint
 class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     val TAG = ServerActivity::class.java.name
 

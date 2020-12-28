@@ -24,7 +24,6 @@ import id.thork.app.databinding.ActivityLoginBinding
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
-@AndroidEntryPoint
 class LoginActivity : BaseActivity() {
     val TAG = LoginActivity::class.java.name
 

@@ -28,7 +28,6 @@ import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.RootUtils
 import id.thork.app.pages.server.ServerActivity
 
-@AndroidEntryPoint
 class SplashScreenActivity : BaseActivity(),
     DialogUtils.DialogUtilsListener {
     private val splashScreenViewModel: SplashScreenViewModel by viewModels()
