@@ -17,9 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-class LoginRepository @Inject constructor(
+class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao
 ) : BaseRepository {
