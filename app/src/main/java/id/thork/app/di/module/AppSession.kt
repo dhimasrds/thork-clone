@@ -16,7 +16,6 @@ import android.content.Context
 import com.skydoves.whatif.whatIfNotNull
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository

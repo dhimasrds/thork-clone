@@ -19,17 +19,22 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySplashScreenBinding
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.RootUtils
+import id.thork.app.pages.intro.IntroActivity
+import id.thork.app.pages.login.LoginActivity
+import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.server.ServerActivity
+import timber.log.Timber
 
 class SplashScreenActivity : BaseActivity(),
     DialogUtils.DialogUtilsListener {
+    private val TAG = SplashScreenActivity::class.java.name
+
     private val splashScreenViewModel: SplashScreenViewModel by viewModels()
     private val binding: ActivitySplashScreenBinding by binding(R.layout.activity_splash_screen)
 
@@ -48,12 +53,22 @@ class SplashScreenActivity : BaseActivity(),
         //TODO
         //Change into IntroActivity
         finish()
-        startActivity(Intent(this, ServerActivity::class.java))
+        startActivity(Intent(this, IntroActivity::class.java))
     }
 
     private fun goToServerActivity() {
         finish()
         startActivity(Intent(this, ServerActivity::class.java))
+    }
+
+    private fun goToLoginActivity() {
+        finish()
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    private fun goToLoginPatternActivity() {
+        finish()
+        startActivity(Intent(this, LoginPatternActivity::class.java))
     }
 
     private fun hideSystemUI() {
@@ -108,10 +123,20 @@ class SplashScreenActivity : BaseActivity(),
         splashScreenViewModel.splashState.observe(this, Observer {
             when (it) {
                 is SplashState.IntroActivity -> {
+                    Timber.tag(TAG).i("setupObserver() intro")
                     goToIntroActivity()
                 }
                 is SplashState.ServerActivity -> {
+                    Timber.tag(TAG).i("setupObserver() server")
                     goToServerActivity()
+                }
+                is SplashState.LoginActivity -> {
+                    Timber.tag(TAG).i("setupObserver() login")
+                    goToLoginActivity()
+                }
+                is SplashState.LoginPatternActivity -> {
+                    Timber.tag(TAG).i("setupObserver() login pattern")
+                    goToLoginPatternActivity()
                 }
             }
         })

@@ -10,20 +10,15 @@
  * permission of This.ID.
  */
 
-package id.thork.app.di.module
+package id.thork.app.pages.login_pattern
 
-import android.content.Context
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import id.thork.app.R
 
-@Module
-@InstallIn(SingletonComponent::class)
-class ResourceProvider @Inject constructor(
-    private val context: Context) {
-
-    fun getString(resId:Int): String {
-        return context.getString(resId)
+class LoginPatternActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login_pattern)
     }
 }

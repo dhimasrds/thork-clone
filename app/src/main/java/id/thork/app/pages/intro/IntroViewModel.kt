@@ -10,20 +10,10 @@
  * permission of This.ID.
  */
 
-package id.thork.app.di.module
+package id.thork.app.pages.intro
 
-import android.content.Context
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Inject
+import id.thork.app.base.LiveCoroutinesViewModel
 
-@Module
-@InstallIn(SingletonComponent::class)
-class ResourceProvider @Inject constructor(
-    private val context: Context) {
+class IntroViewModel: LiveCoroutinesViewModel() {
 
-    fun getString(resId:Int): String {
-        return context.getString(resId)
-    }
 }

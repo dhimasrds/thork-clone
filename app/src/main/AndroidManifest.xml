@@ -8,6 +8,7 @@
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork">
-        <activity android:name=".pages.dummy.DummyActivity"></activity>
+        <activity android:name=".pages.login_pattern.LoginPatternActivity"></activity>
+        <activity android:name=".pages.dummy.DummyActivity" />
         <activity android:name=".pages.login.LoginActivity" />
         <activity android:name=".pages.intro.IntroActivity" />
         <activity
@@ -34,11 +36,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
     </application>
 

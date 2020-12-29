@@ -1,7 +1,6 @@
 package id.thork.app
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -10,7 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {

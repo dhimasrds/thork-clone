@@ -20,7 +20,6 @@ import dagger.hilt.components.SingletonComponent
 import id.thork.app.base.BaseParam
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -66,7 +65,7 @@ class PreferenceManager @Inject constructor(context: Context) {
     }
 
     fun getBoolean(key: String): Boolean {
-        return sharedPref.getBoolean(key, false)
+        return sharedPref.getBoolean(key, true)
     }
 
 }
