@@ -39,18 +39,14 @@ class UserDaoImp : UserDao {
     override fun findUserByPersonUID(personUID: Int): UserEntity? {
         val userEntities: List<UserEntity> =
             userEntityBox.query().equal(UserEntity_.personUID, personUID).build().find()
-        userEntities.whatIfNotNullOrEmpty(
-            whatIf = { return userEntities[0] },
-        )
+        userEntities.whatIfNotNullOrEmpty { return userEntities[0] }
         return null
     }
 
     override fun findActiveSessionUser(): UserEntity? {
         val userEntities: List<UserEntity> =
             userEntityBox.query().equal(UserEntity_.session, BaseParam.APP_TRUE).build().find()
-        userEntities.whatIfNotNullOrEmpty(
-            whatIf = { return userEntities[0] },
-        )
+        userEntities.whatIfNotNullOrEmpty { return userEntities[0] }
         return null
     }
 

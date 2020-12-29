@@ -44,23 +44,17 @@ class LoginViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
+    private val _progressVisible = MutableLiveData<Boolean>(false)
+    private val _success = MutableLiveData<String>()
+    private val _error = MutableLiveData<String>()
+    private val _loginState = MutableLiveData<Int>()
+    private val _firstLogin = MutableLiveData<Boolean>()
+
     val progressVisible: LiveData<Boolean> get() = _progressVisible
     val success: LiveData<String> get() = _success
     val error: LiveData<String> get() = _error
     val loginState: LiveData<Int> get() = _loginState
     val firstLogin: LiveData<Boolean> get() = _firstLogin
-
-    private val _progressVisible = MutableLiveData<Boolean>(false)
-    private val _success = MutableLiveData<String>()
-    private val _error = MutableLiveData<String>()
-    private val _loginState = MutableLiveData<Int>()
-    val _firstLogin = MutableLiveData<Boolean>()
-
-    init {
-        Timber.tag(TAG).i("init()")
-
-        Timber.tag(TAG).i("init() appSession: %s appSession name: %s", appSession, appSession.userHash)
-    }
 
     fun validateCredentials(username: String, password: String) {
         if (username.isNullOrEmpty()) {
@@ -85,14 +79,12 @@ class LoginViewModel @ViewModelInject constructor(
     private fun validateWithActiveSession(username: String) {
         val userEntity: UserEntity? = loginRepository.findActiveSession()
         Timber.tag(TAG).i("validateWithActiveSession() userEntity: %s", userEntity)
-        userEntity.whatIfNotNull(
-            whatIf = {
-                if (!userEntity?.username.equals(username)) {
-                    _error.postValue(resourceProvider.getString(R.string.username_invalid))
-                    return
-                }
-            },
-        )
+        userEntity.whatIfNotNull {
+            if (!userEntity?.username.equals(username)) {
+                _error.postValue(resourceProvider.getString(R.string.username_invalid))
+                return
+            }
+        }
     }
 
     private fun fetchUserData(userHash: String, username: String) {
@@ -131,7 +123,8 @@ class LoginViewModel @ViewModelInject constructor(
 
     private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
         val userEntity: UserEntity? = loginRepository.findUserByPersonUID(member.personuid)
-        Timber.tag(TAG).i("userIsFirstLogin() userEntity: %s personuid: %s", userEntity, member.personuid)
+        Timber.tag(TAG)
+            .i("userIsFirstLogin() userEntity: %s personuid: %s", userEntity, member.personuid)
         userEntity.whatIfNotNull(
             whatIf = {
                 userEntity!!.updatedDate = Date()
@@ -158,28 +151,26 @@ class LoginViewModel @ViewModelInject constructor(
         userEntity.session = BaseParam.APP_TRUE
         userEntity.isPattern = BaseParam.APP_FALSE
         userEntity.username = username
-
         userEntity.personUID = member.personuid
-        member.maxuser.whatIfNotNullOrEmpty(
-            whatIf = { userEntity.userid = member.maxuser[0].userid },
-        )
-        member.organization.whatIfNotNullOrEmpty(
-            whatIf = {
-                userEntity.organization = member.organization[0].description
-                userEntity.orgid = member.organization[0].orgid
-            }
-        )
-        member.site.whatIfNotNullOrEmpty(
-            whatIf = {
-                userEntity.site = member.site[0].description
-                userEntity.siteid = member.site[0].siteid
-            },
-        )
-        member.labor.whatIfNotNullOrEmpty(
-            whatIf = {
-                userEntity.laborcode = member.labor[0].laborcode
-            }
-        )
+
+        member.maxuser.whatIfNotNullOrEmpty {
+            userEntity.userid = member.maxuser[0].userid
+        }
+
+        member.organization.whatIfNotNullOrEmpty {
+            userEntity.organization = member.organization[0].description
+            userEntity.orgid = member.organization[0].orgid
+        }
+
+        member.site.whatIfNotNullOrEmpty {
+            userEntity.site = member.site[0].description
+            userEntity.siteid = member.site[0].siteid
+        }
+
+        member.labor.whatIfNotNullOrEmpty {
+            userEntity.laborcode = member.labor[0].laborcode
+        }
+
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
         //userEntity!!.server_address

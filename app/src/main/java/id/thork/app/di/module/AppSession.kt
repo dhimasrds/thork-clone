@@ -12,7 +12,6 @@
 
 package id.thork.app.di.module
 
-import android.content.Context
 import com.skydoves.whatif.whatIfNotNull
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,7 +24,6 @@ import javax.inject.Inject
 @Module
 @InstallIn(SingletonComponent::class)
 class AppSession @Inject constructor(
-    context: Context,
     private val loginRepository: LoginRepository
 ) {
     val TAG = AppSession::class.java.name
@@ -50,46 +48,43 @@ class AppSession @Inject constructor(
         existingUser.whatIfNotNull(
             whatIf = {
                 userEntity = existingUser!!
-                existingUser?.personUID.whatIfNotNull(
+                existingUser.personUID.whatIfNotNull(
                     whatIf = {
-                        personUID = existingUser?.personUID!!
+                        personUID = existingUser.personUID!!
                     }
                 )
 
-                existingUser?.userHash.whatIfNotNull(
+                existingUser.userHash.whatIfNotNull(
                     whatIf = {
-                        userHash = existingUser?.userHash!!
+                        userHash = existingUser.userHash!!
                     }
                 )
 
-                existingUser?.laborcode.whatIfNotNull(
+                existingUser.laborcode.whatIfNotNull(
                     whatIf = {
-                        laborCode = existingUser?.laborcode!!
+                        laborCode = existingUser.laborcode!!
                     }
                 )
 
-                existingUser?.siteid.whatIfNotNull(
+                existingUser.siteid.whatIfNotNull(
                     whatIf = {
-                        siteId = existingUser?.siteid!!
+                        siteId = existingUser.siteid!!
                     }
                 )
 
-                existingUser?.orgid.whatIfNotNull(
+                existingUser.orgid.whatIfNotNull(
                     whatIf = {
-                        orgId = existingUser?.orgid!!
+                        orgId = existingUser.orgid!!
                     }
                 )
 
-                existingUser?.server_address.whatIfNotNull(
+                existingUser.server_address.whatIfNotNull(
                     whatIf = {
-                        serverAddress = existingUser?.server_address!!
+                        serverAddress = existingUser.server_address!!
                     }
                 )
 
-            },
+            }
         )
-
     }
-
-
 }

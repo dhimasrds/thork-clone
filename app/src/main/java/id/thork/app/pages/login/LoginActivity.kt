@@ -71,7 +71,6 @@ class LoginActivity : BaseActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             } else {
-                // Go to Home
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }

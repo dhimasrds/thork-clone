@@ -54,7 +54,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun setupObserver() {
-        viewModel._state.observe(this, Observer {
+        viewModel.state.observe(this, Observer {
             if (CommonUtils.isTrue(it)) {
                 onSuccess()
             } else {

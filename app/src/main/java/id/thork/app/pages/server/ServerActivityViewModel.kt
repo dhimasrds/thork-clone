@@ -14,11 +14,11 @@ package id.thork.app.pages.server
 
 import android.webkit.URLUtil
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.network.HttpRequestInterceptor
-import id.thork.app.network.model.Todo
 import id.thork.app.repository.LoginRepository
 import okhttp3.OkHttpClient
 import timber.log.Timber
@@ -30,11 +30,9 @@ class ServerActivityViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
-    val _todo = MutableLiveData<Todo>()
-    val _success = MutableLiveData<Boolean>()
-    val _error = MutableLiveData<Boolean>()
+    private val _state = MutableLiveData<Int>()
+    val state:LiveData<Int> get() = _state
 
-    val _state = MutableLiveData<Int>()
     init {
         Timber.tag(TAG).i("init() loginRepository: %s", loginRepository)
     }
@@ -59,90 +57,4 @@ class ServerActivityViewModel @ViewModelInject constructor(
         return beautyUrl
     }
 
-    fun addApiBaseUrl(baseUrl: String) {
-        httpRequestInterceptor.setHost("www.talian.id")
-    }
-
-//    fun fetchApi() {
-//        Timber.tag(TAG).i("fetchApi() loginRepository: %s", loginRepository)
-////        launchOnViewModelScope {
-////            this.loginRepository.loginByPerson("spi:locationsit","spi:maxuser{spi:loginid=\"this\"}",
-////                onSuccess = { Timber.tag(TAG).i("init() success")},
-////                onError = {Timber.tag(TAG).i("init() error")}).asLiveData()
-////        }
-//
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val jsonBody = "{ username: \"THIS\", token: \"1234567890\"}"
-//            Timber.tag(TAG).i("fetchApi() json: %s", jsonBody)
-//            val output = loginRepository.loginPerson("spi:locationsit",
-//                "spi:maxuser{spi:loginid=\"this\"}",
-//                onSuccess = { Timber.tag(TAG).i("init() success") },
-//                onError = { Timber.tag(TAG).i("init() error") })
-//            Timber.tag(TAG).i("fetchApi2() output: %s", output)
-//        }
-//        Timber.tag(TAG).i("fetchApi3() loginRepository: %s", loginRepository)
-//    }
-
-
-//    fun fetchSecondApi() {
-//        Timber.tag(TAG).i("fetchSecondApi() loginRepository: %s", loginRepository)
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val jsonBody = "{ username: \"THIS\", token: \"1234567890\"}"
-//            Timber.tag(TAG).i("fetchApi() json: %s", jsonBody)
-//            val output = loginRepository.loginPerson("spi:locationsit",
-//                "spi:maxuser{spi:loginid=\"this\"}",
-//                onSuccess = { Timber.tag(TAG).i("init() success") },
-//                onError = { Timber.tag(TAG).i("init() error") })
-//            Timber.tag(TAG).i("fetchApi2() output: %s", output)
-//        }
-//        Timber.tag(TAG).i("fetchApi3() loginRepository: %s", loginRepository)
-//    }
-
-//    fun finalFetchApi() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//
-//            } catch (throwable: Throwable) {
-//                when (throwable) {
-//                    is IOException -> {
-//                        _error.postValue("Network Error")
-//                    }
-//                    is HttpException -> {
-//                        val code = throwable.code()
-//                        val errorResponse = throwable.message()
-//                        _error.postValue("Error $code $errorResponse")
-//                    }
-//                    else -> {
-//                        val errorResponse = throwable.message
-//                        _error.postValue("Error $errorResponse")
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun getTodo(id: Int) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                val result = loginRepository.getTodo(id)
-//                _todo.postValue(result)
-//            } catch (throwable: Throwable) {
-//                when (throwable) {
-//                    is IOException -> {
-//                        _error.postValue("Network Error")
-//                    }
-//                    is HttpException -> {
-//                        val code = throwable.code()
-//                        val errorResponse = throwable.message()
-//                        _error.postValue("Error $code $errorResponse")
-//                    }
-//                    else -> {
-//                        val errorResponse = throwable.message
-//                        _error.postValue("Error $errorResponse")
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
 }

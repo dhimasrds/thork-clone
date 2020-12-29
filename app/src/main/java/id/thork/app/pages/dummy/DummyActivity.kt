@@ -20,9 +20,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityDummyBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
 class DummyActivity : BaseActivity() {
+    val TAG = DummyActivity::class.java.name
+
     val viewModel: DummyViewModel by viewModels()
     private  lateinit var binding: ActivityDummyBinding
 
@@ -38,6 +41,7 @@ class DummyActivity : BaseActivity() {
     }
 
     fun showProgress(view:View) {
+        Timber.tag(TAG).i("showProgress() view: %s", view.id)
         viewModel.validate()
     }
 }

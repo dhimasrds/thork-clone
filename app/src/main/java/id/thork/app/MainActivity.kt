@@ -59,6 +59,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun onChange(view: View) {
+        Timber.tag(TAG).i("onChange() view: %s", view.id)
         viewModel.changeRandomQuotes()
     }
 }

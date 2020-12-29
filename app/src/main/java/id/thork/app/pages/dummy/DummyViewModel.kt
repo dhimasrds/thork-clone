@@ -13,22 +13,26 @@
 package id.thork.app.pages.dummy
 
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.LiveCoroutinesViewModel
 import timber.log.Timber
 
-class DummyViewModel: LiveCoroutinesViewModel() {
-    val _progressVisible = MutableLiveData<Boolean>(false)
+class DummyViewModel : LiveCoroutinesViewModel() {
+    private val _progressVisible = MutableLiveData<Boolean>(false)
     val progressVisible: LiveData<Boolean> get() = _progressVisible
 
     fun validate() {
         Timber.tag(BaseApplication.TAG).i("validate")
         _progressVisible.value = true
-        val handler: Handler = Handler()
-        handler.postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             _progressVisible.value = false
         }, 4000)
+    }
+
+    fun fetchList() {
+
     }
 }
