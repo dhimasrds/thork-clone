@@ -15,9 +15,9 @@ package id.thork.app.persistence.dao
 import id.thork.app.persistence.entity.UserEntity
 
 interface UserDao {
-    fun createUserSession(userEntity: UserEntity): UserEntity
+    fun createUserSession(userEntity: UserEntity,username: String): UserEntity
     fun findUserByPersonUID(personUID: Int): UserEntity?
     fun findActiveSessionUser(): UserEntity?
-    fun save(userEntity: UserEntity)
+    fun save(userEntity: UserEntity, username: String)
     fun delete(userEntity: UserEntity)
 }

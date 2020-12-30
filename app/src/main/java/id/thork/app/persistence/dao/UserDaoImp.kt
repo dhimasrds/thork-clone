@@ -13,26 +13,39 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import id.thork.app.base.BaseParam
+import id.thork.app.example.Person
 import id.thork.app.initializer.ObjectBox
+import id.thork.app.persistence.entity.LogEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.persistence.entity.UserEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
+import java.util.*
+import kotlin.math.log
 
 class UserDaoImp : UserDao {
-    val TAG = UserDaoImp::class.java
+    val TAG = UserDaoImp::class.java.name
     var userEntityBox: Box<UserEntity>
     var logDao: LogDaoImp
+    var moshi: Moshi
+    var jsonAdapter: JsonAdapter<UserEntity>
 
     init {
         userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         logDao = LogDaoImp()
+        moshi = Moshi.Builder()
+            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe()).build()
+        jsonAdapter = moshi.adapter(UserEntity::class.java)
     }
 
-    override fun createUserSession(userEntity: UserEntity): UserEntity {
+    override fun createUserSession(userEntity: UserEntity, username: String): UserEntity {
+        addUpdateInfo(userEntity, username)
         userEntityBox.put(userEntity)
-//        logDao.save()
+        saveLog(userEntity, username)
         return userEntity
     }
 
@@ -50,11 +63,29 @@ class UserDaoImp : UserDao {
         return null
     }
 
-    override fun save(userEntity: UserEntity) {
+    override fun save(userEntity: UserEntity, username: String) {
+        addUpdateInfo(userEntity, username)
         userEntityBox.put(userEntity)
+        saveLog(userEntity, username)
     }
 
     override fun delete(userEntity: UserEntity) {
         userEntityBox.remove(userEntity)
+    }
+
+    private fun saveLog(userEntity: UserEntity, username: String) {
+        val jsonString = jsonAdapter.toJson(userEntity)
+        logDao.save(TAG, jsonString, username)
+    }
+
+    private fun addUpdateInfo(userEntity: UserEntity, username: String) {
+        userEntity.createdBy.whatIfNotNullOrEmpty(
+            whatIf = {
+                userEntity.createdDate = Date()
+                userEntity.createdBy = username
+            }
+        )
+        userEntity.updatedDate = Date()
+        userEntity.updatedBy = username
     }
 }

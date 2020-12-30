@@ -131,7 +131,7 @@ class LoginViewModel @ViewModelInject constructor(
                 userEntity.updatedBy = username
                 userEntity.session = BaseParam.APP_TRUE
                 userEntity.isPattern = BaseParam.APP_FALSE
-                loginRepository.createUserSession(userEntity)
+                loginRepository.createUserSession(userEntity, username)
                 return false
             },
             whatIfNot = {
@@ -174,6 +174,6 @@ class LoginViewModel @ViewModelInject constructor(
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
         //userEntity!!.server_address
-        loginRepository.createUserSession(userEntity)
+        loginRepository.createUserSession(userEntity, username)
     }
 }

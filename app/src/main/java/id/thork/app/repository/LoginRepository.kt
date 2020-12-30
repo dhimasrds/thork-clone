@@ -26,8 +26,8 @@ class LoginRepository constructor(
         return userDao.findUserByPersonUID(personUID)
     }
 
-    fun createUserSession(userEntity: UserEntity): UserEntity {
-        return userDao.createUserSession(userEntity)
+    fun createUserSession(userEntity: UserEntity, username: String): UserEntity {
+        return userDao.createUserSession(userEntity, username)
     }
 
     suspend fun loginPerson(
