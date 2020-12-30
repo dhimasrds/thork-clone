@@ -33,8 +33,6 @@ class MainActivity : BaseActivity() {
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        changeDefaultQuotes()
     }
 
 
@@ -42,7 +40,6 @@ class MainActivity : BaseActivity() {
         super.setupView()
         binding.apply {
             lifecycleOwner = this@MainActivity
-            reza = viewModel
         }
     }
 
@@ -52,28 +49,6 @@ class MainActivity : BaseActivity() {
 
     override fun setupObserver() {
         super.setupObserver()
-        
-        viewModel.quote.observe(this, Observer { quot ->
-            Timber.tag(TAG).i("setupObserver() quote value: $quot")
-            if (!quot.isNullOrEmpty()) {
-                saveAndToast(quot)
-            }
-        })
     }
 
-    private fun saveAndToast(value: String) {
-        Toast.makeText(this, value, Toast.LENGTH_SHORT).show()
-        //SAVE IN HERE  ///
-        ////
-        /////
-    }
-
-    private fun changeDefaultQuotes() {
-        binding.quotes.text = "Never give up"
-    }
-
-    fun onChange(view: View) {
-        Timber.tag(TAG).i("onChange() view: %s", view.id)
-        viewModel.changeRandomQuotes()
-    }
 }

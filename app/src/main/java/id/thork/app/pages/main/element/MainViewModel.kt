@@ -23,13 +23,4 @@ class MainViewModel @ViewModelInject constructor(
     ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
-    val quote: LiveData<String> get() = _quote
-    val _quote: MutableLiveData<String> = MutableLiveData()
-
-    fun changeRandomQuotes() {
-        val rnd = (0 until 999).random()
-        val rnd2 = (0 until 999).random()
-        _quote.value = "Keep Learning $rnd DAN ATAU DENGAN $rnd2"
-    }
-
 }

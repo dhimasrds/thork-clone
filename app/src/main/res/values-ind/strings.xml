@@ -39,6 +39,10 @@
     <string name="skip">LEWATKAN</string>
     <string name="start">MULAI</string>
 
+    <!-- Main Menu-->
+    <string name="main_menu_wo"></string>
+    <string name="main_menu_map"></string>
+
     <!-- Action menu bar -->
     <string name="action_notifications">Notifikasi</string>
     <string name="action_settings">Pengaturan</string>
