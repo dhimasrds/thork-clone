@@ -10,12 +10,15 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.login
+package id.thork.app.pages.create_wo
 
-import android.view.View
-import androidx.databinding.BindingAdapter
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import id.thork.app.R
 
-@BindingAdapter("visible")
-fun View.bindVisible(visible: Boolean?) {
-    visibility = if (visible == true) View.VISIBLE else View.GONE
+class CreateWoActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_create_wo)
+    }
 }

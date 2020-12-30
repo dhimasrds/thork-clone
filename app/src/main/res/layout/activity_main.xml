@@ -6,7 +6,7 @@
     <data>
         <variable
             name="reza"
-            type="id.thork.app.MainViewModel" />
+            type="id.thork.app.pages.main.element.MainViewModel" />
     </data>
 
     <LinearLayout
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context=".MainActivity">
+        tools:context=".pages.main.MainActivity">
 
         <TextView
             android:id="@+id/quotes"

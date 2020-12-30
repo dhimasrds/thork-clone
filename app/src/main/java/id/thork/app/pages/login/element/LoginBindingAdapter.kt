@@ -10,10 +10,12 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.intro
+package id.thork.app.pages.login.element
 
-import id.thork.app.base.LiveCoroutinesViewModel
+import android.view.View
+import androidx.databinding.BindingAdapter
 
-class IntroViewModel: LiveCoroutinesViewModel() {
-
+@BindingAdapter("visible")
+fun View.bindVisible(visible: Boolean?) {
+    visibility = if (visible == true) View.VISIBLE else View.GONE
 }

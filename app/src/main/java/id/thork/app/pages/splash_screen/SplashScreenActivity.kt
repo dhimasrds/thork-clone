@@ -29,6 +29,8 @@ import id.thork.app.pages.intro.IntroActivity
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.server.ServerActivity
+import id.thork.app.pages.splash_screen.element.SplashScreenViewModel
+import id.thork.app.pages.splash_screen.element.SplashState
 import timber.log.Timber
 
 class SplashScreenActivity : BaseActivity(),

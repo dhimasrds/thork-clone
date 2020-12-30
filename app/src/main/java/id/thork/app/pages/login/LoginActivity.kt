@@ -16,10 +16,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import id.thork.app.MainActivity
+import id.thork.app.pages.main.MainActivity
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding
+import id.thork.app.pages.login.element.LoginViewModel
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 

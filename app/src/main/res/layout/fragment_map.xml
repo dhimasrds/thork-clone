@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
+  ~
+  ~ This software is the confidential and proprietary information of
+  ~ This.ID. ("Confidential Information").
+  ~
+  ~ Such Confidential Information shall not be disclosed and shall
+  ~ use it only	 in accordance with the terms of the license agreement
+  ~ entered into with This.ID; other than in accordance with the written
+  ~ permission of This.ID.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pages.main.element.MapFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/hello_blank_fragment" />
+
+</FrameLayout>

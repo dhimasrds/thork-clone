@@ -19,7 +19,7 @@
     <data>
         <variable
             name="vm"
-            type="id.thork.app.pages.server.ServerActivityViewModel" />
+            type="id.thork.app.pages.server.element.ServerActivityViewModel" />
     </data>
 
     <ScrollView

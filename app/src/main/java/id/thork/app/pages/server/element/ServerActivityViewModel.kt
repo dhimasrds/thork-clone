@@ -10,7 +10,7 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.server
+package id.thork.app.pages.server.element
 
 import android.webkit.URLUtil
 import androidx.hilt.lifecycle.ViewModelInject

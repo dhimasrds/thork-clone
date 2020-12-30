@@ -10,7 +10,7 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.login
+package id.thork.app.pages.login.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -27,7 +27,7 @@ import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
-import id.thork.app.pages.server.ServerActivityViewModel
+import id.thork.app.pages.server.element.ServerActivityViewModel
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils

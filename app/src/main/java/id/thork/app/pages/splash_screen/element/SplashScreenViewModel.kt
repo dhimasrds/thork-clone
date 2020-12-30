@@ -10,7 +10,7 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.splash_screen
+package id.thork.app.pages.splash_screen.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
