@@ -1,5 +1,6 @@
 package id.thork.app.persistence.entity
 
+import com.squareup.moshi.JsonClass
 import io.objectbox.annotation.Entity
 import java.util.*
 

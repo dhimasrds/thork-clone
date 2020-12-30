@@ -7,7 +7,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.repository.LoginRepository
 
 class MainViewModel @ViewModelInject constructor(
-    private val loginRepository: LoginRepository,
+    private val loginRepository: LoginRepository
     ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 

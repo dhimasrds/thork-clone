@@ -12,6 +12,7 @@
 
 package id.thork.app.persistence.dao
 
+import com.google.gson.Gson
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -31,15 +32,11 @@ class UserDaoImp : UserDao {
     val TAG = UserDaoImp::class.java.name
     var userEntityBox: Box<UserEntity>
     var logDao: LogDaoImp
-    var moshi: Moshi
-    var jsonAdapter: JsonAdapter<UserEntity>
+    var gson: Gson = Gson()
 
     init {
         userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         logDao = LogDaoImp()
-        moshi = Moshi.Builder()
-            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe()).build()
-        jsonAdapter = moshi.adapter(UserEntity::class.java)
     }
 
     override fun createUserSession(userEntity: UserEntity, username: String): UserEntity {
@@ -74,7 +71,7 @@ class UserDaoImp : UserDao {
     }
 
     private fun saveLog(userEntity: UserEntity, username: String) {
-        val jsonString = jsonAdapter.toJson(userEntity)
+        val jsonString = gson.toJson(userEntity, UserEntity::class.java)
         logDao.save(TAG, jsonString, username)
     }
 
