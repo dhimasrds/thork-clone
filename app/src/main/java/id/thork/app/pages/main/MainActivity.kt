@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -38,6 +39,7 @@ class MainActivity : BaseActivity() {
 
     override fun setupView() {
         super.setupView()
+        binding.bottomNavigationMain.menu.findItem(R.id.nav_mynews).isEnabled = false
         binding.apply {
             lifecycleOwner = this@MainActivity
         }

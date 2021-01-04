@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/nav_dailynews"
+            android:icon="@drawable/ic_home"
+            android:title="" />
+    <item
+            android:id="@+id/nav_mynews"
+            android:title="" />
+
+    <item
+            android:id="@+id/nav_hidden_option"
+            android:icon="@drawable/ic_eye"
+            android:title="" />
+
+</menu>

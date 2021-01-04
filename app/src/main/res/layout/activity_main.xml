@@ -8,23 +8,35 @@
             name="reza"
             type="id.thork.app.pages.main.element.MainViewModel" />
     </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+        android:background="#ECECEC"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".pages.main.MainActivity">
 
-        <fragment
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_main"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:defaultNavHost="true"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/mobile_navigation" />
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/home_navigation_menu"/>
+
+
+        <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:src="@drawable/ic_add_white"
+            android:background="@drawable/bg_center_nav_option"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/bottom_sheet_behavior"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
