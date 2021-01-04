@@ -75,6 +75,7 @@ class LoginActivity : BaseActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }
+            finish()
         })
 
         loginViewModel.loginState.observe(this, Observer { loginState ->
