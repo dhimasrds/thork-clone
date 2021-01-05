@@ -20,4 +20,9 @@
     <style name="ColdStart" parent="Theme.Thork">
         <item name="android:windowBackground">@drawable/win_bg_splash</item>
     </style>
+
+    <style name="AppTheme.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="colorOnPrimary">@android:color/white</item>
+    </style>
+
 </resources>

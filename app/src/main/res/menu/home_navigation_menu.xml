@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/nav_dailynews"
+            android:id="@+id/nav_graph_wo"
             android:icon="@drawable/ic_home"
             android:title="" />
     <item
-            android:id="@+id/nav_mynews"
+            android:id="@+id/nav_graph_create"
             android:title="" />
 
     <item
-            android:id="@+id/nav_hidden_option"
+            android:id="@+id/nav_graph_map"
             android:icon="@drawable/ic_eye"
             android:title="" />
-
 </menu>
