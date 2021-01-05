@@ -33,7 +33,7 @@ import id.thork.app.pages.main.element.MainViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(),  View.OnClickListener {
     val TAG = MainActivity::class.java.name
 
     val viewModel: MainViewModel by viewModels()
@@ -77,5 +77,13 @@ class MainActivity : BaseActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return currentNavController?.value?.navigateUp() ?: false
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.iv_add -> {
+                Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
