@@ -23,6 +23,7 @@
             android:theme="@style/AppTheme.Toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
             app:titleTextColor="@android:color/white" />
 
         <androidx.fragment.app.FragmentContainerView
@@ -43,7 +44,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/home_navigation_menu"/>
-
 
         <ImageView
             android:id="@+id/iv_add"
