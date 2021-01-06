@@ -12,17 +12,13 @@
 
 package id.thork.app.pages.main
 
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -42,9 +38,6 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
     private lateinit var toolBar: MaterialToolbar
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun setupView() {
         super.setupView()

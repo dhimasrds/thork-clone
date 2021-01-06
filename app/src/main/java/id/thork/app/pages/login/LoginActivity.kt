@@ -13,14 +13,13 @@
 package id.thork.app.pages.login
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import id.thork.app.pages.main.MainActivity
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding
 import id.thork.app.pages.login.element.LoginViewModel
+import id.thork.app.pages.main.MainActivity
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
@@ -29,10 +28,6 @@ class LoginActivity : BaseActivity() {
 
     val loginViewModel: LoginViewModel by viewModels()
     private val binding: ActivityLoginBinding by binding(R.layout.activity_login)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun setupView() {
         super.setupView()
@@ -56,12 +51,12 @@ class LoginActivity : BaseActivity() {
         super.setupObserver()
         loginViewModel.success.observe(this, Observer { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
-            CommonUtils.showToast(success)
+            CommonUtils.showToast(success, CommonUtils.POSITION_CENTER)
         })
 
         loginViewModel.error.observe(this, Observer { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
-            CommonUtils.showToast(error)
+            CommonUtils.showToast(error, CommonUtils.POSITION_CENTER)
         })
 
         loginViewModel.firstLogin.observe(this, Observer { firstLogin ->

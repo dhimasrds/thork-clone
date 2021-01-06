@@ -13,10 +13,10 @@
 package id.thork.app.pages.main.element
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import id.thork.app.R
 
 class MapFragment : Fragment() {
