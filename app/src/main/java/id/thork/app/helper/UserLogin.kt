@@ -10,7 +10,7 @@
  * permission of This.ID.
  */
 
-package id.thork.app.extensions.helper
+package id.thork.app.helper
 
 class UserLogin constructor(
     var firstLogin: Boolean = false,
