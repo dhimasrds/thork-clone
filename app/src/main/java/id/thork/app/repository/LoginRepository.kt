@@ -5,17 +5,12 @@ import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 class LoginRepository constructor(
     private val loginClient: LoginClient,
@@ -31,8 +26,8 @@ class LoginRepository constructor(
         return userDao.findUserByPersonUID(personUID)
     }
 
-    fun createUserSession(userEntity: UserEntity): UserEntity {
-        return userDao.createUserSession(userEntity)
+    fun createUserSession(userEntity: UserEntity, username: String): UserEntity {
+        return userDao.createUserSession(userEntity, username)
     }
 
     suspend fun loginPerson(

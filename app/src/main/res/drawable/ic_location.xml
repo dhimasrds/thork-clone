@@ -1,0 +1,21 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<vector android:autoMirrored="true" android:height="22dp"
+    android:viewportHeight="22" android:viewportWidth="21"
+    android:width="21dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#1463FF" android:pathData="M13.5,10C16,10 18,12 18,14.5C18,15.38 17.75,16.2 17.31,16.9L20.39,20L19,21.39L15.88,18.32C15.19,18.75 14.37,19 13.5,19C11,19 9,17 9,14.5C9,12 11,10 13.5,10ZM13.5,12C12.837,12 12.2011,12.2634 11.7322,12.7322C11.2634,13.2011 11,13.837 11,14.5C11,15.163 11.2634,15.7989 11.7322,16.2678C12.2011,16.7366 12.837,17 13.5,17C14.163,17 14.7989,16.7366 15.2678,16.2678C15.7366,15.7989 16,15.163 16,14.5C16,13.837 15.7366,13.2011 15.2678,12.7322C14.7989,12.2634 14.163,12 13.5,12ZM17.5,0C17.6326,0 17.7598,0.0527 17.8536,0.1464C17.9473,0.2402 18,0.3674 18,0.5V9.81C17.42,9.26 16.75,8.81 16,8.5V2.7L13,3.86V8C12.3,8.07 11.62,8.24 11,8.5V3.87L7,2.47V14.5C7,15.14 7.09,15.76 7.26,16.34L6,15.9L0.66,17.97L0.5,18C0.3674,18 0.2402,17.9473 0.1464,17.8536C0.0527,17.7598 0,17.6326 0,17.5V2.38C0,2.15 0.15,1.97 0.36,1.9L6,0L12,2.1L17.34,0.03L17.5,0ZM2,3.46V15.31L5,14.15V2.45L2,3.46Z"/>
+</vector>

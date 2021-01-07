@@ -16,7 +16,7 @@
     <data>
         <variable
             name="vm"
-            type="id.thork.app.pages.login.LoginViewModel" />
+            type="id.thork.app.pages.login.element.LoginViewModel" />
     </data>
 
     <ScrollView

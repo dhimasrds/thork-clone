@@ -10,6 +10,7 @@ buildscript {
         whatIfVersion = '1.0.8'
         timberVersion = "4.7.1"
         rootBeerVersion = "0.0.7"
+        gsonVersion = "2.8.6"
         moshiAdapterVersion = "1.11.0"
         moshiVersion = "1.11.0"
         glideVersion = "4.11.0"

@@ -14,11 +14,14 @@ package id.thork.app.utils
 
 
 import android.util.Base64
+import android.view.Gravity
 import android.widget.Toast
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 
 object CommonUtils {
+    const val POSITION_CENTER = 1
+
     fun isTrue(input: Int): Boolean {
         if (input.equals(BaseParam.APP_TRUE)) {
             return true
@@ -35,5 +38,11 @@ object CommonUtils {
         Toast.makeText(BaseApplication.getAppContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-
+    fun showToast(message:String, position: Int) {
+        val toast = Toast.makeText(BaseApplication.getAppContext(), message, Toast.LENGTH_SHORT)
+        if (position == POSITION_CENTER) {
+            toast.setGravity(Gravity.CENTER, 0, 0);
+        }
+        toast.show()
+    }
 }

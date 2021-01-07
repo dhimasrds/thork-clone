@@ -5,27 +5,59 @@
 
     <data>
         <variable
-            name="reza"
-            type="id.thork.app.MainViewModel" />
+            name="vm"
+            type="id.thork.app.pages.main.element.MainViewModel" />
     </data>
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="#ECECEC"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        tools:context=".pages.main.MainActivity">
 
-        <TextView
-            android:id="@+id/quotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{reza.quote}"/>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/AppTheme.Toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            app:titleTextColor="@android:color/white" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_main"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CHANGE"
-            android:onClick="onChange"/>
-    </LinearLayout>
+            android:background="@android:color/white"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/home_navigation_menu"/>
+
+        <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:src="@drawable/ic_add_white"
+            android:background="@drawable/bg_center_nav_option"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/bottom_sheet_behavior"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:onClick="onClick"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -16,17 +16,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityServerBinding
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.LoginActivity
+import id.thork.app.pages.server.element.ServerActivityViewModel
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 
-@AndroidEntryPoint
 class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     val TAG = ServerActivity::class.java.name
 
@@ -56,7 +55,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun setupObserver() {
-        viewModel._state.observe(this, Observer {
+        viewModel.state.observe(this, Observer {
             if (CommonUtils.isTrue(it)) {
                 onSuccess()
             } else {

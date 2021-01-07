@@ -21,7 +21,7 @@
     <data>
         <variable
             name="vm"
-            type="id.thork.app.pages.splash_screen.SplashScreenViewModel" />
+            type="id.thork.app.pages.splash_screen.element.SplashScreenViewModel" />
     </data>
 
     <RelativeLayout

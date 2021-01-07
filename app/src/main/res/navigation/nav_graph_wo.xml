@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
+  ~
+  ~ This software is the confidential and proprietary information of
+  ~ This.ID. ("Confidential Information").
+  ~
+  ~ Such Confidential Information shall not be disclosed and shall
+  ~ use it only	 in accordance with the terms of the license agreement
+  ~ entered into with This.ID; other than in accordance with the written
+  ~ permission of This.ID.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_wo"
+    app:startDestination="@id/nav_wo_fragment">
+
+    <fragment
+        android:id="@+id/nav_wo_fragment"
+        android:name="id.thork.app.pages.main.element.WorkorderFragment"
+        android:label="Work Order"
+        tools:layout="@layout/fragment_workorder"/>
+</navigation>
