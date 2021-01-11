@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import id.thork.app.pages.main.work_order_list.ActivityFragment
-import id.thork.app.pages.main.work_order_list.WorkorderFragment
 
 /**
  * Created by Dhimas Saputra on 08/01/21
