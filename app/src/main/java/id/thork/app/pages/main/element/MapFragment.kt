@@ -59,7 +59,7 @@ class MapFragment : Fragment() {
         binding.tabLayout.isInlineLabel = true
 
         // Set the ViewPager Adapter
-        val adapter = TabsMainAdapter(parentFragmentManager, lifecycle, numberOfTabs)
+        val adapter = TabsMainAdapter(childFragmentManager, lifecycle, numberOfTabs)
         binding.tabsViewpager.adapter = adapter
 
         // Enable Swipe

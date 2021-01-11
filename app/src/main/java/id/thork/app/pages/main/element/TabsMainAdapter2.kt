@@ -9,10 +9,10 @@ import id.thork.app.pages.main.work_order_list.ActivityFragment
 import id.thork.app.pages.main.work_order_list.WorkOrderListFragment
 
 /**
- * Created by Dhimas Saputra on 08/01/21
+ * Created by Dhimas Saputra on 11/01/21
  * Jakarta, Indonesia.
  */
-class TabsMainAdapter(fm: FragmentManager, lifecycle: Lifecycle, private var numberOfTabs: Int) : FragmentStateAdapter(fm, lifecycle) {
+class TabsMainAdapter2 (fm: FragmentManager, lifecycle: Lifecycle, private var numberOfTabs: Int) : FragmentStateAdapter(fm, lifecycle) {
 
     override fun createFragment(position: Int): Fragment {
         when (position) {
