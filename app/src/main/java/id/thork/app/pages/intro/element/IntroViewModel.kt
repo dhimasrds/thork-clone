@@ -14,6 +14,8 @@ package id.thork.app.pages.intro.element
 
 import id.thork.app.base.LiveCoroutinesViewModel
 
-class IntroViewModel: LiveCoroutinesViewModel() {
+class IntroViewModel constructor() : LiveCoroutinesViewModel() {
+
+    val TAG = IntroViewModel::class.java.name
 
 }
