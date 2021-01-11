@@ -337,6 +337,7 @@
     <string name="next_step">Apakah kamu ingin memperbarui wo ini?</string>
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
+    <string name="wo">Wo :</string>
 
     <string-array name="work_type_wo">
         <item>ORR</item>
