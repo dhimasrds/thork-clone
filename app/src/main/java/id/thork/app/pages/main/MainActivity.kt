@@ -42,7 +42,7 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
     override fun setupView() {
         super.setupView()
         toolBar = binding.toolbar
-        setSupportActionBar(toolBar)
+//        setSupportActionBar(toolBar)
 
         setupBottomNavigationBar()
 

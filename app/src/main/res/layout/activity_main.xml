@@ -8,10 +8,11 @@
             name="vm"
             type="id.thork.app.pages.main.element.MainViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="#ECECEC"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ECECEC"
         tools:context=".pages.main.MainActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -21,9 +22,9 @@
             android:background="@color/colorPrimary"
             android:elevation="4dp"
             android:theme="@style/AppTheme.Toolbar"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"
             app:titleTextColor="@android:color/white" />
 
         <androidx.fragment.app.FragmentContainerView
@@ -33,7 +34,14 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_above="@id/bottom_navigation_main"
+            android:background="@drawable/shadow"
+            app:layout_constraintBottom_toTopOf="@id/bottom_navigation_main"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation_main"
@@ -41,23 +49,23 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             app:elevation="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:labelVisibilityMode="labeled"
-            app:menu="@menu/home_navigation_menu"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/home_navigation_menu" />
 
         <ImageView
             android:id="@+id/iv_add"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_center_nav_option"
+            android:contentDescription="@string/bottom_sheet_behavior"
+            android:onClick="onClick"
             android:padding="15dp"
             android:src="@drawable/ic_add_white"
-            android:background="@drawable/bg_center_nav_option"
-            app:layout_constraintStart_toStartOf="parent"
-            android:contentDescription="@string/bottom_sheet_behavior"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="onClick"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
