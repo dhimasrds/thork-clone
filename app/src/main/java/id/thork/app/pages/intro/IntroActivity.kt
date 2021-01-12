@@ -39,12 +39,27 @@ class IntroActivity : BaseActivity() {
     private lateinit var screens: IntArray
     private lateinit var myvpAdapter: MyViewPagerAdapter
 
+    var pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            ColoredBars(position)
+
+            if (position == screens.size - 1) {
+                binding.next.visibility = View.GONE
+                binding.skip.visibility = View.GONE
+                binding.start.visibility = View.VISIBLE
+            } else {
+                binding.next.visibility = View.VISIBLE
+                binding.skip.visibility = View.VISIBLE
+                binding.start.visibility = View.GONE
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initView()
         handlerOnClick()
-
     }
 
     override fun setupView() {
@@ -118,22 +133,5 @@ class IntroActivity : BaseActivity() {
 
     private fun getItem(i: Int): Int {
         return binding.viewPager.getCurrentItem() + i
-    }
-
-    var pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-            ColoredBars(position)
-
-            if (position == screens.size - 1) {
-                binding.next.visibility = View.GONE
-                binding.skip.visibility = View.GONE
-                binding.start.visibility = View.VISIBLE
-            } else {
-                binding.next.visibility = View.VISIBLE
-                binding.skip.visibility = View.VISIBLE
-                binding.start.visibility = View.GONE
-            }
-        }
     }
 }
