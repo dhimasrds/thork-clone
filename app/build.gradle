@@ -128,6 +128,7 @@ dependencies {
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
 
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
 }
 apply plugin: 'io.objectbox'

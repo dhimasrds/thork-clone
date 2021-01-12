@@ -18,7 +18,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseApplication.Constants.context
@@ -38,24 +38,6 @@ class IntroActivity : BaseActivity() {
     private lateinit var bottomBars: Array<ImageView?>
     private lateinit var screens: IntArray
     private lateinit var myvpAdapter: MyViewPagerAdapter
-    private var viewPagerPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
-
-        override fun onPageSelected(position: Int) {
-            ColoredBars(position)
-            if (position == screens.size.minus(1)) {
-                binding.next.visibility = View.GONE
-                binding.skip.visibility = View.GONE
-                binding.start.visibility = View.VISIBLE
-            } else {
-                binding.next.visibility = View.VISIBLE
-                binding.skip.visibility = View.VISIBLE
-                binding.start.visibility = View.GONE
-            }
-        }
-
-        override fun onPageScrolled(arg0: Int, arg1: Float, arg2: Int) {}
-        override fun onPageScrollStateChanged(arg0: Int) {}
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +64,7 @@ class IntroActivity : BaseActivity() {
 
         myvpAdapter = MyViewPagerAdapter(screens)
         binding.viewPager.adapter = myvpAdapter
-        binding.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
+        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
 
         if (!preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)) {
             launchMain()
@@ -136,5 +118,22 @@ class IntroActivity : BaseActivity() {
 
     private fun getItem(i: Int): Int {
         return binding.viewPager.getCurrentItem() + i
+    }
+
+    var pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            ColoredBars(position)
+
+            if (position == screens.size - 1) {
+                binding.next.visibility = View.GONE
+                binding.skip.visibility = View.GONE
+                binding.start.visibility = View.VISIBLE
+            } else {
+                binding.next.visibility = View.VISIBLE
+                binding.skip.visibility = View.VISIBLE
+                binding.start.visibility = View.GONE
+            }
+        }
     }
 }
