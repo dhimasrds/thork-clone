@@ -68,12 +68,6 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    //    fun nextPage(view: View) {
-//        Timber.tag(TAG).i("nextPage() view: %s", view.id)
-//        preferenceManager.putBoolean(BaseParam.APP_FIRST_LAUNCH, false)
-//        startActivity(Intent(this, ServerActivity::class.java))
-//        finish()
-//    }
     fun next(v: View?) {
         val i = getItem(+1)
         if (i < screens.count()) {

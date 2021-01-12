@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/description1"
                 android:gravity="center"
-                android:orientation="horizontal"></LinearLayout>
+                android:orientation="horizontal"/>
         </LinearLayout>
 
         <LinearLayout
