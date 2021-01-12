@@ -33,7 +33,8 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_wms"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +61,7 @@
             android:elevation="@dimen/activity_horizontal_margin"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/skip"
@@ -69,12 +70,27 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/ic_rectangle_border_black"
+                android:background="@color/transparant"
                 android:fontFamily="@font/poppins"
                 android:onClick="skip"
                 android:text="@string/skip"
-                android:textColor="@color/colorBlack"
-                android:visibility="visible" />
+                android:textColor="@color/colorGraySkip"/>
+
+            <Button
+                android:layout_gravity="center_vertical"
+                android:id="@+id/start"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_weight="0.5"
+                android:textSize="12sp"
+                android:background="@drawable/btn_rounded"
+                android:fontFamily="@font/opensans_bold"
+                android:onClick="skip"
+                android:text="Get Started"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/next"
@@ -83,11 +99,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_rounded"
+                android:background="@color/transparant"
                 android:fontFamily="@font/poppins"
                 android:onClick="next"
                 android:text="@string/next"
-                android:textColor="@color/white" />
+                android:textColor="@color/colorPrimaryBackground" />
         </LinearLayout>
 
     </RelativeLayout>

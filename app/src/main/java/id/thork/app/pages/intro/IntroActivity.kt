@@ -36,28 +36,33 @@ class IntroActivity : BaseActivity() {
     val preferenceManager: PreferenceManager = PreferenceManager(context)
 
     private lateinit var bottomBars: Array<ImageView?>
-    lateinit var screens: IntArray
+    private lateinit var screens: IntArray
     private lateinit var myvpAdapter: MyViewPagerAdapter
+    private var viewPagerPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
+
+        override fun onPageSelected(position: Int) {
+            ColoredBars(position)
+            if (position == screens.size.minus(1)) {
+                binding.next.visibility = View.GONE
+                binding.skip.visibility = View.GONE
+                binding.start.visibility = View.VISIBLE
+            } else {
+                binding.next.visibility = View.VISIBLE
+                binding.skip.visibility = View.VISIBLE
+                binding.start.visibility = View.GONE
+            }
+        }
+
+        override fun onPageScrolled(arg0: Int, arg1: Float, arg2: Int) {}
+        override fun onPageScrollStateChanged(arg0: Int) {}
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        screens = intArrayOf(
-                R.layout.layout_welcome1,
-                R.layout.layout_welcome2,
-                R.layout.layout_welcome3
-        )
+        initView()
+        handlerOnClick()
 
-        myvpAdapter = MyViewPagerAdapter(screens)
-        binding.viewPager.setAdapter(myvpAdapter)
-        binding.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
-
-        if (!preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)) {
-            launchMain()
-            finish()
-        }
-
-        ColoredBars(0)
     }
 
     override fun setupView() {
@@ -68,17 +73,48 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    fun next(v: View?) {
-        val i = getItem(+1)
-        if (i < screens.count()) {
-            binding.viewPager.currentItem = i
-        } else {
+    private fun initView() {
+        screens = intArrayOf(
+            R.layout.layout_welcome1,
+            R.layout.layout_welcome2,
+            R.layout.layout_welcome3
+        )
+
+        myvpAdapter = MyViewPagerAdapter(screens)
+        binding.viewPager.adapter = myvpAdapter
+        binding.viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
+
+        if (!preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)) {
+            launchMain()
+            finish()
+        }
+
+        ColoredBars(0)
+    }
+
+    private fun handlerOnClick() {
+        binding.next.setOnClickListener {
+            val i = getItem(+1)
+            if (i < screens.count()) {
+                binding.viewPager.currentItem = i
+            } else {
+                launchMain()
+            }
+        }
+
+        binding.skip.setOnClickListener {
+            launchMain()
+        }
+
+        binding.start.setOnClickListener {
             launchMain()
         }
     }
 
-    fun skip(v: View?) {
-        launchMain()
+    private fun launchMain() {
+        preferenceManager.putBoolean(BaseParam.APP_FIRST_LAUNCH, false)
+        startActivity(Intent(this@IntroActivity, ServerActivity::class.java))
+        finish()
     }
 
     private fun ColoredBars(thisScreen: Int) {
@@ -87,7 +123,10 @@ class IntroActivity : BaseActivity() {
         for (i in bottomBars.indices) {
             bottomBars[i] = ImageView(this)
             bottomBars.get(i)!!.setImageDrawable(resources.getDrawable(R.drawable.ic_dot))
-            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             lp.setMargins(10, 10, 10, 10)
             bottomBars.get(i)?.setLayoutParams(lp)
             binding.layoutBars.addView(bottomBars.get(i))
@@ -97,27 +136,5 @@ class IntroActivity : BaseActivity() {
 
     private fun getItem(i: Int): Int {
         return binding.viewPager.getCurrentItem() + i
-    }
-
-    private fun launchMain() {
-        preferenceManager.putBoolean(BaseParam.APP_FIRST_LAUNCH, false)
-        startActivity(Intent(this@IntroActivity, ServerActivity::class.java))
-        finish()
-    }
-
-    var viewPagerPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
-        override fun onPageSelected(position: Int) {
-            ColoredBars(position)
-            if (position == screens.size - 1) {
-                binding.next.text = "start"
-                binding.skip.visibility = View.GONE
-            } else {
-                binding.next.text = getString(R.string.next)
-                binding.skip.visibility = View.VISIBLE
-            }
-        }
-
-        override fun onPageScrolled(arg0: Int, arg1: Float, arg2: Int) {}
-        override fun onPageScrollStateChanged(arg0: Int) {}
     }
 }

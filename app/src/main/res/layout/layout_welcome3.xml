@@ -100,33 +100,6 @@
                 android:gravity="center_vertical"
                 android:textSize="12sp"
                 tools:ignore="RtlCompat" />
-
-            <LinearLayout
-
-                android:id="@+id/layout_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:elevation="@dimen/activity_horizontal_margin"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_gravity="center_vertical"
-                    android:id="@+id/next"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:textSize="12sp"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_rounded"
-                    android:fontFamily="@font/opensans_bold"
-                    android:onClick="next"
-                    android:text="@string/start"
-                    android:textColor="@color/white" />
-            </LinearLayout>
-
-
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
