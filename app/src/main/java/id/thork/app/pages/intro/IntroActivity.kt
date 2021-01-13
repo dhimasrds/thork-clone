@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
+import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -119,19 +120,19 @@ class IntroActivity : BaseActivity() {
         binding.layoutBars.removeAllViews()
         for (i in bottomBars.indices) {
             bottomBars[i] = ImageView(this)
-            bottomBars.get(i)!!.setImageDrawable(resources.getDrawable(R.drawable.ic_dot))
+            bottomBars.get(i)!!.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot, null))
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             lp.setMargins(10, 10, 10, 10)
-            bottomBars.get(i)?.setLayoutParams(lp)
+            bottomBars.get(i)?.layoutParams = lp
             binding.layoutBars.addView(bottomBars.get(i))
         }
-        if (bottomBars.size > 0) bottomBars.get(thisScreen)?.setImageDrawable(resources.getDrawable(R.drawable.ic_dot_blue))
+        if (bottomBars.isNotEmpty()) bottomBars.get(thisScreen)?.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot_blue, null))
     }
 
     private fun getItem(i: Int): Int {
-        return binding.viewPager.getCurrentItem() + i
+        return binding.viewPager.currentItem + i
     }
 }
