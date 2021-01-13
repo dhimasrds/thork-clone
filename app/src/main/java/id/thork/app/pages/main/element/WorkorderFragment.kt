@@ -17,34 +17,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import id.thork.app.databinding.FragmentMapBinding
+import id.thork.app.R
 import id.thork.app.databinding.FragmentWorkorderBinding
-import id.thork.app.persistence.entity.WoEntity
-import timber.log.Timber
-import kotlin.collections.ArrayList
+import id.thork.app.utils.TransformationPagers
 
 class WorkorderFragment : Fragment() {
-    private lateinit var binding : FragmentWorkorderBinding
+    private lateinit var binding: FragmentWorkorderBinding
+    private val NUMBER_OF_TAB = 2
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-         binding = FragmentWorkorderBinding.inflate(inflater,container, false)
+        binding = FragmentWorkorderBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupTabView()
+    }
+
+    private fun setupTabView() {
         binding.tabLayout.setSelectedTabIndicatorColor(Color.BLUE)
-//        binding.tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
-        binding.tabLayout.tabTextColors =
-            ContextCompat.getColorStateList(requireContext(), android.R.color.black)
+        binding.tabLayout.tabTextColors = ContextCompat.getColorStateList(requireContext(), android.R.color.black)
 
-        val numberOfTabs = 2
         // Set Tabs in the center
         //tab_layout.tabGravity = TabLayout.GRAVITY_CENTER
 
@@ -58,22 +63,22 @@ class WorkorderFragment : Fragment() {
         binding.tabLayout.isInlineLabel = true
 
         // Set the ViewPager Adapter
-        val adapter = TabsMainAdapter(childFragmentManager, lifecycle, numberOfTabs)
+        val adapter = TabsMainAdapter(childFragmentManager, lifecycle, NUMBER_OF_TAB)
         binding.tabsViewpager.adapter = adapter
 
         // Enable Swipe
         binding.tabsViewpager.isUserInputEnabled = true
+        binding.tabsViewpager.setPageTransformer(TransformationPagers.HorizontalFlipTransformation())
 
         // Link the TabLayout and the ViewPager2 together and Set Text & Icons
         TabLayoutMediator(binding.tabLayout, binding.tabsViewpager) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "List Work Order"
+                    tab.text = getString(R.string.list_work_order)
                 }
                 1 -> {
-                    tab.text = "Activity"
+                    tab.text = getString(R.string.activity)
 //                    tab.setIcon(R.drawable.ic_movie)
-
                 }
 
             }
@@ -84,10 +89,27 @@ class WorkorderFragment : Fragment() {
                     BlendModeCompat.SRC_ATOP
                 )
         }.attach()
-
-
-
-
-        return binding.root
+        setCustomTabTitles()
     }
+
+    private fun setCustomTabTitles() {
+        val vg = binding.tabLayout.getChildAt(0) as ViewGroup
+        val tabsCount = vg.childCount
+
+        for (j in 0 until tabsCount) {
+            val vgTab = vg.getChildAt(j) as ViewGroup
+            val tabChildCount = vgTab.childCount
+            for (i in 0 until tabChildCount) {
+                val tabViewChild = vgTab.getChildAt(i)
+                if (tabViewChild is TextView) {
+
+                    // Change Font and Size
+//                    val font = ResourcesCompat.getFont(requireContext(), R.font.opensans_bold)
+//                    tabViewChild.typeface = font
+//                    tabViewChild.setTextSize(TypedValue.COMPLEX_UNIT_SP, 2f)
+                }
+            }
+        }
+    }
+
 }

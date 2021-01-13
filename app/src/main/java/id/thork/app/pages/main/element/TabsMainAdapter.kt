@@ -17,22 +17,17 @@ class TabsMainAdapter(fm: FragmentManager, lifecycle: Lifecycle, private var num
     override fun createFragment(position: Int): Fragment {
         when (position) {
             0 -> {
-                // # Music Fragment
                 val bundle = Bundle()
-                bundle.putString("fragmentName", "Music Fragment")
                 val workorderFragment = WorkOrderListFragment()
                 workorderFragment.arguments = bundle
                 return workorderFragment
             }
             1 -> {
-                // # Movies Fragment
                 val bundle = Bundle()
-                bundle.putString("fragmentName", "Movies Fragment")
                 val activityFragment = ActivityFragment()
                 activityFragment.arguments = bundle
                 return activityFragment
             }
-
             else -> return WorkOrderListFragment()
         }
     }

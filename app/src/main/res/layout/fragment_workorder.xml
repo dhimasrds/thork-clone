@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             app:tabMaxWidth="0dp"
+            android:padding="4dp"
             app:tabTextAppearance="?android:attr/textAppearanceMedium"
             app:textAllCaps="false" />
 

@@ -14,11 +14,14 @@ package id.thork.app.pages.main
 
 import android.graphics.Color
 import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -27,6 +30,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -46,15 +50,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     val viewModel: MainViewModel by viewModels()
 
     private var currentNavController: LiveData<NavController>? = null
-    private lateinit var toolBar: MaterialToolbar
+    private lateinit var toolBar: Toolbar
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
     override fun setupView() {
         super.setupView()
-        toolBar = binding.toolbar
-        setSupportActionBar(toolBar)
-
+        setupToolBar()
         setupBottomNavigationBar()
 
         binding.apply {
@@ -62,32 +64,26 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-//    private fun setupTabsViewPager() {
-//
-//        setCustomTabTitles()
-//    }
-//
-//    private fun setCustomTabTitles() {
-//        val vg = binding.tabLayout.getChildAt(0) as ViewGroup
-//        val tabsCount = vg.childCount
-//
-//        for (j in 0 until tabsCount) {
-//            val vgTab = vg.getChildAt(j) as ViewGroup
-//
-//            val tabChildCount = vgTab.childCount
-//
-//            for (i in 0 until tabChildCount) {
-//                val tabViewChild = vgTab.getChildAt(i)
-//                if (tabViewChild is TextView) {
-//
-//                    // Change Font and Size
-//                    val font = ResourcesCompat.getFont(this, R.font.opensans_light)
-//                    tabViewChild.typeface = font
-//                    tabViewChild.setTextSize(TypedValue.COMPLEX_UNIT_PX, 4f)
-//                }
-//            }
-//        }
-//    }
+    private fun setupToolBar() {
+        toolBar = binding.toolbar.wmsToolbar
+        setSupportActionBar(toolBar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        toolBar.setNavigationIcon(R.drawable.ic_settings)
+        binding.toolbar.toolbarTitle.text = getString(R.string.this_fsm)
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
+        toolBar.overflowIcon = drawable
+        toolBar.inflateMenu(R.menu.filter_menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.filter_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain

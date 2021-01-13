@@ -14,17 +14,21 @@
         android:layout_height="match_parent"
         tools:context=".pages.main.MainActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@color/colorPrimary"
+            android:layout_height="wrap_content"
+            app:theme="@style/MyActionBarTheme"
             android:elevation="4dp"
-            android:theme="@style/AppTheme.Toolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@android:color/white">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
@@ -33,7 +37,7 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/appBar"
             >
                 </androidx.fragment.app.FragmentContainerView>
 

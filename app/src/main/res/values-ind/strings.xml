@@ -338,6 +338,10 @@
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
     <string name="wo">Wo :</string>
+    <string name="this_fsm">THIS FSM</string>
+    <string name="list_work_order">List Work Order</string>
+    <string name="activity">Activity</string>
+    <string name="search_work_order">Search work order</string>
 
     <string-array name="work_type_wo">
         <item>ORR</item>

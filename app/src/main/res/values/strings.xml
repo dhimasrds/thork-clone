@@ -352,5 +352,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="wo">Wo :</string>
     <string name="approve">Approve</string>
+    <string name="this_fsm">THIS FSM</string>
+    <string name="list_work_order">List Work Order</string>
+    <string name="activity">Activity</string>
+    <string name="search_work_order">Search work order</string>
 
 </resources>
