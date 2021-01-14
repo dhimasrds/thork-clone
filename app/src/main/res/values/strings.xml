@@ -111,20 +111,6 @@
     <string name="maps_gps_is_disable">GPS is disable</string>
     <string name="maps_permissions_granted">All Permissions Granted Successfully</string>
 
-    <!-- Settings Menu -->
-    <string name="settings_password">Password</string>
-    <string name="settings_change_password">Change Password</string>
-    <string name="settings_pattern">Password Pattern</string>
-    <string name="settings_change_pattern">Change Password Pattern</string>
-    <string name="settings_enable_pattern">Enable Password Pattern</string>
-    <string name="settings_about">About</string>
-    <string name="settings_about_this">About This</string>
-    <string name="settings_language">Language</string>
-    <string name="settings_logout">Logout</string>
-    <string name="settings_user">User</string>
-    <string name="settings_change_pattern_success">Change Pattern Success</string>
-    <string name="settings_change_pattern_activity">Input Current Pattern</string>
-
     <!-- MENU: Tentang -->
     <string name="about_this_description">
         \t \t
@@ -344,6 +330,25 @@
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
 
+    <!-- Settings Menu -->
+    <string name="settings_password">Password</string>
+    <string name="settings_change_password">Change Password</string>
+    <string name="settings_pattern">Password Pattern</string>
+    <string name="settings_change_pattern">Change Password Pattern</string>
+    <string name="settings_enable_pattern">Enable Password Pattern</string>
+    <string name="settings_enable_dark_mode">Enable Dark Mode</string>
+    <string name="settings_logs">Logs</string>
+    <string name="settings_cache">Cache</string>
+    <string name="settings_logs_detail">View Logs</string>
+    <string name="settings_cache_detail">Clear Cache</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_this">About This</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_logout">Logout</string>
+    <string name="settings_user">User</string>
+    <string name="settings_change_pattern_success">Change Pattern Success</string>
+    <string name="settings_change_pattern_failed">Change Pattern Failed</string>
+    <string name="settings_change_pattern_activity">Input Current Pattern</string>
 
     <string-array name="work_type_wo">
         <item>ORR</item>

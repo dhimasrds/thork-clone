@@ -21,6 +21,17 @@
         <activity android:name=".pages.dummy.DummyActivity" />
         <activity android:name=".pages.login.LoginActivity" />
         <activity android:name=".pages.intro.IntroActivity" />
+        <activity android:name=".pages.settings_language.SettingsLanguageActivity" />
+        <activity android:name=".pages.settings_log.LogActivity" />
+        <activity android:name=".pages.settings.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".pages.about.AboutActivity" />
+
         <activity
             android:name=".pages.server.ServerActivity"
             android:configChanges="orientation"
@@ -30,14 +41,13 @@
         <activity
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:theme="@style/ColdStart">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".pages.main.MainActivity">
-
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
 
