@@ -15,6 +15,9 @@ buildscript {
         moshiVersion = "1.11.0"
         glideVersion = "4.11.0"
 
+        //Pattern Lock View
+        patternLockViewVersion = '1.0.0'
+
         retrofitVersion = "2.9.0"
         okhttpLoggingInterceptorVersion = "4.9.0"
         sandwichVersion = "1.0.6"

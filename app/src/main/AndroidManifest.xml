@@ -17,7 +17,13 @@
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
         <activity android:name=".pages.create_wo.CreateWoActivity"></activity>
-        <activity android:name=".pages.login_pattern.LoginPatternActivity" />
+        <activity android:name=".pages.login_pattern.LoginPatternActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity android:name=".pages.dummy.DummyActivity" />
         <activity android:name=".pages.login.LoginActivity" />
         <activity android:name=".pages.intro.IntroActivity" />
@@ -37,13 +43,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".pages.main.MainActivity">
+<!--             <intent-filter>-->
+<!--             <action android:name="android.intent.action.MAIN" />-->
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+<!--             <category android:name="android.intent.category.LAUNCHER" />-->
+<!--             </intent-filter>-->
         </activity>
     </application>
 
