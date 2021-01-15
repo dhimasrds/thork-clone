@@ -29,21 +29,16 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".pages.splash_screen.SplashScreenActivity"
-            android:theme="@style/ColdStart"/>
-
-        <activity android:name=".pages.main.MainActivity">
+            android:theme="@style/ColdStart">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
+        <activity android:name=".pages.main.MainActivity"/>
 
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
     </application>
 
 </manifest>

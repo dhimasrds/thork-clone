@@ -10,14 +10,16 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Entity
-data class WoEntity(val random :String) :BaseEntity(), Parcelable{
-    var woId : Int? = null
-    var syncStatus : Int? = null
-    var isChanged : Int? = null
-    var isLatest : Int? = null
-    var wonum : String? = null
-    var syncBody : String? = null
-    var syncUpdate : String? = null
-    var laborCode : String? = null
+data class WoEntity(
+    var woId : Int? = null,
+    var syncStatus : Int? = null,
+    var isChanged : Int? = null,
+    var isLatest : Int? = null,
+    var wonum : String? = null,
+    var syncBody : String? = null,
+    var syncUpdate : String? = null,
+    var laborCode : String? = null,
     var status : String? = null
+) :BaseEntity(), Parcelable{
+
 }

@@ -7,6 +7,7 @@ import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import timber.log.Timber
 
@@ -32,6 +33,7 @@ class WorkOrderRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
+
             }
         }
             .onError {
@@ -42,5 +44,9 @@ class WorkOrderRepository constructor(
                 Timber.tag(TAG).i("loginByPerson() exception: %s", message())
                 onError(message())
             }
+    }
+
+    suspend fun getMemberList(list: MutableList<Member>) {
+
     }
 }

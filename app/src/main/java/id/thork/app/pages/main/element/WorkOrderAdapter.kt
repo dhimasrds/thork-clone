@@ -5,20 +5,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardViewWorkOrderBinding
+import id.thork.app.network.response.work_order.Member
 import id.thork.app.persistence.entity.WoEntity
 
 /**
  * Created by Dhimas Saputra on 08/01/21
  * Jakarta, Indonesia.
  */
-class WorkOrderAdapter(val list :List<WoEntity>) : RecyclerView.Adapter<WorkOrderAdapter.ViewHolder>() {
+class WorkOrderAdapter(val list :List<Member>) : RecyclerView.Adapter<WorkOrderAdapter.ViewHolder>() {
     class ViewHolder(val binding : CardViewWorkOrderBinding) :RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(woEntity: WoEntity){
+        fun bind(woEntity: Member){
             binding.tvWonum.text = woEntity.wonum
-            binding.desc.text = woEntity.status
-            binding.tvLocation.text = woEntity.laborCode
+            binding.desc.text = woEntity.description
+            binding.tvLocation.text = woEntity.location
         }
 
     }

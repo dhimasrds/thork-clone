@@ -15,6 +15,13 @@ package id.thork.app.network
 object ApiParam {
     const val LOGIN_SELECT_ENDPOINT = "*";
     const val LOGIN_WHERE_ENDPOINT = "spi:maxuser{spi:loginid=";
+
+    //workorder
+    const val WORKORDER_SELECT = "*"
+    const val WORKORDER_WHERE_LABORCODE_NEW = "cxlabor="
+    const val WORKORDER_WHERE_LABORCODE = "assignment{laborcode="
+    const val WORKORDER_WHERE_COMP = " and status in [\"COMP\",\"CLOSE\"]"
+    const val WORKORDER_WHERE_STATUS = " and status in [\"APPR\",\"INPRG\",\"COMP\"]"
     
 
 }
