@@ -42,13 +42,15 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
     override fun setupView() {
         super.setupView()
         toolBar = binding.toolbar
-//        setSupportActionBar(toolBar)
+        setSupportActionBar(toolBar)
 
         setupBottomNavigationBar()
 
         binding.apply {
             lifecycleOwner = this@MainActivity
         }
+
+        viewModel.checkRepo()
     }
 
     private fun setupBottomNavigationBar() {

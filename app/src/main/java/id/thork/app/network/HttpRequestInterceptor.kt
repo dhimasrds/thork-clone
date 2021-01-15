@@ -1,5 +1,7 @@
 package id.thork.app.network
 
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -8,16 +10,16 @@ import javax.inject.Singleton
 
 @Singleton
 class HttpRequestInterceptor: Interceptor {
-    var url: String = "147.139.139.145"
-    var urlPort: Int = 9080
+    private val TAG = HttpRequestInterceptor::class.java.name
+
+    var url: String = ""
+    var urlPort: Int = 0
     var headers: Map<String, String> = HashMap()
 
-    fun setHost(url: String) {
-        this.url = url
-    }
-
-    fun setPort(urlPort: Int) {
-        this.urlPort = urlPort
+    fun setHost(host: String) {
+        val httpUrl = host.toHttpUrlOrNull()
+        this.url = httpUrl!!.host
+        this.urlPort  = httpUrl!!.port
     }
 
     fun addHeader(headers: Map<String, String>) {
@@ -32,13 +34,12 @@ class HttpRequestInterceptor: Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val newUrl = originalRequest.url.newBuilder().host(url)
-            .port(urlPort).build()
+        val newUrl = originalRequest.url.newBuilder().host(url).port(urlPort).build()
         val request = originalRequest.newBuilder().url(newUrl).build()
 
         var requestBuilder = request.newBuilder()
         configHeader(requestBuilder, headers)
-        Timber.d(requestBuilder.toString())
+        Timber.tag(TAG).d("intercept() newUrl: %s", newUrl.toUri().toString())
         return chain.proceed(requestBuilder.build())
     }
 }

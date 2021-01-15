@@ -15,10 +15,17 @@ package id.thork.app.pages.main.element
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.repository.LoginRepository
+import retrofit2.Retrofit
+import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val retrofit: Retrofit
     ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
+
+    fun checkRepo() {
+        Timber.tag(TAG).i("checkRepo() loginRepository: %s retrofit: %s", loginRepository, retrofit)
+    }
 }
