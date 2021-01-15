@@ -13,7 +13,6 @@
 package id.thork.app.pages.login_pattern
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import com.andrognito.patternlockview.PatternLockView
@@ -43,9 +42,9 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         var tempPattern = BaseParam.APP_EMPTY_STRING
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+    override fun setupView() {
+        super.setupView()
         binding.apply {
             lifecycleOwner = this@LoginPatternActivity
             vm = loginPatternViewModel
@@ -53,17 +52,17 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         //Init Custom Dialog
         customDialogUtils = CustomDialogUtils(this)
         binding.patternLockView.addPatternLockListener(patternLockViewListener)
-        setupListener()
-        setupObserve()
     }
 
     override fun setupListener() {
+        super.setupListener()
         binding.btnSwitchUser.setOnClickListener {
             loginPatternViewModel.deleteUserSession()
         }
     }
 
-    fun setupObserve() {
+    override fun setupObserver() {
+        super.setupObserver()
         loginPatternViewModel.validateUsername()
         loginPatternViewModel.username.observe(this, {
             binding.etProfileName.text = it
@@ -87,12 +86,10 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         })
 
         loginPatternViewModel.switchUser.observe(this, {
-            if(it == BaseParam.APP_TRUE) {
-                //TODO navigate to Server act
+            if (it == BaseParam.APP_TRUE) {
                 navigateToServerAcitivity()
             }
         })
-
     }
 
     override fun onDestroy() {
@@ -121,7 +118,10 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
                     PatternLockUtils.patternToString(binding.patternLockView, pattern)
                 )
                 if (isDoPatternValidation == BaseParam.APP_TRUE) {
-                    Timber.tag(TAG).d("patternLockViewListener() isDoPatternValidation %s", isDoPatternValidation)
+                    Timber.tag(TAG).d(
+                        "patternLockViewListener() isDoPatternValidation %s",
+                        isDoPatternValidation
+                    )
                     //TODO validate pattern with user session
                     loginPatternViewModel.validatePattern(
                         PatternLockUtils.patternToString(
@@ -161,17 +161,9 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
 
             1 -> {
                 if (!tempPattern.equals(patternExisting) && !patternExisting.isNullOrEmpty()) {
-                    Timber.tag(TAG)
-                        .d("patternLockViewListener() onComplete pattern not same")
-                    showFailedDialog()
+                    showFailedReinputDialog()
                 } else {
-                    Timber.tag(TAG).d("patternLockViewListener() onComplete is same")
-                    loginPatternViewModel.setUserPattern(
-                        PatternLockUtils.patternToString(
-                            binding.patternLockView,
-                            pattern
-                        )
-                    )
+                    loginPatternViewModel.setUserPattern(patternExisting)
                     Timber.tag(TAG).d("patternLockViewListener() onComplete has been save")
                 }
             }
@@ -187,6 +179,15 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         customDialogUtils.show()
     }
 
+    private fun showFailedReinputDialog() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_reset)
+            .setRightButtonText(R.string.dialog_repeat)
+            .setTittle(R.string.pattern_title)
+            .setDescription(R.string.reinput_pattern_failed)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
     private fun showFailedDialog() {
         customDialogUtils.setMiddleButtonText(R.string.server_try_again)
             .setTittle(R.string.pattern_title)
@@ -194,11 +195,6 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             .setListener(this)
         customDialogUtils.show()
     }
-
-    private fun showSwitchUserDialog() {
-
-    }
-
 
     override fun onRightButton() {
         if (patternState == 0) {
