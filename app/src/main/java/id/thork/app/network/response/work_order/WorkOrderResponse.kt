@@ -4,6 +4,7 @@ package id.thork.app.network.response.work_order
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+
 @JsonClass(generateAdapter = true)
 data class WorkOrderResponse(
     @Json(name = "href")
@@ -13,7 +14,5 @@ data class WorkOrderResponse(
     @Json(name = "responseInfo")
     val responseInfo: ResponseInfo
 ) {
-    constructor() : this(href = "", member = emptyList(), responseInfo =ResponseInfo(
-        ""
-    ))
+    constructor() : this(href = "", member = emptyList(), responseInfo = ResponseInfo(""))
 }

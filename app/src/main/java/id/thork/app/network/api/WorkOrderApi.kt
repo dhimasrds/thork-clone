@@ -14,7 +14,7 @@ import retrofit2.http.Query
 interface WorkOrderApi {
 
     @GET("maximo/oslc/os/oslcwo")
-    fun getListWorkorder(
+    suspend fun getListWorkorder(
         @Header("MAXAUTH") userHash: String?,
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,

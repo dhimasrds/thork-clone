@@ -12,7 +12,7 @@
 package id.thork.app.base
 
 object BaseParam {
-    const val BASE_SERVER_URL = "http://147.139.139.145:9080"
+    const val BASE_SERVER_URL = "http://149.129.252.41:9080"
 
     const val APP_TRUE = 1
     const val APP_FALSE = 0

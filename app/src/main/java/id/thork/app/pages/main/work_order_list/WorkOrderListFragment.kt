@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
+import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.FragmentWorkOrderListBinding
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
@@ -15,6 +17,7 @@ import id.thork.app.persistence.entity.WoEntity
 import id.thork.app.utils.CustomDialogUtils
 import timber.log.Timber
 
+@AndroidEntryPoint
 class WorkOrderListFragment : Fragment() {
 //    private lateinit var binding: FragmentWorkOrderListBinding
     val arrayList = ArrayList<WoEntity>()
@@ -28,8 +31,14 @@ class WorkOrderListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentWorkOrderListBinding.inflate(inflater)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this@WorkOrderListFragment
         binding.viewModel = viewModel
+
+        viewModel.fetchWoList()
+        viewModel.getWoList.observe(viewLifecycleOwner){
+                    Timber.d("listsize :%s", it.size)
+
+        }
 
 
 //        for (i in 1..20) {
@@ -40,13 +49,9 @@ class WorkOrderListFragment : Fragment() {
 //            )
 //            arrayList.add(wo)
 //        }
-//
-//
+
 //        Timber.d("list size :%s", arrayList.size)
 
-        binding.apply {
-
-        }
 
         return binding.root
     }

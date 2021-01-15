@@ -33,7 +33,6 @@ class WorkOrderRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-
             }
         }
             .onError {
@@ -46,7 +45,4 @@ class WorkOrderRepository constructor(
             }
     }
 
-    suspend fun getMemberList(list: MutableList<Member>) {
-
-    }
 }
