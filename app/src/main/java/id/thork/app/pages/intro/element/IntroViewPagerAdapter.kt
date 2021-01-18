@@ -22,13 +22,12 @@ class IntroViewPagerAdapter(
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
         override fun getItemViewType(position: Int): Int {
-            return screens.get(position)
+            return screens[position]
         }
 
         override fun getItemCount(): Int {
             return screens.size
         }
 
-        inner class SliderViewHolder(view: View?) : RecyclerView.ViewHolder(view!!) {
-        }
+        inner class SliderViewHolder(view: View?) : RecyclerView.ViewHolder(view!!)
     }

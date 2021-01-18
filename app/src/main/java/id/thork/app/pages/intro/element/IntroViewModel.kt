@@ -24,10 +24,8 @@ class IntroViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = IntroViewModel::class.java.name
 
-    fun isFirstLaunch() {
-        viewModelScope.launch {
-            preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)
-        }
+    fun isFirstLaunch(): Boolean {
+        return preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)
     }
 
     fun disableFirstLaunch() {

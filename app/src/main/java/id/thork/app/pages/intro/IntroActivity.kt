@@ -21,7 +21,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMainIntroSliderBinding
 import id.thork.app.pages.intro.element.IntroViewModel
 import id.thork.app.pages.intro.element.IntroViewPagerAdapter
@@ -37,7 +36,7 @@ class IntroActivity : BaseActivity() {
     private lateinit var screens: IntArray
     private lateinit var myvpAdapter: IntroViewPagerAdapter
 
-    var pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
+    private var pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             coloredBars(position)
@@ -91,7 +90,7 @@ class IntroActivity : BaseActivity() {
         binding.viewPager.adapter = myvpAdapter
         binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
 
-        if (viewModel.isFirstLaunch().equals(BaseParam.APP_FIRST_LAUNCH)) {
+        if (!viewModel.isFirstLaunch()) {
             navigateToServer()
             finish()
         }
@@ -99,7 +98,7 @@ class IntroActivity : BaseActivity() {
         coloredBars(0)
     }
 
-    private fun nextAction(){
+    private fun nextAction() {
         val i = binding.viewPager.currentItem + SLIDER_STEP
         if (i < screens.count()) {
             binding.viewPager.currentItem = i
@@ -119,15 +118,17 @@ class IntroActivity : BaseActivity() {
         binding.layoutBars.removeAllViews()
         for (i in bottomBars.indices) {
             bottomBars[i] = ImageView(this)
-            bottomBars.get(i)!!.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot, null))
+            bottomBars[i]!!
+                .setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot, null))
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             lp.setMargins(10, 10, 10, 10)
-            bottomBars.get(i)?.layoutParams = lp
-            binding.layoutBars.addView(bottomBars.get(i))
+            bottomBars[i]?.layoutParams = lp
+            binding.layoutBars.addView(bottomBars[i])
         }
-        if (bottomBars.isNotEmpty()) bottomBars.get(thisScreen)?.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot_blue, null))
+        if (bottomBars.isNotEmpty()) bottomBars[thisScreen]
+            ?.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot_blue, null))
     }
 }
