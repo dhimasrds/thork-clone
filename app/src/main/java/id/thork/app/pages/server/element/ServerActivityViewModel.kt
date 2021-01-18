@@ -20,7 +20,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.NetworkConnectivity
-import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.HttpRequestInterceptor
 import id.thork.app.repository.LoginRepository
 import okhttp3.OkHttpClient
@@ -30,9 +29,8 @@ class ServerActivityViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val httpRequestInterceptor: HttpRequestInterceptor,
     private val preferenceManager: PreferenceManager,
-    private val okHttpClient: OkHttpClient
-    private val networkConnectivity: NetworkConnectivity,
-    private val preferenceManager: PreferenceManager
+    private val okHttpClient: OkHttpClient,
+    private val networkConnectivity: NetworkConnectivity
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
