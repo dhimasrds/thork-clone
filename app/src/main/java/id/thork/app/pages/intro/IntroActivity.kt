@@ -67,7 +67,17 @@ class IntroActivity : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
 
-        nextAction()
+        binding.next.setOnClickListener {
+            nextAction()
+        }
+
+        binding.skip.setOnClickListener {
+            navigateToServer()
+        }
+
+        binding.start.setOnClickListener {
+            navigateToServer()
+        }
     }
 
     private fun initView() {
@@ -90,20 +100,10 @@ class IntroActivity : BaseActivity() {
     }
 
     private fun nextAction(){
-        binding.next.setOnClickListener {
-            val i = binding.viewPager.currentItem + SLIDER_STEP
-            if (i < screens.count()) {
-                binding.viewPager.currentItem = i
-            } else {
-                navigateToServer()
-            }
-        }
-
-        binding.skip.setOnClickListener {
-            navigateToServer()
-        }
-
-        binding.start.setOnClickListener {
+        val i = binding.viewPager.currentItem + SLIDER_STEP
+        if (i < screens.count()) {
+            binding.viewPager.currentItem = i
+        } else {
             navigateToServer()
         }
     }
