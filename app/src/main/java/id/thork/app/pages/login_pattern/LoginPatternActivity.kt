@@ -38,8 +38,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private lateinit var customDialogUtils: CustomDialogUtils
 
     companion object {
-        var isDoPatternValidation = 0
-        var patternState = 0
+        var isDoPatternValidation = BaseParam.APP_FALSE
+        var patternState = BaseParam.APP_FALSE
         var tempPattern = BaseParam.APP_EMPTY_STRING
     }
 
@@ -123,7 +123,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
                         "patternLockViewListener() isDoPatternValidation %s",
                         isDoPatternValidation
                     )
-                    //TODO validate pattern with user session
+                    //validate pattern with user session
                     loginPatternViewModel.validatePattern(
                         PatternLockUtils.patternToString(
                             binding.patternLockView,
@@ -145,7 +145,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     }
 
     private fun resetPattern() {
-        patternState = 0
+        patternState = BaseParam.APP_FALSE
         tempPattern = BaseParam.APP_EMPTY_STRING
         binding.etProfileName.text =
             StringUtils.getStringResources(this, R.string.reset_pattern)
@@ -155,12 +155,12 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     fun reinputPattern(pattern: MutableList<PatternLockView.Dot>?) {
         val patternExisting = PatternLockUtils.patternToString(binding.patternLockView, pattern)
         when (patternState) {
-            0 -> {
+            BaseParam.APP_FALSE -> {
                 tempPattern = patternExisting
                 showReinputDialog()
             }
 
-            1 -> {
+            BaseParam.APP_TRUE -> {
                 if (!tempPattern.equals(patternExisting) && !patternExisting.isNullOrEmpty()) {
                     showFailedReinputDialog()
                 } else {
@@ -198,8 +198,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     }
 
     override fun onRightButton() {
-        if (patternState == 0) {
-            patternState = 1
+        if (patternState == BaseParam.APP_FALSE) {
+            patternState = BaseParam.APP_TRUE
             binding.etProfileName.text =
                 StringUtils.getStringResources(this, R.string.confim_pattern)
         }
