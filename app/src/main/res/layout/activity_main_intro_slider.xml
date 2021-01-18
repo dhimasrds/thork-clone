@@ -33,8 +33,7 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_wms"/>
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,8 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="39dp"
+            android:layout_marginTop="@dimen/linear_margin_top_intro"
+            android:layout_marginBottom="@dimen/linear_margin_bottom_intro"
             android:elevation="@dimen/activity_horizontal_margin"
             android:gravity="center"
             android:orientation="horizontal"
@@ -66,29 +65,27 @@
             <Button
                 android:id="@+id/skip"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/button_margin_left_right_intro"
+                android:layout_marginRight="@dimen/button_margin_left_right_intro"
                 android:layout_weight="1"
                 android:background="@color/transparant"
                 android:fontFamily="@font/opensans_bold"
-                android:onClick="skip"
                 android:text="@string/skip"
                 android:textColor="@color/colorGraySkip"/>
 
             <Button
-                android:layout_gravity="center_vertical"
                 android:id="@+id/start"
+                android:layout_gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/button_skip_left_right_intro"
+                android:layout_marginRight="@dimen/button_skip_left_right_intro"
                 android:layout_weight="0.5"
                 android:textSize="12sp"
                 android:background="@drawable/btn_rounded"
                 android:fontFamily="@font/opensans_bold"
-                android:onClick="skip"
-                android:text="Get Started"
+                android:text="@string/start"
                 android:textColor="@color/white"
                 android:visibility="gone" />
 
@@ -96,12 +93,11 @@
                 android:id="@+id/next"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="@dimen/button_margin_left_right_intro"
+                android:layout_marginRight="@dimen/button_margin_left_right_intro"
                 android:layout_weight="1"
                 android:background="@color/transparant"
                 android:fontFamily="@font/opensans_bold"
-                android:onClick="next"
                 android:text="@string/next"
                 android:textColor="@color/colorPrimaryBackground" />
         </LinearLayout>

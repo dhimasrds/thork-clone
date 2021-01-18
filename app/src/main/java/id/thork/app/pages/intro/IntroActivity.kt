@@ -34,7 +34,6 @@ class IntroActivity : BaseActivity() {
     val TAG = IntroActivity::class.java.name
     private val binding: ActivityMainIntroSliderBinding by binding(R.layout.activity_main_intro_slider)
     private val viewModel: IntroViewModel by viewModels()
-    val preferenceManager: PreferenceManager = PreferenceManager(context)
 
     private lateinit var bottomBars: Array<ImageView?>
     private lateinit var screens: IntArray
@@ -57,40 +56,19 @@ class IntroActivity : BaseActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-        handlerOnClick()
-    }
-
     override fun setupView() {
         super.setupView()
         binding.apply {
             lifecycleOwner = this@IntroActivity
             vm = viewModel
         }
+
+        initView()
     }
 
-    private fun initView() {
-        screens = intArrayOf(
-            R.layout.layout_welcome1,
-            R.layout.layout_welcome2,
-            R.layout.layout_welcome3
-        )
+    override fun setupListener() {
+        super.setupListener()
 
-        myvpAdapter = MyViewPagerAdapter(screens)
-        binding.viewPager.adapter = myvpAdapter
-        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
-
-        if (!preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)) {
-            launchMain()
-            finish()
-        }
-
-        ColoredBars(0)
-    }
-
-    private fun handlerOnClick() {
         binding.next.setOnClickListener {
             val i = getItem(+1)
             if (i < screens.count()) {
@@ -109,8 +87,27 @@ class IntroActivity : BaseActivity() {
         }
     }
 
+    private fun initView() {
+        screens = intArrayOf(
+            R.layout.layout_welcome1,
+            R.layout.layout_welcome2,
+            R.layout.layout_welcome3
+        )
+
+        myvpAdapter = MyViewPagerAdapter(screens)
+        binding.viewPager.adapter = myvpAdapter
+        binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
+
+        if (viewModel.getFirstLaunch().equals(BaseParam.APP_FIRST_LAUNCH)) {
+            launchMain()
+            finish()
+        }
+
+        ColoredBars(0)
+    }
+
     private fun launchMain() {
-        preferenceManager.putBoolean(BaseParam.APP_FIRST_LAUNCH, false)
+        viewModel.launchMain()
         startActivity(Intent(this@IntroActivity, ServerActivity::class.java))
         finish()
     }
