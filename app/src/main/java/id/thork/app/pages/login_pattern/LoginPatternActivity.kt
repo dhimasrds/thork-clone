@@ -37,12 +37,9 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private val binding: ActivityLoginPatternBinding by binding(R.layout.activity_login_pattern)
     private lateinit var customDialogUtils: CustomDialogUtils
 
-    companion object {
-        var isDoPatternValidation = BaseParam.APP_FALSE
-        var patternState = BaseParam.APP_FALSE
-        var tempPattern = BaseParam.APP_EMPTY_STRING
-    }
-
+    private var isDoPatternValidation = BaseParam.APP_FALSE
+    private var patternState = BaseParam.APP_FALSE
+    private var tempPattern = BaseParam.APP_EMPTY_STRING
 
     override fun setupView() {
         super.setupView()
