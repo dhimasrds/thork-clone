@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.intro.element
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
@@ -19,9 +20,10 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
 import kotlinx.coroutines.launch
 
-class IntroViewModel : LiveCoroutinesViewModel() {
+class IntroViewModel @ViewModelInject constructor(
+    val preferenceManager: PreferenceManager
+): LiveCoroutinesViewModel() {
     val TAG = IntroViewModel::class.java.name
-    val preferenceManager: PreferenceManager = PreferenceManager(BaseApplication.context)
 
     fun getFirstLaunch() {
         viewModelScope.launch {
