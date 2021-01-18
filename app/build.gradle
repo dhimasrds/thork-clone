@@ -128,6 +128,9 @@ dependencies {
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
 
-
+    implementation "com.google.android.libraries.places:places:$rootProject.librariesPlaces"
+    implementation "com.google.android.gms:play-services-location:$rootProject.playServices"
+    implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
+    implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtils"
 }
 apply plugin: 'io.objectbox'
