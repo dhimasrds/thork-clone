@@ -26,6 +26,8 @@ buildscript {
 
         fragmentVersion = "1.2.5"
         lifecycleVersion = "2.2.0"
+        navigationVersion = "2.3.0"
+        viewPagerVersion = "1.0.0"
         roomVersion = "2.3.0-alpha03"
         archCompomentVersion = "2.1.0"
 

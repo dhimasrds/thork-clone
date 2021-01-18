@@ -12,8 +12,25 @@
 
 package id.thork.app.pages.intro.element
 
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.viewModelScope
+import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.PreferenceManager
+import kotlinx.coroutines.launch
 
-class IntroViewModel: LiveCoroutinesViewModel() {
+class IntroViewModel @ViewModelInject constructor(
+    val preferenceManager: PreferenceManager
+) : LiveCoroutinesViewModel() {
+    val TAG = IntroViewModel::class.java.name
 
+    fun isFirstLaunch(): Boolean {
+        return preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)
+    }
+
+    fun disableFirstLaunch() {
+        viewModelScope.launch {
+            preferenceManager.putBoolean(BaseParam.APP_FIRST_LAUNCH, false)
+        }
+    }
 }
