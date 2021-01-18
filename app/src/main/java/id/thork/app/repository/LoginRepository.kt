@@ -30,6 +30,14 @@ class LoginRepository constructor(
         return userDao.createUserSession(userEntity, username)
     }
 
+    fun saveLoginPattern(userEntity: UserEntity, username: String?) {
+        return userDao.save(userEntity, username!!)
+    }
+
+    fun deleteUserSession(userEntity: UserEntity) {
+        return userDao.delete(userEntity)
+    }
+
     suspend fun loginPerson(
         headerParam: String,
         select: String,

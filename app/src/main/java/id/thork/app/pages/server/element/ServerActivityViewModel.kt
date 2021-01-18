@@ -18,8 +18,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.di.module.NetworkConnectivity
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.di.module.NetworkConnectivity
 import id.thork.app.network.HttpRequestInterceptor
 import id.thork.app.repository.LoginRepository
 import okhttp3.OkHttpClient
@@ -27,13 +27,18 @@ import timber.log.Timber
 
 class ServerActivityViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
-    private val networkConnectivity: NetworkConnectivity,
-    private val preferenceManager: PreferenceManager
+    private val httpRequestInterceptor: HttpRequestInterceptor,
+    private val preferenceManager: PreferenceManager,
+    private val okHttpClient: OkHttpClient,
+    private val networkConnectivity: NetworkConnectivity
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
     private val _state = MutableLiveData<Int>()
     val state:LiveData<Int> get() = _state
+
+    private val _cacheUrl = MutableLiveData<String>()
+    val cacheUrl: LiveData<String> get() = _cacheUrl
 
     init {
         Timber.tag(TAG).i("init() loginRepository: %s", loginRepository)
@@ -46,7 +51,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
             }
         })
     }
-    
+
     fun validateUrl(serverUrl: String) {
         if (URLUtil.isValidUrl(serverUrl)) {
             Timber.tag(TAG).i("validateUrl() serverUrl: %s", serverUrl)
@@ -55,6 +60,13 @@ class ServerActivityViewModel @ViewModelInject constructor(
         }else {
             _state.postValue(BaseParam.APP_FALSE)
         }
+    }
+
+    fun cacheServerUrl() {
+        if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isNullOrEmpty()) {
+            _cacheUrl.value = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
+        }
+
     }
 
     fun beautifyServerUrl(serverUrl: String): String {

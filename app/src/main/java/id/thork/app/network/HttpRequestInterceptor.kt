@@ -19,7 +19,7 @@ class HttpRequestInterceptor: Interceptor {
     fun setHost(host: String) {
         val httpUrl = host.toHttpUrlOrNull()
         this.url = httpUrl!!.host
-        this.urlPort  = httpUrl!!.port
+        this.urlPort  = httpUrl.port
     }
 
     fun addHeader(headers: Map<String, String>) {
@@ -37,7 +37,7 @@ class HttpRequestInterceptor: Interceptor {
         val newUrl = originalRequest.url.newBuilder().host(url).port(urlPort).build()
         val request = originalRequest.newBuilder().url(newUrl).build()
 
-        var requestBuilder = request.newBuilder()
+        val requestBuilder = request.newBuilder()
         configHeader(requestBuilder, headers)
         Timber.tag(TAG).d("intercept() newUrl: %s", newUrl.toUri().toString())
         return chain.proceed(requestBuilder.build())
