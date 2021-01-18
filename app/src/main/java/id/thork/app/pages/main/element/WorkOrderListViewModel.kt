@@ -25,7 +25,9 @@ class WorkOrderListViewModel @ViewModelInject constructor(
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
-    val getWoList = MutableLiveData<List<Member>>()
+    private val _getWoList = MutableLiveData<List<Member>>()
+    val getWoList : LiveData<List<Member>>get() = _getWoList
+
 
 
     fun fetchWoList() {
@@ -38,14 +40,13 @@ class WorkOrderListViewModel @ViewModelInject constructor(
         var response = WorkOrderResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
-            appSession.userHash?.let {
                 workOrderRepository.getWorkOrderList(
-                    it, select, where,
+                    appSession.userHash!!, select, where,
                     onSuccess = {
                         response = it
-                        Timber.d("fetchWoList :%s", response.member.size)
+                        Timber.d("fetchWoList :%s", response.member!!.size)
+                        _getWoList.postValue(response.member)
 
-                        getWoList.value = response.member
                     },
                     onError = {
                         _error.postValue(it)
@@ -54,4 +55,3 @@ class WorkOrderListViewModel @ViewModelInject constructor(
 
         }
     }
-}

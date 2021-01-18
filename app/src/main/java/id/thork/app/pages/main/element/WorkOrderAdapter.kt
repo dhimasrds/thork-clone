@@ -3,23 +3,38 @@ package id.thork.app.pages.main.element
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.persistence.entity.WoEntity
 
 /**
  * Created by Dhimas Saputra on 08/01/21
  * Jakarta, Indonesia.
  */
-class WorkOrderAdapter(val list :List<Member>) : RecyclerView.Adapter<WorkOrderAdapter.ViewHolder>() {
+class WorkOrderAdapter : ListAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCallback) {
+
+    companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
+        override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
+            TODO("Not yet implemented")
+        }
+
+        override fun areContentsTheSame(oldItem: Member, newItem: Member): Boolean {
+            TODO("Not yet implemented")
+        }
+    }
+
+
     class ViewHolder(val binding : CardViewWorkOrderBinding) :RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("SetTextI18n")
         fun bind(woEntity: Member){
+            binding.wo = woEntity
             binding.tvWonum.text = woEntity.wonum
             binding.desc.text = woEntity.description
             binding.tvLocation.text = woEntity.location
+            binding.tvStatus.text = woEntity.status
+            binding.executePendingBindings()
         }
 
     }
@@ -30,11 +45,8 @@ class WorkOrderAdapter(val list :List<Member>) : RecyclerView.Adapter<WorkOrderA
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val current = list[position]
+        val current = getItem(position)
         holder.bind(current)
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
 }

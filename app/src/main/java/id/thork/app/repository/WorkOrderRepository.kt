@@ -7,8 +7,8 @@ import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.WorkOrderClient
-import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.entity.LogEntity_.message
 import timber.log.Timber
 
 /**
@@ -33,14 +33,16 @@ class WorkOrderRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
+                Timber.tag(TAG).i("getWorkOrderList() code:%s", statusCode.code)
+
             }
         }
             .onError {
-                Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode.code, message())
+                Timber.tag(TAG).i("getWorkOrderList() code: %s error: %s", statusCode.code, message())
                 onError(message())
             }
             .onException {
-                Timber.tag(TAG).i("loginByPerson() exception: %s", message())
+                Timber.tag(TAG).i("getWorkOrderList() exception: %s", message())
                 onError(message())
             }
     }

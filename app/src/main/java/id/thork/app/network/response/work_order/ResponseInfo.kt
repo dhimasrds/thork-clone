@@ -7,5 +7,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ResponseInfo(
     @Json(name = "href")
-    val href: String
+    val href: String? = null
 )
