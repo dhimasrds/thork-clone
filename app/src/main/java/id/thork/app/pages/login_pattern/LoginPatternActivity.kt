@@ -37,12 +37,9 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private val binding: ActivityLoginPatternBinding by binding(R.layout.activity_login_pattern)
     private lateinit var customDialogUtils: CustomDialogUtils
 
-    companion object {
-        var isDoPatternValidation = 0
-        var patternState = 0
-        var tempPattern = BaseParam.APP_EMPTY_STRING
-    }
-
+    private var isDoPatternValidation = BaseParam.APP_FALSE
+    private var patternState = BaseParam.APP_FALSE
+    private var tempPattern = BaseParam.APP_EMPTY_STRING
 
     override fun setupView() {
         super.setupView()
@@ -65,11 +62,11 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     override fun setupObserver() {
         super.setupObserver()
         loginPatternViewModel.validateUsername()
-        loginPatternViewModel.username.observe(this, Observer{
+        loginPatternViewModel.username.observe(this, Observer {
             binding.etProfileName.text = it
         })
 
-        loginPatternViewModel.isPatttern.observe(this, Observer{
+        loginPatternViewModel.isPatttern.observe(this, Observer {
             isDoPatternValidation = it
             if (it == BaseParam.APP_FALSE) {
                 binding.btnSwitchUser.visibility = View.GONE
@@ -77,7 +74,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             Timber.d("isDoPattern %s", isDoPatternValidation)
         })
 
-        loginPatternViewModel.validatePattern.observe(this, Observer{
+        loginPatternViewModel.validatePattern.observe(this, Observer {
             if (it == BaseParam.APP_TRUE) {
                 Timber.d("setupObserve() validatePattern(): %s", it)
                 navigateToMainActivity()
@@ -86,7 +83,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             }
         })
 
-        loginPatternViewModel.switchUser.observe(this, Observer{
+        loginPatternViewModel.switchUser.observe(this, Observer {
             if (it == BaseParam.APP_TRUE) {
                 navigateToServerAcitivity()
             }
@@ -123,7 +120,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
                         "patternLockViewListener() isDoPatternValidation %s",
                         isDoPatternValidation
                     )
-                    //TODO validate pattern with user session
+                    //validate pattern with user session
                     loginPatternViewModel.validatePattern(
                         PatternLockUtils.patternToString(
                             binding.patternLockView,
@@ -145,22 +142,22 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     }
 
     private fun resetPattern() {
-        patternState = 0
+        patternState = BaseParam.APP_FALSE
         tempPattern = BaseParam.APP_EMPTY_STRING
+        binding.etProfileName.text =
+            StringUtils.getStringResources(this, R.string.reset_pattern)
         clearPattern()
     }
 
     fun reinputPattern(pattern: MutableList<PatternLockView.Dot>?) {
         val patternExisting = PatternLockUtils.patternToString(binding.patternLockView, pattern)
         when (patternState) {
-            0 -> {
-                binding.etProfileName.text =
-                    StringUtils.getStringResources(this, R.string.confim_pattern)
+            BaseParam.APP_FALSE -> {
                 tempPattern = patternExisting
                 showReinputDialog()
             }
 
-            1 -> {
+            BaseParam.APP_TRUE -> {
                 if (!tempPattern.equals(patternExisting) && !patternExisting.isNullOrEmpty()) {
                     showFailedReinputDialog()
                 } else {
@@ -198,8 +195,10 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     }
 
     override fun onRightButton() {
-        if (patternState == 0) {
-            patternState = 1
+        if (patternState == BaseParam.APP_FALSE) {
+            patternState = BaseParam.APP_TRUE
+            binding.etProfileName.text =
+                StringUtils.getStringResources(this, R.string.confim_pattern)
         }
         clearPattern()
         customDialogUtils.dismiss()
@@ -227,5 +226,4 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         startActivity(intent)
         finish()
     }
-
 }

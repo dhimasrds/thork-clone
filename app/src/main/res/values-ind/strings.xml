@@ -237,6 +237,7 @@
     <!-- Confirm Pattern -->
     <string name="confim_pattern">"Konfirmasi Pola Baru"</string>
     <string name="change_pattern">"Masukkan Pola Baru"</string>
+    <string name="reset_pattern">"Reset Pola Baru"</string>
 
 
     <string-array name="status_wo">

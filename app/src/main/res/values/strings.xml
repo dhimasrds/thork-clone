@@ -246,6 +246,8 @@
     <!-- Confirm Pattern -->
     <string name="confim_pattern">"Confirm New Pattern"</string>
     <string name="change_pattern">"Input New Pattern"</string>
+    <string name="reset_pattern">"Reset Pattern"</string>
+
 
     <string-array name="status_wo">
         <item>WAPPR</item>

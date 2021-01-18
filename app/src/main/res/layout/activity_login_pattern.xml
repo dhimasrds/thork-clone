@@ -32,18 +32,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginTop="@dimen/login_pattern_margin_top"
+            android:layout_marginRight="@dimen/login_pattern_margin_right"
             android:gravity="right">
 
             <Button
                 android:id="@+id/btn_switch_user"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/login_pattern_button_height"
                 android:text="Switch User"
                 android:background="@drawable/bg_button"
                 android:textAllCaps="false"
-                android:textSize="10sp"
+                android:textSize="@dimen/login_pattern_text_size"
                 android:fontFamily="@font/opensans_bold"
                 android:textColor="@color/white"
                 android:clickable="true"
@@ -57,10 +57,10 @@
 
             <ImageView
                 android:id="@+id/img_view_profile_image"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="@dimen/login_pattern_image_width"
+                android:layout_height="@dimen/login_pattern_image_height"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="@dimen/login_pattern_margin_top_icon"
                 android:src="@drawable/ic_logo" />
 
             <TextView
@@ -68,22 +68,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/login_pattern_margin_top_username"
                 android:fontFamily="@font/opensans_regular"
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="Profile Name"
                 android:textColor="@color/colorBlack"
-                android:textSize="20sp" />
+                android:textSize="@dimen/login_pattern_text_size_username" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginRight="@dimen/login_pattern_margin_cardview"
+                android:layout_marginLeft="@dimen/login_pattern_margin_cardview"
+                android:layout_marginTop="@dimen/login_pattern_margin_cardview"
+                android:layout_marginBottom="@dimen/login_pattern_margin_bottom"
                 android:elevation="4dp"
                 app:cardCornerRadius="8dp">
 
@@ -118,7 +118,7 @@
                 android:fontFamily="@font/opensans_light"
                 android:gravity="center"
                 android:textColor="@color/colorBlack"
-                android:textSize="10sp"
+                android:textSize="@dimen/login_pattern_text_size"
                 android:text="-"/>
         </LinearLayout>
         <LinearLayout
@@ -131,12 +131,12 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/progress_pattern"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="@dimen/login_pattern_progress"
+                android:layout_height="@dimen/login_pattern_progress"
                 android:src="@drawable/infinity_bar"
                 android:visibility="gone" />
         </LinearLayout>
