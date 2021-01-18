@@ -139,4 +139,19 @@
     <!-- Dialog Change Pattern -->
     <dimen name="text_size_change_pattern">25dp</dimen>
 
+    <!-- Intro -->
+    <dimen name="button_margin_left_right_intro">20dp</dimen>
+    <dimen name="button_skip_left_right_intro">30dp</dimen>
+    <dimen name="linear_margin_top_intro">100dp</dimen>
+    <dimen name="linear_margin_bottom_intro">39dp</dimen>
+    <dimen name="layout_height_width_picture_intro">200dp</dimen>
+    <dimen name="margin_left_right_picture_intro">76dp</dimen>
+    <dimen name="margin_top_picture_intro">32dp</dimen>
+    <dimen name="margin_bottom_picture_intro">10dp</dimen>
+    <dimen name="linear_padding_intro">10dp</dimen>
+    <dimen name="margin_bottom_desc_intro">50dp</dimen>
+    <dimen name="text_size_title_intro">16sp</dimen>
+    <dimen name="text_size_desc_intro">12sp</dimen>
+
+
 </resources>

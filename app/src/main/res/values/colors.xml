@@ -18,6 +18,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorBlue">#47BACD</color>
     <color name="colorGray">#AAAAAA</color>
+    <color name="colorGraySkip">#2E2D2D</color>
 
     <color name="colorBlueDispatch">#1463FF</color>
     <color name="bgStatusDispatch">#331463FF</color>
