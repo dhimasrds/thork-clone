@@ -127,8 +127,5 @@ class LoginActivity : BaseActivity(),
     override fun onMiddleButton() {
         Timber.tag(TAG).i("onMiddleButton()")
 
-
     }
-
-
 }

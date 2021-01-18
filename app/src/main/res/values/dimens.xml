@@ -74,6 +74,20 @@
     <dimen name= "activity_login_hor_margin">20dp</dimen>
     <dimen name= "activity_login_ver_margin">40dp</dimen>
 
+    <!-- Login Pattern -->
+    <dimen name= "login_pattern_margin_top">5dp</dimen>
+    <dimen name= "login_pattern_margin_right">15dp</dimen>
+    <dimen name= "login_pattern_button_height">40dp</dimen>
+    <dimen name= "login_pattern_margin_bottom">20dp</dimen>
+    <dimen name= "login_pattern_text_size">10sp</dimen>
+    <dimen name= "login_pattern_margin_top_icon">70dp</dimen>
+    <dimen name= "login_pattern_image_height">120dp</dimen>
+    <dimen name= "login_pattern_image_width">120dp</dimen>
+    <dimen name= "login_pattern_margin_top_username">10dp</dimen>
+    <dimen name= "login_pattern_text_size_username">20sp</dimen>
+    <dimen name= "login_pattern_margin_cardview">15dp</dimen>
+    <dimen name= "login_pattern_progress">80dp</dimen>
+
     <!--Menu WorkOrder -->
     <dimen name="menu_wo_text_size">20dp</dimen>
     <dimen name="menu_wo_margin_bottom">20dp</dimen>
