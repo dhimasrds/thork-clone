@@ -14,7 +14,6 @@ package id.thork.app.pages.intro.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
-import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
@@ -22,16 +21,16 @@ import kotlinx.coroutines.launch
 
 class IntroViewModel @ViewModelInject constructor(
     val preferenceManager: PreferenceManager
-): LiveCoroutinesViewModel() {
+) : LiveCoroutinesViewModel() {
     val TAG = IntroViewModel::class.java.name
 
-    fun getFirstLaunch() {
+    fun isFirstLaunch() {
         viewModelScope.launch {
             preferenceManager.getBoolean(BaseParam.APP_FIRST_LAUNCH)
         }
     }
 
-    fun launchMain(){
+    fun disableFirstLaunch() {
         viewModelScope.launch {
             preferenceManager.putBoolean(BaseParam.APP_FIRST_LAUNCH, false)
         }

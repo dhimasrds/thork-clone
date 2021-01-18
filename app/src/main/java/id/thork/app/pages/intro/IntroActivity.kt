@@ -13,7 +13,6 @@
 package id.thork.app.pages.intro
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -22,27 +21,26 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMainIntroSliderBinding
-import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.intro.element.IntroViewModel
-import id.thork.app.pages.intro.element.MyViewPagerAdapter
+import id.thork.app.pages.intro.element.IntroViewPagerAdapter
 import id.thork.app.pages.server.ServerActivity
 
 class IntroActivity : BaseActivity() {
     val TAG = IntroActivity::class.java.name
+    private val SLIDER_STEP = 1
     private val binding: ActivityMainIntroSliderBinding by binding(R.layout.activity_main_intro_slider)
     private val viewModel: IntroViewModel by viewModels()
 
     private lateinit var bottomBars: Array<ImageView?>
     private lateinit var screens: IntArray
-    private lateinit var myvpAdapter: MyViewPagerAdapter
+    private lateinit var myvpAdapter: IntroViewPagerAdapter
 
     var pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
-            ColoredBars(position)
+            coloredBars(position)
 
             if (position == screens.size - 1) {
                 binding.next.visibility = View.GONE
@@ -69,22 +67,7 @@ class IntroActivity : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
 
-        binding.next.setOnClickListener {
-            val i = getItem(+1)
-            if (i < screens.count()) {
-                binding.viewPager.currentItem = i
-            } else {
-                launchMain()
-            }
-        }
-
-        binding.skip.setOnClickListener {
-            launchMain()
-        }
-
-        binding.start.setOnClickListener {
-            launchMain()
-        }
+        nextAction()
     }
 
     private fun initView() {
@@ -94,25 +77,44 @@ class IntroActivity : BaseActivity() {
             R.layout.layout_welcome3
         )
 
-        myvpAdapter = MyViewPagerAdapter(screens)
+        myvpAdapter = IntroViewPagerAdapter(screens)
         binding.viewPager.adapter = myvpAdapter
         binding.viewPager.registerOnPageChangeCallback(pageChangeCallback)
 
-        if (viewModel.getFirstLaunch().equals(BaseParam.APP_FIRST_LAUNCH)) {
-            launchMain()
+        if (viewModel.isFirstLaunch().equals(BaseParam.APP_FIRST_LAUNCH)) {
+            navigateToServer()
             finish()
         }
 
-        ColoredBars(0)
+        coloredBars(0)
     }
 
-    private fun launchMain() {
-        viewModel.launchMain()
+    private fun nextAction(){
+        binding.next.setOnClickListener {
+            val i = binding.viewPager.currentItem + SLIDER_STEP
+            if (i < screens.count()) {
+                binding.viewPager.currentItem = i
+            } else {
+                navigateToServer()
+            }
+        }
+
+        binding.skip.setOnClickListener {
+            navigateToServer()
+        }
+
+        binding.start.setOnClickListener {
+            navigateToServer()
+        }
+    }
+
+    private fun navigateToServer() {
+        viewModel.disableFirstLaunch()
         startActivity(Intent(this@IntroActivity, ServerActivity::class.java))
         finish()
     }
 
-    private fun ColoredBars(thisScreen: Int) {
+    private fun coloredBars(thisScreen: Int) {
         bottomBars = arrayOfNulls(screens.size)
         binding.layoutBars.removeAllViews()
         for (i in bottomBars.indices) {
@@ -127,9 +129,5 @@ class IntroActivity : BaseActivity() {
             binding.layoutBars.addView(bottomBars.get(i))
         }
         if (bottomBars.isNotEmpty()) bottomBars.get(thisScreen)?.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_dot_blue, null))
-    }
-
-    private fun getItem(i: Int): Int {
-        return binding.viewPager.currentItem + i
     }
 }

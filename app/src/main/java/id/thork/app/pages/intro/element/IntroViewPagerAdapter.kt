@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
  * Created by Raka Putra on 1/11/21
  * Jakarta, Indonesia.
  */
-class MyViewPagerAdapter(
+class IntroViewPagerAdapter(
     private var screens: IntArray
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
