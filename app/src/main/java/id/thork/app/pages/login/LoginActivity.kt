@@ -19,20 +19,18 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.element.LoginViewModel
 import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
-class LoginActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
+class LoginActivity : BaseActivity(),
     CustomDialogUtils.DialogActionListener {
     val TAG = LoginActivity::class.java.name
 
     val loginViewModel: LoginViewModel by viewModels()
     private val binding: ActivityLoginBinding by binding(R.layout.activity_login)
-    private lateinit var dialogUtils: DialogUtils
     private lateinit var customDialogUtils: CustomDialogUtils
 
     companion object {
@@ -73,8 +71,6 @@ class LoginActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         loginViewModel.firstLogin.observe(this, Observer { firstLogin ->
             Timber.tag(TAG).i("setupObserver() first login: %s", firstLogin)
             if (firstLogin) {
-                // TODO
-                // Ask to activate Pattern Login
                 showDialog()
                 Timber.tag(TAG).d("setupObserver() first login: show dialog")
             } else {
@@ -120,14 +116,6 @@ class LoginActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
 
     }
 
-    override fun onPositiveButton() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onNegativeButton() {
-        TODO("Not yet implemented")
-    }
-
     override fun onRightButton() {
         navigateToLoginPattern()
     }
@@ -137,7 +125,9 @@ class LoginActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     override fun onMiddleButton() {
-        TODO("Not yet implemented")
+        Timber.tag(TAG).i("onMiddleButton()")
+
+
     }
 
 

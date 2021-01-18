@@ -15,6 +15,7 @@ package id.thork.app.pages.login_pattern
 import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.andrognito.patternlockview.PatternLockView
 import com.andrognito.patternlockview.listener.PatternLockViewListener
 import com.andrognito.patternlockview.utils.PatternLockUtils
@@ -64,11 +65,11 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     override fun setupObserver() {
         super.setupObserver()
         loginPatternViewModel.validateUsername()
-        loginPatternViewModel.username.observe(this, {
+        loginPatternViewModel.username.observe(this, Observer{
             binding.etProfileName.text = it
         })
 
-        loginPatternViewModel.isPatttern.observe(this, {
+        loginPatternViewModel.isPatttern.observe(this, Observer{
             isDoPatternValidation = it
             if (it == BaseParam.APP_FALSE) {
                 binding.btnSwitchUser.visibility = View.GONE
@@ -76,7 +77,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             Timber.d("isDoPattern %s", isDoPatternValidation)
         })
 
-        loginPatternViewModel.validatePattern.observe(this, {
+        loginPatternViewModel.validatePattern.observe(this, Observer{
             if (it == BaseParam.APP_TRUE) {
                 Timber.d("setupObserve() validatePattern(): %s", it)
                 navigateToMainActivity()
@@ -85,7 +86,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             }
         })
 
-        loginPatternViewModel.switchUser.observe(this, {
+        loginPatternViewModel.switchUser.observe(this, Observer{
             if (it == BaseParam.APP_TRUE) {
                 navigateToServerAcitivity()
             }
