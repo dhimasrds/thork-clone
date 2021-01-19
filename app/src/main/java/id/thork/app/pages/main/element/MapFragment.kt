@@ -17,18 +17,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import id.thork.app.R
 
-class MapFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
+class MapFragment :Fragment(), OnMapReadyCallback {
+
+    private lateinit var mMap: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        val view: View = inflater.inflate(R.layout.fragment_map, container, false)
+
+        val mapFragment: SupportMapFragment? = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false)
+        return view
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        googleMap?.apply {
+            mMap = googleMap
+            val sydney = LatLng(-33.852, 151.211)
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(sydney)
+                    .title("Marker in Sydney")
+            )
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        }
+
     }
 }
