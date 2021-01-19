@@ -75,7 +75,8 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.iv_add -> {
-                Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Clicked xxxx!", Toast.LENGTH_SHORT).show()
+                viewModel.checkRepo()
             }
         }
     }

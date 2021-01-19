@@ -77,9 +77,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation "androidx.navigation:navigation-fragment:$navigationVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewPagerVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
@@ -132,5 +133,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$rootProject.playServices"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
     implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtils"
+    //pattern Lock View
+    implementation "com.andrognito.patternlockview:patternlockview:$patternLockViewVersion"
 }
 apply plugin: 'io.objectbox'

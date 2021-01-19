@@ -7,6 +7,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.BuildConfig
+import id.thork.app.base.BaseParam
+import id.thork.app.di.module.login.LoginModule
 import id.thork.app.network.HttpRequestInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -19,6 +21,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    private val TAG = NetworkModule::class.java.name
 
     @Singleton
     @Provides
@@ -51,35 +54,20 @@ object NetworkModule {
         return HttpRequestInterceptor()
     }
 
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(HttpRequestInterceptor())
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl("http://147.139.139.145:9080")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
-            .build()
-    }
-
 //    @Provides
 //    @Singleton
-//    fun provideLoginApi(retrofit: Retrofit): LoginApi {
-//        return retrofit.create(LoginApi::class.java)
-//    }
-
-//    @Provides
-//    @Singleton
-//    fun provideLoginClient(loginApi: LoginApi): LoginClient {
-//        return LoginClient(loginApi)
+//    fun provideRetrofit(preferenceManager: PreferenceManager): Retrofit {
+//        var serverAddress: String = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
+//        if (serverAddress.isNullOrEmpty()) {
+//            serverAddress = "https://www.google.com"
+//        }
+//        val retrofit =  Retrofit.Builder()
+//            .baseUrl(serverAddress)
+//            .addConverterFactory(MoshiConverterFactory.create())
+//            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
+//            .client(OkHttpClient.Builder().build())
+//            .build()
+//        Timber.tag(TAG).i("provideRetrofit() init retrofit: %s", retrofit)
+//        return retrofit
 //    }
 }
