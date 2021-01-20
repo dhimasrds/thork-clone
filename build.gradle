@@ -34,18 +34,20 @@ buildscript {
         librariesPlaces = "2.0.0"
         playServices = "17.0.0"
         mapUtils = "0.6.2"
-        maps = "16.1.0"
+        maps = "17.0.0"
         locations = "16.0.0"
 
-        permissionsDispatcher = "4.8.0"
+        //Dexter Runtime Permisions
+        dexterVersion = '6.0.2'
+
 
     }
 
     repositories {
         google()
         jcenter()
-        maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
     }
+
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"

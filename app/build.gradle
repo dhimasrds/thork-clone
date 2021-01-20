@@ -136,8 +136,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
     implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtils"
 
-    implementation "org.permissionsdispatcher:permissionsdispatcher:$rootProject.permissionsDispatcher"
-    kapt "org.permissionsdispatcher:permissionsdispatcher-processor:$rootProject.permissionsDispatcher"
+    implementation "com.karumi:dexter:$rootProject.dexterVersion"
+
 
 
 }
