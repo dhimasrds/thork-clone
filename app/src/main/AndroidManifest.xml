@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".base.BaseApplication"
@@ -26,7 +27,8 @@
 <!--            </intent-filter>-->
         </activity>
         <activity android:name=".pages.dummy.DummyActivity" />
-        <activity android:name=".pages.login.LoginActivity" />
+        <activity android:name=".pages.login.LoginActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".pages.intro.IntroActivity" />
         <activity
             android:name=".pages.server.ServerActivity"
@@ -36,20 +38,21 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".pages.splash_screen.SplashScreenActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".pages.main.MainActivity">
-<!--             <intent-filter>-->
-<!--             <action android:name="android.intent.action.MAIN" />-->
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
 
 
-<!--             <category android:name="android.intent.category.LAUNCHER" />-->
-<!--             </intent-filter>-->
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
     </application>
 

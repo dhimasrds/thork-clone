@@ -54,20 +54,4 @@ object NetworkModule {
         return HttpRequestInterceptor()
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideRetrofit(preferenceManager: PreferenceManager): Retrofit {
-//        var serverAddress: String = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
-//        if (serverAddress.isNullOrEmpty()) {
-//            serverAddress = "https://www.google.com"
-//        }
-//        val retrofit =  Retrofit.Builder()
-//            .baseUrl(serverAddress)
-//            .addConverterFactory(MoshiConverterFactory.create())
-//            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
-//            .client(OkHttpClient.Builder().build())
-//            .build()
-//        Timber.tag(TAG).i("provideRetrofit() init retrofit: %s", retrofit)
-//        return retrofit
-//    }
 }
