@@ -12,6 +12,8 @@
 package id.thork.app.base
 
 object BaseParam {
+    const val BASE_SERVER_URL = "http://149.129.252.41:9080"
+
     const val APP_TRUE = 1
     const val APP_FALSE = 0
 
@@ -41,4 +43,21 @@ object BaseParam {
     const val APP_CONTENT_TYPE = "Content-Type"
     const val APP_PROPERTIES = "properties"
     const val APP_ALL_PROPERTIES = "*"
+
+    /**
+     *  Workorder status Param
+     *
+     */
+    const val APPROVED = "APPR"
+    const val WAPPR = "WAPPR"
+    const val WASGN = "WASGN"
+    const val INPROGRESS = "INPRG"
+    const val COMPLETED = "COMP"
+    const val CLOSED = "CLOSE"
+    const val DISPATCH = "DISPATCH"
+    const val ACCEPT = "ACCEPT"
+    const val ARRIVED = "ARRIVE"
+    const val REASSGN = "REASSGN"
+    const val WSUPP = "WSUPP"
+    const val DONE = "DONE"
 }

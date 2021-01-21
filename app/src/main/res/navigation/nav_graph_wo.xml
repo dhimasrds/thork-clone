@@ -20,6 +20,6 @@
     <fragment
         android:id="@+id/nav_wo_fragment"
         android:name="id.thork.app.pages.main.element.WorkorderFragment"
-        android:label="Work Order"
+        android:label="asik"
         tools:layout="@layout/fragment_workorder"/>
 </navigation>

@@ -19,13 +19,7 @@
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
         <activity android:name=".pages.create_wo.CreateWoActivity"></activity>
-        <activity android:name=".pages.login_pattern.LoginPatternActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+        <activity android:name=".pages.login_pattern.LoginPatternActivity" />
         <activity android:name=".pages.dummy.DummyActivity" />
         <activity android:name=".pages.login.LoginActivity"
             android:screenOrientation="portrait"/>
@@ -40,20 +34,14 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".pages.main.MainActivity">
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
 
-
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-        </activity>
+        <activity android:name=".pages.main.MainActivity"/>
     </application>
 
 </manifest>

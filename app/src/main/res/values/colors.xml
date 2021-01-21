@@ -69,6 +69,8 @@
     <color name="grey_nav">#AEAEAE</color>
 
     <color name="colorBlueRadioBt">#3F7FFF</color>
+    <color name="color_stat_blue">#4D436CFF</color>
+    <color name="blueTextStatus">#436CFF</color>
 </resources>
 
 

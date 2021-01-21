@@ -129,6 +129,11 @@ dependencies {
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
 
+    //ViewPager
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.beust:klaxon:5.0.1'
+
     //pattern Lock View
     implementation "com.andrognito.patternlockview:patternlockview:$patternLockViewVersion"
 }

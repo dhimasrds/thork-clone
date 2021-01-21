@@ -91,7 +91,6 @@ class LoginViewModel @ViewModelInject constructor(
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
-
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API

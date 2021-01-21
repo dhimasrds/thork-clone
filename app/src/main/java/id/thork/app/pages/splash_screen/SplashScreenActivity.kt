@@ -40,7 +40,7 @@ class SplashScreenActivity : BaseActivity(),
     private val binding: ActivitySplashScreenBinding by binding(R.layout.activity_splash_screen)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        hideSystemUI()
+//        hideSystemUI()
         super.onCreate(savedInstanceState)
 
         binding.apply {
