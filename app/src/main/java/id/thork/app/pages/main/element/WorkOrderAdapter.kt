@@ -17,11 +17,11 @@ class WorkOrderAdapter : ListAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCal
 
     companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
-            TODO("Not yet implemented")
+            return false;
         }
 
         override fun areContentsTheSame(oldItem: Member, newItem: Member): Boolean {
-            TODO("Not yet implemented")
+           return false;
         }
     }
 
