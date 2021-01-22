@@ -40,6 +40,9 @@ class ServerActivityViewModel @ViewModelInject constructor(
     private val _cacheUrl = MutableLiveData<String>()
     val cacheUrl: LiveData<String> get() = _cacheUrl
 
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> get() =  _message
+
     init {
         Timber.tag(TAG).i("init() loginRepository: %s", loginRepository)
     }
@@ -48,6 +51,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
         networkConnectivity.checkInternetConnection(object : NetworkConnectivity.ConnectivityCallback {
             override fun onDetected(isConnected: Boolean) {
                 Timber.tag(TAG).i("validateConnection() isConnected: %s", isConnected)
+                _message.value = "Connection not available"
             }
         })
     }
@@ -59,6 +63,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
             _state.postValue(BaseParam.APP_TRUE)
         }else {
             _state.postValue(BaseParam.APP_FALSE)
+            _message.value = "Connection not available"
         }
     }
 

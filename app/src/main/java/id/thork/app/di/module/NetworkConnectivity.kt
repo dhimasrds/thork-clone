@@ -31,6 +31,8 @@ class NetworkConnectivity @Inject constructor(val context: Context,
                                               val appExecutors: AppExecutors) {
     private val TAG = NetworkConnectivity::class.java.name
 
+    private val PING_SERVER = "http://clients3.google.com/generate_204";
+
     interface ConnectivityCallback {
         fun onDetected(isConnected: Boolean)
     }
@@ -42,7 +44,7 @@ class NetworkConnectivity @Inject constructor(val context: Context,
             if (isInternetAvailable(context)) {
                 var connection: HttpURLConnection? = null
                 try {
-                    connection = URL("http://clients3.google.com/generate_204")
+                    connection = URL(PING_SERVER)
                         .openConnection() as HttpURLConnection
                     connection.apply {
                         setRequestProperty("User-Agent", "Android")
