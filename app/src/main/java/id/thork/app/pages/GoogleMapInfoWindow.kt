@@ -14,7 +14,7 @@ import id.thork.app.base.BaseParam
  * Created by M.Reza Sulaiman on 21/01/21
  * Jepara, Indonesia.
  */
-class CustomInfoWindowForGoogleMap(context: Context) : GoogleMap.InfoWindowAdapter {
+class GoogleMapInfoWindow(context: Context) : GoogleMap.InfoWindowAdapter {
 
     @SuppressLint("InflateParams")
     var mWindow = (context as Activity).layoutInflater.inflate(R.layout.custom_info_window, null)

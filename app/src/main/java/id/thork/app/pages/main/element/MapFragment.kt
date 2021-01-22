@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import id.thork.app.R
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.CustomInfoWindowForGoogleMap
+import id.thork.app.pages.GoogleMapInfoWindow
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
@@ -47,7 +47,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private var lastKnownLocation: Location? = null
     private val DEFAULT_ZOOM = 17
     private lateinit var customDialogUtils: CustomDialogUtils
-    private lateinit var customInfoWindowForGoogleMap: CustomInfoWindowForGoogleMap
+    private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
 
 
     override fun onCreateView(
@@ -63,7 +63,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context);
         customDialogUtils = CustomDialogUtils(view.context)
-        customInfoWindowForGoogleMap = CustomInfoWindowForGoogleMap(view.context)
+        customInfoWindowForGoogleMap = GoogleMapInfoWindow(view.context)
 
         getLocationPermission()
         // Inflate the layout for this fragment
