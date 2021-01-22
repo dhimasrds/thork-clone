@@ -98,8 +98,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             intent = intent
         )
 
-        navController.observe(this, Observer { navController ->
-            setupActionBarWithNavController(navController)
+        navController.observe(this,  { nav ->
+            setupActionBarWithNavController(nav)
         })
         currentNavController = navController
     }

@@ -62,11 +62,11 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     override fun setupObserver() {
         super.setupObserver()
         loginPatternViewModel.validateUsername()
-        loginPatternViewModel.username.observe(this, Observer {
+        loginPatternViewModel.username.observe(this, {
             binding.etProfileName.text = it
         })
 
-        loginPatternViewModel.isPatttern.observe(this, Observer {
+        loginPatternViewModel.isPatttern.observe(this, {
             isDoPatternValidation = it
             if (it == BaseParam.APP_FALSE) {
                 binding.btnSwitchUser.visibility = View.GONE
@@ -74,7 +74,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             Timber.d("isDoPattern %s", isDoPatternValidation)
         })
 
-        loginPatternViewModel.validatePattern.observe(this, Observer {
+        loginPatternViewModel.validatePattern.observe(this, {
             if (it == BaseParam.APP_TRUE) {
                 Timber.d("setupObserve() validatePattern(): %s", it)
                 navigateToMainActivity()
@@ -83,7 +83,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             }
         })
 
-        loginPatternViewModel.switchUser.observe(this, Observer {
+        loginPatternViewModel.switchUser.observe(this, {
             if (it == BaseParam.APP_TRUE) {
                 navigateToServerAcitivity()
             }

@@ -12,16 +12,21 @@
 
 package id.thork.app.base
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
+import id.thork.app.di.module.NetworkConnectivity
+import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
-abstract class BaseActivity: AppCompatActivity() {
-    protected inline fun <reified T : ViewDataBinding> binding (
+abstract class BaseActivity: AppCompatActivity(), NetworkConnectivity.ConnectivityCallback {
+    protected inline fun <reified T : ViewDataBinding> binding(
         @LayoutRes resId: Int
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
 
@@ -46,4 +51,21 @@ abstract class BaseActivity: AppCompatActivity() {
 
     open fun onError() {
     }
+
+    open fun showToast() {
+    }
+
+    override fun onDetected(isConnected: Boolean) {
+        Timber.tag(BaseApplication.TAG).i("onDetected() isConnected: %s", isConnected)
+    }
+
+//    companion object {
+//        fun stuffDone(baseActivity: BaseActivity)  = baseActivity.showToast()
+//
+//        fun showToast(baseActivity: BaseActivity) {}
+//
+//        fun isConnected(isConnected: Boolean) {
+//        stuffDone()
+//        }
+//    }
 }

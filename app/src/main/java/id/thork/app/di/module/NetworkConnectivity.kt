@@ -12,29 +12,42 @@
 
 package id.thork.app.di.module
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseApplication
 import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkConnectivity @Inject constructor(val context: Context,
-                                              val appExecutors: AppExecutors) {
+class NetworkConnectivity @Inject constructor(
+    val context: Context,
+    val appExecutors: AppExecutors,
+) : BroadcastReceiver() {
     private val TAG = NetworkConnectivity::class.java.name
 
     private val PING_SERVER = "http://clients3.google.com/generate_204";
 
     interface ConnectivityCallback {
         fun onDetected(isConnected: Boolean)
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        checkInternetConnection(object : ConnectivityCallback {
+            override fun onDetected(isConnected: Boolean) {
+                Timber.tag(TAG).i("onReceive() isConnected: %s", isConnected)
+            }
+        })
     }
 
     @Synchronized
@@ -52,8 +65,10 @@ class NetworkConnectivity @Inject constructor(val context: Context,
                         setConnectTimeout(1000)
                         connect()
                     }
-                    Timber.tag(TAG).i("checkInternetConnection() response code: %s content: %s",
-                    connection.responseCode, connection.contentLength)
+                    Timber.tag(TAG).i(
+                        "checkInternetConnection() response code: %s content: %s",
+                        connection.responseCode, connection.contentLength
+                    )
 
                     val isConnected = (connection.responseCode == 204
                             && connection.contentLength == 0)
@@ -62,7 +77,7 @@ class NetworkConnectivity @Inject constructor(val context: Context,
                 } catch (e: Exception) {
                     Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
 
-                        postCallback(callback, false)
+                    postCallback(callback, false)
                     if (connection != null) connection.disconnect()
                 }
             } else {

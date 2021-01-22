@@ -36,14 +36,12 @@ class WorkOrderListViewModel @ViewModelInject constructor(
         val where: String =
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
         Timber.d("laborcode :%s", laborcode)
-
-        var response = WorkOrderResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
                 workOrderRepository.getWorkOrderList(
                     appSession.userHash!!, select, where,
                     onSuccess = {
-                        response = it
+                        var response = it
                         Timber.d("fetchWoList :%s", response.member!!.size)
                         _getWoList.postValue(response.member)
 

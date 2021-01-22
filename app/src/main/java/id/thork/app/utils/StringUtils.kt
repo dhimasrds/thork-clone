@@ -84,24 +84,6 @@ object StringUtils {
 //        }
 //    }
 
-    /**
-     * Check origintext is null or is empty
-     *
-     * @param originText
-     * @return
-     */
-    fun isNull(originText: String?): Boolean {
-        return originText == null || originText.isEmpty()
-    }
-
-    fun convertTimeString(string: String): String {
-        var string = string
-        if (string.length < 2) {
-            string = "0$string"
-        }
-        return string
-    }
-
     fun getFileExtension(file: File): String {
         val fileName = file.name
         return if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) fileName.substring(
