@@ -6,18 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.databinding.FragmentWorkOrderListBinding
-import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
-import id.thork.app.persistence.entity.WoEntity
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
 class WorkOrderListFragment : Fragment() {
     private lateinit var myAdapter : WorkOrderAdapter
-
     private val viewModel : WorkOrderListViewModel by viewModels()
     private lateinit var binding : FragmentWorkOrderListBinding
 
@@ -45,12 +45,14 @@ class WorkOrderListFragment : Fragment() {
         }
     }
 
-    private fun setupObserver(){
+    private fun setupObserver() {
         myAdapter = WorkOrderAdapter()
-        viewModel.fetchWoList()
-        viewModel.getWoList.observe(viewLifecycleOwner){
-            myAdapter.submitList(it)
-            Timber.d("onCreateView :%s", it.size)
+//        viewModel.fetchWoList()
+        lifecycleScope.launch {
+            viewModel.woList.collect {
+                myAdapter.submitData(it)
+                Timber.d("onCreateView :%s",it)
+            }
         }
     }
 

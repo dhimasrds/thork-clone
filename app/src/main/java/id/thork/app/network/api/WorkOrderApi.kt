@@ -17,6 +17,8 @@ interface WorkOrderApi {
         @Header("MAXAUTH") userHash: String?,
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,
-        @Query(value = "oslc.where") where: String?
+        @Query(value = "oslc.where") where: String?,
+        @Query(value = "pageno") pageno: Int?,
+        @Query(value = "oslc.pageSize") pagesize: Int?
     ): ApiResponse<WorkOrderResponse>
 }

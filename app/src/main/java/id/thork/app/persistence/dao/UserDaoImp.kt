@@ -24,12 +24,11 @@ import java.util.*
 
 class UserDaoImp : UserDao {
     val TAG = UserDaoImp::class.java.name
-    var userEntityBox: Box<UserEntity>
+    private var userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
     var logDao: LogDaoImp
     var gson: Gson = Gson()
 
     init {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         logDao = LogDaoImp()
     }
 
