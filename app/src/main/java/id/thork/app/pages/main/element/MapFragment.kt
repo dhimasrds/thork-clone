@@ -28,18 +28,27 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import id.thork.app.R
+import id.thork.app.pages.CustomDialogUtils
+import id.thork.app.pages.CustomInfoWindowForGoogleMap
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
+    val TAG = MapFragment::class.java.name
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var locationPermissionGranted = false
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var lastKnownLocation: Location? = null
     private val DEFAULT_ZOOM = 17
+    private lateinit var customDialogUtils: CustomDialogUtils
+    private lateinit var customInfoWindowForGoogleMap: CustomInfoWindowForGoogleMap
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,27 +62,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context);
+        customDialogUtils = CustomDialogUtils(view.context)
+        customInfoWindowForGoogleMap = CustomInfoWindowForGoogleMap(view.context)
 
         getLocationPermission()
         // Inflate the layout for this fragment
-
         return view
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.apply {
             map = googleMap
+            map.setOnInfoWindowClickListener(this@MapFragment)
+            map.setInfoWindowAdapter(customInfoWindowForGoogleMap)
             with(map) {
                 uiSettings.isMyLocationButtonEnabled = false
                 uiSettings.isMapToolbarEnabled = true
             }
         }
-        Timber.d("onMapReady() :%s", map.isMyLocationEnabled)
-
-//        this.map = googleMap!!
-//
-//        map.uiSettings.isMyLocationButtonEnabled = true
-//
+        renderMarker()
         getLocationPermission()
         updateLocationUI()
         getDeviceLocation()
@@ -111,7 +118,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        locationPermissionGranted = false
         when (requestCode) {
             PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
 
@@ -120,10 +126,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
                 ) {
                     locationPermissionGranted = true
+                    onMapReady(map)
+                    updateLocationUI()
                 }
             }
         }
-        updateLocationUI()
     }
 
     private fun updateLocationUI() {
@@ -131,14 +138,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             if (locationPermissionGranted) {
                 map.isMyLocationEnabled = true
                 map.uiSettings.isMyLocationButtonEnabled = true
-                Timber.d("updateLocationUI(): %s", map.isMyLocationEnabled)
-                Timber.d("updateLocationUI(): button %s",  map.uiSettings.isMyLocationButtonEnabled )
             } else {
                 map.isMyLocationEnabled = false
-                map.uiSettings.isMyLocationButtonEnabled = false
                 lastKnownLocation = null
                 getLocationPermission()
-                Timber.d("updateLocationUI(): %s", map.isMyLocationEnabled)
             }
         } catch (e: SecurityException) {
             Timber.d("updateLocationUI() catch: %s", e.toString())
@@ -177,4 +180,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    override fun onInfoWindowClick(p0: Marker?){
+        Timber.tag(TAG).d("onInfoWindowClick() %s", p0)
+        val titleMarker = p0!!.title.toString()
+        CommonUtils.showToast("onInfoWindowClick() title Marker: $titleMarker")
+
+    }
+
+    private fun renderMarker() {
+        //TODO Hardcode marker
+        val sydney = LatLng(-6.5920505,110.6813501)
+        map.addMarker(
+            MarkerOptions()
+                .position(sydney)
+                .title("2021")
+        )
+    }
 }

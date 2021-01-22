@@ -31,17 +31,19 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.main.element.MainViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(),  View.OnClickListener {
+class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.DialogActionListener {
     val TAG = MainActivity::class.java.name
 
     val viewModel: MainViewModel by viewModels()
 
     private var currentNavController: LiveData<NavController>? = null
     private lateinit var toolBar: MaterialToolbar
+    private lateinit var customDialogUtils: CustomDialogUtils
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
@@ -55,6 +57,8 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
         binding.apply {
             lifecycleOwner = this@MainActivity
         }
+        //Init custom dialog
+        customDialogUtils = CustomDialogUtils(this)
         requestGrantPermissions()
     }
 
@@ -96,9 +100,6 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
     private fun requestGrantPermissions() {
         Dexter.withActivity(this)
             .withPermissions(
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             )
@@ -110,16 +111,15 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
                             "requestGrantPermissions() report: %s",
                             report.grantedPermissionResponses.toString()
                         )
-                        //TODO init location
-//                        validateLocationPermissions()
-//                        onMapReadyState()
+                    } else {
+                        showDialog()
                     }
 
                     // check for permanent denial of any permission
                     if (report.isAnyPermissionPermanentlyDenied) {
                         Timber.tag(TAG).d("requestGrantPermissions() Denied")
                         //TODO add event when permission permanet Denied
-//                        mapsPresenter.showSettingsDialog()
+                        showDialog()
                     }
                 }
 
@@ -132,5 +132,25 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
             })
             .onSameThread()
             .check()
+    }
+
+    private fun showDialog() {
+        customDialogUtils.setMiddleButtonText(R.string.dialog_yes)
+            .setTittle(R.string.information)
+            .setDescription(R.string.permission_location)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        Timber.tag(TAG).d("onRightButton()")
+    }
+
+    override fun onLeftButton() {
+        Timber.tag(TAG).d("onLeftButton()")
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
     }
 }

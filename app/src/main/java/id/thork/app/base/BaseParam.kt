@@ -41,4 +41,12 @@ object BaseParam {
     const val APP_CONTENT_TYPE = "Content-Type"
     const val APP_PROPERTIES = "properties"
     const val APP_ALL_PROPERTIES = "*"
+
+
+    /**
+     * Base Parameter Google Maps
+     */
+
+    const val APP_WONUM = "WO. NUmber "
+    const val APP_DETAIL = "See Detail"
 }
