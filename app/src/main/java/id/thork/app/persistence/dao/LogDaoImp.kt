@@ -33,7 +33,7 @@ class LogDaoImp : LogDao {
             .build().find()
     }
 
-    override fun findLog(id: String): LogEntity {
+    override fun findLog(id: Long): LogEntity {
         val logEntities: List<LogEntity>  =
             logEntityBox.query().equal(LogEntity_.id, id).build().find()
         return logEntities[0]
