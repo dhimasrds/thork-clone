@@ -27,7 +27,7 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun createWoCache(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity {
-        addUpdateInfo(woCacheEntity,username!!)
+        addUpdateInfo(woCacheEntity, username!!)
         woCacheEntityBox.put(woCacheEntity)
         return woCacheEntity
     }
@@ -49,7 +49,12 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun findAllWo(): List<WoCacheEntity> {
-        return woCacheEntityBox.query().notNull(WoCacheEntity_.syncBody).build().find()
+        TODO("Not yet implemented")
+    }
+
+    override fun findAllWo(offset: Int): List<WoCacheEntity> {
+        return woCacheEntityBox.query().notNull(WoCacheEntity_.syncBody).build()
+            .find(offset.toLong(), 10)
     }
 
     override fun findWoBySyncAndChanged(sync: Int, changed: Int): List<WoCacheEntity> {

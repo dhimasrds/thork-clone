@@ -39,7 +39,9 @@ class WoPagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
+        val offset =  0
         Timber.d("position :%s", position)
+        Timber.d("offset :%s", offset)
         val laborcode: String? = appSession.laborCode
         val select: String = ApiParam.WORKORDER_SELECT
         val where: String =
@@ -54,12 +56,15 @@ class WoPagingSource @Inject constructor(
                  },
                  onError = {
                  })
-            val wo = response.member
+            val wo = listWoOffline(offset)
             LoadResult.Page(
-                data = wo,
+                data = wo!!,
                 prevKey = if (position == 1) null else position,
-                nextKey = if (wo.isEmpty()) null else position + 1
-
+                nextKey = if (wo.isEmpty()) {null
+                } else {
+                    offset + 10
+                    position + 1
+                }
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
@@ -91,22 +96,23 @@ class WoPagingSource @Inject constructor(
         return gson.toJson(member)
     }
 
-    private fun findWo(): String {
-        val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
+    private fun findWo(offset : Int): String {
+        val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
         val body = ArrayList<String>()
         for (i in cacheEntities.indices) {
-            if (cacheEntities[i].status !=null && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
-                && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-            ){
+//            if (cacheEntities[i].status !=null
+//                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
+//                && !cacheEntities[i].status.equals(BaseParam.WAPPR)
+//            ){
                 body.add(cacheEntities[i].syncBody!!)
-            }
+//            }
         }
         Timber.d("json : %s", body.toString())
         return body.toString()
     }
 
     @Throws(IOException::class)
-    fun listWoOffline(): List<Member>? {
+    fun listWoOffline(offset: Int): List<Member>? {
         val moshi = Moshi.Builder().build()
         val listMyData: Type = Types.newParameterizedType(
             MutableList::class.java,
@@ -114,7 +120,7 @@ class WoPagingSource @Inject constructor(
         )
 
         val adapter = moshi.adapter<List<Member>>(listMyData)
-        val memberList: List<Member>? = adapter.fromJson(findWo())
+        val memberList: List<Member>? = adapter.fromJson(findWo(offset))
         //        viewListWo(memberList);
         Timber.d("memberlist : %s", memberList?.size)
         return memberList

@@ -29,4 +29,5 @@ interface WoCacheDao {
     fun updateWo(woCacheEntity: WoCacheEntity, username: String)
 
     fun findApprWo(): WoCacheEntity?
+    fun findAllWo(offset: Int): List<WoCacheEntity>
 }
