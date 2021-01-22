@@ -36,12 +36,11 @@ class WoPagingSource @Inject constructor(
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
+    var offset =  0
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
-        val offset =  0
         Timber.d("position :%s", position)
-        Timber.d("offset :%s", offset)
         val laborcode: String? = appSession.laborCode
         val select: String = ApiParam.WORKORDER_SELECT
         val where: String =
@@ -56,13 +55,14 @@ class WoPagingSource @Inject constructor(
                  },
                  onError = {
                  })
-            val wo = listWoOffline(offset)
+            val wo = loadWoCache(offset)
             LoadResult.Page(
                 data = wo!!,
                 prevKey = if (position == 1) null else position,
                 nextKey = if (wo.isEmpty()) {null
                 } else {
-                    offset + 10
+                    offset += 10
+                    Timber.d("offset :%s", offset)
                     position + 1
                 }
             )
@@ -112,7 +112,7 @@ class WoPagingSource @Inject constructor(
     }
 
     @Throws(IOException::class)
-    fun listWoOffline(offset: Int): List<Member>? {
+    fun loadWoCache(offset: Int): List<Member>? {
         val moshi = Moshi.Builder().build()
         val listMyData: Type = Types.newParameterizedType(
             MutableList::class.java,
