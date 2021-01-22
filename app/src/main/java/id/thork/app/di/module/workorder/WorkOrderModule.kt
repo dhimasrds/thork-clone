@@ -9,8 +9,6 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.login.LoginModule
-import id.thork.app.network.api.LoginApi
-import id.thork.app.network.api.LoginClient
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
 import okhttp3.OkHttpClient

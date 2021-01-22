@@ -21,8 +21,6 @@ import android.os.Build
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication
 import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.URL
@@ -31,27 +29,34 @@ import javax.inject.Inject
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkConnectivity @Inject constructor(
-    val context: Context,
-    val appExecutors: AppExecutors,
+    private val context: Context,
+    private val appExecutors: AppExecutors,
 ) : BroadcastReceiver() {
     private val TAG = NetworkConnectivity::class.java.name
 
     private val PING_SERVER = "http://clients3.google.com/generate_204";
+    private lateinit var callback: ConnectivityCallback
+
+    init {
+        Timber.tag(TAG).i("init() init NetworkConnectivity")
+    }
 
     interface ConnectivityCallback {
         fun onDetected(isConnected: Boolean)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        checkInternetConnection(object : ConnectivityCallback {
-            override fun onDetected(isConnected: Boolean) {
-                Timber.tag(TAG).i("onReceive() isConnected: %s", isConnected)
-            }
-        })
+        if (callback != null) {
+            checkInternetConnection()
+        }
+    }
+
+    fun registerCallback(callback: ConnectivityCallback) {
+        this.callback = callback
     }
 
     @Synchronized
-    fun checkInternetConnection(callback: ConnectivityCallback) {
+    fun checkInternetConnection() {
         Timber.tag(TAG).i("checkInternetConnection() callback: %s", callback)
         appExecutors.networkIO().execute {
             if (isInternetAvailable(context)) {
@@ -62,7 +67,7 @@ class NetworkConnectivity @Inject constructor(
                     connection.apply {
                         setRequestProperty("User-Agent", "Android")
                         setRequestProperty("Connection", "close")
-                        setConnectTimeout(1000)
+                        connectTimeout = 1000
                         connect()
                     }
                     Timber.tag(TAG).i(
@@ -77,6 +82,42 @@ class NetworkConnectivity @Inject constructor(
                 } catch (e: Exception) {
                     Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
 
+                    postCallback(callback, false)
+                    if (connection != null) connection.disconnect()
+                }
+            } else {
+                postCallback(callback, false)
+            }
+        }
+    }
+
+    @Synchronized
+    fun checkInternetConnection(paramCallBack: ConnectivityCallback) {
+        this.callback = paramCallBack
+        Timber.tag(TAG).i("checkInternetConnection() callback: %s", callback)
+        appExecutors.networkIO().execute {
+            if (isInternetAvailable(context)) {
+                var connection: HttpURLConnection? = null
+                try {
+                    connection = URL(PING_SERVER)
+                        .openConnection() as HttpURLConnection
+                    connection.apply {
+                        setRequestProperty("User-Agent", "Android")
+                        setRequestProperty("Connection", "close")
+                        connectTimeout = 1000
+                        connect()
+                    }
+                    Timber.tag(TAG).i(
+                        "checkInternetConnection() response code: %s content: %s",
+                        connection.responseCode, connection.contentLength
+                    )
+
+                    val isConnected = (connection.responseCode == 204
+                            && connection.contentLength == 0)
+                    postCallback(callback, isConnected)
+                    connection.disconnect()
+                } catch (e: Exception) {
+                    Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
                     postCallback(callback, false)
                     if (connection != null) connection.disconnect()
                 }

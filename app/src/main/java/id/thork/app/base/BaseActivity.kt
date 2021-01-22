@@ -12,6 +12,7 @@
 
 package id.thork.app.base
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -30,11 +31,25 @@ abstract class BaseActivity: AppCompatActivity(), NetworkConnectivity.Connectivi
         @LayoutRes resId: Int
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
 
+    @Inject
+    lateinit var networkConnectivity: NetworkConnectivity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupView()
         setupListener()
         setupObserver()
+
+        networkConnectivity.registerCallback(this)
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION).apply {
+            addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        }
+        registerReceiver(networkConnectivity, filter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(networkConnectivity)
     }
 
     open fun setupView() {
