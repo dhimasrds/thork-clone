@@ -17,7 +17,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import id.thork.app.R
 import id.thork.app.databinding.FragmentMapBinding
 
 class MapFragment : Fragment() {

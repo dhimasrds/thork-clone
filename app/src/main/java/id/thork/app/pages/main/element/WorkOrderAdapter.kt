@@ -1,6 +1,5 @@
 package id.thork.app.pages.main.element
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

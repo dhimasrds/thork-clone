@@ -18,11 +18,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.NetworkConnectivity
-import id.thork.app.network.HttpRequestInterceptor
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.repository.LoginRepository
-import okhttp3.OkHttpClient
 import timber.log.Timber
 
 class ServerActivityViewModel @ViewModelInject constructor(

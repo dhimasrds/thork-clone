@@ -1,17 +1,13 @@
 package id.thork.app.pages.main.element
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.widget.TextView
-import android.widget.TimePicker
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import timber.log.Timber
-import kotlin.coroutines.coroutineContext
 
 /**
  * Created by Dhimas Saputra on 18/01/21
