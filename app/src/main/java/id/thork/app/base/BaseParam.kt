@@ -47,6 +47,6 @@ object BaseParam {
      * Base Parameter Google Maps
      */
 
-    const val APP_WONUM = "WO. NUmber "
-    const val APP_DETAIL = "See Detail"
+    const val APP_WONUM = "WO. Number "
+    const val APP_DETAIL = "Detail"
 }

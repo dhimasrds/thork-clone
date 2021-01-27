@@ -29,10 +29,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import id.thork.app.R
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.GoogleMapInfoWindow
+import id.thork.app.pages.MapsUtils
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
@@ -46,7 +46,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var lastKnownLocation: Location? = null
     private val DEFAULT_ZOOM = 17
-    private lateinit var customDialogUtils: CustomDialogUtils
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
 
 
@@ -62,20 +61,18 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context);
-        customDialogUtils = CustomDialogUtils(view.context)
         customInfoWindowForGoogleMap = GoogleMapInfoWindow(view.context)
 
         getLocationPermission()
-        // Inflate the layout for this fragment
         return view
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.apply {
             map = googleMap
-            map.setOnInfoWindowClickListener(this@MapFragment)
-            map.setInfoWindowAdapter(customInfoWindowForGoogleMap)
             with(map) {
+                setOnInfoWindowClickListener(this@MapFragment)
+                setInfoWindowAdapter(customInfoWindowForGoogleMap)
                 uiSettings.isMyLocationButtonEnabled = false
                 uiSettings.isMapToolbarEnabled = true
             }
@@ -136,8 +133,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private fun updateLocationUI() {
         try {
             if (locationPermissionGranted) {
-                map.isMyLocationEnabled = true
-                map.uiSettings.isMyLocationButtonEnabled = true
+                with(map) {
+                    isMyLocationEnabled = true
+                    uiSettings.isMyLocationButtonEnabled = true
+                }
             } else {
                 map.isMyLocationEnabled = false
                 lastKnownLocation = null
@@ -160,17 +159,19 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                     if (it.isSuccessful) {
                         lastKnownLocation = it.result
                         if (lastKnownLocation != null) {
-                            map.isMyLocationEnabled = true
-                            map.uiSettings.isCompassEnabled
-                            map.uiSettings.isMyLocationButtonEnabled = true
-                            map.moveCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                    LatLng(
-                                        lastKnownLocation!!.latitude,
-                                        lastKnownLocation!!.longitude
-                                    ), DEFAULT_ZOOM.toFloat()
+                            with(map) {
+                                isMyLocationEnabled = true
+                                uiSettings.isMyLocationButtonEnabled = true
+                                moveCamera(
+                                    CameraUpdateFactory.newLatLngZoom(
+                                        LatLng(
+                                            lastKnownLocation!!.latitude,
+                                            lastKnownLocation!!.longitude
+                                        ), DEFAULT_ZOOM.toFloat()
+                                    )
+
                                 )
-                            )
+                            }
                         }
                     }
                 }
@@ -180,20 +181,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         }
     }
 
-    override fun onInfoWindowClick(p0: Marker?){
-        Timber.tag(TAG).d("onInfoWindowClick() %s", p0)
-        val titleMarker = p0!!.title.toString()
+    override fun onInfoWindowClick(marker: Marker?) {
+        Timber.tag(TAG).d("onInfoWindowClick() %s", marker)
+        val titleMarker = marker!!.title.toString()
         CommonUtils.showToast("onInfoWindowClick() title Marker: $titleMarker")
-
     }
 
     private fun renderMarker() {
         //TODO Hardcode marker
-        val sydney = LatLng(-6.5920505,110.6813501)
-        map.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("2021")
-        )
+        val sydney = LatLng(-6.5920505, 110.6813501)
+        MapsUtils.renderMarker(map, sydney, "2021")
     }
 }

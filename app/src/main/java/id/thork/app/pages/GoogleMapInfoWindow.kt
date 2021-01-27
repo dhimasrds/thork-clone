@@ -9,6 +9,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import id.thork.app.R
 import id.thork.app.base.BaseParam
+import id.thork.app.utils.CommonUtils
+import timber.log.Timber
 
 /**
  * Created by M.Reza Sulaiman on 21/01/21
@@ -30,7 +32,6 @@ class GoogleMapInfoWindow(context: Context) : GoogleMap.InfoWindowAdapter {
         tvPrefix!!.text = BaseParam.APP_WONUM
         tvTitle!!.text = marker.title
         tvSnippet!!.text = BaseParam.APP_DETAIL
-
     }
 
     override fun getInfoContents(marker: Marker): View {
