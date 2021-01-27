@@ -52,6 +52,7 @@ abstract class BaseActivity: AppCompatActivity() {
             isConnected?.let {
                 Timber.tag(BaseApplication.TAG).i("setupObserver() isConnected: %s", isConnected)
                 this.isConnected = isConnected
+                onConnection(this.isConnected)
             }
         })
     }
@@ -66,6 +67,7 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     open fun onConnection(isConnected: Boolean) {
-
+        //TODO
+        //Show bottom toast connection information
     }
 }

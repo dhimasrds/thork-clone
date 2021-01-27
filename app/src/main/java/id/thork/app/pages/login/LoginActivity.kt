@@ -49,26 +49,30 @@ class LoginActivity : BaseActivity(),
     override fun setupListener() {
         super.setupListener()
         binding.includeLoginContent.loginbt.setOnClickListener {
-            loginViewModel.validateCredentials(
-                binding.includeLoginContent.username.text.toString(),
-                binding.includeLoginContent.password.text.toString()
-            )
+            if (isConnected) {
+                loginViewModel.validateCredentials(
+                    binding.includeLoginContent.username.text.toString(),
+                    binding.includeLoginContent.password.text.toString()
+                )
+            } else {
+                loginViewModel.connectionNotAvailable()
+            }
         }
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        loginViewModel.success.observe(this,  { success ->
+        loginViewModel.success.observe(this, { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
             CommonUtils.showToast(success, CommonUtils.POSITION_CENTER)
         })
 
-        loginViewModel.error.observe(this,  { error ->
+        loginViewModel.error.observe(this, { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
             CommonUtils.showToast(error, CommonUtils.POSITION_CENTER)
         })
 
-        loginViewModel.firstLogin.observe(this,  { firstLogin ->
+        loginViewModel.firstLogin.observe(this, { firstLogin ->
             Timber.tag(TAG).i("setupObserver() first login: %s", firstLogin)
             if (firstLogin) {
                 showDialog()
@@ -78,7 +82,7 @@ class LoginActivity : BaseActivity(),
             }
         })
 
-        loginViewModel.loginState.observe(this,  { loginState ->
+        loginViewModel.loginState.observe(this, { loginState ->
             Timber.tag(TAG).i("setupObserver() state: %s", loginState)
         })
     }

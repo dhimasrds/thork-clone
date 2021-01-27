@@ -69,13 +69,6 @@ class LoginViewModel @ViewModelInject constructor(
             return
         }
 
-        networkConnectivity.checkInternetConnection(object :
-            NetworkConnectivity.ConnectivityCallback {
-            override fun onDetected(isConnected: Boolean) {
-                _error.postValue(resourceProvider.getString(R.string.connection_not_available))
-            }
-        })
-
         _progressVisible.value = true
         Timber.tag(TAG).i("validateCredentials() username: %s password: %s", username, password)
         validateWithActiveSession(username)
@@ -83,6 +76,10 @@ class LoginViewModel @ViewModelInject constructor(
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
         fetchUserData(userHash, username)
+    }
+
+    fun connectionNotAvailable() {
+        _error.postValue(resourceProvider.getString(R.string.connection_not_available))
     }
 
     private fun validateWithActiveSession(username: String) {
