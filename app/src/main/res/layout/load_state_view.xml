@@ -23,12 +23,23 @@
             android:textSize="16sp"
             android:layout_alignParentLeft="true" />
 
-        <ProgressBar
+<!--        <ProgressBar-->
+<!--            android:id="@+id/load_state_progress"-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_centerVertical="true" />-->
+
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/load_state_progress"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:visibility="gone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:src="@drawable/infinity_bar"
+            android:elevation="10dp"
+            />
 
         <Button
             android:id="@+id/load_state_retry"

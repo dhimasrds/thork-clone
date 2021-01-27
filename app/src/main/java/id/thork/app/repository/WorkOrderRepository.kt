@@ -38,8 +38,9 @@ class WorkOrderRepository constructor(
         pageno: Int,
         pagesize: Int,
         onSuccess: (WorkOrderResponse) -> Unit,
-        onError: (String) -> Unit
-    ) :WorkOrderResponse {
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    )  {
         val response = workOrderClient.getWorkOrderList(
             headerParam,
             select,
@@ -65,40 +66,13 @@ class WorkOrderRepository constructor(
             }
             .onException {
                 Timber.tag(TAG).i("getWorkOrderList() exception: %s", message())
-                onError(message())
+                onException(message())
             }
 
-        return WorkOrderResponse()
     }
 
     fun saveWoList(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity{
         return woCacheDao.createWoCache(woCacheEntity, username)
-    }
-
-    private fun findWo(): String? {
-        val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
-        val body = ArrayList<String>()
-        for (i in cacheEntities.indices) {
-          if (cacheEntities[i].status !=null && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
-              && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-             ){
-              body.add(cacheEntities[i].syncBody!!)
-          }
-        }
-
-        Timber.d("json : %s", body.toString())
-        return body.toString()
-    }
-
-    @Throws(IOException::class)
-    fun listWoOffline(): List<Member>? {
-        val moshi = Moshi.Builder().build()
-        val listMyData: Type = Types.newParameterizedType(
-            MutableList::class.java,
-            Member::class.java
-        )
-        val adapter: JsonAdapter<List<Member>> = moshi.adapter<List<Member>>(listMyData)
-        return adapter.fromJson(findWo())!!
     }
 
 }

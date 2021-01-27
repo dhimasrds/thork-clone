@@ -36,39 +36,63 @@ class WoPagingSource @Inject constructor(
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
-    var offset =  0
+    var offset = 0
+    var error = false
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
         Timber.d("position :%s", position)
+        return try {
+            fetchWo(position)
+            if (error) {
+                return LoadResult.Error(Exception())
+            }
+            val wo = loadWoCache(offset)
+            loadResultPage(wo!!, position)
+
+        } catch (exception: Exception) {
+            return LoadResult.Error(exception)
+        } catch (exception: HttpException) {
+            return LoadResult.Error(exception)
+        }
+    }
+
+
+    private suspend fun fetchWo(position: Int): Boolean {
         val laborcode: String? = appSession.laborCode
         val select: String = ApiParam.WORKORDER_SELECT
         val where: String =
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
+
+        repository.getWorkOrderList(
+            appSession.userHash!!, select, where, pageno = position, pagesize = 10,
+            onSuccess = {
+                saveWoToObjectBox(it.member)
+                error = false
+            },
+            onError = {
+                error = false
+            },
+            onException = {
+                error = true
+            })
+        return error
+    }
+
+    private fun loadResultPage(list: List<Member>, position: Int): LoadResult<Int, Member> {
         return try {
-            var response = WorkOrderResponse()
-             repository.getWorkOrderList(
-                 appSession.userHash!!, select, where, pageno = position, pagesize = 10,
-                 onSuccess = {
-                     response = it
-                     saveWoToObjectBox(response.member)
-                 },
-                 onError = {
-                 })
-            val wo = loadWoCache(offset)
             LoadResult.Page(
-                data = wo!!,
+                data = list,
                 prevKey = if (position == 1) null else position,
-                nextKey = if (wo.isEmpty()) {null
+                nextKey = if (list.isEmpty()) {
+                    null
                 } else {
                     offset += 10
                     Timber.d("offset :%s", offset)
                     position + 1
                 }
             )
-        } catch (exception: IOException) {
-            return LoadResult.Error(exception)
-        } catch (exception: HttpException) {
+        } catch (exception: Exception) {
             return LoadResult.Error(exception)
         }
     }
@@ -91,21 +115,22 @@ class WoPagingSource @Inject constructor(
             repository.saveWoList(woCacheEntity, appSession.userEntity.username)
         }
     }
+
     private fun convertToJson(member: Member): String? {
         val gson = Gson()
         return gson.toJson(member)
     }
 
-    private fun findWo(offset : Int): String {
+    private fun findWo(offset: Int): String {
         val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
         val body = ArrayList<String>()
         for (i in cacheEntities.indices) {
-//            if (cacheEntities[i].status !=null
-//                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
-//                && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-//            ){
-                body.add(cacheEntities[i].syncBody!!)
-//            }
+            if (cacheEntities[i].status !=null
+                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
+                && !cacheEntities[i].status.equals(BaseParam.WAPPR)
+            ){
+            body.add(cacheEntities[i].syncBody!!)
+            }
         }
         Timber.d("json : %s", body.toString())
         return body.toString()
@@ -118,10 +143,8 @@ class WoPagingSource @Inject constructor(
             MutableList::class.java,
             Member::class.java
         )
-
         val adapter = moshi.adapter<List<Member>>(listMyData)
         val memberList: List<Member>? = adapter.fromJson(findWo(offset))
-        //        viewListWo(memberList);
         Timber.d("memberlist : %s", memberList?.size)
         return memberList
     }
