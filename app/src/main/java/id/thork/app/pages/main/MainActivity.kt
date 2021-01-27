@@ -116,4 +116,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
+
+    override fun onConnection(isConnected: Boolean) {
+        super.onConnection(isConnected)
+        Timber.tag(TAG).i("onConnection() isConnected: %s", isConnected)
+    }
+
+    override fun setupObserver() {
+        super.setupObserver()
+    }
 }

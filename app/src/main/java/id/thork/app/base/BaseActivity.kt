@@ -12,44 +12,32 @@
 
 package id.thork.app.base
 
-import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
-import id.thork.app.di.module.NetworkConnectivity
+import id.thork.app.di.module.ConnectionLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-abstract class BaseActivity: AppCompatActivity(), NetworkConnectivity.ConnectivityCallback {
+abstract class BaseActivity: AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> binding(
         @LayoutRes resId: Int
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
 
     @Inject
-    lateinit var networkConnectivity: NetworkConnectivity
+    lateinit var connectionLiveData: ConnectionLiveData
+
+    var isConnected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupView()
         setupListener()
         setupObserver()
-
-        networkConnectivity.registerCallback(this)
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION).apply {
-            addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-        }
-        registerReceiver(networkConnectivity, filter)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(networkConnectivity)
     }
 
     open fun setupView() {
@@ -59,6 +47,13 @@ abstract class BaseActivity: AppCompatActivity(), NetworkConnectivity.Connectivi
     }
 
     open fun setupObserver() {
+        Timber.tag(BaseApplication.TAG).i("setupObserver() isconnection live data instance: %s", connectionLiveData)
+        connectionLiveData.observe(this, { isConnected ->
+            isConnected?.let {
+                Timber.tag(BaseApplication.TAG).i("setupObserver() isConnected: %s", isConnected)
+                this.isConnected = isConnected
+            }
+        })
     }
 
     open fun onSuccess() {
@@ -70,17 +65,7 @@ abstract class BaseActivity: AppCompatActivity(), NetworkConnectivity.Connectivi
     open fun showToast() {
     }
 
-    override fun onDetected(isConnected: Boolean) {
-        Timber.tag(BaseApplication.TAG).i("onDetected() isConnected: %s", isConnected)
-    }
+    open fun onConnection(isConnected: Boolean) {
 
-//    companion object {
-//        fun stuffDone(baseActivity: BaseActivity)  = baseActivity.showToast()
-//
-//        fun showToast(baseActivity: BaseActivity) {}
-//
-//        fun isConnected(isConnected: Boolean) {
-//        stuffDone()
-//        }
-//    }
+    }
 }
