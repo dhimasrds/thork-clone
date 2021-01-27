@@ -27,9 +27,7 @@ import timber.log.Timber
 
 class ServerActivityViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
-    private val httpRequestInterceptor: HttpRequestInterceptor,
     private val preferenceManager: PreferenceManager,
-    private val okHttpClient: OkHttpClient,
     private val networkConnectivity: NetworkConnectivity
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
@@ -68,15 +66,15 @@ class ServerActivityViewModel @ViewModelInject constructor(
     }
 
     fun cacheServerUrl() {
-        if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isNullOrEmpty()) {
+        if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isEmpty()) {
             _cacheUrl.value = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
         }
 
     }
 
     fun beautifyServerUrl(serverUrl: String): String {
-        var beautyUrl: String
-        var lastString = serverUrl.substring(serverUrl.length-1)
+        val beautyUrl: String
+        val lastString = serverUrl.substring(serverUrl.length-1)
         if (lastString.equals("/")) {
             beautyUrl = serverUrl
         } else {
