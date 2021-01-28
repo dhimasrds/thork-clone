@@ -10,8 +10,8 @@ class WorkOrderClient @Inject constructor(
    private val workOrderApi: WorkOrderApi
 ) {
 
-    suspend fun getWorkOrderList(headerParam: String, select: String, where: String) =
-        workOrderApi.getListWorkorder(headerParam,LEAN, select, where)
+    suspend fun getWorkOrderList(headerParam: String, select: String, where: String,pageno : Int,pagesize : Int) =
+        workOrderApi.getListWorkorder(headerParam,LEAN, select, where, pageno,pagesize)
 
     companion object {
         private const val LEAN = 1

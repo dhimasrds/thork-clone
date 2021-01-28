@@ -134,6 +134,10 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'com.beust:klaxon:5.0.1'
 
+    //Paging
+    def paging_version = "3.0.0-alpha04"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
     //pattern Lock View
     implementation "com.andrognito.patternlockview:patternlockview:$patternLockViewVersion"
 }

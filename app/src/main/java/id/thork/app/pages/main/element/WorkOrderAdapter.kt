@@ -1,7 +1,9 @@
 package id.thork.app.pages.main.element
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,15 +14,15 @@ import id.thork.app.network.response.work_order.Member
  * Created by Dhimas Saputra on 08/01/21
  * Jakarta, Indonesia.
  */
-class WorkOrderAdapter : ListAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCallback) {
+class WorkOrderAdapter : PagingDataAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
-            return false;
+            return oldItem.workorderid == newItem.workorderid
         }
 
         override fun areContentsTheSame(oldItem: Member, newItem: Member): Boolean {
-           return false;
+            return oldItem == newItem
         }
     }
 
@@ -45,7 +47,7 @@ class WorkOrderAdapter : ListAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCal
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current)
+        holder.bind(current!!)
     }
 
 }

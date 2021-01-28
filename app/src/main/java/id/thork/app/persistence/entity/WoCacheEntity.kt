@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 @Entity
-data class WoEntity(
+data class WoCacheEntity(
     var woId : Int? = null,
     var syncStatus : Int? = null,
     var isChanged : Int? = null,
