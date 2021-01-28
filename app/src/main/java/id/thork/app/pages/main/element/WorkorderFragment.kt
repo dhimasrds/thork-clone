@@ -68,7 +68,7 @@ class WorkorderFragment : Fragment() {
 
         // Enable Swipe
         binding.tabsViewpager.isUserInputEnabled = true
-        binding.tabsViewpager.setPageTransformer(TransformationPagers.HorizontalFlipTransformation())
+        binding.tabsViewpager.setPageTransformer(TransformationPagers.ZoomInTransformer())
 
         // Link the TabLayout and the ViewPager2 together and Set Text & Icons
         TabLayoutMediator(binding.tabLayout, binding.tabsViewpager) { tab, position ->

@@ -125,18 +125,14 @@ class WoPagingSource @Inject constructor(
         val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
         val body = ArrayList<String>()
         for (i in cacheEntities.indices) {
-            if (cacheEntities[i].status !=null
-                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
-                && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-            ){
-            body.add(cacheEntities[i].syncBody!!)
+            if (cacheEntities[i].status != null) {
+                body.add(cacheEntities[i].syncBody!!)
             }
         }
         Timber.d("json : %s", body.toString())
         return body.toString()
     }
 
-    @Throws(IOException::class)
     fun loadWoCache(offset: Int): List<Member>? {
         val moshi = Moshi.Builder().build()
         val listMyData: Type = Types.newParameterizedType(
