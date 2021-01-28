@@ -51,7 +51,7 @@ abstract class BaseActivity : AppCompatActivity() {
         Timber.tag(BaseApplication.TAG)
             .i("setupObserver() isconnection live data instance: %s", connectionLiveData)
         connectionLiveData.observe(this, { connectionState ->
-            isConnected?.let {
+            isConnected.let {
                 Timber.tag(BaseApplication.TAG)
                     .i("setupObserver() connection state: %s", connectionState)
                 defineConnectionState(connectionState)
