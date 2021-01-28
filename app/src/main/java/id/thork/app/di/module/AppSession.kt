@@ -36,6 +36,7 @@ class AppSession @Inject constructor(
     var siteId: String? = null
     var orgId: String? = null
     var serverAddress: String? = null
+    var isConnected: Boolean = true
 
     init {
         userEntity = UserEntity()

@@ -51,13 +51,12 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     override fun setupListener() {
         super.setupListener()
         binding.includeServerContent.serverNext.setOnClickListener {
-            viewModel.validateConnection()
             viewModel.validateUrl(binding.includeServerContent.serverUrl.text.toString())
         }
     }
 
     override fun setupObserver() {
-        viewModel.state.observe(this, Observer {
+        viewModel.state.observe(this,  {
             if (CommonUtils.isTrue(it)) {
                 onSuccess()
             } else {

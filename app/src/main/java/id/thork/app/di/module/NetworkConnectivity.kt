@@ -12,7 +12,9 @@
 
 package id.thork.app.di.module
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -24,21 +26,37 @@ import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
 
-
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkConnectivity @Inject constructor(val context: Context,
-                                              val appExecutors: AppExecutors) {
+class NetworkConnectivity @Inject constructor(
+    private val context: Context,
+    private val appExecutors: AppExecutors,
+) : BroadcastReceiver() {
     private val TAG = NetworkConnectivity::class.java.name
 
     private val PING_SERVER = "http://clients3.google.com/generate_204";
+    private lateinit var callback: ConnectivityCallback
+
+    init {
+        Timber.tag(TAG).i("init() init NetworkConnectivity")
+    }
 
     interface ConnectivityCallback {
         fun onDetected(isConnected: Boolean)
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        if (callback != null) {
+            checkInternetConnection()
+        }
+    }
+
+    fun registerCallback(callback: ConnectivityCallback) {
+        this.callback = callback
+    }
+
     @Synchronized
-    fun checkInternetConnection(callback: ConnectivityCallback) {
+    fun checkInternetConnection() {
         Timber.tag(TAG).i("checkInternetConnection() callback: %s", callback)
         appExecutors.networkIO().execute {
             if (isInternetAvailable(context)) {
@@ -49,11 +67,13 @@ class NetworkConnectivity @Inject constructor(val context: Context,
                     connection.apply {
                         setRequestProperty("User-Agent", "Android")
                         setRequestProperty("Connection", "close")
-                        setConnectTimeout(1000)
+                        connectTimeout = 1000
                         connect()
                     }
-                    Timber.tag(TAG).i("checkInternetConnection() response code: %s content: %s",
-                    connection.responseCode, connection.contentLength)
+                    Timber.tag(TAG).i(
+                        "checkInternetConnection() response code: %s content: %s",
+                        connection.responseCode, connection.contentLength
+                    )
 
                     val isConnected = (connection.responseCode == 204
                             && connection.contentLength == 0)
@@ -62,7 +82,43 @@ class NetworkConnectivity @Inject constructor(val context: Context,
                 } catch (e: Exception) {
                     Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
 
-                        postCallback(callback, false)
+                    postCallback(callback, false)
+                    if (connection != null) connection.disconnect()
+                }
+            } else {
+                postCallback(callback, false)
+            }
+        }
+    }
+
+    @Synchronized
+    fun checkInternetConnection(paramCallBack: ConnectivityCallback) {
+        this.callback = paramCallBack
+        Timber.tag(TAG).i("checkInternetConnection() callback: %s", callback)
+        appExecutors.networkIO().execute {
+            if (isInternetAvailable(context)) {
+                var connection: HttpURLConnection? = null
+                try {
+                    connection = URL(PING_SERVER)
+                        .openConnection() as HttpURLConnection
+                    connection.apply {
+                        setRequestProperty("User-Agent", "Android")
+                        setRequestProperty("Connection", "close")
+                        connectTimeout = 1000
+                        connect()
+                    }
+                    Timber.tag(TAG).i(
+                        "checkInternetConnection() response code: %s content: %s",
+                        connection.responseCode, connection.contentLength
+                    )
+
+                    val isConnected = (connection.responseCode == 204
+                            && connection.contentLength == 0)
+                    postCallback(callback, isConnected)
+                    connection.disconnect()
+                } catch (e: Exception) {
+                    Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
+                    postCallback(callback, false)
                     if (connection != null) connection.disconnect()
                 }
             } else {
@@ -79,7 +135,7 @@ class NetworkConnectivity @Inject constructor(val context: Context,
     }
 
     @Suppress("DEPRECATION")
-    fun isInternetAvailable(context: Context): Boolean {
+    private fun isInternetAvailable(context: Context): Boolean {
         var result = false
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

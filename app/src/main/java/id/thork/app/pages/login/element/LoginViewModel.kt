@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.login.element
 
+import android.net.Network
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +23,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.NetworkConnectivity
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
@@ -39,7 +41,7 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val preferenceManager: PreferenceManager,
+    private val networkConnectivity: NetworkConnectivity,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
@@ -74,6 +76,10 @@ class LoginViewModel @ViewModelInject constructor(
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
         fetchUserData(userHash, username)
+    }
+
+    fun connectionNotAvailable() {
+        _error.postValue(resourceProvider.getString(R.string.connection_not_available))
     }
 
     private fun validateWithActiveSession(username: String) {

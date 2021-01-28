@@ -113,7 +113,7 @@ class SplashScreenActivity : BaseActivity(),
     override fun setupObserver() {
         super.setupObserver()
         setupLoadIntroPage()
-        splashScreenViewModel.splashState.observe(this, Observer {
+        splashScreenViewModel.splashState.observe(this,  {
             when (it) {
                 is SplashState.IntroActivity -> {
                     Timber.tag(TAG).i("setupObserver() intro")
