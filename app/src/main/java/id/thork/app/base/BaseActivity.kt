@@ -19,11 +19,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.di.module.ConnectionLiveData
+import id.thork.app.helper.ConnectionState
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-abstract class BaseActivity: AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> binding(
         @LayoutRes resId: Int
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
@@ -47,12 +48,13 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     open fun setupObserver() {
-        Timber.tag(BaseApplication.TAG).i("setupObserver() isconnection live data instance: %s", connectionLiveData)
-        connectionLiveData.observe(this, { isConnected ->
+        Timber.tag(BaseApplication.TAG)
+            .i("setupObserver() isconnection live data instance: %s", connectionLiveData)
+        connectionLiveData.observe(this, { connectionState ->
             isConnected?.let {
-                Timber.tag(BaseApplication.TAG).i("setupObserver() isConnected: %s", isConnected)
-                this.isConnected = isConnected
-                onConnection(this.isConnected)
+                Timber.tag(BaseApplication.TAG)
+                    .i("setupObserver() connection state: %s", connectionState)
+                defineConnectionState(connectionState)
             }
         })
     }
@@ -66,8 +68,34 @@ abstract class BaseActivity: AppCompatActivity() {
     open fun showToast() {
     }
 
-    open fun onConnection(isConnected: Boolean) {
-        //TODO
+    open fun onGoodConnection() {
+    }
+
+    open fun onSlowConnection() {
         //Show bottom toast connection information
+
+    }
+
+    open fun onLostConnection() {
+        //Show bottom toast connection information
+
+    }
+
+    private fun defineConnectionState(connectionState: Int) {
+        if (connectionState >= ConnectionState.SLOW.state) {
+            onConnection(true)
+            if (connectionState.equals(ConnectionState.SLOW.state)) {
+                onSlowConnection()
+            } else {
+                onGoodConnection()
+            }
+        } else {
+            onConnection(false)
+            onLostConnection()
+        }
+    }
+
+    private fun onConnection(isConnected: Boolean) {
+        this.isConnected = isConnected
     }
 }

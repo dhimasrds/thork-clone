@@ -23,6 +23,8 @@ import androidx.lifecycle.LiveData
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import id.thork.app.helper.ConnectionState
+import id.thork.app.utils.NetworkUtils
 import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.URL
@@ -30,7 +32,7 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Boolean>() {
+class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Int>() {
     private val TAG = ConnectionLiveData::class.java.name
 
     private val PING_SERVER = "http://clients3.google.com/generate_204";
@@ -42,6 +44,12 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Bo
     private val networkRequestBuilder: NetworkRequest.Builder = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+
+    /**
+     * used to check internet speed
+     */
+    private var startPingTime: Long = 0
+    private var endPingTime: Long = 0
 
     override fun onActive() {
         super.onActive()
@@ -96,7 +104,7 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Bo
                 }
 
                 override fun onLost(network: Network) {
-                    postValue(false)
+                    postValue(ConnectionState.DISCONNECT.state)
                 }
             }
             return connectivityManagerCallback
@@ -123,7 +131,7 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Bo
                 }
 
                 override fun onLost(network: Network) {
-                    postValue(false)
+                    postValue(ConnectionState.DISCONNECT.state)
                 }
             }
             return connectivityManagerCallback
@@ -143,12 +151,13 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Bo
         val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
         if (activeNetwork?.isConnected == true) {
             doPingNetwork()
-        }else {
-            postValue(false)
+        } else {
+            postValue(ConnectionState.DISCONNECT.state)
         }
     }
 
     private fun doPingNetwork() {
+        startPingTime = System.currentTimeMillis()
         var connection: HttpURLConnection? = null
         try {
             connection = URL(PING_SERVER)
@@ -165,11 +174,14 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Bo
             )
             val isConnected = (connection.responseCode == 204
                     && connection.contentLength == 0)
-            postValue(isConnected)
+            if (isConnected) {
+                endPingTime = System.currentTimeMillis()
+                postValue(NetworkUtils.getConnectionState(startPingTime, endPingTime))
+            }
             connection.disconnect()
         } catch (e: Exception) {
             Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
-            postValue(false)
+            postValue(ConnectionState.DISCONNECT.state)
             if (connection != null) connection.disconnect()
         }
     }
