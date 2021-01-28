@@ -13,12 +13,17 @@
 package id.thork.app.base
 
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
+import es.dmoral.toasty.Toasty
+import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
+import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,6 +36,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var connectionLiveData: ConnectionLiveData
+
+    @Inject
+    lateinit var resourceProvider: ResourceProvider
 
     var isConnected = false
 
@@ -73,12 +81,14 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun onSlowConnection() {
         //Show bottom toast connection information
-
+         Toasty.warning(this, resourceProvider.getString(R.string.connection_slow), Toast.LENGTH_SHORT, true)
+            .show()
     }
 
     open fun onLostConnection() {
         //Show bottom toast connection information
-
+        Toasty.error(this, resourceProvider.getString(R.string.connection_not_available), Toast.LENGTH_SHORT, true)
+            .show()
     }
 
     private fun defineConnectionState(connectionState: Int) {

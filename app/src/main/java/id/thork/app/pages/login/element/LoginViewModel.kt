@@ -23,7 +23,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
-import id.thork.app.di.module.NetworkConnectivity
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
@@ -41,7 +40,6 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val networkConnectivity: NetworkConnectivity,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name

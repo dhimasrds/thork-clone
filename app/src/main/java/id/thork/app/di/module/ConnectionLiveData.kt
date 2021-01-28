@@ -25,14 +25,19 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import id.thork.app.helper.ConnectionState
 import id.thork.app.utils.NetworkUtils
+import kotlinx.coroutines.*
 import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<Int>() {
+class ConnectionLiveData @Inject constructor(
+    val context: Context,
+    private val appExecutors: AppExecutors,
+) : LiveData<Int>() {
     private val TAG = ConnectionLiveData::class.java.name
 
     private val PING_SERVER = "http://clients3.google.com/generate_204";
@@ -44,6 +49,12 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<In
     private val networkRequestBuilder: NetworkRequest.Builder = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+
+    private var parentJob = Job()
+    private val coroutineContext: CoroutineContext
+        get() = parentJob + Dispatchers.Main
+    private val scope = CoroutineScope(coroutineContext)
+
 
     /**
      * used to check internet speed
@@ -158,32 +169,36 @@ class ConnectionLiveData @Inject constructor(val context: Context) : LiveData<In
 
     private fun doPingNetwork() {
         startPingTime = System.currentTimeMillis()
-        var connection: HttpURLConnection? = null
-        try {
-            connection = URL(PING_SERVER)
-                .openConnection() as HttpURLConnection
-            connection.apply {
-                setRequestProperty("User-Agent", "Android")
-                setRequestProperty("Connection", "close")
-                connectTimeout = 1000
-                connect()
+        Timber.tag(TAG).i("doPingNetwork() startPingTime: %s", startPingTime)
+        appExecutors.networkIO().execute {
+            var connection: HttpURLConnection? = null
+            try {
+                connection = URL(PING_SERVER)
+                    .openConnection() as HttpURLConnection
+                connection.apply {
+                    setRequestProperty("User-Agent", "Android")
+                    setRequestProperty("Connection", "close")
+                    connectTimeout = 1000
+                    connect()
+                }
+                Timber.tag(TAG).i(
+                    "doPingNetwork() response code: %s content: %s",
+                    connection.responseCode, connection.contentLength
+                )
+                val isConnected = (connection.responseCode == 204
+                        && connection.contentLength == 0)
+                if (isConnected) {
+                    endPingTime = System.currentTimeMillis()
+                    postValue(NetworkUtils.getConnectionState(startPingTime, endPingTime))
+                }
+                connection.disconnect()
+            } catch (e: Exception) {
+                Timber.tag(TAG).i("doPingNetwork() error: %s", e)
+                postValue(ConnectionState.DISCONNECT.state)
+                if (connection != null) connection.disconnect()
             }
-            Timber.tag(TAG).i(
-                "checkInternetConnection() response code: %s content: %s",
-                connection.responseCode, connection.contentLength
-            )
-            val isConnected = (connection.responseCode == 204
-                    && connection.contentLength == 0)
-            if (isConnected) {
-                endPingTime = System.currentTimeMillis()
-                postValue(NetworkUtils.getConnectionState(startPingTime, endPingTime))
-            }
-            connection.disconnect()
-        } catch (e: Exception) {
-            Timber.tag(TAG).i("checkInternetConnection() error: %s", e)
-            postValue(ConnectionState.DISCONNECT.state)
-            if (connection != null) connection.disconnect()
         }
+
     }
 
 }
