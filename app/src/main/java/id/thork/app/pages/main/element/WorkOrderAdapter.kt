@@ -1,11 +1,9 @@
 package id.thork.app.pages.main.element
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member

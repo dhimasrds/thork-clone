@@ -14,7 +14,6 @@ package id.thork.app.pages.login
 
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding

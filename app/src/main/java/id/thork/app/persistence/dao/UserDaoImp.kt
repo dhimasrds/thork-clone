@@ -18,7 +18,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.persistence.entity.UserEntity_
-import io.objectbox.Box
 import io.objectbox.kotlin.equal
 import java.util.*
 

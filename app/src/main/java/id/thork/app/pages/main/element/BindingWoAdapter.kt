@@ -1,6 +1,5 @@
 package id.thork.app.pages.main.element
 
-import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat

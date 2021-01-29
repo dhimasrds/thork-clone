@@ -11,12 +11,10 @@ import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.ApiParam
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
-import java.io.IOException
 import java.lang.reflect.Type
 import java.util.*
 import javax.inject.Inject

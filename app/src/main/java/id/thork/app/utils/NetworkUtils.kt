@@ -12,7 +12,6 @@
 
 package id.thork.app.utils
 
-import android.net.Network
 import id.thork.app.helper.ConnectionState
 import timber.log.Timber
 import kotlin.math.round

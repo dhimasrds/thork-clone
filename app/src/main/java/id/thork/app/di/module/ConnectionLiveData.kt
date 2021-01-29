@@ -25,12 +25,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import id.thork.app.helper.ConnectionState
 import id.thork.app.utils.NetworkUtils
-import kotlinx.coroutines.*
 import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -49,12 +47,6 @@ class ConnectionLiveData @Inject constructor(
     private val networkRequestBuilder: NetworkRequest.Builder = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-
-    private var parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Main
-    private val scope = CoroutineScope(coroutineContext)
-
 
     /**
      * used to check internet speed

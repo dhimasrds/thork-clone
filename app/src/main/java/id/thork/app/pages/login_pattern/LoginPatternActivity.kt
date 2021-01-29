@@ -15,7 +15,6 @@ package id.thork.app.pages.login_pattern
 import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import com.andrognito.patternlockview.PatternLockView
 import com.andrognito.patternlockview.listener.PatternLockViewListener
 import com.andrognito.patternlockview.utils.PatternLockUtils

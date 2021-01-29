@@ -2,7 +2,6 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import java.util.*

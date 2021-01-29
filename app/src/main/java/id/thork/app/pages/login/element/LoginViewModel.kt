@@ -12,7 +12,6 @@
 
 package id.thork.app.pages.login.element
 
-import android.net.Network
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,7 +22,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
-import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
