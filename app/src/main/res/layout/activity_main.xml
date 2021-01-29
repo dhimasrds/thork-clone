@@ -9,6 +9,7 @@
             type="id.thork.app.pages.main.element.MainViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
         android:background="#ECECEC"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

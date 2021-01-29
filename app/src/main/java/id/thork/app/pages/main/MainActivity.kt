@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
@@ -43,6 +44,8 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun setupView() {
         super.setupView()
+        setupMainView(binding.mainLayout)
+
         setupToolBar()
         setupBottomNavigationBar()
 

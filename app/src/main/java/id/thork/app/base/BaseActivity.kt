@@ -13,11 +13,17 @@
 package id.thork.app.base
 
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.emredavarci.noty.Noty
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import id.thork.app.R
@@ -26,6 +32,7 @@ import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
 import timber.log.Timber
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
@@ -41,11 +48,16 @@ abstract class BaseActivity : AppCompatActivity() {
 
     var isConnected = false
 
+    var mainView: ViewGroup? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupView()
         setupListener()
         setupObserver()
+    }
+
+    open fun setupMainView(mainView: ViewGroup) {
+        this.mainView = mainView
     }
 
     open fun setupView() {
@@ -76,18 +88,31 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun onGoodConnection() {
+        Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
     }
 
     open fun onSlowConnection() {
         //Show bottom toast connection information
-         Toasty.warning(this, resourceProvider.getString(R.string.connection_slow), Toast.LENGTH_SHORT, true)
-            .show()
+        val toast = Toasty.warning(
+            this,
+            resourceProvider.getString(R.string.connection_slow),
+            Toast.LENGTH_LONG,
+            true
+        )
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
     }
 
     open fun onLostConnection() {
-        //Show bottom toast connection information
-        Toasty.error(this, resourceProvider.getString(R.string.connection_not_available), Toast.LENGTH_SHORT, true)
-            .show()
+//        Show bottom toast connection information
+        val toast = Toasty.error(
+            this,
+            resourceProvider.getString(R.string.connection_not_available),
+            Toast.LENGTH_LONG,
+            true
+        )
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
     }
 
     private fun defineConnectionState(connectionState: Int) {
@@ -98,6 +123,11 @@ abstract class BaseActivity : AppCompatActivity() {
             } else {
                 onGoodConnection()
             }
+            Timber.tag(BaseApplication.TAG).i(
+                "defineConnectionState() connectionState: %s",
+                connectionState
+            )
+
         } else {
             onConnection(false)
             onLostConnection()
