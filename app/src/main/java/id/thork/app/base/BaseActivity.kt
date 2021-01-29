@@ -14,16 +14,12 @@ package id.thork.app.base
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.emredavarci.noty.Noty
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import id.thork.app.R
