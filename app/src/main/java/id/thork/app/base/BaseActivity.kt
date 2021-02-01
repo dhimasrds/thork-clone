@@ -26,6 +26,7 @@ import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.workmanager.WoCoordinator
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -42,6 +43,9 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
+    @Inject
+    lateinit var workerCoordinator: WoCoordinator
+
     var isConnected = false
 
     var mainView: ViewGroup? = null
@@ -50,6 +54,9 @@ abstract class BaseActivity : AppCompatActivity() {
         setupView()
         setupListener()
         setupObserver()
+
+        Timber.tag(BaseApplication.TAG).i("onCreate() coordinator instance: %s", workerCoordinator)
+        workerCoordinator.ping()
     }
 
     open fun setupMainView(mainView: ViewGroup) {
