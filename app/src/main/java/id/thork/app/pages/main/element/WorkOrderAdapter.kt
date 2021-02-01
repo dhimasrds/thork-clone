@@ -17,8 +17,9 @@ import id.thork.app.network.response.work_order.Member
 class WorkOrderAdapter : PagingDataAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
+
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
-            return oldItem.workorderid == newItem.workorderid
+            return oldItem.wonum === newItem.wonum
         }
 
         override fun areContentsTheSame(oldItem: Member, newItem: Member): Boolean {
