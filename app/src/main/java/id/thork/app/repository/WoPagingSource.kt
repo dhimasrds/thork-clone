@@ -16,7 +16,6 @@ import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
-import java.io.IOException
 import java.lang.reflect.Type
 import java.util.*
 import javax.inject.Inject
@@ -38,6 +37,9 @@ class WoPagingSource @Inject constructor(
     val TAG = WoPagingSource::class.java.name
     var offset = 0
     var error = false
+    var woListObjectBox: HashMap<String, WoCacheEntity>? = null
+    var response = WorkOrderResponse()
+
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
@@ -67,14 +69,15 @@ class WoPagingSource @Inject constructor(
         repository.getWorkOrderList(
             appSession.userHash!!, select, where, pageno = position, pagesize = 10,
             onSuccess = {
-                saveWoToObjectBox(it.member)
+                response = it
+                saveWoToObjectBox(response.member)
                 error = false
             },
             onError = {
                 error = false
             },
             onException = {
-                error = true
+                error = false
             })
         return error
     }
@@ -98,6 +101,16 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun saveWoToObjectBox(list: List<Member>) {
+       if(woCacheDao.findAllWo().isEmpty()){
+           addWoToObjectBox(list)
+       }
+        else{
+            addObjectBoxToHashMap()
+           compareWoLocalWithServer(list)
+        }
+    }
+
+    private fun addWoToObjectBox(list: List<Member>){
         for (wo in list) {
             val woCacheEntity = WoCacheEntity(
                 syncBody = convertToJson(wo),
@@ -115,6 +128,28 @@ class WoPagingSource @Inject constructor(
             repository.saveWoList(woCacheEntity, appSession.userEntity.username)
         }
     }
+
+    private fun addObjectBoxToHashMap() {
+        Timber.d("queryObjectBoxToHashMap()")
+        if (woCacheDao.findAllWo().isNotEmpty()) {
+            woListObjectBox = HashMap<String, WoCacheEntity>()
+            val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
+            for (i in cacheEntities.indices) {
+                woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
+                Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
+            }
+        }
+    }
+
+    private fun compareWoLocalWithServer(list: List<Member>){
+        for (wo in list){
+            if(woListObjectBox!![wo.wonum!!] != null ){
+
+            }
+        }
+    }
+
+
 
     private fun convertToJson(member: Member): String? {
         val gson = Gson()

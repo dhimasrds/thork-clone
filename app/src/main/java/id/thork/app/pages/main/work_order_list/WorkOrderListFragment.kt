@@ -1,6 +1,7 @@
 package id.thork.app.pages.main.work_order_list
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class WorkOrderListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupView()
         setupObserver()
-        progressBarOnFirstLoad()
+//        progressBarOnFirstLoad()
 
 //        viewLifecycleOwner.lifecycleScope.launch {
 //
@@ -111,7 +112,9 @@ class WorkOrderListFragment : Fragment() {
                         else -> null
                     }
                     errorState?.let {
-                        Toast.makeText(requireContext(), it.error.message, Toast.LENGTH_LONG).show()
+                        val toast = Toast.makeText(requireContext(), "it.error.message", Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0 , 0)
+                        toast.show()
                     }
                 }
             }

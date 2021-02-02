@@ -49,7 +49,8 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun findAllWo(): List<WoCacheEntity> {
-        TODO("Not yet implemented")
+        return woCacheEntityBox.query().notNull(WoCacheEntity_.syncBody).build()
+            .find()
     }
 
     override fun findAllWo(offset: Int): List<WoCacheEntity> {
