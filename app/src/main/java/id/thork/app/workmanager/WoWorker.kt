@@ -21,7 +21,7 @@ class WoWorker(context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
     private val TAG = WoWorker::class.java.name
 
-    private val MAX_RUN_ATTEMPT = 10
+    private val MAX_RUN_ATTEMPT = 6
     override fun doWork(): Result {
         try {
             //Query Local WO Record is needed to sync with the server
@@ -31,7 +31,7 @@ class WoWorker(context: Context, workerParameters: WorkerParameters) :
 
             //If Post to server success then return result.success
             //Else return result.retry until MAX RUN ATTEMPT
-            val workerId  = inputData.getString("workerId")
+            val workerId  = inputData.getString("workerid")
             val wonum = inputData.getString("wonum")
             val woid = inputData.getInt("woid", 0)
             Timber.tag(TAG).i("doWork() sync workerId: %s wonum: %s woid: %s",

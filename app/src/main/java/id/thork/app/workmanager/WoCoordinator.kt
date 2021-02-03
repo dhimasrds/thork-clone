@@ -39,7 +39,7 @@ class WoCoordinator @Inject constructor(
 
         val workerId = UUID.randomUUID().toString()
         val inputData =
-            workDataOf("wonum" to "$wonum", "woid" to "$woid", "workderid" to "$workerId")
+            workDataOf("wonum" to "$wonum", "woid" to "$woid", "workerid" to "$workerId")
         //backoff criteria for Retry work manager if work is need to retry
         val syncWorkOrderRequest: WorkRequest = OneTimeWorkRequestBuilder<WoWorker>()
             .setInputData(inputData)
