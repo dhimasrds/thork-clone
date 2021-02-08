@@ -54,7 +54,6 @@
         <TextView
             android:id="@+id/snippet"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:background="@drawable/ic_rectangle_border_detail"
             android:clickable="true"

@@ -30,13 +30,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import id.thork.app.R
-import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.GoogleMapInfoWindow
-import id.thork.app.pages.MapsUtils
+import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 import id.thork.app.databinding.FragmentMapBinding
+import id.thork.app.pages.GoogleMapInfoWindow
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -192,7 +191,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
     private fun renderMarker() {
         //TODO Hardcode marker
+
+        val crew = LatLng(-6.592277,110.6819295)
+        MapsUtils.renderCrewMarker(map, crew, "Tester")
+
         val sydney = LatLng(-6.5920505, 110.6813501)
-        MapsUtils.renderMarker(map, sydney, "2021")
+        MapsUtils.renderWoMarker(map, sydney, "2021")
+
+
+
     }
 }

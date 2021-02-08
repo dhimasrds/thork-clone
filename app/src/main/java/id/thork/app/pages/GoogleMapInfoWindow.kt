@@ -9,8 +9,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 import id.thork.app.R
 import id.thork.app.base.BaseParam
-import id.thork.app.utils.CommonUtils
-import timber.log.Timber
 
 /**
  * Created by M.Reza Sulaiman on 21/01/21
@@ -19,7 +17,9 @@ import timber.log.Timber
 class GoogleMapInfoWindow(context: Context) : GoogleMap.InfoWindowAdapter {
 
     @SuppressLint("InflateParams")
-    var mWindow = (context as Activity).layoutInflater.inflate(R.layout.custom_info_window, null)
+    var mWindow = (context as Activity).layoutInflater.inflate(R.layout.custom_info_window_wo, null)
+    var mWindowCrew =
+        (context as Activity).layoutInflater.inflate(R.layout.custom_info_window_crew, null)
     private var tvTitle: TextView? = null
     private var tvSnippet: TextView? = null
     private var tvPrefix: TextView? = null
@@ -34,13 +34,32 @@ class GoogleMapInfoWindow(context: Context) : GoogleMap.InfoWindowAdapter {
         tvSnippet!!.text = BaseParam.APP_DETAIL
     }
 
+    private fun rendowWindowTextCrew(marker: Marker, view: View) {
+        tvPrefix = view.findViewById(R.id.prefixcrew)
+        tvTitle = view.findViewById(R.id.name_crew)
+
+        tvPrefix!!.text = BaseParam.APP_CREW
+        tvTitle!!.text = marker.title
+    }
+
+
     override fun getInfoContents(marker: Marker): View {
-        rendowWindowText(marker, mWindow)
-        return mWindow
+        return if (marker.tag.toString().equals(BaseParam.APP_TAG_MARKER_WO)) {
+            rendowWindowText(marker, mWindow)
+            mWindow
+        } else {
+            rendowWindowTextCrew(marker, mWindowCrew)
+            mWindowCrew
+        }
     }
 
     override fun getInfoWindow(marker: Marker): View? {
-        rendowWindowText(marker, mWindow)
-        return mWindow
+        return if (marker.tag.toString().equals(BaseParam.APP_TAG_MARKER_WO)) {
+            rendowWindowText(marker, mWindow)
+            mWindow
+        } else {
+            rendowWindowTextCrew(marker, mWindowCrew)
+            mWindowCrew
+        }
     }
 }

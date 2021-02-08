@@ -66,4 +66,9 @@ object BaseParam {
      */
     const val APP_WONUM = "WO. Number "
     const val APP_DETAIL = "Detail"
+    const val APP_CREW = "Crew "
+    const val APP_TAG_MARKER_WO = "WO"
+    const val APP_TAG_MARKER_CREW = "CREW"
+
+
 }
