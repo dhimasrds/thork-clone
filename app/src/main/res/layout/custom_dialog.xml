@@ -8,37 +8,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
 
         <LinearLayout
             android:layout_width="296dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/white">
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/opensans_bold"
-                android:gravity="center"
                 android:text="Title"
-                android:textColor="@color/colorBlack"
                 android:textSize="16sp"
-                android:visibility="visible" />
+                android:textColor="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/tv_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/opensans_regular"
-                android:gravity="center"
-                android:padding="10dp"
                 android:text="@string/desc"
+                android:fontFamily="@font/opensans_regular"
+                android:padding="10dp"
+                android:gravity="center"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
 
@@ -53,9 +53,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="17dp"
+                    android:layout_marginLeft="20dp"
                     android:background="@drawable/ic_rectangle_blue2"
                     android:fontFamily="@font/opensans_bold"
                     android:text="@string/later"
@@ -67,13 +67,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="17dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:background="@drawable/ic_rectangle_blue2"
                     android:fontFamily="@font/opensans_bold"
-                    android:text="@string/dialog_cancel"
+                    android:text="@string/dialog_yes"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />
             </LinearLayout>
@@ -84,18 +84,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_middle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/ic_rectangle_blue2"
+                    android:textColor="@color/white"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="17dp"
-                    android:background="@drawable/ic_rectangle_blue2"
-                    android:text="@string/start"
-                    android:textColor="@color/white" />
+                    android:text="@string/start" />
 
             </LinearLayout>
 

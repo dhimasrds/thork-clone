@@ -19,18 +19,12 @@ import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.di.module.NetworkConnectivity
-import id.thork.app.network.HttpRequestInterceptor
 import id.thork.app.repository.LoginRepository
-import okhttp3.OkHttpClient
 import timber.log.Timber
 
 class ServerActivityViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
-    private val httpRequestInterceptor: HttpRequestInterceptor,
     private val preferenceManager: PreferenceManager,
-    private val okHttpClient: OkHttpClient,
-    private val networkConnectivity: NetworkConnectivity
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
 
@@ -44,14 +38,6 @@ class ServerActivityViewModel @ViewModelInject constructor(
         Timber.tag(TAG).i("init() loginRepository: %s", loginRepository)
     }
 
-    fun validateConnection() {
-        networkConnectivity.checkInternetConnection(object : NetworkConnectivity.ConnectivityCallback {
-            override fun onDetected(isConnected: Boolean) {
-                Timber.tag(TAG).i("validateConnection() isConnected: %s", isConnected)
-            }
-        })
-    }
-
     fun validateUrl(serverUrl: String) {
         if (URLUtil.isValidUrl(serverUrl)) {
             Timber.tag(TAG).i("validateUrl() serverUrl: %s", serverUrl)
@@ -63,15 +49,15 @@ class ServerActivityViewModel @ViewModelInject constructor(
     }
 
     fun cacheServerUrl() {
-        if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isNullOrEmpty()) {
+        if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isEmpty()) {
             _cacheUrl.value = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
         }
 
     }
 
     fun beautifyServerUrl(serverUrl: String): String {
-        var beautyUrl: String
-        var lastString = serverUrl.substring(serverUrl.length-1)
+        val beautyUrl: String
+        val lastString = serverUrl.substring(serverUrl.length-1)
         if (lastString.equals("/")) {
             beautyUrl = serverUrl
         } else {

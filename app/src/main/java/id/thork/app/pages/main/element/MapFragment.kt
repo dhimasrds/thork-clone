@@ -36,6 +36,7 @@ import id.thork.app.pages.MapsUtils
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
+import id.thork.app.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -48,6 +49,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private val DEFAULT_ZOOM = 17
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
 
+
+    private lateinit var binding : FragmentMapBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -22,7 +22,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
-import id.thork.app.di.module.PreferenceManager
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
@@ -39,7 +38,6 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val preferenceManager: PreferenceManager,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     val TAG = ServerActivityViewModel::class.java.name
@@ -76,6 +74,10 @@ class LoginViewModel @ViewModelInject constructor(
         fetchUserData(userHash, username)
     }
 
+    fun connectionNotAvailable() {
+        _error.postValue(resourceProvider.getString(R.string.connection_not_available))
+    }
+
     private fun validateWithActiveSession(username: String) {
         val userEntity: UserEntity? = loginRepository.findActiveSession()
         Timber.tag(TAG).i("validateWithActiveSession() userEntity: %s", userEntity)
@@ -91,7 +93,6 @@ class LoginViewModel @ViewModelInject constructor(
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
-
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API

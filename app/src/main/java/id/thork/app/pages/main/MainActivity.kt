@@ -13,11 +13,15 @@
 package id.thork.app.pages.main
 
 import android.Manifest
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.appbar.MaterialToolbar
@@ -42,16 +46,16 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
     val viewModel: MainViewModel by viewModels()
 
     private var currentNavController: LiveData<NavController>? = null
-    private lateinit var toolBar: MaterialToolbar
     private lateinit var customDialogUtils: CustomDialogUtils
+    private lateinit var toolBar: Toolbar
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
     override fun setupView() {
         super.setupView()
-        toolBar = binding.toolbar
-        setSupportActionBar(toolBar)
+        setupMainView(binding.mainLayout)
 
+        setupToolBar()
         setupBottomNavigationBar()
 
         binding.apply {
@@ -60,6 +64,27 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
         //Init custom dialog
         customDialogUtils = CustomDialogUtils(this)
         requestGrantPermissions()
+    }
+
+    private fun setupToolBar() {
+        toolBar = binding.toolbar.wmsToolbar
+        setSupportActionBar(toolBar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        toolBar.setNavigationIcon(R.drawable.ic_settings)
+        binding.toolbar.toolbarTitle.text = getString(R.string.this_fsm)
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
+        toolBar.overflowIcon = drawable
+        toolBar.inflateMenu(R.menu.filter_menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.filter_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupBottomNavigationBar() {
@@ -75,8 +100,8 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
             intent = intent
         )
 
-        navController.observe(this, Observer { navController ->
-            setupActionBarWithNavController(navController)
+        navController.observe(this,  { nav ->
+            setupActionBarWithNavController(nav)
         })
         currentNavController = navController
     }
@@ -92,6 +117,10 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
                 viewModel.checkRepo()
             }
         }
+    }
+
+    override fun setupObserver() {
+        super.setupObserver()
     }
 
     /**

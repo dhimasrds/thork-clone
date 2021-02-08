@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -40,7 +39,7 @@ class SplashScreenActivity : BaseActivity(),
     private val binding: ActivitySplashScreenBinding by binding(R.layout.activity_splash_screen)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        hideSystemUI()
+//        hideSystemUI()
         super.onCreate(savedInstanceState)
 
         binding.apply {
@@ -113,7 +112,7 @@ class SplashScreenActivity : BaseActivity(),
     override fun setupObserver() {
         super.setupObserver()
         setupLoadIntroPage()
-        splashScreenViewModel.splashState.observe(this, Observer {
+        splashScreenViewModel.splashState.observe(this,  {
             when (it) {
                 is SplashState.IntroActivity -> {
                     Timber.tag(TAG).i("setupObserver() intro")

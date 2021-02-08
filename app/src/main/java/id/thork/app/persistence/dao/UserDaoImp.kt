@@ -18,18 +18,16 @@ import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.persistence.entity.UserEntity_
-import io.objectbox.Box
 import io.objectbox.kotlin.equal
 import java.util.*
 
 class UserDaoImp : UserDao {
     val TAG = UserDaoImp::class.java.name
-    var userEntityBox: Box<UserEntity>
+    private var userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
     var logDao: LogDaoImp
     var gson: Gson = Gson()
 
     init {
-        userEntityBox = ObjectBox.boxStore.boxFor(UserEntity::class.java)
         logDao = LogDaoImp()
     }
 

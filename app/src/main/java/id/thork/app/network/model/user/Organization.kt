@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Organization(
+data class  Organization(
     @Json(name = "description")
     val description: String,
     @Json(name = "href")

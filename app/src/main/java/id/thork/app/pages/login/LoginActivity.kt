@@ -14,7 +14,6 @@ package id.thork.app.pages.login
 
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding
@@ -49,26 +48,30 @@ class LoginActivity : BaseActivity(),
     override fun setupListener() {
         super.setupListener()
         binding.includeLoginContent.loginbt.setOnClickListener {
-            loginViewModel.validateCredentials(
-                binding.includeLoginContent.username.text.toString(),
-                binding.includeLoginContent.password.text.toString()
-            )
+            if (isConnected) {
+                loginViewModel.validateCredentials(
+                    binding.includeLoginContent.username.text.toString(),
+                    binding.includeLoginContent.password.text.toString()
+                )
+            } else {
+                loginViewModel.connectionNotAvailable()
+            }
         }
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        loginViewModel.success.observe(this, Observer { success ->
+        loginViewModel.success.observe(this, { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
             CommonUtils.showToast(success, CommonUtils.POSITION_CENTER)
         })
 
-        loginViewModel.error.observe(this, Observer { error ->
+        loginViewModel.error.observe(this, { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
             CommonUtils.showToast(error, CommonUtils.POSITION_CENTER)
         })
 
-        loginViewModel.firstLogin.observe(this, Observer { firstLogin ->
+        loginViewModel.firstLogin.observe(this, { firstLogin ->
             Timber.tag(TAG).i("setupObserver() first login: %s", firstLogin)
             if (firstLogin) {
                 showDialog()
@@ -78,7 +81,7 @@ class LoginActivity : BaseActivity(),
             }
         })
 
-        loginViewModel.loginState.observe(this, Observer { loginState ->
+        loginViewModel.loginState.observe(this, { loginState ->
             Timber.tag(TAG).i("setupObserver() state: %s", loginState)
         })
     }

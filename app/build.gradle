@@ -77,13 +77,15 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation "androidx.navigation:navigation-fragment:$navigationVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewPagerVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
+    implementation "androidx.work:work-runtime-ktx:$workVersion"
 
     // RootBeer
     implementation "com.scottyab:rootbeer-lib:$rootBeerVersion"
@@ -95,7 +97,8 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation "com.github.GrenderG:Toasty:$toastyVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltCoreVersion"
     implementation "androidx.hilt:hilt-common:$hiltVersion"
@@ -127,6 +130,15 @@ dependencies {
     // https://docs.objectbox.io/data-browser
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
+
+    //ViewPager
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.beust:klaxon:5.0.1'
+
+    //Paging
+    def paging_version = "3.0.0-alpha04"
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
     //pattern Lock View
     implementation "com.andrognito.patternlockview:patternlockview:$patternLockViewVersion"

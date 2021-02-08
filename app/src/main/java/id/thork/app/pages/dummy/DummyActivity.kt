@@ -13,11 +13,9 @@
 package id.thork.app.pages.dummy
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import com.andrognito.patternlockview.utils.PatternLockUtils
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
