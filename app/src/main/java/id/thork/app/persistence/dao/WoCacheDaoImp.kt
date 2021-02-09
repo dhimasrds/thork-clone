@@ -2,9 +2,10 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.UserEntity
+import id.thork.app.initializer.ObjectBox.boxStore
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
+import io.objectbox.Box
 import java.util.*
 
 /**
@@ -32,9 +33,23 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntity
     }
 
-    override fun findWoByWonum(wonum: String): WoCacheEntity {
-        TODO("Not yet implemented")
+    override fun findWoByWonum(offset: Int , wonum: String): List<WoCacheEntity> {
+        val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheBox.query().contains(WoCacheEntity_.wonum, wonum).build().find(offset.toLong(), 10)
+        return if (woCacheEntity.isNotEmpty()) {
+            woCacheEntity
+        } else emptyList()
     }
+
+//    override fun findWoByWonum(wonum: String): WoCacheEntity? {
+//        val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
+//        val woCacheEntity: List<WoCacheEntity> =
+//            woCacheBox.query().equal(WoCacheEntity_.wonum, wonum).build().find()
+//        return if (woCacheEntity.isNotEmpty()) {
+//            woCacheEntity[0]
+//        } else null
+//    }
 
     override fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity {
         TODO("Not yet implemented")

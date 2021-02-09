@@ -33,6 +33,7 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
     class ViewHolder(val binding: CardViewWorkOrderBinding) :RecyclerView.ViewHolder(binding.root) {
 
         fun bind(woEntity: Member){
+            Timber.d("adapter wonum :%s",woEntity.wonum)
             binding.wo = woEntity
             binding.tvWonum.text = woEntity.wonum
             binding.desc.text = woEntity.description

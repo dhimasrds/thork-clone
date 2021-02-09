@@ -1,13 +1,15 @@
 package id.thork.app.pages.main.work_order_list
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -16,10 +18,9 @@ import id.thork.app.databinding.FragmentWorkOrderListBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
 class WorkOrderListFragment : Fragment() {
@@ -45,19 +46,9 @@ class WorkOrderListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupView()
         setupObserver()
-//        progressBarOnFirstLoad()
+        setUpFilterListener()
+        progressBarOnFirstLoad()
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//
-//            myAdapter.loadStateFlow.collectLatest { loadStates ->
-//                Timber.d("onCreateView :%s", loadStates.refresh)
-//                binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
-//                binding.btnRetry.isVisible = loadStates.refresh !is LoadState.Loading
-//                binding.btnRetry.setOnClickListener {
-//                    setupObserver()
-//                }
-//            }
-//        }
     }
 
     private fun setupView() {
@@ -70,10 +61,9 @@ class WorkOrderListFragment : Fragment() {
     }
 
     private fun setupObserver() {
-//        viewModel.fetchWoList()
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.woList.collect {
-                myAdapter.submitData(it)
+            viewModel.woList.observe(viewLifecycleOwner) {
+                myAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 Timber.d("onCreateView :%s", it)
             }
         }
@@ -112,8 +102,12 @@ class WorkOrderListFragment : Fragment() {
                         else -> null
                     }
                     errorState?.let {
-                        val toast = Toast.makeText(requireContext(), "it.error.message", Toast.LENGTH_LONG)
-                        toast.setGravity(Gravity.CENTER, 0 , 0)
+                        val toast = Toast.makeText(
+                            requireContext(),
+                            "it.error.message",
+                            Toast.LENGTH_LONG
+                        )
+                        toast.setGravity(Gravity.CENTER, 0, 0)
                         toast.show()
                     }
                 }
@@ -121,4 +115,45 @@ class WorkOrderListFragment : Fragment() {
         }
     }
 
+    private fun setUpFilterListener() {
+        binding.apply {
+            editText.addTextChangedListener(object : TextWatcher {
+                private var timer = Timer()
+                private val DELAY: Long = 1000 // milliseconds
+                var isTyping = false
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    //Method before text change
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    //Method on text Change
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    if (!isTyping) {
+                        // Send notification for start typing event
+                        isTyping = true
+                    }
+                    timer.cancel()
+                    timer = Timer()
+                    timer.schedule(
+                        object : TimerTask() {
+                            override fun run() {
+                                isTyping = false
+                                activity?.runOnUiThread {
+                                    Timber.d("filter :%s", s.toString())
+                                    viewModel!!.searchWo(s.toString())
+                                }
+                            }
+                        }, DELAY
+                    )
+                }
+            })
+        }
+    }
 }

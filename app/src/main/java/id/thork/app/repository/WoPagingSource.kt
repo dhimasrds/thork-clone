@@ -16,9 +16,11 @@ import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
+import java.io.IOException
 import java.lang.reflect.Type
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * Created by Dhimas Saputra on 21/01/21
@@ -31,12 +33,14 @@ import javax.inject.Inject
 class WoPagingSource @Inject constructor(
     private val appSession: AppSession,
     private val repository: WorkOrderRepository,
-    private val woCacheDao: WoCacheDao
+    private val woCacheDao: WoCacheDao,
+    private val query: String?
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
     var offset = 0
     var error = false
+    var emptyList = false
     var woListObjectBox: HashMap<String, WoCacheEntity>? = null
     var response = WorkOrderResponse()
 
@@ -49,10 +53,13 @@ class WoPagingSource @Inject constructor(
             if (error) {
                 return LoadResult.Error(Exception())
             }
-            val wo = loadWoCache(offset)
+            val wo = if (query != null) searchLoadWoCache(offset, query) else loadWoCache(offset)
+            Timber.d("filter paging source :%s", query)
+            Timber.d("filter paging source wo size:%s", wo)
             loadResultPage(wo!!, position)
 
-        } catch (exception: Exception) {
+        } catch (exception: IOException) {
+            Timber.d("exception :%s", exception)
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)
@@ -71,7 +78,6 @@ class WoPagingSource @Inject constructor(
             onSuccess = {
                 response = it
                 saveWoToObjectBox(response.member)
-                error = false
             },
             onError = {
                 error = false
@@ -101,16 +107,15 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun saveWoToObjectBox(list: List<Member>) {
-       if(woCacheDao.findAllWo().isEmpty()){
-           addWoToObjectBox(list)
-       }
-        else{
+        if (woCacheDao.findAllWo().isEmpty()) {
+            addWoToObjectBox(list)
+        } else {
             addObjectBoxToHashMap()
-           compareWoLocalWithServer(list)
+            compareWoLocalWithServer(list)
         }
     }
 
-    private fun addWoToObjectBox(list: List<Member>){
+    private fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
             val woCacheEntity = WoCacheEntity(
                 syncBody = convertToJson(wo),
@@ -141,15 +146,13 @@ class WoPagingSource @Inject constructor(
         }
     }
 
-    private fun compareWoLocalWithServer(list: List<Member>){
-        for (wo in list){
-            if(woListObjectBox!![wo.wonum!!] != null ){
+    private fun compareWoLocalWithServer(list: List<Member>) {
+        for (wo in list) {
+            if (woListObjectBox!![wo.wonum!!] != null) {
 
             }
         }
     }
-
-
 
     private fun convertToJson(member: Member): String? {
         val gson = Gson()
@@ -166,6 +169,34 @@ class WoPagingSource @Inject constructor(
         }
         Timber.d("json : %s", body.toString())
         return body.toString()
+    }
+
+    private fun searchFindWo(offset: Int, query: String): String {
+        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query)
+        Timber.d("searchFindWo list :%s", list.size)
+        val body = ArrayList<String>()
+        for (i in list.indices) {
+            if (list[i].status != null) {
+                body.add(list[i].syncBody!!)
+            }
+        }
+        Timber.d(" searchFindWo json : %s", body.toString())
+        return body.toString()
+    }
+
+    private fun searchLoadWoCache(offset: Int, query: String): List<Member>? {
+        val moshi = Moshi.Builder().build()
+        val listMyData: Type = Types.newParameterizedType(
+            MutableList::class.java,
+            Member::class.java
+        )
+        val adapter = moshi.adapter<List<Member>>(listMyData)
+        val memberList: List<Member>? = adapter.fromJson(searchFindWo(offset, query))
+        Timber.d("memberlist search: %s", memberList?.size)
+        if (memberList.isNullOrEmpty()) {
+            emptyList = true
+        }
+        return memberList
     }
 
     fun loadWoCache(offset: Int): List<Member>? {

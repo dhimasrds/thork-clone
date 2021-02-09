@@ -1,5 +1,8 @@
 package id.thork.app.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.liveData
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
@@ -40,7 +43,7 @@ class WorkOrderRepository constructor(
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
         onException: (String) -> Unit
-    )  {
+    ) {
         val response = workOrderClient.getWorkOrderList(
             headerParam,
             select,
@@ -49,7 +52,7 @@ class WorkOrderRepository constructor(
             pagesize
         )
         response.suspendOnSuccess {
-            data.whatIfNotNull { response->
+            data.whatIfNotNull { response ->
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
@@ -71,8 +74,49 @@ class WorkOrderRepository constructor(
 
     }
 
-    fun saveWoList(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity{
+    fun saveWoList(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity {
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
+
+    fun getWoList(
+        appSession: AppSession,
+        workOrderRepository: WorkOrderRepository,
+    ) =
+        Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                maxSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                WoPagingSource(
+                    appSession = appSession,
+                    repository = workOrderRepository,
+                    woCacheDao,
+                    null
+                )
+            }
+        ).liveData
+
+    fun getSearchWo(
+        appSession: AppSession,
+        workOrderRepository: WorkOrderRepository,
+        query: String
+    ) =
+        Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                maxSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                WoPagingSource(
+                    appSession = appSession,
+                    repository = workOrderRepository,
+                    woCacheDao,
+                    query
+                )
+            }
+        ).liveData
 
 }
