@@ -17,9 +17,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import timber.log.Timber
 
-class WoWorker(context: Context, workerParameters: WorkerParameters) :
+class WorkOrderWorker(context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
-    private val TAG = WoWorker::class.java.name
+    private val TAG = WorkOrderWorker::class.java.name
 
     private val MAX_RUN_ATTEMPT = 6
     override fun doWork(): Result {

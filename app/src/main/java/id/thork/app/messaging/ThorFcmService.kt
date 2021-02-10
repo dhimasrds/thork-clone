@@ -15,50 +15,72 @@ package id.thork.app.messaging
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import dagger.Module
-import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.components.SingletonComponent
-import id.thork.app.di.module.PushNotificationLiveData
+import id.thork.app.base.BaseParam
+import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ThorFcmService: FirebaseMessagingService() {
+class ThorFcmService : FirebaseMessagingService() {
     private val TAG = ThorFcmService::class.java.name
 
     @Inject
     lateinit var context: Context
 
     @Inject
-    lateinit var pushNotificationLiveData: PushNotificationLiveData
-
-    override fun onCreate() {
-        super.onCreate()
-    }
+    lateinit var workerCoordinator: WorkerCoordinator
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Timber.tag(TAG).i("onNewToken() token: %s context: %s", token, context)
+
+        //subcribe topic 'thor-notif'
+        FirebaseMessaging.getInstance().subscribeToTopic(BaseParam.FIREBASE_NOTIFICATION_TOPIC)
+            .addOnSuccessListener {
+                Timber.tag(
+                    TAG
+                ).i("onNewToken() subcribe on NOTIFICATION topic: %s", "success")
+            }
+
+        FirebaseMessaging.getInstance().subscribeToTopic(BaseParam.FIREBASE_LOCATION_TOPIC)
+            .addOnSuccessListener {
+                Timber.tag(
+                    TAG
+                ).i("onNewToken() subcribe on LOCATION topic: %s", "success")
+            }
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        processingRemoteMessage(remoteMessage)
-        Timber.tag(TAG).i("onMessageReceived() remote Message: %s context: %s", remoteMessage, context)
+        Timber.tag(TAG).i(
+            "onMessageReceived() remote Message: %s from: %s to: %s",
+            remoteMessage,
+            remoteMessage.from,
+            remoteMessage.to
+        )
+        remoteMessage.data.let {
+            processingRemoteMessage(remoteMessage)
+        }
     }
 
     private fun processingRemoteMessage(remoteMessage: RemoteMessage) {
-        if (isBackgroundRunning(applicationContext)) {
-            Timber.tag(TAG).i("processingRemoteMessage() on background true");
-            //push notification on background with workmanager
-        } else {
-            Timber.tag(TAG).i("processingRemoteMessage() on foreground true");
-            //push notification on foreground with live data
-            pushNotificationLiveData.onMessageReceived(remoteMessage)
+        if (remoteMessage.from == BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
+            if (isBackgroundRunning(applicationContext)) {
+                //notification when application on background
+            } else {
+                //notification when application on foreground
+            }
+        } else if (remoteMessage.from == BaseParam.FIREBASE_LOCATION_TOPIC) {
+            if (isBackgroundRunning(applicationContext)) {
+                //firebase location when application on background
+            } else {
+                //notification when application on foreground
+                workerCoordinator.addCrewPositionQueue(remoteMessage.data)
+            }
         }
     }
 

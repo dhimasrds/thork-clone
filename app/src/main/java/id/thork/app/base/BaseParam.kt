@@ -14,6 +14,13 @@ package id.thork.app.base
 object BaseParam {
     const val BASE_SERVER_URL = "http://149.129.252.41:9080"
 
+    /**
+     * Firebase Parameter
+     */
+    const val FIREBASE_TOPIC = "/topics/"
+    const val FIREBASE_NOTIFICATION_TOPIC = "thor-notif"
+    const val FIREBASE_LOCATION_TOPIC = "thor-location"
+
     const val APP_TRUE = 1
     const val APP_FALSE = 0
 

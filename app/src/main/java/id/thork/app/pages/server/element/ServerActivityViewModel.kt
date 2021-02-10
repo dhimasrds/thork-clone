@@ -12,10 +12,13 @@
 
 package id.thork.app.pages.server.element
 
+import android.content.Context
 import android.webkit.URLUtil
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
@@ -23,6 +26,7 @@ import id.thork.app.repository.LoginRepository
 import timber.log.Timber
 
 class ServerActivityViewModel @ViewModelInject constructor(
+    private val context: Context,
     private val loginRepository: LoginRepository,
     private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
@@ -34,8 +38,12 @@ class ServerActivityViewModel @ViewModelInject constructor(
     private val _cacheUrl = MutableLiveData<String>()
     val cacheUrl: LiveData<String> get() = _cacheUrl
 
+    private val workManager = WorkManager.getInstance(context)
+    internal val outputWorkInfos: LiveData<List<WorkInfo>>
+
     init {
         Timber.tag(TAG).i("init() loginRepository: %s", loginRepository)
+        outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
     }
 
     fun validateUrl(serverUrl: String) {

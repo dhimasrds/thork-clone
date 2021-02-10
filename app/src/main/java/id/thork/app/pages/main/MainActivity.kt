@@ -25,8 +25,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
+import id.thork.app.messaging.Events
 import id.thork.app.pages.main.element.MainViewModel
 import timber.log.Timber
 
@@ -108,5 +110,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     override fun setupObserver() {
         super.setupObserver()
+
     }
 }

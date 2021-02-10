@@ -15,16 +15,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityServerBinding
+import id.thork.app.di.module.PushNotificationLiveData
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.server.element.ServerActivityViewModel
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     val TAG = ServerActivity::class.java.name
 
@@ -55,6 +61,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun setupObserver() {
+        super.setupObserver()
         viewModel.state.observe(this,  {
             if (CommonUtils.isTrue(it)) {
                 onSuccess()
@@ -66,6 +73,39 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         viewModel.cacheUrl.observe(this, { it ->
             binding.includeServerContent.serverUrl.setText(it)
         })
+
+
+        viewModel.outputWorkInfos.observe(this,  workInfosObserver())
+    }
+
+    // Add this functions
+    private fun workInfosObserver(): Observer<List<WorkInfo>> {
+        return Observer { listOfWorkInfo ->
+
+            // Note that these next few lines grab a single WorkInfo if it exists
+            // This code could be in a Transformation in the ViewModel; they are included here
+            // so that the entire process of displaying a WorkInfo is in one location.
+
+            // If there are no matching work info, do nothing
+            if (listOfWorkInfo.isNullOrEmpty()) {
+                return@Observer
+            }
+
+            // We only care about the one output status.
+            // Every continuation has only one worker tagged TAG_OUTPUT
+            val workInfo = listOfWorkInfo[0]
+            val myResult = workInfo.outputData.getString("data")
+            val myResult2 = workInfo.outputData.getInt("angka", 23)
+
+            Timber.tag(TAG).i("workInfosObserver() myResult: %s myResult2: %s", myResult.toString(), myResult2)
+
+
+//            if (workInfo.state.isFinished) {
+//                showWorkFinished()
+//            } else {
+//                showWorkInProgress()
+//            }
+        }
     }
 
     override fun onSuccess() {
@@ -96,5 +136,11 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         }
 
         dialogUtils.show()
+    }
+
+
+    override fun onNotificationReceived(message: String) {
+        super.onNotificationReceived(message)
+        Timber.tag(TAG).i("onNotificationReceived() message: %s", message)
     }
 }
