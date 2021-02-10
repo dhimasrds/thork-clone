@@ -53,7 +53,20 @@ class WoPagingSource @Inject constructor(
             if (error) {
                 return LoadResult.Error(Exception())
             }
-            val wo = if (query != null) searchLoadWoCache(offset, query) else loadWoCache(offset)
+            val wo = if (query != null) {
+                searchLoadWoCache(offset, query)
+
+                when {
+                    emptyList -> {
+                        Timber.d("emptylist paging source :%s", emptyList)
+                        searchWoFromServer()
+                        searchLoadWoCache(offset, query.toString())
+                    }
+                    else -> loadWoCache(offset)
+                }
+            } else {
+                loadWoCache(offset)
+            }
             Timber.d("filter paging source :%s", query)
             Timber.d("filter paging source wo size:%s", wo)
             loadResultPage(wo!!, position)
@@ -77,7 +90,30 @@ class WoPagingSource @Inject constructor(
             appSession.userHash!!, select, where, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
-                saveWoToObjectBox(response.member)
+                checkingWoInObjectBox(response.member)
+            },
+            onError = {
+                error = false
+            },
+            onException = {
+                error = false
+            })
+        return error
+    }
+
+    private suspend fun searchWoFromServer(): Boolean {
+        val laborcode: String? = appSession.laborCode
+        val select: String = ApiParam.WORKORDER_SELECT
+        val wonum: String = query.toString()
+        val where: String =
+            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_SEARCH + wonum + "%\"" + "}"
+
+        repository.searchWorkOrder(
+            appSession.userHash!!, select, where,
+            onSuccess = {
+                response = it
+                Timber.d("emptylist paging source :%s", it.member)
+                checkingWoInObjectBox(response.member)
             },
             onError = {
                 error = false
@@ -106,7 +142,7 @@ class WoPagingSource @Inject constructor(
         }
     }
 
-    private fun saveWoToObjectBox(list: List<Member>) {
+    private fun checkingWoInObjectBox(list: List<Member>) {
         if (woCacheDao.findAllWo().isEmpty()) {
             addWoToObjectBox(list)
         } else {
@@ -148,8 +184,11 @@ class WoPagingSource @Inject constructor(
 
     private fun compareWoLocalWithServer(list: List<Member>) {
         for (wo in list) {
+            Timber.d("compareWoLocalWithServer : %s", wo.wonum)
             if (woListObjectBox!![wo.wonum!!] != null) {
 
+            } else {
+                addWoToObjectBox(list)
             }
         }
     }
