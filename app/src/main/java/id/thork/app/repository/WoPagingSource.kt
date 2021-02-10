@@ -105,7 +105,9 @@ class WoPagingSource @Inject constructor(
                 isChanged = BaseParam.APP_TRUE,
                 isLatest = BaseParam.APP_TRUE,
                 syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.cxlabor
+                laborCode = wo.cxlabor,
+                latitude = wo.woserviceaddress!![0].latitudey,
+                longitude = wo.woserviceaddress[0].longitudex
             )
             woCacheEntity.createdDate = Date()
             woCacheEntity.createdBy = appSession.userEntity.username

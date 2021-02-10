@@ -19,7 +19,9 @@ data class WoCacheEntity(
     var syncBody : String? = null,
     var syncUpdate : String? = null,
     var laborCode : String? = null,
-    var status : String? = null
+    var status : String? = null,
+    var latitude : Double? = null,
+    var longitude: Double? = null
 ) :BaseEntity(), Parcelable{
 
 }

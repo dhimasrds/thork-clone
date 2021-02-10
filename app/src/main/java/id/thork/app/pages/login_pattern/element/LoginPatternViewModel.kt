@@ -33,7 +33,6 @@ class LoginPatternViewModel @ViewModelInject constructor(
         _isPattern.value = appSession.userEntity.isPattern
     }
 
-
     fun setUserPattern(pattern: String) {
         val userExisting: UserEntity? = loginRepository.findUserByPersonUID(appSession.personUID)
         userExisting!!.isPattern = BaseParam.APP_TRUE

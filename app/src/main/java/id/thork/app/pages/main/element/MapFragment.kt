@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -30,12 +31,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import id.thork.app.R
-import id.thork.app.utils.MapsUtils
-import id.thork.app.utils.CommonUtils
-import timber.log.Timber
-
 import id.thork.app.databinding.FragmentMapBinding
 import id.thork.app.pages.GoogleMapInfoWindow
+import id.thork.app.utils.CommonUtils
+import id.thork.app.utils.MapsUtils
+import timber.log.Timber
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -47,26 +47,30 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private var lastKnownLocation: Location? = null
     private val DEFAULT_ZOOM = 17
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
-
-
+    private val mapViewModel: MapViewModel by activityViewModels()
     private lateinit var binding : FragmentMapBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(R.layout.fragment_map, container, false)
+        binding = FragmentMapBinding.inflate(inflater, container, false)
 
         val mapFragment: SupportMapFragment? =
             childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
         // Construct a FusedLocationProviderClient.
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(view.context);
-        customInfoWindowForGoogleMap = GoogleMapInfoWindow(view.context)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        customInfoWindowForGoogleMap = GoogleMapInfoWindow(requireContext())
 
         getLocationPermission()
-        return view
+
+        binding.apply {
+            lifecycleOwner = this@MapFragment
+            vm = mapViewModel
+        }
+        return binding.root
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -79,10 +83,20 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 uiSettings.isMapToolbarEnabled = true
             }
         }
-        renderMarker()
         getLocationPermission()
         updateLocationUI()
         getDeviceLocation()
+        setupObserver()
+    }
+
+    fun setupObserver() {
+        mapViewModel.fetchListWo()
+        mapViewModel.listWo.observe(viewLifecycleOwner, {
+            it.forEach {
+                val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
+                MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
+            }
+        })
     }
 
     private fun getLocationPermission() {
@@ -106,7 +120,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
             )
         }
-
     }
 
 
@@ -187,18 +200,5 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         Timber.tag(TAG).d("onInfoWindowClick() %s", marker)
         val titleMarker = marker!!.title.toString()
         CommonUtils.showToast("onInfoWindowClick() title Marker: $titleMarker")
-    }
-
-    private fun renderMarker() {
-        //TODO Hardcode marker
-
-        val crew = LatLng(-6.592277,110.6819295)
-        MapsUtils.renderCrewMarker(map, crew, "Tester")
-
-        val sydney = LatLng(-6.5920505, 110.6813501)
-        MapsUtils.renderWoMarker(map, sydney, "2021")
-
-
-
     }
 }

@@ -66,4 +66,8 @@ class WorkOrderRepository constructor(
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
 
+    fun fetchWoList(): List<WoCacheEntity>{
+        return woCacheDao.findAllWo()
+    }
+
 }
