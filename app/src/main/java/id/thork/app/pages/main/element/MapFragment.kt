@@ -13,6 +13,7 @@
 package id.thork.app.pages.main.element
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -31,8 +32,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import id.thork.app.R
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
 import id.thork.app.pages.GoogleMapInfoWindow
+import id.thork.app.pages.detail_wo.DetailWoActivity
+import id.thork.app.pages.main.MainActivity
 import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.MapsUtils
 import timber.log.Timber
@@ -197,8 +201,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     }
 
     override fun onInfoWindowClick(marker: Marker?) {
-        Timber.tag(TAG).d("onInfoWindowClick() %s", marker)
-        val titleMarker = marker!!.title.toString()
-        CommonUtils.showToast("onInfoWindowClick() title Marker: $titleMarker")
+        navigateToDetailWo(marker)
+    }
+
+    private fun navigateToDetailWo(marker: Marker?) {
+        val intent = Intent(activity, DetailWoActivity::class.java)
+        intent.putExtra(BaseParam.APP_WONUM, marker!!.title.toString())
+        startActivity(intent)
+        CommonUtils.showToast("Wonum: ${marker.title}")
     }
 }
