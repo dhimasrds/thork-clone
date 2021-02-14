@@ -5,13 +5,14 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivitySettingsBinding
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.about.AboutActivity
 import id.thork.app.pages.settings.element.SettingsViewModel
 import id.thork.app.pages.settings_language.SettingsLanguageActivity
 import id.thork.app.pages.settings_log.LogActivity
-import id.thork.app.pages.splash_screen.element.SplashState
+import id.thork.app.pages.settings_pattern.SettingsPatternActivity
 
 /**
  * Created by Raka Putra on 1/14/21
@@ -68,22 +69,12 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
 
         binding.buttonLogout.setOnClickListener {
 
-            //Logout User Session
-            currentTag = TAG_LOGOUT
-            dialogLogout = DialogUtils(this)
-            dialogLogout!!
-                    .setTitles(R.string.logout_title)
-                    .setMessage(R.string.logout_qustion)
-                    .setPositiveButtonLabel(R.string.dialog_yes)
-                    .setNegativeButtonLabel(R.string.dialog_no)
-                    .setListener(this)
-                    .show()
         }
     }
 
     private fun goToLoginPatternActivity() {
         finish()
-        startActivity(Intent(this, SplashState.LoginPatternActivity::class.java))
+        startActivity(Intent(this, SettingsPatternActivity::class.java))
     }
 
     private fun goToLanguageActivity() {
@@ -101,30 +92,7 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         startActivity(Intent(this, AboutActivity::class.java))
     }
 
-    override fun onPositiveButton() {
-        when (currentTag) {
-            TAG_LOGOUT -> logoutPostCrew()
-//                var  intent: Intent? = Intent(this@SettingsActivity, ServerActivity::class.java)
-//            if (appSession.getUser() != null) {
-//                appSession.getUser().getLanguage()
-//                appSession.getUser().getDarkMode()
-//                LocaleHelper.setLocale(this, BaseParam.DEFAULT_LANG)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                settingsPresenter.setSessionEnded()
-//            }
-//                    startActivity intent
-        }
-    }
+    override fun onPositiveButton() {}
 
-    override fun onNegativeButton() {
-
-    }
-
-    fun logoutPostCrew() {
-//        val mFusedLocation: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-//        mFusedLocation.getLastLocation().addOnSuccessListener(this) { location ->
-//            loginId = Integer.toString(appSession.getPersonUID())
-//            settingsPresenter.postCrewPosition(loginId, laborcode, location.getLatitude().toString() + "", location.getLongitude().toString() + "", tag)
-//        }
-    }
+    override fun onNegativeButton() {}
 }

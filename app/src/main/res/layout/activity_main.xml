@@ -15,6 +15,14 @@
         android:background="#ECECEC"
         tools:context=".pages.main.MainActivity">
 
+        <Button
+            android:id="@+id/btn_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            tools:ignore="MissingConstraints"
+            android:text="settings"
+            android:gravity="center" />
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"

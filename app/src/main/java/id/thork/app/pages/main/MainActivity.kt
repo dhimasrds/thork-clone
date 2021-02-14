@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.main
 
+import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -25,7 +26,9 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
+import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.main.element.MainViewModel
+import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -49,6 +52,13 @@ class MainActivity : BaseActivity(),  View.OnClickListener {
         binding.apply {
             lifecycleOwner = this@MainActivity
         }
+
+        binding.btnSettings.setOnClickListener { goToSettingsActivity() }
+    }
+
+    private fun goToSettingsActivity() {
+        finish()
+        startActivity(Intent(this, SettingsActivity::class.java))
     }
 
     private fun setupBottomNavigationBar() {

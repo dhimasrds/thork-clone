@@ -46,4 +46,10 @@ object BaseParam {
 
     const val ID = "ID"
 
+    /**
+     * Intent message key
+     */
+    const val INTENT_PERSON_UID = "personUID"
+    const val INTENT_VALIDATE_PATTERN = "validatePattern"
+    const val TAG_SETTING = "TAG_SETTING"
 }
