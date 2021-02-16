@@ -10,7 +10,6 @@ interface WoCacheDao {
 
     fun createWoCache(woCacheEntity: WoCacheEntity,username: String?): WoCacheEntity
 
-    fun findWoByWonum(wonum: String): WoCacheEntity
 
     fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity
 
@@ -30,4 +29,5 @@ interface WoCacheDao {
 
     fun findApprWo(): WoCacheEntity?
     fun findAllWo(offset: Int): List<WoCacheEntity>
+    fun findWoByWonum(offset: Int, wonum: String): List<WoCacheEntity>
 }

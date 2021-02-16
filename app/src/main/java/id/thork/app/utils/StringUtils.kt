@@ -35,6 +35,7 @@ object StringUtils {
         return context.resources.getString(stringResource)
     }
 
+    
     /**
      * Encode string to base64
      *

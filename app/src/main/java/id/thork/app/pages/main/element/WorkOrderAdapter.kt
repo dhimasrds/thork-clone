@@ -2,21 +2,26 @@ package id.thork.app.pages.main.element
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member
+import timber.log.Timber
+import java.util.*
 
 /**
  * Created by Dhimas Saputra on 08/01/21
  * Jakarta, Indonesia.
  */
-class WorkOrderAdapter : PagingDataAdapter<Member,WorkOrderAdapter.ViewHolder>(DiffCallback) {
+class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
+
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
-            return oldItem.workorderid == newItem.workorderid
+            return oldItem.wonum === newItem.wonum
         }
 
         override fun areContentsTheSame(oldItem: Member, newItem: Member): Boolean {
@@ -25,9 +30,10 @@ class WorkOrderAdapter : PagingDataAdapter<Member,WorkOrderAdapter.ViewHolder>(D
     }
 
 
-    class ViewHolder(val binding : CardViewWorkOrderBinding) :RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: CardViewWorkOrderBinding) :RecyclerView.ViewHolder(binding.root) {
 
         fun bind(woEntity: Member){
+            Timber.d("adapter wonum :%s",woEntity.wonum)
             binding.wo = woEntity
             binding.tvWonum.text = woEntity.wonum
             binding.desc.text = woEntity.description
@@ -40,7 +46,13 @@ class WorkOrderAdapter : PagingDataAdapter<Member,WorkOrderAdapter.ViewHolder>(D
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(CardViewWorkOrderBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return ViewHolder(
+            CardViewWorkOrderBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

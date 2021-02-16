@@ -1,9 +1,8 @@
 package id.thork.app.pages.main.element
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -24,45 +23,37 @@ import kotlinx.coroutines.flow.Flow
 class WorkOrderListViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val workOrderRepository: WorkOrderRepository,
+    @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
 
-    private val woCacheDao : WoCacheDao
+    companion object {
+        private const val CURRENT_QUERY = "current_query"
+        private const val EMPTY_QUERY = ""
+    }
+
+    private val woCacheDao: WoCacheDao
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
     private val _getWoList = MutableLiveData<List<Member>>()
-    val getWoList : LiveData<List<Member>>get() = _getWoList
+    val getWoList: LiveData<List<Member>> get() = _getWoList
 
-init {
-    woCacheDao = WoCacheDaoImp()
-}
-
-    val woList: Flow<PagingData<Member>> = Pager(PagingConfig(pageSize = 10)) {
-        WoPagingSource(appSession,workOrderRepository,woCacheDao)
-    }.flow
-        .cachedIn(viewModelScope)
-
-//    fun fetchWoList() {
-//        val laborcode: String? = appSession.laborCode
-//        val select: String = ApiParam.WORKORDER_SELECT
-//        val where: String =
-//            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
-//        Timber.d("laborcode :%s", laborcode)
-//
-//        var response = WorkOrderResponse()
-//        viewModelScope.launch(Dispatchers.IO) {
-//            //fetch user data via API
-//                workOrderRepository.getWorkOrderList(
-//                    appSession.userHash!!, select, where,
-//                    onSuccess = {
-//                        response = it
-//                        Timber.d("fetchWoList :%s", response.member!!.size)
-//                        _getWoList.postValue(response.member)
-//
-//                    },
-//                    onError = {
-//                        _error.postValue(it)
-//                    })
-//            }
-//
-//        }
+    init {
+        woCacheDao = WoCacheDaoImp()
     }
+
+    private val currentQuery = state.getLiveData(CURRENT_QUERY, EMPTY_QUERY)
+    val woList = currentQuery.switchMap { query ->
+        if (!query.isEmpty()) {
+            Timber.d("filter on  viewmodel :%s", query)
+            workOrderRepository.getSearchWo(appSession, workOrderRepository, query)
+        } else {
+            Timber.d("filter off viewmodel :%s", query)
+            workOrderRepository.getWoList(appSession, workOrderRepository).cachedIn(viewModelScope)
+        }
+    }
+
+    fun searchWo(query: String) {
+        currentQuery.value = query
+    }
+    
+}
