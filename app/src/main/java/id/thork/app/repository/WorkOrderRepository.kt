@@ -153,4 +153,7 @@ class WorkOrderRepository constructor(
         return woCacheDao.findAllWo()
     }
 
+    fun findWobyWonum(wonum: String): WoCacheEntity? {
+        return woCacheDao.findWoByWonum(wonum)
+    }
 }

@@ -13,6 +13,7 @@
 package id.thork.app.pages.main.element
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -31,13 +32,16 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import id.thork.app.R
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.GoogleMapInfoWindow
-import id.thork.app.utils.CommonUtils
+import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
 import timber.log.Timber
 
-class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
+    CustomDialogUtils.DialogActionListener {
 
     val TAG = MapFragment::class.java.name
     private lateinit var map: GoogleMap
@@ -47,8 +51,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private var lastKnownLocation: Location? = null
     private val DEFAULT_ZOOM = 17
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
+    private lateinit var customDialogUtils: CustomDialogUtils
     private val mapViewModel: MapViewModel by activityViewModels()
-    private lateinit var binding : FragmentMapBinding
+    private lateinit var binding: FragmentMapBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,11 +66,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         mapFragment?.getMapAsync(this)
 
         // Construct a FusedLocationProviderClient.
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext());
         customInfoWindowForGoogleMap = GoogleMapInfoWindow(requireContext())
 
-        getLocationPermission()
+        //init Dialog
+        customDialogUtils = CustomDialogUtils(requireContext())
 
+        getLocationPermission()
         binding.apply {
             lifecycleOwner = this@MapFragment
             vm = mapViewModel
@@ -93,8 +101,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         mapViewModel.fetchListWo()
         mapViewModel.listWo.observe(viewLifecycleOwner, {
             it.forEach {
-                val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
-                MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
+                if (it.latitude != null && it.longitude != null) {
+                    val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
+                    MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
+                }
             }
         })
     }
@@ -184,7 +194,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                                             lastKnownLocation!!.longitude
                                         ), DEFAULT_ZOOM.toFloat()
                                     )
-
                                 )
                             }
                         }
@@ -197,8 +206,36 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     }
 
     override fun onInfoWindowClick(marker: Marker?) {
-        Timber.tag(TAG).d("onInfoWindowClick() %s", marker)
-        val titleMarker = marker!!.title.toString()
-        CommonUtils.showToast("onInfoWindowClick() title Marker: $titleMarker")
+        if (locationPermissionGranted) {
+            navigateToDetailWo(marker)
+        } else {
+            showDialog()
+        }
+    }
+
+    private fun navigateToDetailWo(marker: Marker?) {
+        val intent = Intent(activity, DetailWoActivity::class.java)
+        intent.putExtra(BaseParam.APP_WONUM, marker!!.title.toString())
+        startActivity(intent)
+    }
+
+    private fun showDialog() {
+        customDialogUtils.setMiddleButtonText(R.string.dialog_yes)
+            .setTittle(R.string.information)
+            .setDescription(R.string.permission_location)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        Timber.tag(TAG).d("onRightButton()")
+    }
+
+    override fun onLeftButton() {
+        Timber.tag(TAG).d("onLeftButton()")
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
     }
 }

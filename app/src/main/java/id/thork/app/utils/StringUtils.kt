@@ -16,6 +16,7 @@
 package id.thork.app.utils
 
 import android.content.Context
+import id.thork.app.base.BaseParam
 import java.io.File
 import java.util.*
 
@@ -63,17 +64,21 @@ object StringUtils {
             originText
         } else replacementText
     }
-    //TODO
-//    fun createPriority(priority: Int): String {
-//        if (priority == 1) {
-//            return BaseParam.PRIORITY_NORMAL_DESC
-//        } else if (priority == 2) {
-//            return BaseParam.PRIORITY_MEDIUM_DESC
-//        } else if (priority == 3) {
-//            return BaseParam.PRIORITY_HIGH_DESC
-//        }
-//        return BaseParam.DASH
-//    }
+
+    fun NVL(originText: Int?, replacementText: Int): Int {
+        return originText?: replacementText
+    }
+
+    fun createPriority(priority: Int): String {
+        if (priority == 1) {
+            return BaseParam.PRIORITY_NORMAL_DESC
+        } else if (priority == 2) {
+            return BaseParam.PRIORITY_MEDIUM_DESC
+        } else if (priority == 3) {
+            return BaseParam.PRIORITY_HIGH_DESC
+        }
+        return BaseParam.APP_DASH
+    }
     //TODO
 //    fun getBundleString(bundle: Bundle?, key: String?, replacementValue: String): String {
 //        return if (bundle != null && bundle.getString(key) != null && !bundle.getString(key)
