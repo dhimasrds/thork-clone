@@ -48,7 +48,8 @@ class WorkOrderRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-                Timber.tag(TAG).i("getWorkOrderList() code:%s", statusCode.code)
+                Timber.tag(TAG).i("repository getWorkOrderList() code:%s", response.member)
+                Timber.tag(TAG).i("repository getWorkOrderList() code:%s", statusCode.code)
             }
         }
             .onError {
@@ -60,7 +61,44 @@ class WorkOrderRepository constructor(
                 onError(message())
             }
             .onException {
-                Timber.tag(TAG).i("getWorkOrderList() exception: %s", message())
+                Timber.tag(TAG).i("reposs getWorkOrderList() exception: %s", message())
+                onException(message())
+            }
+
+    }
+
+    suspend fun searchWorkOrder(
+        headerParam: String,
+        select: String,
+        where: String,
+        onSuccess: (WorkOrderResponse) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = workOrderClient.searchWorkOrder(
+            headerParam,
+            select,
+            where
+        )
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //TODO
+                //Save user session into local cache
+                onSuccess(response)
+                Timber.tag(TAG).i("repository searchWorkOrder() code:%s",response.member)
+                Timber.tag(TAG).i("repository searchWorkOrder() code:%s",statusCode.code)
+            }
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "searchWorkOrder() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("searchWorkOrder() exception: %s", message())
                 onException(message())
             }
 
