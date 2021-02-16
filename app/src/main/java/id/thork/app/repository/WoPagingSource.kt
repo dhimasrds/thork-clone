@@ -49,10 +49,13 @@ class WoPagingSource @Inject constructor(
         val position = params.key ?: 1
         Timber.d("position :%s", position)
         return try {
-            fetchWo(position)
-            if (error) {
-                return LoadResult.Error(Exception())
+            if (query == null) {
+                fetchWo(position)
+                if (error) {
+                    return LoadResult.Error(Exception())
+                }
             }
+
             val wo = if (query != null) {
                 searchLoadWoCache(offset, query)
 
@@ -62,7 +65,7 @@ class WoPagingSource @Inject constructor(
                         searchWoFromServer()
                         searchLoadWoCache(offset, query.toString())
                     }
-                    else -> loadWoCache(offset)
+                    else -> searchLoadWoCache(offset, query)
                 }
             } else {
                 loadWoCache(offset)
@@ -91,6 +94,7 @@ class WoPagingSource @Inject constructor(
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)
+                error = false
             },
             onError = {
                 error = false
@@ -116,10 +120,8 @@ class WoPagingSource @Inject constructor(
                 checkingWoInObjectBox(response.member)
             },
             onError = {
-                error = false
             },
             onException = {
-                error = false
             })
         return error
     }
@@ -232,6 +234,7 @@ class WoPagingSource @Inject constructor(
         val adapter = moshi.adapter<List<Member>>(listMyData)
         val memberList: List<Member>? = adapter.fromJson(searchFindWo(offset, query))
         Timber.d("memberlist search: %s", memberList?.size)
+        Timber.d("memberlist search: %s", memberList)
         if (memberList.isNullOrEmpty()) {
             emptyList = true
         }
