@@ -30,4 +30,6 @@ interface WoCacheDao {
     fun findApprWo(): WoCacheEntity?
     fun findAllWo(offset: Int): List<WoCacheEntity>
     fun findWoByWonum(offset: Int, wonum: String): List<WoCacheEntity>
+    fun findListWoByStatus(status: String): List<WoCacheEntity>
+    fun findListWoByStatus(status: String, offset: Int): List<WoCacheEntity>
 }

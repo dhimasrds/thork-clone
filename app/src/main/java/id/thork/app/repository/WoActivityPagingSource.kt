@@ -23,21 +23,21 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 /**
- * Created by Dhimas Saputra on 21/01/21
+ * Created by Dhimas Saputra on 16/02/21
  * Jakarta, Indonesia.
  */
 
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class WoPagingSource @Inject constructor(
+class WoActivityPagingSource @Inject constructor(
     private val appSession: AppSession,
-    private val repository: WorkOrderRepository,
+    private val repository: WoActivityRepository,
     private val woCacheDao: WoCacheDao,
     private val query: String?
 ) : PagingSource<Int, Member>() {
 
-    val TAG = WoPagingSource::class.java.name
+    val TAG = WoActivityPagingSource::class.java.name
     var offset = 0
     var error = false
     var emptyList = false
@@ -87,13 +87,17 @@ class WoPagingSource @Inject constructor(
         val laborcode: String? = appSession.laborCode
         val select: String = ApiParam.WORKORDER_SELECT
         val where: String =
-            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
+            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_COMP + "}"
 
         repository.getWorkOrderList(
             appSession.userHash!!, select, where, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)
+                Timber.d("fetchWo paging source :%s", it.member)
+                Timber.d("fetchWo paging source :%s", it.responseInfo)
+                Timber.d("fetchWo paging source :%s", it.member.size)
+
                 error = false
             },
             onError = {
@@ -110,7 +114,7 @@ class WoPagingSource @Inject constructor(
         val select: String = ApiParam.WORKORDER_SELECT
         val wonum: String = query.toString()
         val where: String =
-            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_SEARCH + wonum + "%\"" + "}"
+            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_SEARCH_COMP + wonum + "%\"" + "}"
 
         repository.searchWorkOrder(
             appSession.userHash!!, select, where,
@@ -130,7 +134,7 @@ class WoPagingSource @Inject constructor(
         return try {
             LoadResult.Page(
                 data = list,
-                prevKey = if (position == 1) null else position,
+                prevKey = null,
                 nextKey = if (list.isEmpty()) {
                     null
                 } else {
@@ -145,9 +149,13 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
-        if (woCacheDao.findAllWo().isEmpty()) {
+        var listwo : List<WoCacheEntity> = woCacheDao.findAllWo(offset)
+        Timber.d("checkingWoInObjectBox savelocal :%s",listwo.size)
+        if (listwo.isEmpty()) {
+            Timber.d("checkingWoInObjectBox savelocal :%s",list.size)
             addWoToObjectBox(list)
         } else {
+            Timber.d("checkingWoInObjectBox compare :%s","TEST")
             addObjectBoxToHashMap()
             compareWoLocalWithServer(list)
         }
@@ -172,14 +180,35 @@ class WoPagingSource @Inject constructor(
         }
     }
 
+
+    private fun createNewWo(wo: Member){
+        val woCacheEntity = WoCacheEntity(
+            syncBody = convertToJson(wo),
+            woId = wo.workorderid,
+            wonum = wo.wonum,
+            status = wo.status,
+            isChanged = BaseParam.APP_TRUE,
+            isLatest = BaseParam.APP_TRUE,
+            syncStatus = BaseParam.APP_TRUE,
+            laborCode = wo.cxlabor
+        )
+        woCacheEntity.createdDate = Date()
+        woCacheEntity.createdBy = appSession.userEntity.username
+        woCacheEntity.updatedBy = appSession.userEntity.username
+        repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+    }
+
     private fun addObjectBoxToHashMap() {
         Timber.d("queryObjectBoxToHashMap()")
         if (woCacheDao.findAllWo().isNotEmpty()) {
             woListObjectBox = HashMap<String, WoCacheEntity>()
             val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
             for (i in cacheEntities.indices) {
+                if (cacheEntities[i].status != null
+                    && cacheEntities[i].status.equals(BaseParam.COMPLETED)){
                 woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
                 Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
+                }
             }
         }
     }
@@ -190,7 +219,7 @@ class WoPagingSource @Inject constructor(
             if (woListObjectBox!![wo.wonum!!] != null) {
 
             } else {
-                addWoToObjectBox(list)
+                createNewWo(wo)
             }
         }
     }
@@ -201,16 +230,15 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun findWo(offset: Int): String {
-        val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
+        val cacheEntities: List<WoCacheEntity> = woCacheDao.findListWoByStatus(BaseParam.COMPLETED,offset)
         val body = ArrayList<String>()
         for (i in cacheEntities.indices) {
-            if (cacheEntities[i].status != null
-                && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)) {
+            if (cacheEntities[i].status != null) {
                 body.add(cacheEntities[i].syncBody!!)
             }
         }
         Timber.d("json : %s", body.toString())
+        Timber.d("json : %s", body.trimToSize())
         return body.toString()
     }
 
@@ -243,7 +271,7 @@ class WoPagingSource @Inject constructor(
         return memberList
     }
 
-    fun loadWoCache(offset: Int): List<Member>? {
+    private fun loadWoCache(offset: Int): List<Member>? {
         val moshi = Moshi.Builder().build()
         val listMyData: Type = Types.newParameterizedType(
             MutableList::class.java,
@@ -252,6 +280,7 @@ class WoPagingSource @Inject constructor(
         val adapter = moshi.adapter<List<Member>>(listMyData)
         val memberList: List<Member>? = adapter.fromJson(findWo(offset))
         Timber.d("memberlist : %s", memberList?.size)
+        Timber.d("memberlist offset: %s", offset)
         return memberList
     }
 

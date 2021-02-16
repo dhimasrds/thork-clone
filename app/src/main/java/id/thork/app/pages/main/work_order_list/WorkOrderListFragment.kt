@@ -34,7 +34,7 @@ class WorkOrderListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentWorkOrderListBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this@WorkOrderListFragment
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         myAdapter = WorkOrderAdapter()
