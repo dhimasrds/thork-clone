@@ -2,7 +2,7 @@
 buildscript {
     ext {
         kotlin_version = "1.4.20"
-        hiltCoreVersion =  "2.30.1-alpha"
+        hiltCoreVersion = "2.30.1-alpha"
         hiltVersion = "1.0.0-alpha02"
         assistedInjectVersion = "0.5.2"
 
@@ -34,12 +34,24 @@ buildscript {
         workVersion = "2.4.0"
 
         objectboxVersion = "2.8.1"
+
+        librariesPlaces = "2.0.0"
+        playServices = "17.0.0"
+        mapUtils = "0.6.2"
+        maps = "17.0.0"
+        locations = "16.0.0"
+
+        //Dexter Runtime Permisions
+        dexterVersion = '6.0.2'
+
+
     }
 
     repositories {
         google()
         jcenter()
     }
+
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"

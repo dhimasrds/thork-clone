@@ -1,0 +1,40 @@
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=75:E9:3B:FB:2C:A2:61:A2:94:51:6E:50:C2:2D:24:97:5A:E3:06:6D%3Bid.thor.app.pages.maps
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    75:E9:3B:FB:2C:A2:61:A2:94:51:6E:50:C2:2D:24:97:5A:E3:06:6D
+
+    SHA-1 certificate fingerprint:
+    75:E9:3B:FB:2C:A2:61:A2:94:51:6E:50:C2:2D:24:97:5A:E3:06:6D
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBPivfKhYEznn-DgmRipiRPn_z-JM2THfA</string>
+</resources>

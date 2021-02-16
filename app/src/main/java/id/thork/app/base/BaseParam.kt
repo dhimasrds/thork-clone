@@ -60,4 +60,15 @@ object BaseParam {
     const val REASSGN = "REASSGN"
     const val WSUPP = "WSUPP"
     const val DONE = "DONE"
+
+    /**
+     * Base Parameter Google Maps
+     */
+    const val APP_WONUM = "WO. Number "
+    const val APP_DETAIL = "Detail"
+    const val APP_CREW = "Crew "
+    const val APP_TAG_MARKER_WO = "WO"
+    const val APP_TAG_MARKER_CREW = "CREW"
+
+
 }

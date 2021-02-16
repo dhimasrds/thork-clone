@@ -349,6 +349,9 @@
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
 
+    <!-- Permission -->
+    <string name="permission_location">We need your location permission to show Workorder on map</string>
+
 
     <string-array name="work_type_wo">
         <item>ORR</item>

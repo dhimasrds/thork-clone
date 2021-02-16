@@ -142,5 +142,16 @@ dependencies {
 
     //pattern Lock View
     implementation "com.andrognito.patternlockview:patternlockview:$patternLockViewVersion"
+
+    implementation "com.google.android.libraries.places:places:$rootProject.librariesPlaces"
+    implementation "com.google.android.gms:play-services-location:$rootProject.playServices"
+    implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
+    implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtils"
+
+    implementation "com.karumi:dexter:$rootProject.dexterVersion"
+
+
+
 }
 apply plugin: 'io.objectbox'
+

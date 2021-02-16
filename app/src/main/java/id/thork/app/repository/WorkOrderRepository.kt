@@ -111,4 +111,8 @@ class WorkOrderRepository constructor(
             }
         ).liveData
 
+    fun fetchWoList(): List<WoCacheEntity>{
+        return woCacheDao.findAllWo()
+    }
+
 }

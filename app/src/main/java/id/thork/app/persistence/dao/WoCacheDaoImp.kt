@@ -42,15 +42,6 @@ class WoCacheDaoImp : WoCacheDao {
         } else emptyList()
     }
 
-//    override fun findWoByWonum(wonum: String): WoCacheEntity? {
-//        val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
-//        val woCacheEntity: List<WoCacheEntity> =
-//            woCacheBox.query().equal(WoCacheEntity_.wonum, wonum).build().find()
-//        return if (woCacheEntity.isNotEmpty()) {
-//            woCacheEntity[0]
-//        } else null
-//    }
-
     override fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity {
         TODO("Not yet implemented")
     }
