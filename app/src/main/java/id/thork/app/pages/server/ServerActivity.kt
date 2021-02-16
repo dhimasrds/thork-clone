@@ -74,7 +74,6 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             binding.includeServerContent.serverUrl.setText(it)
         })
 
-
         viewModel.outputWorkInfos.observe(this,  workInfosObserver())
     }
 
