@@ -8,9 +8,9 @@ import id.thork.app.persistence.entity.WoCacheEntity
  */
 interface WoCacheDao {
 
-    fun createWoCache(woCacheEntity: WoCacheEntity,username: String?): WoCacheEntity
+    fun createWoCache(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity
 
-    fun findWoByWonum(wonum: String): WoCacheEntity
+    fun findWoByWonum(wonum: String): WoCacheEntity?
 
     fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity
 
@@ -29,5 +29,6 @@ interface WoCacheDao {
     fun updateWo(woCacheEntity: WoCacheEntity, username: String)
 
     fun findApprWo(): WoCacheEntity?
+
     fun findAllWo(offset: Int): List<WoCacheEntity>
 }

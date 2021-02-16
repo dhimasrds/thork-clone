@@ -69,6 +69,16 @@ object BaseParam {
     const val APP_CREW = "Crew "
     const val APP_TAG_MARKER_WO = "WO"
     const val APP_TAG_MARKER_CREW = "CREW"
+    const val APP_LOCATION_LONGITUDE = "LONGITUDE"
+    const val APP_LOCATION_LATITUDE = "LATITUDE"
+
+    /**
+     * Base Parameter Priority Workorder
+     */
+    const val PRIORITY_NORMAL_DESC = "Normal"
+    const val PRIORITY_MEDIUM_DESC = "Medium"
+    const val PRIORITY_HIGH_DESC = "High"
+
 
 
 }

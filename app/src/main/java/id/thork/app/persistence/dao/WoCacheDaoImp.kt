@@ -1,5 +1,6 @@
 package id.thork.app.persistence.dao
 
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.WoCacheEntity
@@ -31,8 +32,11 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntity
     }
 
-    override fun findWoByWonum(wonum: String): WoCacheEntity {
-        TODO("Not yet implemented")
+    override fun findWoByWonum(wonum: String): WoCacheEntity? {
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum).build().find()
+        woCacheEntity.whatIfNotNull(whatIf = { return woCacheEntity[0] })
+        return null
     }
 
     override fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity {

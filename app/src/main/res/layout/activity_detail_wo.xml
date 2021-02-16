@@ -93,6 +93,23 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:fontFamily="@font/poppins"
+                        android:text="@string/desc" />
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginBottom="20dp"
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:fontFamily="@font/poppins"
                         android:text="@string/workorder" />
 
                     <TextView
@@ -110,9 +127,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
+                        android:text="Status" />
 
                     <TextView
+                        android:id="@+id/status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
@@ -126,73 +144,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
+                        android:text="Priority" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
-
-                    <TextView
+                        android:id="@+id/priority"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
