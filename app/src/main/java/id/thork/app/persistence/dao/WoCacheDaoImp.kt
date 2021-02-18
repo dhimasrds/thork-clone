@@ -34,10 +34,13 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntity
     }
 
-    override fun findWoByWonum(offset: Int , wonum: String): List<WoCacheEntity> {
+    override fun findWoByWonum(offset: Int, wonum: String): List<WoCacheEntity> {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         val woCacheEntity: List<WoCacheEntity> =
-            woCacheBox.query().contains(WoCacheEntity_.wonum, wonum).build().find(offset.toLong(), 10)
+            woCacheBox.query().contains(WoCacheEntity_.wonum, wonum).build().find(
+                offset.toLong(),
+                10
+            )
         return if (woCacheEntity.isNotEmpty()) {
             woCacheEntity
         } else emptyList()
@@ -62,7 +65,7 @@ class WoCacheDaoImp : WoCacheDao {
         TODO("Not yet implemented")
     }
 
-    override fun findAllWo(): List<WoCacheEntity> {
+    override fun    findAllWo(): List<WoCacheEntity> {
         return woCacheEntityBox.query().notNull(WoCacheEntity_.syncBody).build()
             .find()
     }
@@ -90,5 +93,13 @@ class WoCacheDaoImp : WoCacheDao {
 
     override fun findApprWo(): WoCacheEntity? {
         TODO("Not yet implemented")
+    }
+
+    override fun findListWoByStatus(status: String): List<WoCacheEntity> {
+        return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build().find()
+    }
+
+    override fun findListWoByStatus(status: String, offset: Int): List<WoCacheEntity> {
+        return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build().find(offset.toLong(), 10)
     }
 }

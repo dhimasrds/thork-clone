@@ -17,10 +17,10 @@ import id.thork.app.persistence.entity.WoCacheEntity
 import timber.log.Timber
 
 /**
- * Created by Dhimas Saputra on 13/01/21
+ * Created by Dhimas Saputra on 16/02/21
  * Jakarta, Indonesia.
  */
-class WorkOrderRepository constructor(
+class WoActivityRepository constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
 ) : BaseRepository {
@@ -85,8 +85,8 @@ class WorkOrderRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-                Timber.tag(TAG).i("repository searchWorkOrder() code:%s",response.member)
-                Timber.tag(TAG).i("repository searchWorkOrder() code:%s",statusCode.code)
+                Timber.tag(TAG).i("repository searchWorkOrder() code:%s", response.member)
+                Timber.tag(TAG).i("repository searchWorkOrder() code:%s", statusCode.code)
             }
         }
             .onError {
@@ -110,7 +110,7 @@ class WorkOrderRepository constructor(
 
     fun getWoList(
         appSession: AppSession,
-        workOrderRepository: WorkOrderRepository,
+        repository: WoActivityRepository,
     ) =
         Pager(
             config = PagingConfig(
@@ -118,9 +118,9 @@ class WorkOrderRepository constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                WoPagingSource(
+                WoActivityPagingSource(
                     appSession = appSession,
-                    repository = workOrderRepository,
+                    repository = repository,
                     woCacheDao,
                     null
                 )
@@ -129,7 +129,7 @@ class WorkOrderRepository constructor(
 
     fun getSearchWo(
         appSession: AppSession,
-        workOrderRepository: WorkOrderRepository,
+        repository: WoActivityRepository,
         query: String
     ) =
         Pager(
@@ -138,20 +138,13 @@ class WorkOrderRepository constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                WoPagingSource(
+                WoActivityPagingSource(
                     appSession = appSession,
-                    repository = workOrderRepository,
+                    repository = repository,
                     woCacheDao,
                     query
                 )
             }
         ).liveData
 
-    fun fetchWoList(): List<WoCacheEntity>{
-        return woCacheDao.findAllWo()
-    }
-
-    fun findWobyWonum(wonum: String): WoCacheEntity? {
-        return woCacheDao.findWoByWonum(wonum)
-    }
 }
