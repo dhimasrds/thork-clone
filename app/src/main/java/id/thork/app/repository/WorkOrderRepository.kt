@@ -123,7 +123,6 @@ class WorkOrderRepository constructor(
         Pager(
             config = PagingConfig(
                 pageSize = 5,
-                maxSize = 20,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -144,7 +143,6 @@ class WorkOrderRepository constructor(
         Pager(
             config = PagingConfig(
                 pageSize = 5,
-                maxSize = 20,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {

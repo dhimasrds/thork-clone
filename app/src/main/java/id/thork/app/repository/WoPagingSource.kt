@@ -130,7 +130,7 @@ class WoPagingSource @Inject constructor(
         return try {
             LoadResult.Page(
                 data = list,
-                prevKey = if (position == 1) null else position,
+                prevKey = null,
                 nextKey = if (list.isEmpty()) {
                     null
                 } else {
