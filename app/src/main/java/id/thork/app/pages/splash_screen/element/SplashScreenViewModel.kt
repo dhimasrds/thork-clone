@@ -36,11 +36,14 @@ class SplashScreenViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = SplashScreenViewModel::class.java.name
 
-    val splashState: LiveData<SplashState>
-        get() = _splashState
+    val splashState: LiveData<SplashState> get() = _splashState
+    val selectedLang: LiveData<String> get() = _selectedLang
+
 
     private val _splashState = MutableLiveData<SplashState>()
     private val _defaultLang = MutableLiveData<String>()
+    private val _selectedLang = MutableLiveData<String>()
+
 
     init {
         validateLaunchState()
@@ -49,10 +52,14 @@ class SplashScreenViewModel @ViewModelInject constructor(
     private fun validateLaunchState() {
         viewModelScope.launch(Dispatchers.IO) {
             delay(1200)
-            setupLanguage()
+//            setupLanguage()
 
             setupLaunchState()
         }
+    }
+
+    fun validateLanguage(){
+        _selectedLang.value = appSession.userEntity.language
     }
 
     private fun setupLanguage() {

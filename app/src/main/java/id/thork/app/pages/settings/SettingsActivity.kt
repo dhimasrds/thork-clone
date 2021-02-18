@@ -3,6 +3,7 @@ package id.thork.app.pages.settings
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
@@ -13,12 +14,16 @@ import id.thork.app.pages.settings.element.SettingsViewModel
 import id.thork.app.pages.settings_language.SettingsLanguageActivity
 import id.thork.app.pages.settings_log.LogActivity
 import id.thork.app.pages.settings_pattern.SettingsPatternActivity
+import id.thork.app.persistence.entity.LanguageEntity
+import id.thork.app.utils.LocaleHelper
 
 /**
  * Created by Raka Putra on 1/14/21
  * Jakarta, Indonesia.
  */
 class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
+
+    private val SETTINGS_REQUEST_CODE = 0
 
     private val viewModel: SettingsViewModel by viewModels()
     private val binding: ActivitySettingsBinding by binding(R.layout.activity_settings)
@@ -34,12 +39,26 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     private var dialogChangePattern: DialogUtils? = null
     private var dialogSwitchPattern: DialogUtils? = null
     private var dialogCache: DialogUtils? = null
+    private var languageEntity: LanguageEntity? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         handlerOnclick()
+        initLang()
+    }
+
+    private fun initLang() {
+        val indo = LanguageEntity(
+            languageCode = BaseParam.APP_IND_LANG,
+            language = BaseParam.APP_IND_LANG_DETAIL
+        )
+        val english = LanguageEntity(
+            languageCode = BaseParam.APP_DEFAULT_LANG,
+            language = BaseParam.APP_DEFAULT_LANG_DETAIL
+        )
+        viewModel.save(indo)
+        viewModel.save(english)
     }
 
     override fun setupView() {
@@ -48,6 +67,14 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             lifecycleOwner = this@SettingsActivity
             vm = viewModel
         }
+    }
+
+    override fun setupObserver() {
+        super.setupObserver()
+        viewModel.validateLanguage()
+        viewModel.selectedLang.observe(this, Observer {
+            binding.settingsLanguageTitle.text = it
+        })
     }
 
     private fun handlerOnclick() {
@@ -72,14 +99,25 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            LocaleHelper.setLocale(
+                this@SettingsActivity,
+                data.getStringExtra(BaseParam.SELECTED_LANG_CODE)
+            )
+        }
+            startActivity(intent)
+            finish()
+    }
+
     private fun goToLoginPatternActivity() {
         finish()
         startActivity(Intent(this, SettingsPatternActivity::class.java))
     }
 
     private fun goToLanguageActivity() {
-        finish()
-        startActivity(Intent(this, SettingsLanguageActivity::class.java))
+        startActivityForResult(Intent(this, SettingsLanguageActivity::class.java), SETTINGS_REQUEST_CODE)
     }
 
     private fun goToLogActivity() {

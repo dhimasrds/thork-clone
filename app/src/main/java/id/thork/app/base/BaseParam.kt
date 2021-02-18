@@ -22,6 +22,9 @@ object BaseParam {
     const val APP_DEFAULT_LANG_DETAIL = "English"
     const val APP_IND_LANG = "ind"
     const val APP_IND_LANG_DETAIL = "Indonesia"
+    const val SELECTED_LANG_DETAIL = "LANG"
+    const val SELECTED_LANG_CODE = "LANG-CODE"
+
 
     const val APP_LOGIN_PREFERENCE = "loginPreference"
     const val APP_SERVER_ADDRESS = "serverAddress"

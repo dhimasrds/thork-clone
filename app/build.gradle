@@ -129,6 +129,9 @@ dependencies {
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
 
+    def paging_version = "3.0.0-alpha04"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
     implementation "com.google.android.libraries.places:places:$rootProject.librariesPlaces"
     implementation "com.google.android.gms:play-services-location:$rootProject.playServices"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
