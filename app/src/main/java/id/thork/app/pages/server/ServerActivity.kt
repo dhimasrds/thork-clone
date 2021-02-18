@@ -22,7 +22,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityServerBinding
-import id.thork.app.di.module.PushNotificationLiveData
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.server.element.ServerActivityViewModel

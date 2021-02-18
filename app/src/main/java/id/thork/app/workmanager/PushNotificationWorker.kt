@@ -16,9 +16,13 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.beust.klaxon.JsonObject
+import id.thork.app.helper.NotificationData
+import id.thork.app.utils.NotificationUtils
+import org.json.JSONObject
 import timber.log.Timber
 
-class PushNotificationWorker(context: Context, workerParameters: WorkerParameters) :
+class PushNotificationWorker(val context: Context, val workerParameters: WorkerParameters) :
     Worker(context, workerParameters) {
     private val TAG = PushNotificationWorker::class.java.name
 
@@ -29,17 +33,24 @@ class PushNotificationWorker(context: Context, workerParameters: WorkerParameter
                 Result.failure()
             }
 
-            //If Post to server success then return result.success
-            //Else return result.retry until MAX RUN ATTEMPT
             val data  = inputData.getString("data")
-            val angka  = inputData.getInt("angka", 44)
-            val outputData = Data.Builder()
-                .putString("data", data)
-                .putInt("angka", angka)
-                .build()
+            if (!data.isNullOrEmpty()) {
+                val notificationUtils = NotificationUtils(context)
+                val notificationData = NotificationData("PUSH_NOTIFICATION", data)
+                notificationUtils.sendNotification(notificationData)
+                Timber.tag(TAG).i("doWork() receive notification data: %s",data)
+                return Result.success()
+            }
+            return Result.retry()
 
-            Timber.tag(TAG).i("doWork() sync data: %s angka: %s", data, angka)
-            return Result.success(outputData)
+
+            //            val angka  = inputData.getInt("angka", 44)
+//            val outputData = Data.Builder()
+//                .putString("data", data)
+//                .putInt("angka", angka)
+//                .build()
+//            return Result.success(outputData)
+
         } catch (e: Exception) {
             Timber.tag(TAG).e("doWork() error: %s", e.message)
             return Result.retry()

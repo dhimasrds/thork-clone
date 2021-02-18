@@ -19,6 +19,8 @@ import com.google.firebase.messaging.RemoteMessage
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.utils.MoshiUtils
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -74,12 +76,31 @@ class WorkerCoordinator @Inject constructor(
         val tag = remoteMessageMap.get("tag")
 
         Timber.tag(TAG).i("addCrewPositionQueue() tag: %s", tag)
-        val inputData = workDataOf("title" to "$title", "message" to "$message",
+        val inputData = workDataOf(
+            "title" to "$title", "message" to "$message",
             "crewId" to "$crewId", "laborcode" to "$laborcode",
             "longitude" to "$longitude", "latitude" to "$latitude",
-            "tag" to "$tag", )
+            "tag" to "$tag",
+        )
         val workRequest: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
             .addTag(CREW_POSITION)
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+        WorkManager.getInstance(context).enqueue(workRequest)
+    }
+
+    fun sendPushNotification(remoteMessageMap: MutableMap<String, String>) {
+        val remoteMessageString = MoshiUtils.mapToJson(remoteMessageMap)
+        Timber.tag(TAG).i("receivePushNotification() remote map: %s remote map json: %s",
+            remoteMessageMap, remoteMessageString)
+        val inputData = workDataOf("data" to remoteMessageString)
+        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
+            .addTag("PUSH_NOTIFICATION")
             .setInputData(inputData)
             .setConstraints(constraints)
             .setBackoffCriteria(

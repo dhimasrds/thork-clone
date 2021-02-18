@@ -20,6 +20,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.base.BaseParam
+import id.thork.app.di.module.AppSession
+import id.thork.app.repository.LoginRepository
 import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,6 +35,9 @@ class ThorFcmService : FirebaseMessagingService() {
 
     @Inject
     lateinit var workerCoordinator: WorkerCoordinator
+
+    @Inject
+    lateinit var appSession: AppSession
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -68,12 +73,24 @@ class ThorFcmService : FirebaseMessagingService() {
     }
 
     private fun processingRemoteMessage(remoteMessage: RemoteMessage) {
-        if (remoteMessage.from == BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
-            if (isBackgroundRunning(applicationContext)) {
-                //notification when application on background
-            } else {
-                //notification when application on foreground
+        Timber.tag(TAG).i("processingRemoteMessage() topic: %s", remoteMessage.from)
+        if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
+            val crewId = remoteMessage.data.get("crewId")
+            if (!crewId.isNullOrEmpty() && appSession.personUID != null) {
+                val isCrewExists = appSession.personUID.toString().equals(crewId)
+                Timber.tag(TAG).i(
+                    "processingRemoteMessage() local crewId: %s server CrewId: %s Crew Exists: %s",
+                    appSession.personUID, crewId, isCrewExists
+                )
+                if (isCrewExists) {
+                    workerCoordinator.sendPushNotification(remoteMessage.data)
+                }
             }
+            //if (isBackgroundRunning(applicationContext)) {
+            //notification when application on background
+            //} else {
+            //notification when application on foreground
+            //}
         } else if (remoteMessage.from == BaseParam.FIREBASE_LOCATION_TOPIC) {
             if (isBackgroundRunning(applicationContext)) {
                 //firebase location when application on background
