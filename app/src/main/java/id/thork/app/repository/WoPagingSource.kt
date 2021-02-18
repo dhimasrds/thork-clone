@@ -163,14 +163,26 @@ class WoPagingSource @Inject constructor(
                 isChanged = BaseParam.APP_TRUE,
                 isLatest = BaseParam.APP_TRUE,
                 syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.cxlabor,
-                latitude = wo.woserviceaddress!![0].latitudey,
-                longitude = wo.woserviceaddress[0].longitudex
+                laborCode = wo.cxlabor
             )
+            setupWoLocation(woCacheEntity, wo)
             woCacheEntity.createdDate = Date()
             woCacheEntity.createdBy = appSession.userEntity.username
             woCacheEntity.updatedBy = appSession.userEntity.username
             repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+        }
+    }
+
+    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
+        woCacheEntity.latitude = if(!wo.woserviceaddress.isNullOrEmpty()){
+            wo.woserviceaddress!![0].latitudey
+        } else {
+            null
+        }
+        woCacheEntity.longitude = if(!wo.woserviceaddress.isNullOrEmpty()){
+            wo.woserviceaddress!![0].longitudex
+        } else {
+            null
         }
     }
 
