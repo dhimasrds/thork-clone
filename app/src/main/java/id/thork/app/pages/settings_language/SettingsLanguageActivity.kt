@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -13,9 +12,6 @@ import id.thork.app.databinding.ActivitySettingsLanguageBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.settings_language.element.*
 import id.thork.app.persistence.entity.Language
-import id.thork.app.persistence.entity.LanguageEntity
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -28,10 +24,27 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
 
     private val english = "is selected!"
     private val bahasa = "Bahasa dipilih!"
-    private lateinit var languageAdapter: SettingsLanguageAdapter
+    private lateinit var languageAdapter: LanguageAdapter
     private lateinit var customDialogUtils: CustomDialogUtils
     private var selectedLangCode: String? = null
     private var selectedLanguage: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val listLanguage = listOf(
+            Language(languageCode = BaseParam.APP_DEFAULT_LANG ,language = BaseParam.APP_DEFAULT_LANG_DETAIL),
+            Language(languageCode = BaseParam.APP_IND_LANG ,language = BaseParam.APP_IND_LANG_DETAIL),
+            )
+        languageAdapter = LanguageAdapter(object : RecyclerViewItemClickListener {
+            override fun onItemClicked(lang: Language) {
+                selectedLanguage = lang.language.toString()
+                selectedLangCode = lang.languageCode.toString()
+                showFailedReinputDialog()
+            }
+        }, listLanguage)
+        binding.recyclerviewSettingsLanguage.adapter = languageAdapter
+        binding.recyclerviewSettingsLanguage.layoutManager = LinearLayoutManager(this)
+    }
 
     override fun setupView() {
         super.setupView()
@@ -40,33 +53,6 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
             settingsLanguage = settingsLanguageViewModel
         }
         customDialogUtils = CustomDialogUtils(this)
-    }
-
-    override fun setupListener() {
-        super.setupListener()
-        languageAdapter = SettingsLanguageAdapter(object : RecyclerViewItemClickListener {
-            override fun onItemClicked(lang: LanguageEntity) {
-                selectedLanguage = lang.language.toString()
-                selectedLangCode = lang.languageCode.toString()
-                showFailedReinputDialog()
-            }
-        })
-    }
-
-    override fun setupObserver() {
-        super.setupObserver()
-        binding.recyclerviewSettingsLanguage.adapter = languageAdapter
-        binding.recyclerviewSettingsLanguage.layoutManager = LinearLayoutManager(this)
-        binding.recyclerviewSettingsLanguage.addItemDecoration(DividerItemDecoration(this))
-        binding.recyclerviewSettingsLanguage.apply {
-            adapter = languageAdapter.withLoadStateFooter(DefaultLoadStateAdapter())
-        }
-        lifecycleScope.launch {
-            settingsLanguageViewModel.languageList.collect {
-                languageAdapter.submitData(it)
-
-            }
-        }
     }
 
     private fun showFailedReinputDialog() {

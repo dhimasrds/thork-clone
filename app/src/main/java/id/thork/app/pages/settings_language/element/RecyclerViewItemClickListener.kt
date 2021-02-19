@@ -31,7 +31,6 @@
 package id.thork.app.pages.settings_language.element
 
 import id.thork.app.persistence.entity.Language
-import id.thork.app.persistence.entity.LanguageEntity
 
 /**
  * Created by Raka Putra on 1/2/21
@@ -39,5 +38,5 @@ import id.thork.app.persistence.entity.LanguageEntity
  */
 interface RecyclerViewItemClickListener {
 
-  fun onItemClicked(language: LanguageEntity)
+  fun onItemClicked(language: Language)
 }

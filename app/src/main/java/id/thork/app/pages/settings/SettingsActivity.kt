@@ -14,7 +14,6 @@ import id.thork.app.pages.settings.element.SettingsViewModel
 import id.thork.app.pages.settings_language.SettingsLanguageActivity
 import id.thork.app.pages.settings_log.LogActivity
 import id.thork.app.pages.settings_pattern.SettingsPatternActivity
-import id.thork.app.persistence.entity.LanguageEntity
 import id.thork.app.utils.LocaleHelper
 
 /**
@@ -39,26 +38,10 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     private var dialogChangePattern: DialogUtils? = null
     private var dialogSwitchPattern: DialogUtils? = null
     private var dialogCache: DialogUtils? = null
-    private var languageEntity: LanguageEntity? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handlerOnclick()
-        initLang()
-    }
-
-    private fun initLang() {
-        val indo = LanguageEntity(
-            languageCode = BaseParam.APP_IND_LANG,
-            language = BaseParam.APP_IND_LANG_DETAIL
-        )
-        val english = LanguageEntity(
-            languageCode = BaseParam.APP_DEFAULT_LANG,
-            language = BaseParam.APP_DEFAULT_LANG_DETAIL
-        )
-        viewModel.save(indo)
-        viewModel.save(english)
     }
 
     override fun setupView() {
