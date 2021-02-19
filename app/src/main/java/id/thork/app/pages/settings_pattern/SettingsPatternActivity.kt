@@ -10,70 +10,64 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.login_pattern
+package id.thork.app.pages.settings_pattern
 
 import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.andrognito.patternlockview.PatternLockView
 import com.andrognito.patternlockview.listener.PatternLockViewListener
 import com.andrognito.patternlockview.utils.PatternLockUtils
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
-import id.thork.app.databinding.ActivityLoginPatternBinding
+import id.thork.app.databinding.ActivitySettingsPatternBinding
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
-import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.server.ServerActivity
-import id.thork.app.pages.settings.SettingsActivity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
-class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
-    private val TAG = LoginPatternActivity::class.java.name
+class SettingsPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
+    private val TAG = SettingsPatternActivity::class.java.name
 
-    private val loginPatternViewModel: LoginPatternViewModel by viewModels()
-    private val binding: ActivityLoginPatternBinding by binding(R.layout.activity_login_pattern)
+    private val viewModel: SettingsPatternViewModel by viewModels()
+    private val binding: ActivitySettingsPatternBinding by binding(R.layout.activity_settings_pattern)
     private lateinit var customDialogUtils: CustomDialogUtils
 
-    private val TAG_SETTING = "TAG_SETTING"
     private var isDoPatternValidation = BaseParam.APP_FALSE
     private var patternState = BaseParam.APP_FALSE
     private var tempPattern = BaseParam.APP_EMPTY_STRING
-    private var changePatternSetting = BaseParam.APP_EMPTY_STRING
+    private val TAG_SETTING = "TAG_SETTING"
+
 
     override fun setupView() {
         super.setupView()
         binding.apply {
-            lifecycleOwner = this@LoginPatternActivity
-            vm = loginPatternViewModel
+            lifecycleOwner = this@SettingsPatternActivity
+            vm = viewModel
         }
         //Init Custom Dialog
         customDialogUtils = CustomDialogUtils(this)
         binding.patternLockView.addPatternLockListener(patternLockViewListener)
-        val intent = intent
-        val data = intent.getStringExtra(TAG_SETTING)
-        if (data != null) {
-            changePatternSetting = data
-        }
     }
 
     override fun setupListener() {
         super.setupListener()
         binding.btnSwitchUser.setOnClickListener {
-            loginPatternViewModel.deleteUserSession()
+            viewModel.deleteUserSession()
         }
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        loginPatternViewModel.validateUsername()
-        loginPatternViewModel.username.observe(this, {
+        viewModel.validateUsername()
+        viewModel.username.observe(this, Observer {
             binding.etProfileName.text = it
         })
 
-        loginPatternViewModel.isPatttern.observe(this, {
+        viewModel.isPatttern.observe(this, Observer {
             isDoPatternValidation = it
             if (it == BaseParam.APP_FALSE) {
                 binding.btnSwitchUser.visibility = View.GONE
@@ -81,16 +75,16 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             Timber.d("isDoPattern %s", isDoPatternValidation)
         })
 
-        loginPatternViewModel.validatePattern.observe(this, {
+        viewModel.validatePattern.observe(this, Observer {
             if (it == BaseParam.APP_TRUE) {
                 Timber.d("setupObserve() validatePattern(): %s", it)
-                navigateToMainActivity()
+                navigateLoginPattern()
             } else {
                 showFailedDialog()
             }
         })
 
-        loginPatternViewModel.switchUser.observe(this, {
+        viewModel.switchUser.observe(this, Observer {
             if (it == BaseParam.APP_TRUE) {
                 navigateToServerAcitivity()
             }
@@ -118,30 +112,23 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             }
 
             override fun onComplete(pattern: MutableList<PatternLockView.Dot>?) {
-//                Timber.tag(TAG).d(
-//                    "patternLockViewListener() onComplete 1: %s",
-//                    PatternLockUtils.patternToString(binding.patternLockView, pattern)
-//                )
-                if (changePatternSetting == TAG_SETTING) {
-                    Timber.tag(TAG).d("patternLockViewListener() onComplete 1 %s", changePatternSetting)
-                    reinputPattern(pattern)
-                } else if (isDoPatternValidation == BaseParam.APP_TRUE) {
+                Timber.tag(TAG).d(
+                    "patternLockViewListener() onComplete: %s",
+                    PatternLockUtils.patternToString(binding.patternLockView, pattern)
+                )
+                if (isDoPatternValidation == BaseParam.APP_TRUE) {
                     Timber.tag(TAG).d(
-                        "patternLockViewListener() onComplete 2 %s",
+                        "patternLockViewListener() isDoPatternValidation %s",
                         isDoPatternValidation
                     )
                     //validate pattern with user session
-                    loginPatternViewModel.validatePattern(
+                    viewModel.validatePattern(
                         PatternLockUtils.patternToString(
                             binding.patternLockView,
                             pattern
                         )
                     )
                 } else {
-                    Timber.tag(TAG).d(
-                        "patternLockViewListener() onComplete 3 %s",
-                        isDoPatternValidation
-                    )
                     reinputPattern(pattern)
                 }
             }
@@ -164,7 +151,6 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     }
 
     fun reinputPattern(pattern: MutableList<PatternLockView.Dot>?) {
-        Timber.tag(TAG).d("patternLockViewListener() onComplete 1 %s", changePatternSetting)
         val patternExisting = PatternLockUtils.patternToString(binding.patternLockView, pattern)
         when (patternState) {
             BaseParam.APP_FALSE -> {
@@ -176,7 +162,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
                 if (!tempPattern.equals(patternExisting) && !patternExisting.isNullOrEmpty()) {
                     showFailedReinputDialog()
                 } else {
-                    loginPatternViewModel.setUserPattern(patternExisting)
+                    viewModel.setUserPattern(patternExisting)
                     Timber.tag(TAG).d("patternLockViewListener() onComplete has been save")
                 }
             }
@@ -229,14 +215,10 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         clearPattern()
     }
 
-    private fun navigateToMainActivity() {
-        Timber.tag(TAG).d("navigateToMainActivity()")
-        if (changePatternSetting == TAG_SETTING) {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-        val intent = Intent(this, MainActivity::class.java)
+    private fun navigateLoginPattern() {
+        Timber.tag(TAG).d("navigateLoginPattern()")
+        val intent = Intent(this, LoginPatternActivity::class.java)
+        intent.putExtra("TAG_SETTING", TAG_SETTING)
         startActivity(intent)
         finish()
     }

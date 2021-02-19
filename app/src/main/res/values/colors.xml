@@ -63,12 +63,17 @@
     <color name="green_username">#4E4AFF</color>
     <color name="green_username_bg">#70448AFF</color>
 
+    <color name="colorDarkTheme">#ffff</color>
+    <color name="colorDarkTheme_black">#000000</color>
 
     <!-- Bottom Navigation    -->
     <color name="blue_nav">#1463FF</color>
     <color name="grey_nav">#AEAEAE</color>
 
     <color name="colorBlueRadioBt">#3F7FFF</color>
+
+    <color name="blue_toolbar">#2F5589</color>
+
     <color name="color_stat_blue">#4D436CFF</color>
     <color name="blueTextStatus">#436CFF</color>
 </resources>

@@ -35,6 +35,10 @@ buildscript {
         archCompomentVersion = "2.1.0"
         workVersion = "2.4.0"
 
+        librariesPlaces = '2.0.0'
+        playServices = '17.0.0'
+        mapUtils = '0.6.2'
+
         objectboxVersion = "2.8.1"
 
         librariesPlaces = "2.0.0"
