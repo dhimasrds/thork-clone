@@ -87,5 +87,9 @@ object BaseParam {
     const val PRIORITY_HIGH_DESC = "High"
 
 
-
+    /**
+     * Base Parameter Google Maps Direction Route
+     */
+    const val APP_APIKEY = "AIzaSyBPSt1F9lZcgia7JG4nW5eFPAuJCv68XBQ"
+    const val BASE_MAPS_URL = "https://maps.googleapis.com/maps/api/directions/"
 }
