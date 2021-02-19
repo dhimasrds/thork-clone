@@ -238,12 +238,11 @@ class WoActivityPagingSource @Inject constructor(
             }
         }
         Timber.d("json : %s", body.toString())
-        Timber.d("json : %s", body.trimToSize())
         return body.toString()
     }
 
     private fun searchFindWo(offset: Int, query: String): String {
-        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query)
+        val list: List<WoCacheEntity> = woCacheDao.findWoByWonumComp(offset, query,BaseParam.COMPLETED)
         Timber.d("searchFindWo list :%s", list.size)
         val body = ArrayList<String>()
         for (i in list.indices) {

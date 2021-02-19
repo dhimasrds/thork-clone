@@ -49,6 +49,7 @@ class WorkOrderActvityViewModel  @ViewModelInject constructor(
     }
 
     fun searchWo(query: String) {
+        Timber.d("searchWo viewmodel :%s", query)
         currentQuery.value = query
     }
 

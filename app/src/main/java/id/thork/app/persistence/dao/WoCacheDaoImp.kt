@@ -34,10 +34,22 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntity
     }
 
-    override fun findWoByWonum(offset: Int, wonum: String): List<WoCacheEntity> {
+    override fun findWoByWonum(offset: Int, wonum: String, status: String ): List<WoCacheEntity> {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         val woCacheEntity: List<WoCacheEntity> =
-            woCacheBox.query().contains(WoCacheEntity_.wonum, wonum).build().find(
+            woCacheBox.query().notEqual(WoCacheEntity_.status, status).contains(WoCacheEntity_.wonum, wonum).build().find(
+                offset.toLong(),
+                10
+            )
+        return if (woCacheEntity.isNotEmpty()) {
+            woCacheEntity
+        } else emptyList()
+    }
+
+    override fun findWoByWonumComp(offset: Int, wonum: String, status: String ): List<WoCacheEntity> {
+        val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheBox.query().equal(WoCacheEntity_.status, status).contains(WoCacheEntity_.wonum, wonum).build().find(
                 offset.toLong(),
                 10
             )

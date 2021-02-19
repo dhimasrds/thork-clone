@@ -186,6 +186,23 @@ class WoPagingSource @Inject constructor(
         }
     }
 
+    private fun createNewWo(wo: Member){
+        val woCacheEntity = WoCacheEntity(
+            syncBody = convertToJson(wo),
+            woId = wo.workorderid,
+            wonum = wo.wonum,
+            status = wo.status,
+            isChanged = BaseParam.APP_TRUE,
+            isLatest = BaseParam.APP_TRUE,
+            syncStatus = BaseParam.APP_TRUE,
+            laborCode = wo.cxlabor
+        )
+        woCacheEntity.createdDate = Date()
+        woCacheEntity.createdBy = appSession.userEntity.username
+        woCacheEntity.updatedBy = appSession.userEntity.username
+        repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+    }
+
     private fun addObjectBoxToHashMap() {
         Timber.d("queryObjectBoxToHashMap()")
         if (woCacheDao.findAllWo().isNotEmpty()) {
@@ -204,7 +221,7 @@ class WoPagingSource @Inject constructor(
             if (woListObjectBox!![wo.wonum!!] != null) {
 
             } else {
-                addWoToObjectBox(list)
+                createNewWo(wo)
             }
         }
     }
@@ -229,7 +246,7 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun searchFindWo(offset: Int, query: String): String {
-        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query)
+        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query,BaseParam.COMPLETED)
         Timber.d("searchFindWo list :%s", list.size)
         val body = ArrayList<String>()
         for (i in list.indices) {
