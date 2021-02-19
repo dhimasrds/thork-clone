@@ -19,7 +19,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
@@ -33,8 +32,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
+import id.thork.app.messaging.Events
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.main.element.MainViewModel
 import timber.log.Timber

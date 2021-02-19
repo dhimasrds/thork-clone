@@ -5,6 +5,9 @@ import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.UserResponse
@@ -12,6 +15,8 @@ import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 
+@Module
+@InstallIn(SingletonComponent::class)
 class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao

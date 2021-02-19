@@ -12,10 +12,13 @@
 
 package id.thork.app.di.module
 
+import android.content.Context
 import com.skydoves.whatif.whatIfNotNull
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.persistence.dao.UserDao
+import id.thork.app.persistence.dao.UserDaoImp
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import timber.log.Timber
@@ -23,9 +26,7 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppSession @Inject constructor(
-    private val loginRepository: LoginRepository
-) {
+class AppSession @Inject constructor(context: Context){
     val TAG = AppSession::class.java.name
 
     var userEntity: UserEntity
@@ -38,13 +39,15 @@ class AppSession @Inject constructor(
     var serverAddress: String? = null
     var isConnected: Boolean = true
 
+    var userDao: UserDao = UserDaoImp()
+
     init {
         userEntity = UserEntity()
         reinitUser()
     }
 
     fun reinitUser() {
-        val existingUser: UserEntity? = loginRepository.findActiveSession()
+        val existingUser: UserEntity? = userDao.findActiveSessionUser()
         Timber.tag(TAG).i("reinitUser() existingUser: %s", existingUser)
         existingUser.whatIfNotNull(
             whatIf = {

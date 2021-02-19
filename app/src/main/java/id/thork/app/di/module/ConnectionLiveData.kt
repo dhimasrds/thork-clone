@@ -20,6 +20,7 @@ import android.content.IntentFilter
 import android.net.*
 import android.os.Build
 import androidx.lifecycle.LiveData
+import com.google.firebase.messaging.RemoteMessage
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
@@ -56,6 +57,7 @@ class ConnectionLiveData @Inject constructor(
 
     override fun onActive() {
         super.onActive()
+        Timber.tag(TAG).i("onActive() %s", true)
         updateConnection()
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> connectivityManager.registerDefaultNetworkCallback(
@@ -103,10 +105,12 @@ class ConnectionLiveData @Inject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             connectivityManagerCallback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
+                    Timber.tag(TAG).i("getConnectivityLollipopManagerCallback() lollipop available");
                     doPingNetwork()
                 }
 
                 override fun onLost(network: Network) {
+                    Timber.tag(TAG).i("getConnectivityLollipopManagerCallback() lollipop NOT available");
                     postValue(ConnectionState.DISCONNECT.state)
                 }
             }
@@ -128,12 +132,14 @@ class ConnectionLiveData @Inject constructor(
                                 NetworkCapabilities.NET_CAPABILITY_VALIDATED
                             )
                         ) {
+                            Timber.tag(TAG).i("getConnectivityLollipopManagerCallback() marsmallow available");
                             doPingNetwork()
                         }
                     }
                 }
 
                 override fun onLost(network: Network) {
+                    Timber.tag(TAG).i("getConnectivityLollipopManagerCallback() marsmallow NOT available");
                     postValue(ConnectionState.DISCONNECT.state)
                 }
             }
@@ -192,5 +198,4 @@ class ConnectionLiveData @Inject constructor(
         }
 
     }
-
 }

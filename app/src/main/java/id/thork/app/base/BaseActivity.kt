@@ -26,7 +26,7 @@ import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
-import id.thork.app.workmanager.WoCoordinator
+import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -44,7 +44,10 @@ abstract class BaseActivity : AppCompatActivity() {
     lateinit var resourceProvider: ResourceProvider
 
     @Inject
-    lateinit var workerCoordinator: WoCoordinator
+    lateinit var workerCoordinator: WorkerCoordinator
+
+//    @Inject
+//    lateinit var pushNotificationLiveData: PushNotificationLiveData
 
     var isConnected = false
 
@@ -71,7 +74,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun setupObserver() {
         Timber.tag(BaseApplication.TAG)
-            .i("setupObserver() isconnection live data instance: %s", connectionLiveData)
+//            .i("setupObserver() isconnection live data instance: %s push notification instance: %s",
+//                connectionLiveData, pushNotificationLiveData)
         connectionLiveData.observe(this, { connectionState ->
             isConnected.let {
                 Timber.tag(BaseApplication.TAG)
@@ -79,6 +83,16 @@ abstract class BaseActivity : AppCompatActivity() {
                 defineConnectionState(connectionState)
             }
         })
+//        pushNotificationLiveData.observe(this, { message ->
+//            message.let {
+//                Timber.tag(BaseApplication.TAG).i("setupObserver() x1x push notification: %s", message)
+//                onNotificationReceived(message)
+//            }
+//        })
+//        Events.serviceEvent.observe(this, {
+//            Timber.tag(BaseApplication.TAG).i("setupObserver() message event: %s", it)
+//        })
+
     }
 
     open fun onSuccess() {
@@ -116,6 +130,10 @@ abstract class BaseActivity : AppCompatActivity() {
         )
         toast.setGravity(Gravity.CENTER, 0, 0)
         toast.show()
+    }
+
+    open fun onNotificationReceived(message: String) {
+        Timber.tag(BaseApplication.TAG).i("onNotificationReceived");
     }
 
     private fun defineConnectionState(connectionState: Int) {

@@ -14,6 +14,7 @@ package id.thork.app.example
 
 import com.squareup.moshi.*
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
+import id.thork.app.utils.MoshiUtils
 import java.lang.reflect.Type
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,11 +28,13 @@ This is Moshi Documentation how to use Moshi for
 fun main() {
     println("Moshi Sample")
 
-    createPersonObjectFromJson()
-    createPersonArrayFromJson()
+//    createPersonObjectFromJson()
+//    createPersonArrayFromJson()
+//
+//    createJsonFromObject()
+//    createJsonArrayFromObject()
 
-    createJsonFromObject()
-    createJsonArrayFromObject()
+    convertMapToJson()
 }
 
 fun createPersonObjectFromJson() {
@@ -98,6 +101,12 @@ fun createJsonArrayFromObject() {
     val jsonString = jsonAdapter.toJson(personList)
     println("Json Array String: $jsonString")
     println()
+}
+
+fun convertMapToJson() {
+    val map = mutableMapOf("name" to "reja", "id" to "123")
+    val json = MoshiUtils.mapToJson(map)
+    println(json)
 }
 
 @JsonClass(generateAdapter = true)

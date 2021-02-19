@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'org.jetbrains.kotlin.plugin.parcelize'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -147,11 +148,12 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$rootProject.playServices"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
     implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtils"
-
     implementation "com.karumi:dexter:$rootProject.dexterVersion"
 
-
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:26.4.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 
 }
 apply plugin: 'io.objectbox'
-
