@@ -63,11 +63,11 @@ class NotificationUtils constructor(val context: Context) {
                 notificationManager.createNotificationChannel(notificationChannel)
 
                 builder = Notification.Builder(context, channelId)
-                    .setSmallIcon(R.drawable.ic_tnb_icon)
+                    .setSmallIcon(R.drawable.ic_logo_this_white)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
                             context.resources,
-                            R.drawable.ic_tnb_icon
+                            R.drawable.ic_logo_this_white
                         )
                     )
                     .setContentTitle(title)
@@ -75,11 +75,11 @@ class NotificationUtils constructor(val context: Context) {
             } else {
                 builder = Notification.Builder(context)
                     .setSound(defaultSound)
-                    .setSmallIcon(R.drawable.ic_tnb_icon)
+                    .setSmallIcon(R.drawable.ic_logo_this_white)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
                             context.resources,
-                            R.drawable.ic_tnb_icon
+                            R.drawable.ic_logo_this_white
                         )
                     )
                     .setContentTitle(title)
