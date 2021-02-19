@@ -25,7 +25,6 @@ import id.thork.app.helper.NotificationData
 import org.json.JSONObject
 import timber.log.Timber
 
-@SuppressWarnings("deprecation")
 class NotificationUtils constructor(val context: Context) {
     private val TAG = NotificationUtils::class.java.name
 
@@ -44,6 +43,7 @@ class NotificationUtils constructor(val context: Context) {
         Timber.tag(TAG).i("sendNotification()")
     }
 
+    @Suppress("DEPRECATION")
     fun sendNotification(notificationData: NotificationData) {
         val data = JSONObject(notificationData.data)
         Timber.tag(TAG).i("sendNotification() receive data: %s", data)
