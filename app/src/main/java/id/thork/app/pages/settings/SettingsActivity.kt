@@ -8,6 +8,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivitySettingsBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.about.AboutActivity
 import id.thork.app.pages.settings.element.SettingsViewModel
@@ -20,24 +21,19 @@ import id.thork.app.utils.LocaleHelper
  * Created by Raka Putra on 1/14/21
  * Jakarta, Indonesia.
  */
-class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
-
-    private val SETTINGS_REQUEST_CODE = 0
-
+class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     private val viewModel: SettingsViewModel by viewModels()
     private val binding: ActivitySettingsBinding by binding(R.layout.activity_settings)
-
+    private val SETTINGS_REQUEST_CODE = 0
     private val TAG = SettingsActivity::class.java.name
+
+    private lateinit var customDialogUtils: CustomDialogUtils
     private val TAG_SWITCH_PATTERN = "TAG_SWITCH_PATTERN"
     private val TAG_CHANGE_PATTERN = "TAG_CHANGE_PATTERN"
     private val TAG_CLEAR_CACHE = "CLEAR_CACHE"
     private val TAG_LOGOUT = "TAG_LOGOUT"
     private val TAG_SETTING = "TAG_SETTING"
     private var currentTag: String = ""
-    private var dialogLogout: DialogUtils? = null
-    private var dialogChangePattern: DialogUtils? = null
-    private var dialogSwitchPattern: DialogUtils? = null
-    private var dialogCache: DialogUtils? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +46,7 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             lifecycleOwner = this@SettingsActivity
             vm = viewModel
         }
+        customDialogUtils = CustomDialogUtils(this)
     }
 
     override fun setupObserver() {
@@ -66,7 +63,7 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         }
 
         binding.settingsLogs.setOnClickListener {
-            goToLogActivity()
+//            goToLogActivity()
         }
 
         binding.settingsLanguage.setOnClickListener {
@@ -95,7 +92,6 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     private fun goToLoginPatternActivity() {
-        finish()
         startActivity(Intent(this, SettingsPatternActivity::class.java))
     }
 
@@ -104,16 +100,49 @@ class SettingsActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     private fun goToLogActivity() {
-        finish()
         startActivity(Intent(this, LogActivity::class.java))
     }
 
     private fun goToAboutActivity() {
-        finish()
         startActivity(Intent(this, AboutActivity::class.java))
     }
 
-    override fun onPositiveButton() {}
+    private fun setDialogSwitchPattern() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.change_switch_dialog)
+            .setDescription(R.string.change_switch_dialog_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
 
-    override fun onNegativeButton() {}
+    private fun setDialogChangePattern() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.change_pattern_dialog)
+            .setDescription(R.string.change_pattern_dialog_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogCache() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.settings_cache)
+            .setDescription(R.string.settings_cache_detail)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onLeftButton() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMiddleButton() {
+        TODO("Not yet implemented")
+    }
 }

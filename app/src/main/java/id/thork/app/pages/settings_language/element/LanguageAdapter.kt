@@ -35,7 +35,8 @@ class LanguageAdapter(
             tvLanguage.text = lang.language
             itemView.setOnClickListener {
                 recyclerViewItemClickListener.onItemClicked(lang)
-            }        }
+            }
+        }
     }
 
 }
