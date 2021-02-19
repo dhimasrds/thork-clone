@@ -13,6 +13,7 @@
 package id.thork.app.pages.main
 
 import android.Manifest
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -37,6 +38,7 @@ import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.main.element.MainViewModel
+import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -71,6 +73,7 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
         setSupportActionBar(toolBar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         toolBar.setNavigationIcon(R.drawable.ic_settings)
+        toolBar.setNavigationOnClickListener { goToSettingsActivity() }
         binding.toolbar.toolbarTitle.text = getString(R.string.this_fsm)
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
         toolBar.overflowIcon = drawable
@@ -121,6 +124,11 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
 
     override fun setupObserver() {
         super.setupObserver()
+    }
+
+    private fun goToSettingsActivity() {
+        finish()
+        startActivity(Intent(this, SettingsActivity::class.java))
     }
 
     /**

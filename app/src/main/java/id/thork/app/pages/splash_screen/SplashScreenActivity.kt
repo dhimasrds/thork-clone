@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseActivity

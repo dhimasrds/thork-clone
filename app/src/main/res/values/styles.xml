@@ -96,9 +96,9 @@
         <item name="color">@color/white</item>
     </style>
 
-    <style name="MyActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColorPrimary">@color/white</item>
-    </style>
+<!--    <style name="MyActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">-->
+<!--        <item name="android:textColorPrimary">@color/white</item>-->
+<!--    </style>-->
 
     <style name="SpinnerTheme" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/spinner_bg</item>

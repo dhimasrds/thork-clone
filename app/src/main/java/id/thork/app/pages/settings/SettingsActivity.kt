@@ -2,6 +2,7 @@ package id.thork.app.pages.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.CompoundButton
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import id.thork.app.R
@@ -60,7 +61,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         })
         viewModel.validateLogin()
         viewModel.isPattern.observe(this, Observer {
-            binding.activatePattern.isChecked = it != null
+            binding.activatePattern.isChecked = it == BaseParam.APP_TRUE
         })
     }
 
@@ -77,10 +78,9 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             setDialogChangePattern()
         }
 
-        binding.activatePattern.setOnCheckedChangeListener { compoundButton, b ->
-            val value = if (b) 1 else 0
-            viewModel.setUserIsPattern(value)
-            if (b) {
+        binding.activatePattern.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            activatePatternPassword(b)
+            if (b == true) {
                 viewModel.validatePattern()
                 viewModel.pattern.observe(this, Observer {
                     if (it == null) {
@@ -88,11 +88,28 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
                     }
                 })
             }
-        }
+        })
+//        binding.activatePattern.setOnCheckedChangeListener { compoundButton, b ->
+//            val value = if (b) 1 else 0
+//            viewModel.setUserIsPattern(value)
+//            if (b) {
+//                viewModel.validatePattern()
+//                viewModel.pattern.observe(this, Observer {
+//                    if (it == null) {
+//                        setDialogSwitchPattern()
+//                    }
+//                })
+//            }
+//        }
 
         binding.buttonLogout.setOnClickListener {
             TODO("Not yet implemented")
         }
+    }
+
+    private fun activatePatternPassword(b: Boolean) {
+        val value = if (b) 1 else 0
+        viewModel.setUserIsPattern(value)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,11 +141,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     private fun goToAboutActivity() {
         startActivity(Intent(this, AboutActivity::class.java))
-    }
-
-    private fun activatePattern() {
-        startActivity(Intent(this, LoginPatternActivity::class.java))
-        binding.activatePattern.isChecked
     }
 
     private fun setDialogSwitchPattern() {
@@ -169,12 +181,18 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         when (currentTag) {
             TAG_ACTIVE_PATTERN -> goToLoginPatternActivity()
             TAG_CHANGE_PATTERN -> goToChangePatternActivity()
-            TAG_SWITCH_PATTERN -> activatePattern()
+            TAG_SWITCH_PATTERN -> goToLoginPatternActivity()
         }
     }
 
     override fun onLeftButton() {
-        customDialogUtils.dismiss()
+        when (currentTag) {
+            TAG_SWITCH_PATTERN -> {
+                customDialogUtils.dismiss()
+                binding.activatePattern.isChecked = false
+            }
+            TAG_CHANGE_PATTERN -> customDialogUtils.dismiss()
+        }
     }
 
     override fun onMiddleButton() {
