@@ -67,6 +67,9 @@ class ThorFcmService : FirebaseMessagingService() {
             remoteMessage.from,
             remoteMessage.to
         )
+        appSession.let {
+            appSession.reinitUser()
+        }
         remoteMessage.data.let {
             processingRemoteMessage(remoteMessage)
         }
@@ -76,7 +79,7 @@ class ThorFcmService : FirebaseMessagingService() {
         Timber.tag(TAG).i("processingRemoteMessage() topic: %s", remoteMessage.from)
         if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
             val crewId = remoteMessage.data.get("crewId")
-            if (!crewId.isNullOrEmpty() && appSession.personUID != null) {
+            if (!crewId.isNullOrEmpty()) {
                 val isCrewExists = appSession.personUID.toString().equals(crewId)
                 Timber.tag(TAG).i(
                     "processingRemoteMessage() local crewId: %s server CrewId: %s Crew Exists: %s",

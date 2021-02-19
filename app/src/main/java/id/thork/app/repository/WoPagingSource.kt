@@ -175,12 +175,12 @@ class WoPagingSource @Inject constructor(
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
         woCacheEntity.latitude = if(!wo.woserviceaddress.isNullOrEmpty()){
-            wo.woserviceaddress!![0].latitudey
+            wo.woserviceaddress[0].latitudey
         } else {
             null
         }
         woCacheEntity.longitude = if(!wo.woserviceaddress.isNullOrEmpty()){
-            wo.woserviceaddress!![0].longitudex
+            wo.woserviceaddress[0].longitudex
         } else {
             null
         }

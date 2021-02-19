@@ -113,6 +113,7 @@ class LoginViewModel @ViewModelInject constructor(
                     val isFirstLogin = userIsFirstLogin(member, username, userHash)
                     _firstLogin.postValue(isFirstLogin)
                     _loginState.postValue(BaseParam.APP_TRUE)
+                    appSession.reinitUser()
                 },
                 whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
             )

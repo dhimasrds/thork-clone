@@ -35,7 +35,6 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
-import id.thork.app.messaging.Events
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.main.element.MainViewModel
 import timber.log.Timber
