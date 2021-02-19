@@ -34,6 +34,7 @@ class ActivityFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentActivityBinding.inflate(inflater,container,false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         woActivityAdapter = WorkOrderAdapter()
         return binding.root

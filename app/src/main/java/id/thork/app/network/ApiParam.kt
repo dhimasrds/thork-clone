@@ -21,7 +21,7 @@ object ApiParam {
     const val WORKORDER_WHERE_LABORCODE_NEW = "cxlabor="
     const val WORKORDER_WHERE_LABORCODE = "assignment{laborcode="
     const val WORKORDER_WHERE_COMP = " and status in [\"COMP\",\"CLOSE\"]"
-    const val WORKORDER_WHERE_STATUS = " and status in [\"APPR\"]"
+    const val WORKORDER_WHERE_STATUS = " and status in [\"APPR\",\"INPRG\"]"
     const val WORKORDER_WHERE_STATUS_COMP = " and status in [\"COMP\"]"
     const val WORKORDER_WHERE_STATUS_SEARCH = " and status in [\"APPR\",\"INPRG\"] and wonum=\"%"
     const val WORKORDER_WHERE_STATUS_SEARCH_COMP = " and status in [\"COMP\"] and wonum=\"%"
