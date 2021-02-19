@@ -26,7 +26,6 @@ import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
-import id.thork.app.pages.server.element.ServerActivityViewModel
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
@@ -40,7 +39,7 @@ class LoginViewModel @ViewModelInject constructor(
     private val resourceProvider: ResourceProvider,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
-    val TAG = ServerActivityViewModel::class.java.name
+    val TAG = LoginViewModel::class.java.name
 
     private val _progressVisible = MutableLiveData<Boolean>(false)
     private val _success = MutableLiveData<String>()

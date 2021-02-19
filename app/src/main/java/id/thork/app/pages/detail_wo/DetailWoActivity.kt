@@ -1,27 +1,38 @@
 package id.thork.app.pages.detail_wo
 
+import android.location.Location
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailWoBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
+import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
 
 class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     private val TAG = DetailWoActivity::class.java.name
 
     private val detailWoViewModel: DetailWoViewModel by viewModels()
     private val binding: ActivityDetailWoBinding by binding(R.layout.activity_detail_wo)
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var customDialogUtils: CustomDialogUtils
-    private var intentWonum: String? = null
     private lateinit var toolBar: Toolbar
     private lateinit var map: GoogleMap
+    private var lastKnownLocation: Location? = null
+    private var intentWonum: String? = null
+    private var destinationString: String? = null
+    private var destinationLatLng: LatLng? = null
+    private var isRoute: Int = BaseParam.APP_FALSE
 
 
     override fun setupView() {
@@ -34,6 +45,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
+
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(this)
 
         customDialogUtils = CustomDialogUtils(this)
         setupToolbar()
@@ -50,7 +64,29 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
             }
+            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress.get(0).longitudex != null) {
+                isRoute = BaseParam.APP_TRUE
+                destinationLatLng = LatLng(
+                    it.woserviceaddress.get(0).latitudey!!,
+                    it.woserviceaddress.get(0).longitudex!!
+                )
+                destinationString =
+                    "${it.woserviceaddress.get(0).latitudey!!},${it.woserviceaddress.get(0).longitudex!!}"
+            }
         })
+
+        detailWoViewModel.RequestRoute.observe(this, {
+            val deviceLocation = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
+            MapsUtils.renderMapDirection(map, this, it, deviceLocation, destinationLatLng)
+        })
+
+        detailWoViewModel.MapsInfo.observe(this, {
+            binding.apply {
+                tvDistance.text = it.distanceText
+                tvDuration.text = it.durationText
+            }
+        })
+
     }
 
     private fun setupToolbar() {
@@ -72,6 +108,45 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.apply {
             map = googleMap
+        }
+        getDeviceLocation()
+    }
+
+    private fun updateLocationUI() {
+        try {
+            with(map) {
+                isMyLocationEnabled = true
+                uiSettings.isMyLocationButtonEnabled = true
+            }
+        } catch (e: SecurityException) {
+            Timber.tag(TAG).d("updateLocationUI() catch: %s", e.toString())
+        }
+    }
+
+    private fun getDeviceLocation() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+            val locationResult = fusedLocationProviderClient.lastLocation
+            locationResult.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    lastKnownLocation = it.result
+                    if (lastKnownLocation != null) {
+                        if (isRoute == BaseParam.APP_TRUE) {
+                            val originString =
+                                "${lastKnownLocation!!.latitude},${lastKnownLocation!!.longitude}"
+                            detailWoViewModel.requestRoute(originString, destinationString!!)
+                        } else {
+                            updateLocationUI()
+                            MapsUtils.renderCurrentLocation(map, lastKnownLocation)
+                        }
+                    }
+                }
+            }
+        } catch (e: SecurityException) {
+            Timber.tag(TAG).d("getDeviceLocation(): %s", e.message)
         }
     }
 }

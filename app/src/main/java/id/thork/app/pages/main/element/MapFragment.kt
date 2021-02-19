@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -186,16 +185,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                         if (lastKnownLocation != null) {
                             with(map) {
                                 isMyLocationEnabled = true
-                                uiSettings.isMyLocationButtonEnabled = true
-                                moveCamera(
-                                    CameraUpdateFactory.newLatLngZoom(
-                                        LatLng(
-                                            lastKnownLocation!!.latitude,
-                                            lastKnownLocation!!.longitude
-                                        ), DEFAULT_ZOOM.toFloat()
-                                    )
-                                )
                             }
+                            MapsUtils.renderCurrentLocation(map, lastKnownLocation)
                         }
                     }
                 }

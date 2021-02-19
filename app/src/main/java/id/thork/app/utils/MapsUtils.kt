@@ -1,17 +1,32 @@
 package id.thork.app.utils
 
+import android.content.Context
+import android.graphics.Color
+import android.location.Location
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
 import id.thork.app.R
 import id.thork.app.base.BaseParam
+import id.thork.app.helper.MapsLocation
+import id.thork.app.network.response.google_maps.Distance
+import id.thork.app.network.response.google_maps.Duration
+import id.thork.app.network.response.google_maps.Leg
+import id.thork.app.network.response.google_maps.ResponseRoute
+import timber.log.Timber
 
 /**
  * Created by M.Reza Sulaiman on 22/01/21
  * Jepara, Indonesia.
  */
 object MapsUtils {
+
+    private const val LONG_DISTANCE_ZOOM = 11f
+    private const val SHORT_DISTANCE_ZOOM = 17f
+    private const val MAX_DISTANCE = 20000
+    private val DEFAULT_ZOOM = 17
+
 
     fun renderWoMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
@@ -33,5 +48,92 @@ object MapsUtils {
         googleMap.addMarker(options)
             .tag = BaseParam.APP_TAG_MARKER_CREW
     }
+
+    fun renderCurrentLocation(googleMap: GoogleMap, lastKnownLocation: Location?) {
+        with(googleMap) {
+            uiSettings.isMyLocationButtonEnabled = true
+            moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        lastKnownLocation!!.latitude,
+                        lastKnownLocation!!.longitude
+                    ), DEFAULT_ZOOM.toFloat()
+                )
+            )
+        }
+    }
+
+    fun getLocationInfo(dataDirection: ResponseRoute?): MapsLocation? {
+        if (dataDirection != null) {
+            val mapsLocation = MapsLocation()
+            val dataLegs: Leg = dataDirection.routes!![0].legs!![0]
+
+            // get distance and duration
+            val dataDistance: Distance? = dataLegs.distance
+            val dataDuration: Duration? = dataLegs.duration
+            mapsLocation.startAddress = dataLegs.startAddress
+            mapsLocation.endAddress = dataLegs.endAddress
+            mapsLocation.distanceText = dataDistance!!.text
+            mapsLocation.distanceValue = dataDistance.value!!
+            mapsLocation.durationText = dataDuration!!.text
+            mapsLocation.durationValue = dataDuration.value!!
+            return mapsLocation
+        }
+        return null
+    }
+
+
+
+    fun renderMapDirection(
+        mMap: GoogleMap?, context: Context, dataDirection: ResponseRoute?,
+        startLatLng: LatLng?, endLatLng: LatLng?
+    ) {
+        if (mMap != null) {
+            // get Distance
+            val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
+            val dataDistance: Distance = dataLegs.distance!!
+            // get polyline
+            val polylinePoint: String = dataDirection.routes[0].overviewPolyline!!.points!!
+            // Decode
+            val decodePath = PolyUtil.decode(polylinePoint)
+            mMap.addPolyline(
+                PolylineOptions().addAll(decodePath)
+                    .width(8f).color(Color.argb(255, 56, 167, 252))
+            ).isGeodesic = true
+            // Add Marker
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(startLatLng!!)
+                    .title("Origin")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
+            )
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(endLatLng!!)
+                    .title("Destination")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+            )
+            val latLongBuilder = LatLngBounds.Builder()
+            latLongBuilder.include(startLatLng)
+            latLongBuilder.include(endLatLng)
+            var bounds = latLongBuilder.build()
+            val center = bounds.center
+            latLongBuilder.include(LatLng(center.latitude - 0.001f, center.longitude - 0.001f))
+            latLongBuilder.include(LatLng(center.latitude + 0.001f, center.longitude + 0.001f))
+            bounds = latLongBuilder.build()
+            val width = context.resources.displayMetrics.widthPixels
+            val height = context.resources.displayMetrics.heightPixels
+            val paddingMap = (width * 0.1).toInt()
+            val cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, paddingMap)
+            Timber.d("renderMapDirection() Distance : %s", dataDistance.value)
+            if (dataDistance.value!! > MAX_DISTANCE) {
+                mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
+            } else {
+                mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
+            }
+            mMap.animateCamera(cu)
+        }
+    }
+
 
 }
