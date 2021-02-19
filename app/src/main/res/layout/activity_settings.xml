@@ -149,7 +149,8 @@
                             android:layout_weight="2"
                             android:checked="false"
                             android:switchMinWidth="6dp"
-                            android:theme="@style/SwitchTheme" />
+                            android:theme="@style/SwitchTheme"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -188,7 +189,8 @@
                             android:layout_weight="2"
                             android:checked="false"
                             android:switchMinWidth="6dp"
-                            android:theme="@style/SwitchTheme" />
+                            android:theme="@style/SwitchTheme"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -234,6 +236,7 @@
 
                 <!-- Log -->
                 <TextView
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/settings_start_margin"
@@ -245,6 +248,7 @@
                     android:theme="@style/PrimaryCaption" />
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/settings_button_min_height"
                     android:background="@color/white">
@@ -274,6 +278,7 @@
 
                 <!-- Cache -->
                 <TextView
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/settings_start_margin"
@@ -285,6 +290,7 @@
                     android:theme="@style/PrimaryCaption" />
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/settings_button_min_height"
                     android:background="@color/white">

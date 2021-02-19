@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
+import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 
 /**
@@ -17,9 +18,36 @@ class SettingsViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
 
     val selectedLang: LiveData<String> get() = _selectedLang
-    private val _selectedLang = MutableLiveData<String>()
+    val pattern: LiveData<String> get() = _pattern
+    val username: LiveData<String> get() = _username
+    val isPattern: LiveData<Int> get() = _isPattern
 
-    fun validateLanguage(){
+    private val _selectedLang = MutableLiveData<String>()
+    private val _pattern = MutableLiveData<String>()
+    private val _username = MutableLiveData<String>()
+    private val _isPattern = MutableLiveData<Int>()
+
+    fun validateLanguage() {
         _selectedLang.value = appSession.userEntity.language
     }
+
+    fun validatePattern() {
+        _pattern.value = appSession.userEntity.pattern
+    }
+
+    fun validateUsername() {
+        _username.value = appSession.userEntity.username
+    }
+
+    fun validateLogin() {
+        _isPattern.value = appSession.userEntity.isPattern
+    }
+
+    fun setUserIsPattern(activate: Int) {
+        val userExisting: UserEntity? = loginRepository.findUserByPersonUID(appSession.personUID)
+        userExisting!!.isPattern = activate
+        loginRepository.saveLoginPattern(userExisting, appSession.userEntity.username)
+    }
+
+
 }
