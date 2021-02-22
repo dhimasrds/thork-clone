@@ -20,6 +20,5 @@ class SettingsLanguageViewModel @ViewModelInject constructor(
         val userExisting: UserEntity? = loginRepository.findUserByPersonUID(appSession.personUID)
         userExisting!!.language = selectedLang
         loginRepository.saveLoginPattern(userExisting, appSession.userEntity.username)
-        Timber.d("raka %s", selectedLang)
     }
 }

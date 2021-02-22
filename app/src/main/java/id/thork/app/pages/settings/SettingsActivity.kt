@@ -12,6 +12,7 @@ import id.thork.app.databinding.ActivitySettingsBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.about.AboutActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
+import id.thork.app.pages.server.ServerActivity
 import id.thork.app.pages.settings.element.SettingsViewModel
 import id.thork.app.pages.settings_language.SettingsLanguageActivity
 import id.thork.app.pages.settings_pattern.SettingsPatternActivity
@@ -63,6 +64,11 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         viewModel.isPattern.observe(this, Observer {
             binding.activatePattern.isChecked = it == BaseParam.APP_TRUE
         })
+        viewModel.logout.observe(this, {
+            if (it == BaseParam.APP_TRUE) {
+                goToServerAcitivity()
+            }
+        })
     }
 
     private fun handlerOnclick() {
@@ -89,26 +95,14 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
                 })
             }
         })
-//        binding.activatePattern.setOnCheckedChangeListener { compoundButton, b ->
-//            val value = if (b) 1 else 0
-//            viewModel.setUserIsPattern(value)
-//            if (b) {
-//                viewModel.validatePattern()
-//                viewModel.pattern.observe(this, Observer {
-//                    if (it == null) {
-//                        setDialogSwitchPattern()
-//                    }
-//                })
-//            }
-//        }
 
         binding.buttonLogout.setOnClickListener {
-            TODO("Not yet implemented")
+            viewModel.deleteUserSession()
         }
     }
 
     private fun activatePatternPassword(b: Boolean) {
-        val value = if (b) 1 else 0
+        val value = if (b) BaseParam.APP_TRUE else BaseParam.APP_FALSE
         viewModel.setUserIsPattern(value)
     }
 
@@ -137,6 +131,12 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             Intent(this, SettingsLanguageActivity::class.java),
             SETTINGS_REQUEST_CODE
         )
+    }
+
+    private fun goToServerAcitivity() {
+        val intent = Intent(this, ServerActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun goToAboutActivity() {
