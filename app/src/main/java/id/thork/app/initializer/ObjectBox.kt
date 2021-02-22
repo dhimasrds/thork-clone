@@ -37,9 +37,9 @@ object ObjectBox {
             )
             // Enable Data Browser on debug builds.
             // https://docs.objectbox.io/data-browser
-            val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
-            Log.d("Objectbox here", started.toString())
-            Timber.tag(BaseApplication.TAG).i("init() object browser started: %s", started)
+//            val started = AndroidObjectBrowser(boxStore).start(context.applicationContext)
+//            Log.d("Objectbox here", started.toString())
+//            Timber.tag(BaseApplication.TAG).i("init() object browser started: %s", started)
         }
     }
 
