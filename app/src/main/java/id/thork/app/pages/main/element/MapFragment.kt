@@ -77,6 +77,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             lifecycleOwner = this@MapFragment
             vm = mapViewModel
         }
+        mapViewModel.fetchListWo()
         return binding.root
     }
 
@@ -97,9 +98,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     }
 
     fun setupObserver() {
-        mapViewModel.fetchListWo()
         mapViewModel.listWo.observe(viewLifecycleOwner, {
             it.forEach {
+                Timber.tag(TAG).d("setupObserver() ${it.wonum}")
                 if (it.latitude != null && it.longitude != null) {
                     val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
                     MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
