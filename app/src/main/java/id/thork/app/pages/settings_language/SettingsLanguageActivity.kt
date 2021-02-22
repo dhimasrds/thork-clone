@@ -25,6 +25,7 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
 
     private lateinit var languageAdapter: LanguageAdapter
     private lateinit var customDialogUtils: CustomDialogUtils
+    private lateinit var toolBar: androidx.appcompat.widget.Toolbar
     private var selectedLangCode: String? = null
     private var selectedLanguage: String? = null
     private val english = " is selected!"
@@ -43,6 +44,7 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
             settingsLanguage = settingsLanguageViewModel
         }
         customDialogUtils = CustomDialogUtils(this)
+        setupToolbar()
     }
 
     private fun initAdapter() {
@@ -69,6 +71,17 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
             .setDescription(R.string.change_language_question)
             .setListener(this)
         customDialogUtils.show()
+    }
+
+    private fun setupToolbar() {
+        toolBar = binding.toolbarLanguage.wmsToolbar
+        setSupportActionBar(toolBar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbarLanguage.toolbarTitle.text = getString(R.string.action_settings)
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        toolBar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     override fun onRightButton() {

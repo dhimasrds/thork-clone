@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -15,6 +16,7 @@ import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.server.ServerActivity
 import id.thork.app.pages.settings.element.SettingsViewModel
 import id.thork.app.pages.settings_language.SettingsLanguageActivity
+import id.thork.app.pages.settings_log.LogActivity
 import id.thork.app.pages.settings_pattern.SettingsPatternActivity
 import id.thork.app.utils.LocaleHelper
 
@@ -29,6 +31,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     private val SETTINGS_REQUEST_CODE = 0
 
     private lateinit var customDialogUtils: CustomDialogUtils
+    private lateinit var toolBar: Toolbar
     private val TAG_SWITCH_PATTERN = "TAG_SWITCH_PATTERN"
     private val TAG_CHANGE_PATTERN = "TAG_CHANGE_PATTERN"
     private val TAG_ACTIVE_PATTERN = "TAG_ACTIVE_PATTERN"
@@ -48,6 +51,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             vm = viewModel
         }
         customDialogUtils = CustomDialogUtils(this)
+        setupToolbar()
     }
 
     override fun setupObserver() {
@@ -96,6 +100,10 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             }
         })
 
+        binding.settingsLogs.setOnClickListener {
+            goToLogActivity()
+        }
+
         binding.buttonLogout.setOnClickListener {
             viewModel.deleteUserSession()
         }
@@ -141,6 +149,21 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     private fun goToAboutActivity() {
         startActivity(Intent(this, AboutActivity::class.java))
+    }
+
+    private fun goToLogActivity() {
+        startActivity(Intent(this, LogActivity::class.java))
+    }
+
+    private fun setupToolbar() {
+        toolBar = binding.toolbarSettings.wmsToolbar
+        setSupportActionBar(toolBar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        binding.toolbarSettings.toolbarTitle.text = getString(R.string.action_settings)
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        toolBar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     private fun setDialogSwitchPattern() {

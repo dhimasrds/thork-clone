@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content">
 
                     <include
-                        android:id="@+id/toolbar"
+                        android:id="@+id/toolbarSettings"
                         layout="@layout/wms_toolbar" />
                 </com.google.android.material.appbar.AppBarLayout>
 
@@ -236,7 +236,6 @@
 
                 <!-- Log -->
                 <TextView
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/settings_start_margin"
@@ -248,7 +247,6 @@
                     android:theme="@style/PrimaryCaption" />
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/settings_button_min_height"
                     android:background="@color/white">

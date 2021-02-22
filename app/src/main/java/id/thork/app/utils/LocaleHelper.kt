@@ -1,11 +1,7 @@
 package id.thork.app.utils
 
 import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.os.Build
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
-import id.thork.app.persistence.entity.UserEntity_
 import java.util.*
 
 

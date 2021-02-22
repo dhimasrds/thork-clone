@@ -38,7 +38,7 @@
         android:layout_height="wrap_content">
 
         <include
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbarLanguage"
             layout="@layout/wms_toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
