@@ -231,6 +231,8 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
                 binding.activatePattern.isChecked = false
             }
             TAG_CHANGE_PATTERN -> customDialogUtils.dismiss()
+            TAG_ACTIVE_PATTERN -> customDialogUtils.dismiss()
+            TAG_LOGOUT -> customDialogUtils.dismiss()
         }
     }
 
