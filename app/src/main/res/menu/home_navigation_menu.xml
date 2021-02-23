@@ -3,12 +3,12 @@
     <item
             android:id="@+id/nav_graph_wo"
             android:icon="@drawable/ic_nav_wo"
-            android:title="Work Order" />
+            android:title="@string/main_workorder" />
     <item
             android:id="@+id/nav_graph_create"
-            android:title="Create WO" />
+            android:title="@string/main_createwo" />
     <item
             android:id="@+id/nav_graph_map"
             android:icon="@drawable/ic_nav_map"
-            android:title="Map" />
+            android:title="@string/main_maps" />
 </menu>

@@ -356,6 +356,13 @@
     <string name="settings_change_pattern_failed">Ganti Pola Gagal</string>
     <string name="settings_change_pattern_activity">Masukan Pola Saat Ini</string>
 
+    <!-- Main Activity -->
+    <string name="main_workorder">Pekerjaan</string>
+    <string name="main_createwo">Membuat WO</string>
+    <string name="main_maps">Peta</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="approve">Approve</string>
     <string-array name="work_type_wo">
         <item>ORR</item>
     </string-array>

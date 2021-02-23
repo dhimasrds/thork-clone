@@ -358,6 +358,10 @@
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>
 
+    <!-- Main Activity -->
+    <string name="main_workorder">Work Order</string>
+    <string name="main_createwo">Create WO</string>
+    <string name="main_maps">Maps</string>
 
     <string-array name="work_type_wo">
         <item>ORR</item>

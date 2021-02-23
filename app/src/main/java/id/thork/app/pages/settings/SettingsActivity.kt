@@ -106,7 +106,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         }
 
         binding.buttonLogout.setOnClickListener {
-            viewModel.deleteUserSession()
+            setDialogLogout()
         }
     }
 
@@ -156,6 +156,10 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         startActivity(Intent(this, LogActivity::class.java))
     }
 
+    private fun goToLogout() {
+        viewModel.deleteUserSession()
+    }
+
     private fun setupToolbar() {
         toolBar = binding.toolbarSettings.wmsToolbar
         setSupportActionBar(toolBar)
@@ -173,6 +177,16 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             .setRightButtonText(R.string.dialog_yes)
             .setTittle(R.string.change_switch_dialog)
             .setDescription(R.string.change_switch_dialog_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogLogout() {
+        currentTag = TAG_LOGOUT
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.logout_title)
+            .setDescription(R.string.logout_qustion)
             .setListener(this)
         customDialogUtils.show()
     }
@@ -205,6 +219,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         when (currentTag) {
             TAG_ACTIVE_PATTERN -> goToLoginPatternActivity()
             TAG_CHANGE_PATTERN -> goToChangePatternActivity()
+            TAG_LOGOUT -> goToLogout()
             TAG_SWITCH_PATTERN -> goToLoginPatternActivity()
         }
     }

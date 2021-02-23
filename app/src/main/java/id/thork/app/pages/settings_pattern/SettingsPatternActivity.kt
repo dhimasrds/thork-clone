@@ -64,10 +64,6 @@ class SettingsPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionLi
     override fun setupObserver() {
         super.setupObserver()
         viewModel.validateUsername()
-//        viewModel.username.observe(this, Observer {
-//            binding.etProfileName.text = it
-//        })
-
         viewModel.isPatttern.observe(this, Observer {
             isDoPatternValidation = it
             if (it == BaseParam.APP_FALSE) {
