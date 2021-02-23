@@ -155,5 +155,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
+
+    //
+    implementation 'com.baoyz.pullrefreshlayout:library:1.2.0'
 }
 apply plugin: 'io.objectbox'
