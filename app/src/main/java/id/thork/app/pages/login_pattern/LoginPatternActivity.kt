@@ -70,7 +70,11 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         super.setupObserver()
         loginPatternViewModel.validateUsername()
         loginPatternViewModel.username.observe(this, {
-            binding.etProfileName.text = it
+            if(changePatternSetting == TAG_SETTING){
+                binding.etProfileName.setText(R.string.change_pattern)
+            } else {
+                binding.etProfileName.text = it
+            }
         })
 
         loginPatternViewModel.isPatttern.observe(this, {
@@ -235,10 +239,11 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             finish()
+        } else {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 
     private fun navigateToServerAcitivity() {

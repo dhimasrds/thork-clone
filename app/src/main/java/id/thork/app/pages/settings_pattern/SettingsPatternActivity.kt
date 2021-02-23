@@ -51,6 +51,7 @@ class SettingsPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionLi
         //Init Custom Dialog
         customDialogUtils = CustomDialogUtils(this)
         binding.patternLockView.addPatternLockListener(patternLockViewListener)
+        binding.etProfileName.setText(R.string.settings_change_pattern_activity)
     }
 
     override fun setupListener() {
@@ -63,9 +64,9 @@ class SettingsPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionLi
     override fun setupObserver() {
         super.setupObserver()
         viewModel.validateUsername()
-        viewModel.username.observe(this, Observer {
-            binding.etProfileName.text = it
-        })
+//        viewModel.username.observe(this, Observer {
+//            binding.etProfileName.text = it
+//        })
 
         viewModel.isPatttern.observe(this, Observer {
             isDoPatternValidation = it

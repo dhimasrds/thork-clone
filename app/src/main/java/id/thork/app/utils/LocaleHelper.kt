@@ -1,6 +1,8 @@
 package id.thork.app.utils
 
 import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import java.util.*
 
@@ -12,12 +14,12 @@ import java.util.*
 object LocaleHelper {
     private const val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
 
-    fun onAttach(context: Context): Boolean? {
+    fun onAttach(context: Context): Context? {
         val lang = getPersistedData(context, Locale.getDefault().language)
         return setLocale(context, lang)
     }
 
-    fun onAttach(context: Context, defaultLanguage: String): Boolean? {
+    fun onAttach(context: Context, defaultLanguage: String): Context? {
         val lang = getPersistedData(context, defaultLanguage)
         return setLocale(context, lang)
     }
@@ -26,7 +28,7 @@ object LocaleHelper {
         return getPersistedData(context, Locale.getDefault().language)
     }
 
-    fun setLocale(context: Context, language: String?): Boolean? {
+    fun setLocale(context: Context, language: String?): Context? {
         persist(context, language)
         return updateResourcesLegacy(context, language)
     }
@@ -43,15 +45,38 @@ object LocaleHelper {
         editor.apply()
     }
 
-    @Suppress("DEPRECATION")
-    private fun updateResourcesLegacy(context: Context, language: String?): Boolean {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        val resources = context.resources
-        val configuration = resources.configuration
-        context.createConfigurationContext(configuration)
-        configuration.setLocale(locale)
-        resources.updateConfiguration(configuration, resources.displayMetrics)
-        return true
+    private fun updateResourcesLegacy(context: Context, language: String?): Context {
+        val config: Configuration = context.resources.configuration
+        val sysLocale: Locale?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sysLocale = config.locales.get(0)
+        } else {
+            sysLocale = config.locale
+        }
+        if (language != "" && sysLocale!!.language != language) {
+            val locale = Locale(language)
+            Locale.setDefault(locale)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocale(locale)
+            } else {
+                config.locale = locale
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.createConfigurationContext(config)
+            context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        } else {
+            context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        }
+        return context
     }
+//        val locale = Locale(language)
+//        Locale.setDefault(locale)
+//        val resources = context.resources
+//        val configuration = resources.configuration
+//        context.createConfigurationContext(configuration)
+//        configuration.setLocale(locale)
+//        resources.updateConfiguration(configuration, resources.displayMetrics)
+//        return true
+//    }
 }

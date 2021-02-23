@@ -13,6 +13,7 @@ import id.thork.app.databinding.ActivitySettingsBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.about.AboutActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
+import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.server.ServerActivity
 import id.thork.app.pages.settings.element.SettingsViewModel
 import id.thork.app.pages.settings_language.SettingsLanguageActivity
@@ -162,7 +163,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         binding.toolbarSettings.toolbarTitle.text = getString(R.string.action_settings)
         toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         toolBar.setNavigationOnClickListener {
-            finish()
+            onBackPressed()
         }
     }
 
@@ -220,5 +221,12 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     override fun onMiddleButton() {
         TODO("Not yet implemented")
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
     }
 }
