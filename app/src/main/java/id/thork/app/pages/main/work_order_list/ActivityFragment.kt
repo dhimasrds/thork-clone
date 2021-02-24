@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.LoadType
 import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -42,6 +44,8 @@ class ActivityFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         pullRefreshLayout = binding.swipeRefreshLayout
+        woActivityAdapter = WorkOrderAdapter()
+
 
         pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
         pullRefreshLayout.setColorSchemeColors(
@@ -52,13 +56,24 @@ class ActivityFragment : Fragment() {
 
 
         pullRefreshLayout.setOnRefreshListener(PullRefreshLayout.OnRefreshListener {
-            Handler().postDelayed(Runnable {
-                pullRefreshLayout.setRefreshing(false)
-            }, 5000)
-        })
+//            Handler().postDelayed(Runnable {
+//                woActivityAdapter.refresh()
+//                pullRefreshLayout.setRefreshing(false)
+//                woActivityAdapter.addLoadStateListener { loadstate ->
+//                    Timber.d("loadresult wo :%s",loadstate.refresh)
+//                }
+//            }, 5000)
+            woActivityAdapter.refresh()
+            woActivityAdapter.addLoadStateListener { loadstate ->
+                Timber.d("loadresult wo :%s",loadstate.refresh)
+                if (loadstate.refresh !is LoadState.Loading){
+                    pullRefreshLayout.setRefreshing(false)
+                }
+            }
+            })
 
+//        pullRefreshLayout.setRefreshing(false)
 
-        woActivityAdapter = WorkOrderAdapter()
         return binding.root
     }
 
