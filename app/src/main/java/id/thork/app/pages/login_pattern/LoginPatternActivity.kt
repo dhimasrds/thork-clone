@@ -14,6 +14,7 @@ package id.thork.app.pages.login_pattern
 
 import android.content.Intent
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.andrognito.patternlockview.PatternLockView
 import com.andrognito.patternlockview.listener.PatternLockViewListener
@@ -236,6 +237,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private fun navigateToMainActivity() {
         Timber.tag(TAG).d("navigateToMainActivity()")
         if (changePatternSetting == TAG_SETTING) {
+            Toast.makeText(this, R.string.settings_change_pattern_success, Toast.LENGTH_SHORT).show()
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             finish()

@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
+import id.thork.app.base.BaseParam.TAG_SETTING
 import id.thork.app.databinding.ActivitySettingsBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.about.AboutActivity
@@ -129,10 +130,14 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     private fun goToChangePatternActivity() {
         startActivity(Intent(this, SettingsPatternActivity::class.java))
+        finish()
     }
 
     private fun goToLoginPatternActivity() {
-        startActivity(Intent(this, LoginPatternActivity::class.java))
+        val intent = Intent(this, LoginPatternActivity::class.java)
+        intent.putExtra("TAG_SETTING", TAG_SETTING)
+        startActivity(intent)
+        finish()
     }
 
     private fun goToLanguageActivity() {
@@ -157,6 +162,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     }
 
     private fun goToLogout() {
+        LocaleHelper.setLocale(this, BaseParam.APP_DEFAULT_LANG)
         viewModel.deleteUserSession()
     }
 
@@ -219,8 +225,8 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         when (currentTag) {
             TAG_ACTIVE_PATTERN -> goToLoginPatternActivity()
             TAG_CHANGE_PATTERN -> goToChangePatternActivity()
-            TAG_LOGOUT -> goToLogout()
             TAG_SWITCH_PATTERN -> goToLoginPatternActivity()
+            TAG_LOGOUT -> goToLogout()
         }
     }
 
@@ -237,7 +243,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     }
 
     override fun onMiddleButton() {
-        TODO("Not yet implemented")
+        customDialogUtils.dismiss()
     }
 
     override fun onBackPressed() {
@@ -245,5 +251,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
+        finish()
     }
 }

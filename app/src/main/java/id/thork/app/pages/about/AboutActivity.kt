@@ -35,8 +35,7 @@ class AboutActivity: BaseActivity() {
         mTitle.setText(R.string.action_settings)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
-        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_toolbar))
-        toolbar.setNavigationOnClickListener { view: View? -> finish() }
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     override fun onBackPressed() {

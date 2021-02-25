@@ -14,6 +14,8 @@ package id.thork.app.pages.main
 
 import android.Manifest
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -24,7 +26,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.material.appbar.MaterialToolbar
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -33,7 +34,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
@@ -42,12 +42,13 @@ import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 
 @AndroidEntryPoint
-class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.DialogActionListener {
+class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.DialogActionListener {
     val TAG = MainActivity::class.java.name
 
     val viewModel: MainViewModel by viewModels()
 
     private var currentNavController: LiveData<NavController>? = null
+    private var exitApplication = false
     private lateinit var customDialogUtils: CustomDialogUtils
     private lateinit var toolBar: Toolbar
 
@@ -86,10 +87,6 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain
         bottomNavigationView.menu.findItem(R.id.nav_graph_create).isEnabled = false
@@ -103,7 +100,7 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
             intent = intent
         )
 
-        navController.observe(this,  { nav ->
+        navController.observe(this, { nav ->
             setupActionBarWithNavController(nav)
         })
         currentNavController = navController
@@ -120,10 +117,6 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
                 viewModel.checkRepo()
             }
         }
-    }
-
-    override fun setupObserver() {
-        super.setupObserver()
     }
 
     private fun goToSettingsActivity() {
@@ -189,5 +182,17 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
 
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
+    }
+
+    override fun onBackPressed() {
+        Toast.makeText(this, R.string.exit_application, Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            exitApplication = false
+        }, 2000)
+        if (exitApplication) {
+            finishAffinity()
+            return
+        }
+        this.exitApplication = true
     }
 }
