@@ -67,7 +67,7 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
     }
 
     private fun setupToolBar() {
-        toolBar = binding.toolbar.wmsToolbar
+        toolBar = binding.toolbar.appToolbar
         setSupportActionBar(toolBar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         toolBar.setNavigationIcon(R.drawable.ic_settings)

@@ -18,6 +18,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,6 +54,8 @@ abstract class BaseActivity : AppCompatActivity() {
     var isConnected = false
 
     var mainView: ViewGroup? = null
+    lateinit var toolBar: Toolbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupView()
@@ -60,6 +64,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
         Timber.tag(BaseApplication.TAG).i("onCreate() coordinator instance: %s", workerCoordinator)
         workerCoordinator.ping()
+    }
+
+    open fun setupToolbar() {
+        toolBar = binding.toolbar.appToolbar
+        setSupportActionBar(toolBar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+        toolBar.setNavigationIcon(R.drawable.ic_settings)
+        binding.toolbar.toolbarTitle.text = getString(R.string.this_fsm)
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
+        toolBar.overflowIcon = drawable
+        toolBar.inflateMenu(R.menu.filter_menu)
     }
 
     open fun setupMainView(mainView: ViewGroup) {
