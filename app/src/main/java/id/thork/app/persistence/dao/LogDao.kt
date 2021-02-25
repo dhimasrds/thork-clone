@@ -15,9 +15,14 @@ package id.thork.app.persistence.dao
 import id.thork.app.persistence.entity.LogEntity
 
 interface LogDao {
-    fun findLogs(): List<LogEntity>
     fun findLog(id: Long): LogEntity
     fun save(logEntity: LogEntity, username: String): LogEntity
     fun save(trxId: String, message: String, username: String): LogEntity
     fun removeAll()
+
+    fun findLogs(): List<LogEntity>
+    fun pagingLog(position: Long ,limit: Long): List<LogEntity>?
+    fun getLogById(id: Long): LogEntity?
+
+
 }

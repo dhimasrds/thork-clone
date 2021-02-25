@@ -1,17 +1,15 @@
 package id.thork.app.pages.settings_log_detail
 
-import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivitySettingsLogDetailBinding
+import id.thork.app.pages.settings_log.LogActivity
 import id.thork.app.pages.settings_log_detail.element.LogDetailViewModel
 import id.thork.app.persistence.entity.LogEntity
-import id.thork.app.utils.DateUtils
 
 /**
  * Created by Raka Putra on 1/19/21
@@ -21,8 +19,15 @@ class LogDetailActivity : BaseActivity() {
     private val binding: ActivitySettingsLogDetailBinding by binding(R.layout.activity_settings_log_detail)
     private val viewModel: LogDetailViewModel by viewModels()
 
+    private var logEntity: LogEntity? = null
+
+
     override fun setupView() {
         super.setupView()
+        binding.apply {
+            lifecycleOwner = this@LogDetailActivity
+            vm = viewModel
+        }
         initView()
         retrieveFromIntent()
     }
@@ -40,14 +45,13 @@ class LogDetailActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { finish() }
     }
 
+
     private fun retrieveFromIntent() {
-        val intent = intent
-        val id = intent.getLongExtra(BaseParam.ID, 0)
-        val logEntity: LogEntity = viewModel.findLogs(id)
-        if (logEntity != null) {
-            val message: String = DateUtils.getDateTimeOB(logEntity.createdDate)
-                .toString() + " # " + logEntity.message
-            binding.tvLogDetail.text = message
+        val logId = intent.extras?.getLong(LogActivity.INTENT_EXTRA_KEY)
+        if (logId != null) {
+            logEntity = viewModel.getLogById(logId)
+            binding.tvLogDetail.text = logEntity?.message
+
         }
     }
 }

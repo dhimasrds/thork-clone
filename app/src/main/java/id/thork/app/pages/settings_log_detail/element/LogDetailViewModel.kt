@@ -5,6 +5,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.persistence.dao.LogDao
 import id.thork.app.persistence.dao.LogDaoImp
 import id.thork.app.persistence.entity.LogEntity
+import id.thork.app.repository.LogRepository
 
 /**
  * Created by Raka Putra on 1/19/21
@@ -13,12 +14,14 @@ import id.thork.app.persistence.entity.LogEntity
 class LogDetailViewModel @ViewModelInject constructor():LiveCoroutinesViewModel() {
 
     private val logDao: LogDao
+    private val repository: LogRepository
 
     init {
         logDao = LogDaoImp()
+        repository = LogRepository(logDao)
     }
 
-    fun findLogs(id: Long): LogEntity {
-        return logDao.findLog(id)
+    fun getLogById(id: Long): LogEntity? {
+        return repository.getLogById(id)
     }
 }

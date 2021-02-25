@@ -65,4 +65,18 @@ class LogDaoImp : LogDao {
         logEntity.updatedDate = Date()
         logEntity.updatedBy = username
     }
+
+    override fun pagingLog(position: Long ,limit: Long): List<LogEntity>? {
+        logEntityBox = ObjectBox.boxStore.boxFor(LogEntity::class.java)
+        val notesEntities: List<LogEntity> =
+            logEntityBox.query().notNull(LogEntity_.id).build().find(position, limit)
+        if (notesEntities != null){
+            return notesEntities
+        }
+        return null
+    }
+
+    override fun getLogById(id: Long): LogEntity? {
+        return logEntityBox.get(id)
+    }
 }
