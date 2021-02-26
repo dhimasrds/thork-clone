@@ -16,6 +16,7 @@ import android.content.Intent
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding
@@ -70,10 +71,17 @@ class LoginActivity : BaseActivity(),
         })
 
         loginViewModel.username.observe(this, Observer {
-            binding.includeLoginContent.username.setText(it)
             Timber.tag(TAG).i("raka() success: %s", it)
-            binding.includeLoginContent.username.isEnabled = false
-            binding.includeLoginContent.username.setTextColor(ContextCompat.getColor(this, R.color.colorBlack))
+            if (it != null) {
+                binding.includeLoginContent.username.setText(it)
+                binding.includeLoginContent.username.isEnabled = false
+                binding.includeLoginContent.username.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.colorBlack
+                    )
+                )
+            }
         })
 
         loginViewModel.error.observe(this, { error ->
