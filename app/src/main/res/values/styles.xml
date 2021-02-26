@@ -29,11 +29,11 @@
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
     </style>
 
-    <style name="Base.Widget.Design.TabLayout" parent="android:Widget">
-        <item name="tabBackground">@drawable/rb_on_focus</item>
-        <item name="tabIndicatorColor">#ff00ff</item>
-        <item name="tabIndicatorHeight">2dp</item>
-    </style>
+<!--    <style name="Base.Widget.Design.TabLayout" parent="android:Widget">-->
+<!--        <item name="tabBackground">@drawable/rb_on_focus</item>-->
+<!--        <item name="tabIndicatorColor">#ff00ff</item>-->
+<!--        <item name="tabIndicatorHeight">2dp</item>-->
+<!--    </style>-->
 
     <!-- Toolbar back button -->
     <style name="ThisToolbar" parent="android:Theme.DeviceDefault.Light.DarkActionBar">
