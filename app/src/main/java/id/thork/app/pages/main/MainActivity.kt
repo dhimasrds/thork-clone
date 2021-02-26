@@ -43,7 +43,6 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
 
     private var currentNavController: LiveData<NavController>? = null
     private lateinit var customDialogUtils: CustomDialogUtils
-//    private lateinit var toolBar: Toolbar
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 

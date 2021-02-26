@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:theme="@style/MyActionBarTheme"
-        android:padding="8dp"
+        android:padding="2dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_scrollFlags="scroll|enterAlways">
 

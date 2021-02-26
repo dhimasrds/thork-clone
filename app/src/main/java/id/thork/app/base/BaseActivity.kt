@@ -76,10 +76,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (navigation) {
             toolBar.setNavigationIcon(R.drawable.ic_settings)
-            val drawableFilter = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
-            val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_conn_on)
-            toolBar.overflowIcon = drawableFilter
-            toolBar.overflowIcon = drawable
             toolBar.inflateMenu(R.menu.filter_menu)
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
