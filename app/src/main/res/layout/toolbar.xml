@@ -11,8 +11,7 @@
         android:theme="@style/MyActionBarTheme"
         android:padding="8dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:layout_scrollFlags="scroll|enterAlways"
-        >
+        app:layout_scrollFlags="scroll|enterAlways">
 
         <TextView
             android:id="@+id/toolbar_title"
@@ -20,7 +19,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/opensans_bold"
-            android:text="Toolbar Title"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </androidx.appcompat.widget.Toolbar>

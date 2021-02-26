@@ -62,16 +62,6 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
         requestGrantPermissions()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.filter_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain
         bottomNavigationView.menu.findItem(R.id.nav_graph_create).isEnabled = false
@@ -167,4 +157,6 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
     }
+
+
 }
