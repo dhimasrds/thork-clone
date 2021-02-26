@@ -47,7 +47,7 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
 
     private var currentNavController: LiveData<NavController>? = null
     private lateinit var customDialogUtils: CustomDialogUtils
-    private lateinit var toolBar: Toolbar
+//    private lateinit var toolBar: Toolbar
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
@@ -55,7 +55,7 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
         super.setupView()
         setupMainView(binding.mainLayout)
 
-        setupToolBar()
+        setupToolbarWithNavigation(navigation = false)
         setupBottomNavigationBar()
 
         binding.apply {
@@ -64,17 +64,6 @@ class   MainActivity : BaseActivity(),  View.OnClickListener, CustomDialogUtils.
         //Init custom dialog
         customDialogUtils = CustomDialogUtils(this)
         requestGrantPermissions()
-    }
-
-    private fun setupToolBar() {
-        toolBar = binding.toolbar.appToolbar
-        setSupportActionBar(toolBar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        toolBar.setNavigationIcon(R.drawable.ic_settings)
-        binding.toolbar.toolbarTitle.text = getString(R.string.this_fsm)
-        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
-        toolBar.overflowIcon = drawable
-        toolBar.inflateMenu(R.menu.filter_menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -66,15 +66,22 @@ abstract class BaseActivity : AppCompatActivity() {
         workerCoordinator.ping()
     }
 
-    open fun setupToolbar() {
-        toolBar = binding.toolbar.appToolbar
+    open fun setupToolbarWithNavigation(navigation: Boolean) {
+        toolBar = findViewById(R.id.app_toolbar)
         setSupportActionBar(toolBar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         toolBar.setNavigationIcon(R.drawable.ic_settings)
-        binding.toolbar.toolbarTitle.text = getString(R.string.this_fsm)
+        toolBar.title = getString(R.string.this_fsm)
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
         toolBar.overflowIcon = drawable
         toolBar.inflateMenu(R.menu.filter_menu)
+
+        if (navigation) {
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            toolBar.setNavigationOnClickListener {
+                finish()
+            }
+        }
     }
 
     open fun setupMainView(mainView: ViewGroup) {

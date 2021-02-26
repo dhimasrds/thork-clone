@@ -26,7 +26,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     private val binding: ActivityDetailWoBinding by binding(R.layout.activity_detail_wo)
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var customDialogUtils: CustomDialogUtils
-    private lateinit var toolBar: Toolbar
     private lateinit var map: GoogleMap
     private var lastKnownLocation: Location? = null
     private var intentWonum: String? = null
@@ -50,7 +49,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this)
 
         customDialogUtils = CustomDialogUtils(this)
-        setupToolbar()
+        setupToolbarWithNavigation(navigation = true)
         retrieveFromIntent()
     }
 
@@ -87,17 +86,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
             }
         })
 
-    }
-
-    private fun setupToolbar() {
-        toolBar = binding.toolbarDetails.wmsToolbar
-        setSupportActionBar(toolBar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        binding.toolbarDetails.toolbarTitle.text = getString(R.string.wo_detail)
-        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-        toolBar.setNavigationOnClickListener {
-            finish()
-        }
     }
 
     private fun retrieveFromIntent() {
