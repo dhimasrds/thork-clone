@@ -71,7 +71,7 @@ class LoginActivity : BaseActivity(),
         })
 
         loginViewModel.username.observe(this, Observer {
-            Timber.tag(TAG).i("raka() success: %s", it)
+            Timber.tag(TAG).i("username.observe() success: %s", it)
             if (it != null) {
                 binding.includeLoginContent.username.setText(it)
                 binding.includeLoginContent.username.isEnabled = false
