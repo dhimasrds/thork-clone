@@ -15,17 +15,14 @@ package id.thork.app.workmanager
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.work.*
-import com.google.firebase.messaging.RemoteMessage
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.utils.MoshiUtils
-import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.collections.HashMap
 
 @Module
 @InstallIn(SingletonComponent::class)

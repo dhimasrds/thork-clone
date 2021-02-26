@@ -2,15 +2,12 @@ package id.thork.app.pages.main.element
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member
 import timber.log.Timber
-import java.util.*
 
 /**
  * Created by Dhimas Saputra on 08/01/21

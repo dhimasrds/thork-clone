@@ -20,7 +20,6 @@ import dagger.hilt.components.SingletonComponent
 import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.dao.UserDaoImp
 import id.thork.app.persistence.entity.UserEntity
-import id.thork.app.repository.LoginRepository
 import timber.log.Timber
 import javax.inject.Inject
 

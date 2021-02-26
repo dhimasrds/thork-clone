@@ -20,14 +20,12 @@ import androidx.work.WorkInfo
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication
 import id.thork.app.databinding.ActivityServerBinding
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.server.element.ServerActivityViewModel
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {

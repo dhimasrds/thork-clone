@@ -15,6 +15,7 @@ package id.thork.app.base
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -66,17 +67,19 @@ abstract class BaseActivity : AppCompatActivity() {
         workerCoordinator.ping()
     }
 
-    open fun setupToolbarWithNavigation(navigation: Boolean) {
+    open fun setupToolbarWithHomeNavigation(title: String, navigation: Boolean) {
         toolBar = findViewById(R.id.app_toolbar)
+        val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
         setSupportActionBar(toolBar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-        toolBar.setNavigationIcon(R.drawable.ic_settings)
-        toolBar.title = getString(R.string.this_fsm)
-        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
-        toolBar.overflowIcon = drawable
-        toolBar.inflateMenu(R.menu.filter_menu)
+        toolBarTitle.text = title
 
         if (navigation) {
+            toolBar.setNavigationIcon(R.drawable.ic_settings)
+            val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
+            toolBar.overflowIcon = drawable
+            toolBar.inflateMenu(R.menu.filter_menu)
+        } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
                 finish()

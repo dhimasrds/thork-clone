@@ -26,7 +26,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import id.thork.app.R
 import id.thork.app.databinding.FragmentWorkorderBinding
-import id.thork.app.utils.TransformationPagers
 
 class WorkorderFragment : Fragment() {
     private lateinit var binding: FragmentWorkorderBinding

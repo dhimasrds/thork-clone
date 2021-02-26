@@ -13,13 +13,10 @@
 package id.thork.app.workmanager
 
 import android.content.Context
-import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.beust.klaxon.JsonObject
 import id.thork.app.helper.NotificationData
 import id.thork.app.utils.NotificationUtils
-import org.json.JSONObject
 import timber.log.Timber
 
 class PushNotificationWorker(val context: Context, val workerParameters: WorkerParameters) :

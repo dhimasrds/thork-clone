@@ -7,7 +7,6 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.WoCacheDaoImp
-import id.thork.app.repository.LoginRepository
 import id.thork.app.repository.WoActivityRepository
 import id.thork.app.repository.WorkOrderRepository
 

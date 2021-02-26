@@ -2,7 +2,6 @@ package id.thork.app.pages.detail_wo
 
 import android.location.Location
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -49,7 +48,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this)
 
         customDialogUtils = CustomDialogUtils(this)
-        setupToolbarWithNavigation(navigation = true)
+        setupToolbarWithHomeNavigation(getString(R.string.wo_detail), navigation = false)
         retrieveFromIntent()
     }
 
