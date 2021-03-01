@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -237,6 +236,10 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     override fun onBackPressed() {
         super.onBackPressed()
+        goToPreviousActivity()
+    }
+
+    override fun goToPreviousActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)

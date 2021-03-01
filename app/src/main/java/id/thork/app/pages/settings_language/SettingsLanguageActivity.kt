@@ -99,4 +99,8 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
             Toast.makeText(this, bahasa, Toast.LENGTH_SHORT).show()
         }
     }
+
+    override fun goToPreviousActivity() {
+        finish()
+    }
 }

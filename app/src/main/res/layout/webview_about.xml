@@ -25,7 +25,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/wms_toolbar" />
+            layout="@layout/toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
     <WebView
         android:id="@+id/webview_about"

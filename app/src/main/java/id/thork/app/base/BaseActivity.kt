@@ -22,7 +22,6 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +82,7 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
-                finish()
+                goToPreviousActivity()
             }
         }
     }
@@ -199,6 +198,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun goToSettingsActivity() {
+
+    }
+
+    open fun goToPreviousActivity() {
 
     }
 }
