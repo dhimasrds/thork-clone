@@ -51,7 +51,10 @@ class WoActivityPagingSource @Inject constructor(
         return try {
             if (query == null) {
                 fetchWo(position)
-                if (error) {
+                checkWoOnLocal()
+                if (error && checkWoOnLocal().isEmpty()) {
+                    return LoadResult.Error(Exception())
+                }else if(error && checkWoOnLocal().isNotEmpty() && position > 1){
                     return LoadResult.Error(Exception())
                 }
             }
@@ -82,6 +85,10 @@ class WoActivityPagingSource @Inject constructor(
         }
     }
 
+    private fun checkWoOnLocal() : List<WoCacheEntity>{
+        return woCacheDao.findAllWo()
+    }
+
 
     private suspend fun fetchWo(position: Int): Boolean {
         val laborcode: String? = appSession.laborCode
@@ -104,7 +111,7 @@ class WoActivityPagingSource @Inject constructor(
                 error = false
             },
             onException = {
-                error = false
+                error = true
             })
         return error
     }

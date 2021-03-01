@@ -161,5 +161,7 @@ dependencies {
 
     implementation "androidx.preference:preference-ktx:1.1.1"
 
+    // Swipe pull refresh layout
+    implementation "com.baoyz.pullrefreshlayout:library:$rootProject.pullRefreshLayoutVersion"
 }
 apply plugin: 'io.objectbox'
