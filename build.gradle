@@ -45,7 +45,7 @@ buildscript {
 
         //Dexter Runtime Permisions
         dexterVersion = '6.0.2'
-
+        pullRefreshLayoutVersion = '1.2.0'
 
     }
 
