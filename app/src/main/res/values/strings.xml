@@ -117,12 +117,18 @@
     <string name="settings_pattern">Password Pattern</string>
     <string name="settings_change_pattern">Change Password Pattern</string>
     <string name="settings_enable_pattern">Enable Password Pattern</string>
+    <string name="settings_enable_dark_mode">Enable Dark Mode</string>
+    <string name="settings_logs">Logs</string>
+    <string name="settings_cache">Cache</string>
+    <string name="settings_logs_detail">Show Logs</string>
+    <string name="settings_cache_detail">Delete Cache</string>
     <string name="settings_about">About</string>
     <string name="settings_about_this">About This</string>
     <string name="settings_language">Language</string>
     <string name="settings_logout">Logout</string>
     <string name="settings_user">User</string>
     <string name="settings_change_pattern_success">Change Pattern Success</string>
+    <string name="settings_change_pattern_failed">Change Pattern Failed</string>
     <string name="settings_change_pattern_activity">Input Current Pattern</string>
 
     <!-- MENU: Tentang -->
@@ -352,6 +358,10 @@
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>
 
+    <!-- Main Activity -->
+    <string name="main_workorder">Work Order</string>
+    <string name="main_createwo">Create WO</string>
+    <string name="main_maps">Maps</string>
 
     <string-array name="work_type_wo">
         <item>ORR</item>

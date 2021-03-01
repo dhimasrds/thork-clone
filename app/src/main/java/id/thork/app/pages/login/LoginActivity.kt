@@ -14,6 +14,9 @@ package id.thork.app.pages.login
 
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityLoginBinding
@@ -43,6 +46,7 @@ class LoginActivity : BaseActivity(),
         }
         //Init Custom Dialog
         customDialogUtils = CustomDialogUtils(this)
+        loginViewModel.validateUsername()
     }
 
     override fun setupListener() {
@@ -64,6 +68,20 @@ class LoginActivity : BaseActivity(),
         loginViewModel.success.observe(this, { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
             CommonUtils.showToast(success, CommonUtils.POSITION_CENTER)
+        })
+
+        loginViewModel.username.observe(this, Observer {
+            Timber.tag(TAG).i("username.observe() success: %s", it)
+            if (it != null) {
+                binding.includeLoginContent.username.setText(it)
+                binding.includeLoginContent.username.isEnabled = false
+                binding.includeLoginContent.username.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.colorBlack
+                    )
+                )
+            }
         })
 
         loginViewModel.error.observe(this, { error ->

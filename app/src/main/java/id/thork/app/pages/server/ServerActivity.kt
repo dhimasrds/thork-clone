@@ -13,7 +13,10 @@ package id.thork.app.pages.server
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
@@ -36,6 +39,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
 
     private lateinit var dialogUtils: DialogUtils
     private lateinit var tryAgain: View
+    private var exitApplication = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,5 +142,17 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     override fun onNotificationReceived(message: String) {
         super.onNotificationReceived(message)
         Timber.tag(TAG).i("onNotificationReceived() message: %s", message)
+    }
+
+    override fun onBackPressed() {
+        Toast.makeText(this, R.string.exit_application, Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            exitApplication = false
+        }, 2000)
+        if (exitApplication) {
+            finishAffinity()
+            return
+        }
+        this.exitApplication = true
     }
 }

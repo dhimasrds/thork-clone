@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -29,6 +30,7 @@ import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.server.ServerActivity
 import id.thork.app.pages.splash_screen.element.SplashScreenViewModel
 import id.thork.app.pages.splash_screen.element.SplashState
+import id.thork.app.utils.LocaleHelper
 import timber.log.Timber
 
 class SplashScreenActivity : BaseActivity(),
@@ -41,11 +43,11 @@ class SplashScreenActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
 //        hideSystemUI()
         super.onCreate(savedInstanceState)
-
         binding.apply {
             lifecycleOwner = this@SplashScreenActivity
             vm = splashScreenViewModel
         }
+        validateLanguage()
         setupVersion()
     }
 
@@ -79,6 +81,15 @@ class SplashScreenActivity : BaseActivity(),
                 it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
         }
+    }
+
+    private fun validateLanguage() {
+        splashScreenViewModel.validateLanguage()
+        splashScreenViewModel.selectedLang.observe(this, Observer {
+            if (it != null) {
+                LocaleHelper.onAttach(this@SplashScreenActivity, it)
+            }
+        })
     }
 
     private fun setupLoadIntroPage() {

@@ -113,20 +113,6 @@
     <string name="maps_gps_is_disable">GPS tidak aktif</string>
     <string name="maps_permissions_granted">Semua Izin Sistem diaktifkan</string>
 
-    <!-- Settings Menu -->
-    <string name="settings_password">Kata Sandi</string>
-    <string name="settings_change_password">Ubah Kata Sandi</string>
-    <string name="settings_pattern">Pola Sandi</string>
-    <string name="settings_change_pattern">Ubah Pola Sandi</string>
-    <string name="settings_enable_pattern">Aktifkan Pola Sandi</string>
-    <string name="settings_about">Tentang</string>
-    <string name="settings_about_this">Tentang This</string>
-    <string name="settings_language">Bahasa</string>
-    <string name="settings_logout">Keluar</string>
-    <string name="settings_user">Pengguna</string>
-    <string name="settings_change_pattern_success">Ganti Pola Berhasil</string>
-    <string name="settings_change_pattern_activity">Masukan Pola Saat Ini</string>
-
     <!-- MENU: Tentang -->
     <string name="about_this_description">
         \t \t Dalam aktivitas para pekerja di lapangan, setiap pekerja mengolah serangkaian informasi yang diperoleh dalam menyelesaikan pekerjaan di lapangan baik dari pekerjaan harian (scheduler task) sampai dengan pelaporan status pekerjaan ke atasan.
@@ -350,6 +336,33 @@
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>
 
+    <!-- Settings Menu -->
+    <string name="settings_password">Kata Sandi</string>
+    <string name="settings_change_password">Ubah Kata Sandi</string>
+    <string name="settings_pattern">Pola Sandi</string>
+    <string name="settings_change_pattern">Ubah Pola Sandi</string>
+    <string name="settings_enable_pattern">Aktifkan Pola Sandi</string>
+    <string name="settings_enable_dark_mode">Aktifkan Mode Gelap</string>
+    <string name="settings_logs">Logs</string>
+    <string name="settings_cache">Cache</string>
+    <string name="settings_logs_detail">Tampilkan Logs</string>
+    <string name="settings_cache_detail">Hapus Cache</string>
+    <string name="settings_about">Tentang</string>
+    <string name="settings_about_this">Tentang This</string>
+    <string name="settings_language">Bahasa</string>
+    <string name="settings_logout">Keluar</string>
+    <string name="settings_user">Pengguna</string>
+    <string name="settings_change_pattern_success">Ganti Pola Berhasil</string>
+    <string name="settings_change_pattern_failed">Ganti Pola Gagal</string>
+    <string name="settings_change_pattern_activity">Masukan Pola Saat Ini</string>
+
+    <!-- Main Activity -->
+    <string name="main_workorder">Pekerjaan</string>
+    <string name="main_createwo">Membuat WO</string>
+    <string name="main_maps">Peta</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="approve">Approve</string>
     <string-array name="work_type_wo">
         <item>ORR</item>
     </string-array>
