@@ -12,6 +12,7 @@
 
 package id.thork.app.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
@@ -31,6 +32,7 @@ import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.pages.main.MainActivity
 import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber
 import javax.inject.Inject
@@ -83,7 +85,7 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
-                finish()
+                gotoHomeActivity()
             }
         }
     }
@@ -199,6 +201,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun goToSettingsActivity() {
+
+    }
+
+    open fun gotoHomeActivity() {
 
     }
 }
