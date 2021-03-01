@@ -236,10 +236,10 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     override fun onBackPressed() {
         super.onBackPressed()
-        backPressToolbar()
+        goToPreviousActivity()
     }
 
-    override fun backPressToolbar() {
+    override fun goToPreviousActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)

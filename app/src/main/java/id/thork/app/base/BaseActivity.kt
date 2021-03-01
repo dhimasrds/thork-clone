@@ -82,7 +82,7 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
-                backPressToolbar()
+                goToPreviousActivity()
             }
         }
     }
@@ -201,7 +201,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     }
 
-    open fun backPressToolbar() {
+    open fun goToPreviousActivity() {
 
     }
 }

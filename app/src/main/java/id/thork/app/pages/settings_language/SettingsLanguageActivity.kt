@@ -100,7 +100,7 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
         }
     }
 
-    override fun backPressToolbar() {
+    override fun goToPreviousActivity() {
         finish()
     }
 }

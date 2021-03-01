@@ -68,7 +68,7 @@ class LogActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    override fun backPressToolbar() {
+    override fun goToPreviousActivity() {
         finish()
     }
 

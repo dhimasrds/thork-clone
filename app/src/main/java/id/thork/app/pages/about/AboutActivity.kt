@@ -40,7 +40,7 @@ class AboutActivity: BaseActivity() {
         }
     }
 
-    override fun backPressToolbar() {
+    override fun goToPreviousActivity() {
         if (webView.canGoBack()) {
             webView.goBack()
         } else {
