@@ -26,7 +26,6 @@ class LogActivity : BaseActivity() {
     private val viewModel: LogViewModel by viewModels()
 
     private lateinit var adapter: LogAdapter
-    private lateinit var toolBar: Toolbar
 
     companion object {
         val INTENT_EXTRA_KEY = "LOG_ID"
@@ -39,7 +38,8 @@ class LogActivity : BaseActivity() {
             lifecycleOwner = this@LogActivity
             logsActivity = viewModel
         }
-        setupToolbar()
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
+//        setupToolbar()
     }
 
     override fun setupObserver() {
@@ -68,14 +68,4 @@ class LogActivity : BaseActivity() {
         startActivity(intent)
     }
 
-    private fun setupToolbar() {
-        toolBar = binding.toolbarLog.wmsToolbar
-        setSupportActionBar(toolBar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        binding.toolbarLog.toolbarTitle.text = getString(R.string.settings_logs_detail)
-        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-        toolBar.setNavigationOnClickListener {
-            finish()
-        }
-    }
 }

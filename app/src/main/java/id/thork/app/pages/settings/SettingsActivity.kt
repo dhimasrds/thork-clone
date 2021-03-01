@@ -33,7 +33,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     private val SETTINGS_REQUEST_CODE = 0
 
     private lateinit var customDialogUtils: CustomDialogUtils
-    private lateinit var toolBar: Toolbar
     private val TAG_SWITCH_PATTERN = "TAG_SWITCH_PATTERN"
     private val TAG_CHANGE_PATTERN = "TAG_CHANGE_PATTERN"
     private val TAG_ACTIVE_PATTERN = "TAG_ACTIVE_PATTERN"
@@ -53,7 +52,8 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             vm = viewModel
         }
         customDialogUtils = CustomDialogUtils(this)
-        setupToolbar()
+
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
     }
 
     override fun setupObserver() {
@@ -164,17 +164,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     private fun goToLogout() {
         LocaleHelper.setLocale(this, BaseParam.APP_DEFAULT_LANG)
         viewModel.deleteUserSession()
-    }
-
-    private fun setupToolbar() {
-        toolBar = binding.toolbarSettings.wmsToolbar
-        setSupportActionBar(toolBar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        binding.toolbarSettings.toolbarTitle.text = getString(R.string.action_settings)
-        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-        toolBar.setNavigationOnClickListener {
-            onBackPressed()
-        }
     }
 
     private fun setDialogSwitchPattern() {

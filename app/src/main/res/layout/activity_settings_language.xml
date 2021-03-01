@@ -38,8 +38,8 @@
         android:layout_height="wrap_content">
 
         <include
-            android:id="@+id/toolbarLanguage"
-            layout="@layout/wms_toolbar" />
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

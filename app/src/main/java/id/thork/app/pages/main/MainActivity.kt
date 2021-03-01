@@ -48,7 +48,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     private var currentNavController: LiveData<NavController>? = null
     private var exitApplication = false
     private lateinit var customDialogUtils: CustomDialogUtils
-    private lateinit var toolBar: Toolbar
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
@@ -99,7 +98,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         }
     }
 
-    private fun goToSettingsActivity() {
+    override fun goToSettingsActivity() {
         finish()
         startActivity(Intent(this, SettingsActivity::class.java))
     }

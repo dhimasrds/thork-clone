@@ -76,6 +76,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (navigation) {
             toolBar.setNavigationIcon(R.drawable.ic_settings)
+            toolBar.setNavigationOnClickListener {
+                goToSettingsActivity()
+            }
             toolBar.inflateMenu(R.menu.filter_menu)
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
@@ -193,5 +196,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun onConnection(isConnected: Boolean) {
         this.isConnected = isConnected
+    }
+
+    open fun goToSettingsActivity() {
+
     }
 }
