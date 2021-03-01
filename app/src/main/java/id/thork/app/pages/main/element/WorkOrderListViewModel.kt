@@ -3,18 +3,13 @@ package id.thork.app.pages.main.element
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
-import id.thork.app.network.response.work_order.Member
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
-import id.thork.app.repository.WoPagingSource
+import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.WorkOrderRepository
-import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 /**
@@ -35,8 +30,8 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     private val woCacheDao: WoCacheDao
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
-    private val _getWoList = MutableLiveData<List<Member>>()
-    val getWoList: LiveData<List<Member>> get() = _getWoList
+    private val _getWoList = MutableLiveData<List<WoCacheEntity>>()
+    val getWoList: LiveData<List<WoCacheEntity>> get() = _getWoList
 
     init {
         woCacheDao = WoCacheDaoImp()
@@ -56,5 +51,11 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     fun searchWo(query: String) {
         currentQuery.value = query
     }
+
+    fun checkingListWo() : List<WoCacheEntity>{
+        return woCacheDao.findAllWo()
+    }
+
+
     
 }

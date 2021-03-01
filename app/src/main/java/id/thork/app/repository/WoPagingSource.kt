@@ -51,7 +51,10 @@ class WoPagingSource @Inject constructor(
         return try {
             if (query == null) {
                 fetchWo(position)
-                if (error) {
+                checkWoOnLocal()
+                if (error && checkWoOnLocal().isEmpty()) {
+                    return LoadResult.Error(Exception())
+                }else if(error && checkWoOnLocal().isNotEmpty() && position > 1){
                     return LoadResult.Error(Exception())
                 }
             }
@@ -100,9 +103,13 @@ class WoPagingSource @Inject constructor(
                 error = false
             },
             onException = {
-                error = false
+                error = true
             })
         return error
+    }
+
+    private fun checkWoOnLocal() : List<WoCacheEntity>{
+        return woCacheDao.findAllWo()
     }
 
     private suspend fun searchWoFromServer(): Boolean {

@@ -47,33 +47,6 @@ class ActivityFragment : Fragment() {
         woActivityAdapter = WorkOrderAdapter()
 
 
-        pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
-        pullRefreshLayout.setColorSchemeColors(
-            ContextCompat.getColor(requireContext(), R.color.blueTextStatus),
-            ContextCompat.getColor(requireContext(), R.color.colorYellow),
-            ContextCompat.getColor(requireContext(), R.color.colorGreen)
-        )
-
-
-        pullRefreshLayout.setOnRefreshListener(PullRefreshLayout.OnRefreshListener {
-//            Handler().postDelayed(Runnable {
-//                woActivityAdapter.refresh()
-//                pullRefreshLayout.setRefreshing(false)
-//                woActivityAdapter.addLoadStateListener { loadstate ->
-//                    Timber.d("loadresult wo :%s",loadstate.refresh)
-//                }
-//            }, 5000)
-            woActivityAdapter.refresh()
-            woActivityAdapter.addLoadStateListener { loadstate ->
-                Timber.d("loadresult wo :%s",loadstate.refresh)
-                if (loadstate.refresh !is LoadState.Loading){
-                    pullRefreshLayout.setRefreshing(false)
-                }
-            }
-            })
-
-//        pullRefreshLayout.setRefreshing(false)
-
         return binding.root
     }
 
@@ -82,6 +55,7 @@ class ActivityFragment : Fragment() {
         setupView()
         setupObserver()
         setUpFilterListener()
+        swipeRefresh()
         progressBarOnFirstLoad()
     }
 
@@ -91,7 +65,6 @@ class ActivityFragment : Fragment() {
                 footer = WoLoadStateAdapter { woActivityAdapter.retry() }
             )
         }
-
     }
 
     private fun setupObserver() {
@@ -99,6 +72,25 @@ class ActivityFragment : Fragment() {
             viewModel.woList.observe(viewLifecycleOwner) {
                 woActivityAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 Timber.d("onCreateView :%s", it)
+            }
+        }
+    }
+
+    private fun swipeRefresh(){
+        pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
+        pullRefreshLayout.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.blueTextStatus),
+            ContextCompat.getColor(requireContext(), R.color.colorYellow),
+            ContextCompat.getColor(requireContext(), R.color.colorGreen)
+        )
+
+        pullRefreshLayout.setOnRefreshListener {
+            woActivityAdapter.refresh()
+            woActivityAdapter.addLoadStateListener { loadstate ->
+                Timber.d("loadresult wo :%s",loadstate.refresh)
+                if (loadstate.refresh !is LoadState.Loading){
+                    pullRefreshLayout.setRefreshing(false)
+                }
             }
         }
     }
@@ -138,7 +130,7 @@ class ActivityFragment : Fragment() {
                     errorState?.let {
                         val toast = Toast.makeText(
                             requireContext(),
-                            "it.error.message",
+                            "Please,check your connection",
                             Toast.LENGTH_LONG
                         )
                         toast.setGravity(Gravity.CENTER, 0, 0)

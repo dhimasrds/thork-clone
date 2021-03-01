@@ -7,13 +7,15 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
+import id.thork.app.R
 import id.thork.app.databinding.FragmentWorkOrderListBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
@@ -24,9 +26,11 @@ import java.util.*
 
 @AndroidEntryPoint
 class WorkOrderListFragment : Fragment() {
-    private lateinit var myAdapter: WorkOrderAdapter
+    private lateinit var workOrderAdapter: WorkOrderAdapter
     private val viewModel: WorkOrderListViewModel by viewModels()
     private lateinit var binding: FragmentWorkOrderListBinding
+    private lateinit var pullRefreshLayout: PullRefreshLayout
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +40,10 @@ class WorkOrderListFragment : Fragment() {
         binding = FragmentWorkOrderListBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        pullRefreshLayout = binding.swipeRefreshLayout
+        workOrderAdapter = WorkOrderAdapter()
 
-        myAdapter = WorkOrderAdapter()
+
 
         return binding.root
     }
@@ -47,14 +53,15 @@ class WorkOrderListFragment : Fragment() {
         setupView()
         setupObserver()
         setUpFilterListener()
+        swipeRefresh()
         progressBarOnFirstLoad()
 
     }
 
     private fun setupView() {
         binding.recyclerView.apply {
-            adapter = myAdapter.withLoadStateFooter(
-                footer = WoLoadStateAdapter { myAdapter.retry() }
+            adapter = workOrderAdapter.withLoadStateFooter(
+                footer = WoLoadStateAdapter { workOrderAdapter.retry() }
             )
         }
 
@@ -63,8 +70,27 @@ class WorkOrderListFragment : Fragment() {
     private fun setupObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.woList.observe(viewLifecycleOwner) {
-                myAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+                workOrderAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 Timber.d("onCreateView :%s", it)
+            }
+        }
+    }
+
+    private fun swipeRefresh(){
+        pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
+        pullRefreshLayout.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.blueTextStatus),
+            ContextCompat.getColor(requireContext(), R.color.colorYellow),
+            ContextCompat.getColor(requireContext(), R.color.colorGreen)
+        )
+
+        pullRefreshLayout.setOnRefreshListener {
+            workOrderAdapter.refresh()
+            workOrderAdapter.addLoadStateListener { loadstate ->
+                Timber.d("loadresult wo :%s",loadstate.refresh)
+                if (loadstate.refresh !is LoadState.Loading){
+                    pullRefreshLayout.setRefreshing(false)
+                }
             }
         }
     }
@@ -72,10 +98,10 @@ class WorkOrderListFragment : Fragment() {
     private fun progressBarOnFirstLoad() {
         binding.apply {
             btnRetry.setOnClickListener {
-                myAdapter.retry()
+                workOrderAdapter.retry()
             }
             // show the loading state for te first load
-            myAdapter.addLoadStateListener { loadState ->
+            workOrderAdapter.addLoadStateListener { loadState ->
 
                 if (loadState.refresh is LoadState.Loading) {
 
@@ -86,14 +112,14 @@ class WorkOrderListFragment : Fragment() {
                 } else {
                     // Hide ProgressBar
                     progressBar.visibility = View.GONE
-                    Timber.d("progressBarOnFirstLoad :%s", loadState.append)
-                    Timber.d("progressBarOnFirstLoad :%s", loadState.prepend)
-                    Timber.d("progressBarOnFirstLoad :%s", loadState.refresh)
+                    Timber.d("progressBarOnFirstLoad append:%s", loadState.append)
+                    Timber.d("progressBarOnFirstLoad prepend:%s", loadState.prepend)
+                    Timber.d("progressBarOnFirstLoad refresh:%s", loadState.refresh)
                     // If we have an error, show a toast
                     val errorState = when {
                         loadState.append is LoadState.Error -> loadState.append as LoadState.Error
                         loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-                        loadState.refresh is LoadState.Error -> {
+                        loadState.refresh is LoadState.Error  -> {
                             Timber.d("btnretry :%s", "sukses")
                             btnRetry.visibility = View.VISIBLE
                             loadState.refresh as LoadState.Error
@@ -104,8 +130,8 @@ class WorkOrderListFragment : Fragment() {
                     errorState?.let {
                         val toast = Toast.makeText(
                             requireContext(),
-                            "it.error.message",
-                            Toast.LENGTH_LONG
+                            "Please, check your connection",
+                            Toast.LENGTH_SHORT
                         )
                         toast.setGravity(Gravity.CENTER, 0, 0)
                         toast.show()
