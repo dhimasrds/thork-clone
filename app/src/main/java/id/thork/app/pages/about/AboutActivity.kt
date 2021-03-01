@@ -22,25 +22,27 @@ class AboutActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview_about)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
+        
         webView = findViewById(R.id.webview_about)
-        webView.setWebViewClient(WebViewClient())
+        webView.webViewClient = WebViewClient()
         webView.loadUrl(url)
-        val webSettings = webView.getSettings()
+        val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
-        val toolbar = findViewById<Toolbar>(R.id.wms_toolbar)
-        val mTitle = toolbar.findViewById<TextView>(R.id.toolbar_title)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        mTitle.setText(R.string.action_settings)
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+
     }
 
     override fun onBackPressed() {
-        if (webView!!.canGoBack()) {
-            webView!!.goBack()
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun backPressToolbar() {
+        if (webView.canGoBack()) {
+            webView.goBack()
         } else {
             super.onBackPressed()
         }
