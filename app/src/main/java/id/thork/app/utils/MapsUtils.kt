@@ -83,55 +83,57 @@ object MapsUtils {
     }
 
 
-
     fun renderMapDirection(
         mMap: GoogleMap?, context: Context, dataDirection: ResponseRoute?,
         startLatLng: LatLng?, endLatLng: LatLng?
     ) {
         if (mMap != null) {
-            // get Distance
-            val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
-            val dataDistance: Distance = dataLegs.distance!!
-            // get polyline
-            val polylinePoint: String = dataDirection.routes[0].overviewPolyline!!.points!!
-            // Decode
-            val decodePath = PolyUtil.decode(polylinePoint)
-            mMap.addPolyline(
-                PolylineOptions().addAll(decodePath)
-                    .width(8f).color(Color.argb(255, 56, 167, 252))
-            ).isGeodesic = true
-            // Add Marker
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(startLatLng!!)
-                    .title("Origin")
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
-            )
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(endLatLng!!)
-                    .title("Destination")
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
-            )
-            val latLongBuilder = LatLngBounds.Builder()
-            latLongBuilder.include(startLatLng)
-            latLongBuilder.include(endLatLng)
-            var bounds = latLongBuilder.build()
-            val center = bounds.center
-            latLongBuilder.include(LatLng(center.latitude - 0.001f, center.longitude - 0.001f))
-            latLongBuilder.include(LatLng(center.latitude + 0.001f, center.longitude + 0.001f))
-            bounds = latLongBuilder.build()
-            val width = context.resources.displayMetrics.widthPixels
-            val height = context.resources.displayMetrics.heightPixels
-            val paddingMap = (width * 0.1).toInt()
-            val cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, paddingMap)
-            Timber.d("renderMapDirection() Distance : %s", dataDistance.value)
-            if (dataDistance.value!! > MAX_DISTANCE) {
-                mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
-            } else {
-                mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
+            if (dataDirection != null && !dataDirection.routes!!.isNotEmpty()) {
+                // get Distance
+                val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
+                val dataDistance: Distance = dataLegs.distance!!
+                // get polyline
+                val polylinePoint: String = dataDirection.routes[0].overviewPolyline!!.points!!
+                // Decode
+                val decodePath = PolyUtil.decode(polylinePoint)
+                mMap.addPolyline(
+                    PolylineOptions().addAll(decodePath)
+                        .width(8f).color(Color.argb(255, 56, 167, 252))
+                ).isGeodesic = true
+                // Add Marker
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(startLatLng!!)
+                        .title("Origin")
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
+                )
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(endLatLng!!)
+                        .title("Destination")
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+                )
+                val latLongBuilder = LatLngBounds.Builder()
+                latLongBuilder.include(startLatLng)
+                latLongBuilder.include(endLatLng)
+                var bounds = latLongBuilder.build()
+                val center = bounds.center
+                latLongBuilder.include(LatLng(center.latitude - 0.001f, center.longitude - 0.001f))
+                latLongBuilder.include(LatLng(center.latitude + 0.001f, center.longitude + 0.001f))
+                bounds = latLongBuilder.build()
+                val width = context.resources.displayMetrics.widthPixels
+                val height = context.resources.displayMetrics.heightPixels
+                val paddingMap = (width * 0.1).toInt()
+                val cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, paddingMap)
+                Timber.d("renderMapDirection() Distance : %s", dataDistance.value)
+                if (dataDistance.value!! > MAX_DISTANCE) {
+                    mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
+                } else {
+                    mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
+                }
+                mMap.animateCamera(cu)
             }
-            mMap.animateCamera(cu)
+
         }
     }
 
