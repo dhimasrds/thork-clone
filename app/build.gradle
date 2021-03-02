@@ -141,6 +141,10 @@ dependencies {
     def paging_version = "3.0.0-alpha04"
     implementation "androidx.paging:paging-runtime:$paging_version"
 
+    implementation "com.google.android.libraries.places:places:$rootProject.librariesPlaces"
+    implementation "com.google.android.gms:play-services-location:$rootProject.playServices"
+    implementation "com.google.android.gms:play-services-maps:$rootProject.playServices"
+    implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtils"
     //pattern Lock View
     implementation "com.andrognito.patternlockview:patternlockview:$patternLockViewVersion"
 
@@ -155,5 +159,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
+    implementation "androidx.preference:preference-ktx:1.1.1"
+
+    // Swipe pull refresh layout
+    implementation "com.baoyz.pullrefreshlayout:library:$rootProject.pullRefreshLayoutVersion"
 }
 apply plugin: 'io.objectbox'

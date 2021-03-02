@@ -45,13 +45,16 @@ class LoginViewModel @ViewModelInject constructor(
     private val _success = MutableLiveData<String>()
     private val _error = MutableLiveData<String>()
     private val _loginState = MutableLiveData<Int>()
-    private val _firstLogin = MutableLiveData<Boolean>()
+    private val _username = MutableLiveData<String>()
 
+    private val _firstLogin = MutableLiveData<Boolean>()
     val progressVisible: LiveData<Boolean> get() = _progressVisible
     val success: LiveData<String> get() = _success
     val error: LiveData<String> get() = _error
     val loginState: LiveData<Int> get() = _loginState
     val firstLogin: LiveData<Boolean> get() = _firstLogin
+    val username: LiveData<String> get() = _username
+
 
     fun validateCredentials(username: String, password: String) {
         if (username.isNullOrEmpty()) {
@@ -75,6 +78,10 @@ class LoginViewModel @ViewModelInject constructor(
 
     fun connectionNotAvailable() {
         _error.postValue(resourceProvider.getString(R.string.connection_not_available))
+    }
+
+    fun validateUsername() {
+        _username.value = appSession.userEntity.username
     }
 
     private fun validateWithActiveSession(username: String) {

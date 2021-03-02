@@ -21,12 +21,12 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:gravity="center">
 
                 <include
-                    android:id="@+id/toolbarDetails"
+                    android:id="@+id/toolbar"
                     layout="@layout/toolbar" />
             </com.google.android.material.appbar.AppBarLayout>
 

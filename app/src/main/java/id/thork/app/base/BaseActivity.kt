@@ -14,13 +14,14 @@ package id.thork.app.base
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,13 +50,11 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var workerCoordinator: WorkerCoordinator
 
-//    @Inject
-//    lateinit var pushNotificationLiveData: PushNotificationLiveData
-
     var isConnected = false
 
     var mainView: ViewGroup? = null
     lateinit var toolBar: Toolbar
+    private var optionMenu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,15 +75,40 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (navigation) {
             toolBar.setNavigationIcon(R.drawable.ic_settings)
-            val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_filter)
-            toolBar.overflowIcon = drawable
+            toolBar.setNavigationOnClickListener {
+                goToSettingsActivity()
+            }
             toolBar.inflateMenu(R.menu.filter_menu)
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
-                finish()
+                goToPreviousActivity()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (toolBar != null) {
+            optionMenu = menu
+            getMenuInflater().inflate(R.menu.actionbar_menu, optionMenu)
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toolBar != null) {
+            val id = item.itemId
+            if (id == R.id.action_conn) {
+                Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action conn");
+                return true
+            }
+
+            if (id == R.id.action_filter) {
+                Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter");
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     open fun setupMainView(mainView: ViewGroup) {
@@ -99,8 +123,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun setupObserver() {
         Timber.tag(BaseApplication.TAG)
-//            .i("setupObserver() isconnection live data instance: %s push notification instance: %s",
-//                connectionLiveData, pushNotificationLiveData)
         connectionLiveData.observe(this, { connectionState ->
             isConnected.let {
                 Timber.tag(BaseApplication.TAG)
@@ -108,16 +130,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 defineConnectionState(connectionState)
             }
         })
-//        pushNotificationLiveData.observe(this, { message ->
-//            message.let {
-//                Timber.tag(BaseApplication.TAG).i("setupObserver() x1x push notification: %s", message)
-//                onNotificationReceived(message)
-//            }
-//        })
-//        Events.serviceEvent.observe(this, {
-//            Timber.tag(BaseApplication.TAG).i("setupObserver() message event: %s", it)
-//        })
-
     }
 
     open fun onSuccess() {
@@ -131,10 +143,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun onGoodConnection() {
         Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
+        optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
     }
 
     open fun onSlowConnection() {
-        //Show bottom toast connection information
         val toast = Toasty.warning(
             this,
             resourceProvider.getString(R.string.connection_slow),
@@ -143,10 +155,10 @@ abstract class BaseActivity : AppCompatActivity() {
         )
         toast.setGravity(Gravity.CENTER, 0, 0)
         toast.show()
+        optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
     }
 
     open fun onLostConnection() {
-//        Show bottom toast connection information
         val toast = Toasty.error(
             this,
             resourceProvider.getString(R.string.connection_not_available),
@@ -155,6 +167,7 @@ abstract class BaseActivity : AppCompatActivity() {
         )
         toast.setGravity(Gravity.CENTER, 0, 0)
         toast.show()
+        optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_off)
     }
 
     open fun onNotificationReceived(message: String) {
@@ -182,5 +195,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun onConnection(isConnected: Boolean) {
         this.isConnected = isConnected
+    }
+
+    open fun goToSettingsActivity() {
+
+    }
+
+    open fun goToPreviousActivity() {
+
     }
 }

@@ -1,6 +1,8 @@
 package id.thork.app.pages.main.work_order_list
 
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -8,34 +10,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.LoadType
+import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.databinding.FragmentActivityBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderActvityViewModel
 import id.thork.app.pages.main.element.WorkOrderAdapter
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
 class ActivityFragment : Fragment() {
-    private lateinit var woActivityAdapter : WorkOrderAdapter
+    private lateinit var woActivityAdapter: WorkOrderAdapter
     private lateinit var binding: FragmentActivityBinding
-    private val viewModel : WorkOrderActvityViewModel by viewModels()
+    private lateinit var pullRefreshLayout: PullRefreshLayout
+    private val viewModel: WorkOrderActvityViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentActivityBinding.inflate(inflater,container,false)
+        binding = FragmentActivityBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
+        pullRefreshLayout = binding.swipeRefreshLayout
         woActivityAdapter = WorkOrderAdapter()
+
+
         return binding.root
     }
 
@@ -44,6 +54,7 @@ class ActivityFragment : Fragment() {
         setupView()
         setupObserver()
         setUpFilterListener()
+        swipeRefresh()
         progressBarOnFirstLoad()
     }
 
@@ -53,7 +64,6 @@ class ActivityFragment : Fragment() {
                 footer = WoLoadStateAdapter { woActivityAdapter.retry() }
             )
         }
-
     }
 
     private fun setupObserver() {
@@ -61,6 +71,25 @@ class ActivityFragment : Fragment() {
             viewModel.woList.observe(viewLifecycleOwner) {
                 woActivityAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 Timber.d("onCreateView :%s", it)
+            }
+        }
+    }
+
+    private fun swipeRefresh(){
+        pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
+        pullRefreshLayout.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.blueTextStatus),
+            ContextCompat.getColor(requireContext(), R.color.colorYellow),
+            ContextCompat.getColor(requireContext(), R.color.colorGreen)
+        )
+
+        pullRefreshLayout.setOnRefreshListener {
+            woActivityAdapter.refresh()
+            woActivityAdapter.addLoadStateListener { loadstate ->
+                Timber.d("loadresult wo :%s",loadstate.refresh)
+                if (loadstate.refresh !is LoadState.Loading){
+                    pullRefreshLayout.setRefreshing(false)
+                }
             }
         }
     }
@@ -100,7 +129,7 @@ class ActivityFragment : Fragment() {
                     errorState?.let {
                         val toast = Toast.makeText(
                             requireContext(),
-                            "it.error.message",
+                            "Please,check your connection",
                             Toast.LENGTH_LONG
                         )
                         toast.setGravity(Gravity.CENTER, 0, 0)
