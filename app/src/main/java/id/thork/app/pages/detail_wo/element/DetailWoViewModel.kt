@@ -4,6 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
@@ -40,8 +41,11 @@ class DetailWoViewModel @ViewModelInject constructor(
 
     fun fetchWobyWonum(wonum: String) {
         val woCacheEntity: WoCacheEntity? = workOrderRepository.findWobyWonum(wonum)
-        val member = WoUtils.convertBodyToMember(woCacheEntity!!.syncBody.toString())
-        _CurrentMember.value = member
+        Timber.tag(TAG).d("viewmodel fetchWobyWonum() $woCacheEntity")
+        woCacheEntity.whatIfNotNull {
+            val member = WoUtils.convertBodyToMember(woCacheEntity!!.syncBody.toString())
+            _CurrentMember.value = member
+        }
     }
 
     fun requestRoute(origin: String, destination: String) {

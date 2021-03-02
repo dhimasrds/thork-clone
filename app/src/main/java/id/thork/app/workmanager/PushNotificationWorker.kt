@@ -36,6 +36,7 @@ class PushNotificationWorker(val context: Context, val workerParameters: WorkerP
                 val notificationData = NotificationData("PUSH_NOTIFICATION", data)
                 notificationUtils.sendNotification(notificationData)
                 Timber.tag(TAG).i("doWork() receive notification data: %s",data)
+
                 return Result.success()
             }
             return Result.retry()

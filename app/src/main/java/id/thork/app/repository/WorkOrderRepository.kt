@@ -152,6 +152,9 @@ class WorkOrderRepository constructor(
     }
 
     fun findWobyWonum(wonum: String): WoCacheEntity? {
-        return woCacheDao.findWoByWonum(wonum)
+        val woCacheEntity = woCacheDao.findWoByWonum(wonum)
+        Timber.tag(TAG).d("workorder repository findWobyWonum() $woCacheEntity")
+        woCacheEntity.whatIfNotNull { return woCacheEntity }
+        return null
     }
 }
