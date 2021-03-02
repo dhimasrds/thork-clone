@@ -88,25 +88,22 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (toolBar != null) {
-            optionMenu = menu
-            getMenuInflater().inflate(R.menu.actionbar_menu, optionMenu)
-        }
+        optionMenu = menu
+        getMenuInflater().inflate(R.menu.actionbar_menu, optionMenu)
+
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toolBar != null) {
-            val id = item.itemId
-            if (id == R.id.action_conn) {
-                Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action conn");
-                return true
-            }
+        val id = item.itemId
+        if (id == R.id.action_conn) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action conn");
+            return true
+        }
 
-            if (id == R.id.action_filter) {
-                Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter");
-                return true
-            }
+        if (id == R.id.action_filter) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter");
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

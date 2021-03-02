@@ -45,6 +45,7 @@ object LocaleHelper {
         editor.apply()
     }
 
+    @Suppress("DEPRECATION")
     private fun updateResourcesLegacy(context: Context, language: String?): Context {
         val config: Configuration = context.resources.configuration
         val sysLocale: Locale?
