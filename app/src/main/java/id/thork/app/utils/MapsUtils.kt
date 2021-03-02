@@ -64,7 +64,7 @@ object MapsUtils {
     }
 
     fun getLocationInfo(dataDirection: ResponseRoute?): MapsLocation? {
-        if (dataDirection != null) {
+        if (dataDirection != null && !dataDirection.routes!!.isNullOrEmpty()) {
             val mapsLocation = MapsLocation()
             val dataLegs: Leg = dataDirection.routes!![0].legs!![0]
 
