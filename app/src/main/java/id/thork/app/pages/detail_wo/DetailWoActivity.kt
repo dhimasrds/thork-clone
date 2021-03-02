@@ -80,7 +80,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
 
         detailWoViewModel.MapsInfo.observe(this, {
             binding.apply {
-                if (it != null) {
+                if(it != null) {
                     tvDistance.text = it.distanceText
                     tvDuration.text = it.durationText
                 }
