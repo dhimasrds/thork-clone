@@ -88,7 +88,7 @@ object MapsUtils {
         startLatLng: LatLng?, endLatLng: LatLng?
     ) {
         if (mMap != null) {
-            if (dataDirection != null && !dataDirection.routes!!.isNotEmpty()) {
+            if (dataDirection != null && !dataDirection.routes!!.isNullOrEmpty()) {
                 // get Distance
                 val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
                 val dataDistance: Distance = dataLegs.distance!!
