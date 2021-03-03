@@ -1,6 +1,5 @@
 package id.thork.app.persistence.dao
 
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.ObjectBox.boxStore
@@ -34,25 +33,31 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntity
     }
 
-    override fun findWoByWonum(offset: Int, wonum: String, status: String ): List<WoCacheEntity> {
+    override fun findWoByWonum(offset: Int, wonum: String, status: String): List<WoCacheEntity> {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         val woCacheEntity: List<WoCacheEntity> =
-            woCacheBox.query().notEqual(WoCacheEntity_.status, status).contains(WoCacheEntity_.wonum, wonum).build().find(
-                offset.toLong(),
-                10
-            )
+            woCacheBox.query().notEqual(WoCacheEntity_.status, status)
+                .contains(WoCacheEntity_.wonum, wonum).build().find(
+                    offset.toLong(),
+                    10
+                )
         return if (woCacheEntity.isNotEmpty()) {
             woCacheEntity
         } else emptyList()
     }
 
-    override fun findWoByWonumComp(offset: Int, wonum: String, status: String ): List<WoCacheEntity> {
+    override fun findWoByWonumComp(
+        offset: Int,
+        wonum: String,
+        status: String
+    ): List<WoCacheEntity> {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         val woCacheEntity: List<WoCacheEntity> =
-            woCacheBox.query().equal(WoCacheEntity_.status, status).contains(WoCacheEntity_.wonum, wonum).build().find(
-                offset.toLong(),
-                10
-            )
+            woCacheBox.query().equal(WoCacheEntity_.status, status)
+                .contains(WoCacheEntity_.wonum, wonum).build().find(
+                    offset.toLong(),
+                    10
+                )
         return if (woCacheEntity.isNotEmpty()) {
             woCacheEntity
         } else emptyList()
@@ -61,7 +66,7 @@ class WoCacheDaoImp : WoCacheDao {
     override fun findWoByWonum(wonum: String): WoCacheEntity? {
         val woCacheEntity: List<WoCacheEntity> =
             woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum).build().find()
-        woCacheEntity.whatIfNotNull(whatIf = { return woCacheEntity[0] })
+        woCacheEntity.whatIfNotNullOrEmpty { return woCacheEntity[0] }
         return null
     }
 
@@ -77,7 +82,7 @@ class WoCacheDaoImp : WoCacheDao {
         TODO("Not yet implemented")
     }
 
-    override fun    findAllWo(): List<WoCacheEntity> {
+    override fun findAllWo(): List<WoCacheEntity> {
         return woCacheEntityBox.query().notNull(WoCacheEntity_.syncBody).build()
             .find()
     }
@@ -112,6 +117,7 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun findListWoByStatus(status: String, offset: Int): List<WoCacheEntity> {
-        return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build().find(offset.toLong(), 10)
+        return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build()
+            .find(offset.toLong(), 10)
     }
 }

@@ -23,7 +23,7 @@ import javax.inject.Inject
  */
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
-    private val woCacheDao: WoCacheDao,
+    private val woCacheDao: WoCacheDao
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -153,6 +153,9 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun findWobyWonum(wonum: String): WoCacheEntity? {
-        return woCacheDao.findWoByWonum(wonum)
+        val woCacheEntity = woCacheDao.findWoByWonum(wonum)
+        Timber.tag(TAG).d("workorder repository findWobyWonum() $woCacheEntity")
+        woCacheEntity.whatIfNotNull { return woCacheEntity }
+        return null
     }
 }

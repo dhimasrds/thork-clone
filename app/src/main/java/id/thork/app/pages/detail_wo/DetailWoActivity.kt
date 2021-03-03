@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
@@ -91,7 +92,10 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
 
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.APP_WONUM)
-        detailWoViewModel.fetchWobyWonum(intentWonum!!)
+        intentWonum.whatIfNotNull {
+            detailWoViewModel.fetchWobyWonum(intentWonum!!)
+        }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
