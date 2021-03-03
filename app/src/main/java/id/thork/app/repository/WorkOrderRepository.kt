@@ -22,7 +22,7 @@ import timber.log.Timber
  */
 class WorkOrderRepository constructor(
     private val workOrderClient: WorkOrderClient,
-    private val woCacheDao: WoCacheDao,
+    private val woCacheDao: WoCacheDao
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 

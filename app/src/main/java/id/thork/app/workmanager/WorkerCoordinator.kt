@@ -18,7 +18,10 @@ import androidx.work.*
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.repository.LoginRepository
+import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.MoshiUtils
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -28,7 +31,7 @@ import javax.inject.Inject
 @InstallIn(SingletonComponent::class)
 class WorkerCoordinator @Inject constructor(
     val context: Context
-) {
+    ) {
     private val TAG = WorkerCoordinator::class.java.name
 
     //Work manager only execute when connected to internet
@@ -93,8 +96,26 @@ class WorkerCoordinator @Inject constructor(
 
     fun sendPushNotification(remoteMessageMap: MutableMap<String, String>) {
         val remoteMessageString = MoshiUtils.mapToJson(remoteMessageMap)
-        Timber.tag(TAG).i("receivePushNotification() remote map: %s remote map json: %s",
-            remoteMessageMap, remoteMessageString)
+        Timber.tag(TAG).i(
+            "receivePushNotification() remote map: %s remote map json: %s",
+            remoteMessageMap, remoteMessageString
+        )
+
+        val data = JSONObject(remoteMessageString)
+        val wonum = data.getString("wonum")
+        Timber.tag(TAG).i("receivePushNotification() wonum: $wonum")
+
+        generatePushNotificationWorker(remoteMessageString!!)
+
+//        val wocache = workOrderRepository.findWobyWonum(wonum)
+//
+//        wocache.whatIfNotNull {
+//            generatePushNotificationWorker(remoteMessageString!!)
+//        }
+
+    }
+
+    private fun generatePushNotificationWorker(remoteMessageString: String) {
         val inputData = workDataOf("data" to remoteMessageString)
         val workRequest: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
             .addTag("PUSH_NOTIFICATION")

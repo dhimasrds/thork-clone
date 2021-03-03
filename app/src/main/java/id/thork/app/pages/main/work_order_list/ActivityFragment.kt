@@ -19,6 +19,7 @@ import androidx.paging.LoadStates
 import androidx.paging.LoadType
 import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
+import id.thork.app.R
 import id.thork.app.databinding.FragmentActivityBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderActvityViewModel
