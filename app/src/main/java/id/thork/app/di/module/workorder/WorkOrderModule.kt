@@ -26,22 +26,22 @@ import timber.log.Timber
 object WorkOrderModule {
     val TAG = LoginModule::class.java.name
 
-    @Provides
-    @ActivityRetainedScoped
-    fun provideWorkOrderApi(retrofit: Retrofit, okHttpClient: OkHttpClient, preferenceManager: PreferenceManager): WorkOrderApi {
-        Timber.tag(TAG).i("provideLoginApi() init")
-        var serverUrl = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
-        if (serverUrl.isNullOrEmpty()) {
-            serverUrl = BaseParam.BASE_SERVER_URL
-        }
-        Timber.tag(TAG).i("provideLoginApi() serverUrl: %s", serverUrl)
-        retrofit.newBuilder().baseUrl(serverUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
-            .client(okHttpClient)
-            .build()
-        return retrofit.create(WorkOrderApi::class.java)
-    }
+//    @Provides
+//    @ActivityRetainedScoped
+//    fun provideWorkOrderApi(retrofit: Retrofit, okHttpClient: OkHttpClient, preferenceManager: PreferenceManager): WorkOrderApi {
+//        Timber.tag(TAG).i("provideLoginApi() init")
+//        var serverUrl = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
+//        if (serverUrl.isNullOrEmpty()) {
+//            serverUrl = BaseParam.BASE_SERVER_URL
+//        }
+//        Timber.tag(TAG).i("provideLoginApi() serverUrl: %s", serverUrl)
+//        retrofit.newBuilder().baseUrl(serverUrl)
+//            .addConverterFactory(MoshiConverterFactory.create())
+//            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
+//            .client(okHttpClient)
+//            .build()
+//        return retrofit.create(WorkOrderApi::class.java)
+//    }
 
     @Provides
     @ActivityRetainedScoped

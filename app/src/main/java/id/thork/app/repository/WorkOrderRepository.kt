@@ -15,12 +15,13 @@ import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.WoCacheEntity
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Created by Dhimas Saputra on 13/01/21
  * Jakarta, Indonesia.
  */
-class WorkOrderRepository constructor(
+class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
 ) : BaseRepository {

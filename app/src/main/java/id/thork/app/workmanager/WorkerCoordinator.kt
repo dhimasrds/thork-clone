@@ -18,6 +18,7 @@ import androidx.work.*
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.MoshiUtils
 import timber.log.Timber
 import java.util.*
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @Module
 @InstallIn(SingletonComponent::class)
 class WorkerCoordinator @Inject constructor(
-    val context: Context
+    val context: Context,
+    val workOrderRepository: WorkOrderRepository
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 

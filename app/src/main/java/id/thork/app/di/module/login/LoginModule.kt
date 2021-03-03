@@ -28,48 +28,49 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
+import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 object LoginModule {
     val TAG = LoginModule::class.java.name
 
-    @Provides
-    @ActivityRetainedScoped
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor, preferenceManager: PreferenceManager): OkHttpClient {
-        var serverAddress: String = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
-        if (serverAddress.isNullOrEmpty()) {
-            serverAddress= "https://www.google.com"
-        }
-        Timber.tag(TAG).i("provideOkHttpClient() init server address: %s", serverAddress)
-        val httpRequestInterceptor = HttpRequestInterceptor()
-        httpRequestInterceptor.setHost(serverAddress)
-        return OkHttpClient.Builder()
-            .addInterceptor(httpRequestInterceptor)
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
-    }
+//    @Provides
+//    @ActivityRetainedScoped
+//    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor, preferenceManager: PreferenceManager): OkHttpClient {
+//        var serverAddress: String = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
+//        if (serverAddress.isNullOrEmpty()) {
+//            serverAddress= "https://www.google.com"
+//        }
+//        Timber.tag(TAG).i("provideOkHttpClient() init server address: %s", serverAddress)
+//        val httpRequestInterceptor = HttpRequestInterceptor()
+//        httpRequestInterceptor.setHost(serverAddress)
+//        return OkHttpClient.Builder()
+//            .addInterceptor(httpRequestInterceptor)
+//            .addInterceptor(httpLoggingInterceptor)
+//            .build()
+//    }
+
+//    @Provides
+//    @ActivityRetainedScoped
+//    fun provideRetrofit(preferenceManager: PreferenceManager, okHttpClient: OkHttpClient): Retrofit {
+//        var serverAddress: String = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
+//        if (serverAddress.isNullOrEmpty()) {
+//            serverAddress = "https://www.google.com"
+//        }
+//        val retrofit =  Retrofit.Builder()
+//            .baseUrl(serverAddress)
+//            .addConverterFactory(MoshiConverterFactory.create())
+//            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
+//            .client(okHttpClient)
+//            .build()
+//        Timber.tag(TAG).i("provideRetrofit() init retrofit: %s", retrofit)
+//        return retrofit
+//    }
 
     @Provides
     @ActivityRetainedScoped
-    fun provideRetrofit(preferenceManager: PreferenceManager, okHttpClient: OkHttpClient): Retrofit {
-        var serverAddress: String = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
-        if (serverAddress.isNullOrEmpty()) {
-            serverAddress = "https://www.google.com"
-        }
-        val retrofit =  Retrofit.Builder()
-            .baseUrl(serverAddress)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
-            .client(okHttpClient)
-            .build()
-        Timber.tag(TAG).i("provideRetrofit() init retrofit: %s", retrofit)
-        return retrofit
-    }
-
-    @Provides
-    @ActivityRetainedScoped
-    fun provideLoginApi(retrofit: Retrofit):LoginApi {
+    fun provideLoginApi(preferenceManager: PreferenceManager, retrofit: Retrofit):LoginApi {
         Timber.tag(TAG).i("provideLoginApi() init retrofit: %s", retrofit)
         return retrofit.create(LoginApi::class.java)
     }

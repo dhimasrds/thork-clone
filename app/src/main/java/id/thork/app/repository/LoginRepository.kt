@@ -15,8 +15,6 @@ import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 
-@Module
-@InstallIn(SingletonComponent::class)
 class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao
