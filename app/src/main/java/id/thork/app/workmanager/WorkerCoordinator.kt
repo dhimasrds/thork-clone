@@ -19,7 +19,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.di.module.worker.WorkerRepository
+import id.thork.app.repository.WorkerRepository
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.MoshiUtils
