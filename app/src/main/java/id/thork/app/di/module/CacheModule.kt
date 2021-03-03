@@ -12,24 +12,12 @@
 
 package id.thork.app.di.module
 
-import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.components.SingletonComponent
-import id.thork.app.base.BaseParam
-import id.thork.app.di.module.workorder.WorkOrderModule
-import id.thork.app.network.HttpRequestInterceptor
-import id.thork.app.network.api.WorkOrderApi
-import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Module

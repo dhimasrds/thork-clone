@@ -93,7 +93,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         when (view?.id) {
             R.id.iv_add -> {
                 Toast.makeText(this, "Clicked xxxx!", Toast.LENGTH_SHORT).show()
-                viewModel.checkRepo()
             }
         }
     }

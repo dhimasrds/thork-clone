@@ -18,8 +18,12 @@ import androidx.work.*
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.di.module.PreferenceManager
+import id.thork.app.di.module.worker.WorkerRepository
+import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.MoshiUtils
+import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -29,14 +33,25 @@ import javax.inject.Inject
 @InstallIn(SingletonComponent::class)
 class WorkerCoordinator @Inject constructor(
     val context: Context,
-    val workOrderRepository: WorkOrderRepository
+    val preferenceManager: PreferenceManager,
+    val httpLoggingInterceptor: HttpLoggingInterceptor,
+    val woCacheDao: WoCacheDao
 ) {
     private val TAG = WorkerCoordinator::class.java.name
+
+    var workOrderRepository: WorkOrderRepository
 
     //Work manager only execute when connected to internet
     private val constraints = Constraints.Builder()
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .build()
+
+    init {
+        val workerRepository =
+            WorkerRepository(preferenceManager, httpLoggingInterceptor, woCacheDao)
+        workOrderRepository = workerRepository.buildWorkorderRepository()
+        Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
+    }
 
     fun ping() {
         Timber.tag(TAG).i("ping()")
@@ -95,8 +110,10 @@ class WorkerCoordinator @Inject constructor(
 
     fun sendPushNotification(remoteMessageMap: MutableMap<String, String>) {
         val remoteMessageString = MoshiUtils.mapToJson(remoteMessageMap)
-        Timber.tag(TAG).i("receivePushNotification() remote map: %s remote map json: %s",
-            remoteMessageMap, remoteMessageString)
+        Timber.tag(TAG).i(
+            "receivePushNotification() remote map: %s remote map json: %s",
+            remoteMessageMap, remoteMessageString
+        )
         val inputData = workDataOf("data" to remoteMessageString)
         val workRequest: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
             .addTag("PUSH_NOTIFICATION")
