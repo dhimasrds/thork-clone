@@ -8,13 +8,17 @@ import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.utils.WoUtils
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -23,7 +27,8 @@ import javax.inject.Inject
  */
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
-    private val woCacheDao: WoCacheDao
+    private val woCacheDao: WoCacheDao,
+    private val appSession: AppSession
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -86,8 +91,8 @@ class WorkOrderRepository @Inject constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-                Timber.tag(TAG).i("repository searchWorkOrder() code:%s",response.member)
-                Timber.tag(TAG).i("repository searchWorkOrder() code:%s",statusCode.code)
+                Timber.tag(TAG).i("repository searchWorkOrder() code:%s", response.member)
+                Timber.tag(TAG).i("repository searchWorkOrder() code:%s", statusCode.code)
             }
         }
             .onError {
@@ -148,14 +153,49 @@ class WorkOrderRepository @Inject constructor(
             }
         ).liveData
 
-    fun fetchWoList(): List<WoCacheEntity>{
+    fun fetchWoList(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
     }
 
     fun findWobyWonum(wonum: String): WoCacheEntity? {
         val woCacheEntity = woCacheDao.findWoByWonum(wonum)
-        Timber.tag(TAG).d("workorder repository findWobyWonum() $woCacheEntity")
         woCacheEntity.whatIfNotNull { return woCacheEntity }
         return null
     }
+
+    fun addWoToObjectBox(list: List<Member>) {
+        for (wo in list) {
+            val woCacheEntity = WoCacheEntity(
+                syncBody = WoUtils.convertMemberToBody(wo),
+                woId = wo.workorderid,
+                wonum = wo.wonum,
+                status = wo.status,
+                isChanged = BaseParam.APP_TRUE,
+                isLatest = BaseParam.APP_TRUE,
+                syncStatus = BaseParam.APP_TRUE,
+                laborCode = wo.cxlabor
+            )
+            setupWoLocation(woCacheEntity, wo)
+            woCacheEntity.createdDate = Date()
+            woCacheEntity.createdBy = appSession.userEntity.username
+            woCacheEntity.updatedBy = appSession.userEntity.username
+            saveWoList(woCacheEntity, appSession.userEntity.username)
+        }
+    }
+
+
+    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
+        woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
+            wo.woserviceaddress[0].latitudey
+        } else {
+            null
+        }
+        woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
+            wo.woserviceaddress[0].longitudex
+        } else {
+            null
+        }
+    }
+
+
 }

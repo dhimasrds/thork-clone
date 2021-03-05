@@ -12,6 +12,7 @@
 
 package id.thork.app.repository
 
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.WorkOrderApi
@@ -22,12 +23,13 @@ import okhttp3.logging.HttpLoggingInterceptor
 class WorkerRepository constructor(
     private val preferenceManager: PreferenceManager,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
-    private val woCacheDao: WoCacheDao
+    private val woCacheDao: WoCacheDao,
+    private val appSession: AppSession
 ) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())
-        return WorkOrderRepository(workOrderClient, woCacheDao)
+        return WorkOrderRepository(workOrderClient, woCacheDao, appSession)
     }
 
     private fun provideWorkOrderApi(): WorkOrderApi {

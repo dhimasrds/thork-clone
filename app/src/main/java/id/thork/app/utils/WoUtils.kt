@@ -1,5 +1,6 @@
 package id.thork.app.utils
 
+import com.google.gson.Gson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import id.thork.app.network.response.work_order.Member
@@ -16,5 +17,10 @@ object WoUtils {
             Member::class.java
         )
         return memberJsonAdapter.fromJson(syncBody)
+    }
+
+    fun convertMemberToBody(member: Member): String? {
+        val gson = Gson()
+        return gson.toJson(member)
     }
 }

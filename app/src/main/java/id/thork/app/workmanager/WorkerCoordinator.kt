@@ -15,16 +15,23 @@ package id.thork.app.workmanager
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.work.*
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.repository.WorkerRepository
+import id.thork.app.network.ApiParam
+import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.MoshiUtils
-import org.json.JSONObject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,11 +43,13 @@ class WorkerCoordinator @Inject constructor(
     val context: Context,
     val preferenceManager: PreferenceManager,
     val httpLoggingInterceptor: HttpLoggingInterceptor,
-    val woCacheDao: WoCacheDao
+    val woCacheDao: WoCacheDao,
+    val appSession: AppSession
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
     var workOrderRepository: WorkOrderRepository
+    var response = WorkOrderResponse()
 
     //Work manager only execute when connected to internet
     private val constraints = Constraints.Builder()
@@ -49,7 +58,7 @@ class WorkerCoordinator @Inject constructor(
 
     init {
         val workerRepository =
-            WorkerRepository(preferenceManager, httpLoggingInterceptor, woCacheDao)
+            WorkerRepository(preferenceManager, httpLoggingInterceptor, woCacheDao, appSession)
         workOrderRepository = workerRepository.buildWorkorderRepository()
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }
@@ -118,16 +127,49 @@ class WorkerCoordinator @Inject constructor(
 
         val data = JSONObject(remoteMessageString)
         val wonum = data.getString("wonum")
+        val workorderid = data.getString("workorderid")
         Timber.tag(TAG).i("receivePushNotification() wonum: $wonum")
 
-        generatePushNotificationWorker(remoteMessageString!!)
 
-//        val wocache = workOrderRepository.findWobyWonum(wonum)
-//
-//        wocache.whatIfNotNull {
-//            generatePushNotificationWorker(remoteMessageString!!)
-//        }
+        val wocache = workOrderRepository.findWobyWonum(wonum)
 
+        wocache.whatIfNotNull(
+            whatIf = {
+                Timber.d("sendPushNotification() wocache available")
+                generatePushNotificationWorker(remoteMessageString!!)
+
+            },
+            whatIfNot = {
+                searchWoFromServer(workorderid.toInt(), remoteMessageString!!)
+            }
+        )
+    }
+
+    private fun searchWoFromServer(workorderid: Int, remoteMessageString: String) {
+        val laborcode: String? = appSession.laborCode
+        val select: String = ApiParam.WORKORDER_SELECT
+        val where: String =
+            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_WOID + workorderid
+
+        GlobalScope.launch {
+            workOrderRepository.searchWorkOrder(
+                appSession.userHash!!, select, where,
+                onSuccess = {
+                    response = it
+                    Timber.d("searchWoFromServer :%s", it.member)
+
+                    response.member.whatIfNotNullOrEmpty(
+                        whatIf = {
+                            workOrderRepository.addWoToObjectBox(response.member)
+                            generatePushNotificationWorker(remoteMessageString)
+                        }
+                    )
+                },
+                onError = {
+                },
+                onException = {
+                })
+        }
     }
 
     private fun generatePushNotificationWorker(remoteMessageString: String) {
