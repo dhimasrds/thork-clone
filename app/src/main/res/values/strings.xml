@@ -355,6 +355,10 @@
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
 
+    <string name="note">Notes</string>
+    <string name="list_material">List of Material</string>
+
+
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>
 

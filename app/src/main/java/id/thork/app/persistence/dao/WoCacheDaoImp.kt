@@ -6,6 +6,7 @@ import id.thork.app.initializer.ObjectBox.boxStore
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import io.objectbox.Box
+import io.objectbox.BoxStore
 import java.util.*
 
 /**
@@ -33,7 +34,7 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntity
     }
 
-    override fun findWoByWonum(offset: Int, wonum: String, status: String): List<WoCacheEntity> {
+    override fun findWoByWonum(offset: Int, wonum: String, status: String ): List<WoCacheEntity> {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         val woCacheEntity: List<WoCacheEntity> =
             woCacheBox.query().notEqual(WoCacheEntity_.status, status)
@@ -105,8 +106,9 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun updateWo(woCacheEntity: WoCacheEntity, username: String) {
-        TODO("Not yet implemented")
-    }
+        val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
+        addUpdateInfo(woCacheEntity, username)
+        woCacheBox.put(woCacheEntity)    }
 
     override fun findApprWo(): WoCacheEntity? {
         TODO("Not yet implemented")

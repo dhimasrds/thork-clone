@@ -52,7 +52,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         }
         customDialogUtils = CustomDialogUtils(this)
 
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false)
     }
 
     override fun setupObserver() {

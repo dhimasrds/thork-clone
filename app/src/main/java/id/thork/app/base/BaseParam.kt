@@ -106,4 +106,31 @@ object BaseParam {
      */
     const val APP_APIKEY = "AIzaSyBPSt1F9lZcgia7JG4nW5eFPAuJCv68XBQ"
     const val BASE_MAPS_URL = "https://maps.googleapis.com/maps/api/directions/"
+
+    /**
+     * Workorder Adapter Param
+     *
+     */
+    const val WONUM = "Wonum"
+    const val DESCRIPTION = "Description"
+    const val DATE = "Date"
+    const val HOURSSTART = "Hours start"
+    const val HOURSFINISH = "Hours Finish"
+    const val PERIOD = "Period"
+    const val SUPERVISOR = "Supervisor"
+    const val LOCATIONS = "Location"
+    const val LISTITEM = "List Item"
+    const val WORKORDERID = "WORKORDERID"
+    const val STATUS = "STATUS"
+    const val LATITUDE = "SERVICEADDRESS_latitude"
+    const val LONGITUDE = "SERVICEADDRESS_longitude"
+    const val STREETADDRESS = "SERVICEADDRESS_streetAddress"
+    const val PRIORITY_LEVEL = "PRIORITY_LEVEL"
+    const val WORK_CATEGORY = "WORK_CATEGORY"
+    const val ESTDUR = "ESTDUR"
+    const val REPORT_DATE = "REPORT_DATE"
+    const val PRIORITY_NORMAL = "0"
+    const val PRIORITY_MEDIUM = "1"
+    const val PRIORITY_HIGH = "2"
+    const val LONGDESC = "longdescription"
 }

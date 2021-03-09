@@ -19,7 +19,7 @@ data class Longdescription(
     @Json(name = "ldownertable")
     val ldownertable: String? = null,
     @Json(name = "ldtext")
-    val ldtext: String? = null,
+    var ldtext: String? = null,
     @Json(name = "localref")
     val localref: String? = null,
     @Json(name = "longdescriptionid")

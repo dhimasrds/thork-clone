@@ -22,7 +22,7 @@ class AboutActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview_about)
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false)
         
         webView = findViewById(R.id.webview_about)
         webView.webViewClient = WebViewClient()

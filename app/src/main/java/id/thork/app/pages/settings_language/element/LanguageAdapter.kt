@@ -13,7 +13,7 @@ import id.thork.app.persistence.entity.Language
  * Jakarta, Indonesia.
  */
 class LanguageAdapter(
-    private val recyclerViewItemClickListener: RecyclerViewItemClickListener,
+    private val languageAdapterItemClickListener: LanguageAdapterItemClickListener,
     private val listLanguage: List<Language>
     ) : RecyclerView.Adapter<LanguageAdapter.ViewHolder>(){
 
@@ -34,7 +34,7 @@ class LanguageAdapter(
         fun bind(lang: Language) {
             tvLanguage.text = lang.language
             itemView.setOnClickListener {
-                recyclerViewItemClickListener.onItemClicked(lang)
+                languageAdapterItemClickListener.onItemClicked(lang)
             }
         }
     }

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="id.thork.app.pages.long_description.element.LongDescViewModel" />
+    </data>
+
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="id.thork.app.pages.long_description.LongDescActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_marginBottom="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <Button
+
+            android:id="@+id/cancel"
+            android:text="@string/dialog_cancel"
+            android:textColor="@color/blue"
+            android:fontFamily="@font/poppins"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_rectangle_border_white"/>
+        <Button
+
+            android:id="@+id/save"
+            android:text="@string/button_estdur_save"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rounded"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tvLongdesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_bar"
+        android:fontFamily="@font/poppins"
+        android:text="@string/Note"
+        android:textColor="@color/colorBlueNew"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/longdesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cursorVisible="true"
+        android:layout_below="@id/tvLongdesc"
+        android:layout_marginBottom="90dp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/menu_wo_text_size"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
+
+
+
+</RelativeLayout>
+</layout>

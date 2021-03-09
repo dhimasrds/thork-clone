@@ -51,6 +51,9 @@ buildscript {
         dexterVersion = '6.0.2'
         pullRefreshLayoutVersion = '1.2.0'
 
+        //Barcode Scanner
+        zxingAndroidVersion = '3.5.0'
+
     }
 
     repositories {

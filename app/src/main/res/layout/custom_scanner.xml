@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <!--Bar code Scanner window-->
+    <com.journeyapps.barcodescanner.BarcodeView
+        android:id="@+id/zxing_barcode_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_framing_rect_height="200dp"
+        app:zxing_framing_rect_width="250dp" />
+
+    <!--Full Camera Window with viewfinder-->
+    <com.journeyapps.barcodescanner.ViewfinderView
+        android:id="@+id/zxing_viewfinder_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_possible_result_points="@color/colorPrimary"
+        app:zxing_result_view="@color/colorAccent"
+        app:zxing_viewfinder_laser="@color/colorPrimaryDark"
+        app:zxing_viewfinder_mask="@color/zxing_transparent" />
+
+
+
+    <!--Help Text-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:padding="15dp"
+        android:orientation="vertical"
+        android:background="@drawable/ic_scan_screen">
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="15dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/zxing_status_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:gravity="center"
+            android:textSize="12dp"
+            android:text="@string/message_qr"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/switch_flashlight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true">
+            <ImageView
+                android:id="@+id/img_flash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_flash"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/txt_flash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/flash_on"
+                android:textSize="@dimen/text_size_scanner"
+                android:textColor="@color/white"
+                android:layout_marginBottom="12dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_ellipse"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"/>
+    </LinearLayout>
+
+</merge>

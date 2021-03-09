@@ -55,6 +55,7 @@ abstract class BaseActivity : AppCompatActivity() {
     var mainView: ViewGroup? = null
     lateinit var toolBar: Toolbar
     private var optionMenu: Menu? = null
+    private var filterIcon: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +67,7 @@ abstract class BaseActivity : AppCompatActivity() {
         workerCoordinator.ping()
     }
 
-    open fun setupToolbarWithHomeNavigation(title: String, navigation: Boolean) {
+    open fun setupToolbarWithHomeNavigation(title: String, navigation: Boolean, filter: Boolean) {
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
         setSupportActionBar(toolBar)
@@ -85,24 +86,30 @@ abstract class BaseActivity : AppCompatActivity() {
                 goToPreviousActivity()
             }
         }
+
+        if (filter) {
+            filterIcon = filter
+        } 
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         optionMenu = menu
-        getMenuInflater().inflate(R.menu.actionbar_menu, optionMenu)
-
+        menuInflater.inflate(R.menu.actionbar_menu, optionMenu)
+        if (!filterIcon){
+            optionMenu?.findItem(R.id.action_filter)?.isVisible = false
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.action_conn) {
-            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action conn");
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action conn")
             return true
         }
 
         if (id == R.id.action_filter) {
-            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter");
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter")
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -168,7 +175,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun onNotificationReceived(message: String) {
-        Timber.tag(BaseApplication.TAG).i("onNotificationReceived");
+        Timber.tag(BaseApplication.TAG).i("onNotificationReceived")
     }
 
     private fun defineConnectionState(connectionState: Int) {

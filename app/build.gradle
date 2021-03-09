@@ -163,5 +163,9 @@ dependencies {
 
     // Swipe pull refresh layout
     implementation "com.baoyz.pullrefreshlayout:library:$rootProject.pullRefreshLayoutVersion"
+
+    // Barcode Scanner
+    implementation "com.journeyapps:zxing-android-embedded:$rootProject.zxingAndroidVersion"
+
 }
 apply plugin: 'io.objectbox'

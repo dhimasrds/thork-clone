@@ -38,7 +38,7 @@ class LogActivity : BaseActivity() {
             lifecycleOwner = this@LogActivity
             logsActivity = viewModel
         }
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false)
 //        setupToolbar()
     }
 

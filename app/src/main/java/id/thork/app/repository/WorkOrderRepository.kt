@@ -163,6 +163,10 @@ class WorkOrderRepository @Inject constructor(
         return null
     }
 
+    fun updateWo(woCacheEntity: WoCacheEntity, username: String){
+        return woCacheDao.updateWo(woCacheEntity, username)
+    }
+
     fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
             val woCacheEntity = WoCacheEntity(
