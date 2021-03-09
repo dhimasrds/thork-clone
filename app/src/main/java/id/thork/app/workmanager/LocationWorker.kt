@@ -18,8 +18,6 @@ class LocationWorker(val context: Context, val workerParameters: WorkerParameter
     private val TAG = LocationWorker::class.java.name
 
     private val MAX_RUN_ATTEMPT = 6
-    private val DEFAULT = 0.0
-
 
     override fun doWork(): Result {
         try {

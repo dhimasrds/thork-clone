@@ -132,11 +132,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
             // We only care about the one output status.
             // Every continuation has only one worker tagged TAG_OUTPUT
-//            val workInfo = listOfWorkInfo[0]
-
-
             listOfWorkInfo.forEach { workInfo ->
-
                 val resultLaborcode = workInfo.outputData.getString("laborcode")
                 val resultCrewId = workInfo.outputData.getString("crewId")
                 val resultLongitude = workInfo.outputData.getString("longitude")
