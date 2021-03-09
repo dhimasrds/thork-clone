@@ -7,6 +7,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.helper.MapsLocation
@@ -21,6 +22,10 @@ import timber.log.Timber
  * Jepara, Indonesia.
  */
 object MapsUtils {
+    private val crewListMarkers: MutableMap<String, Marker?> = hashMapOf()
+    private var crewMarker: Marker? = null
+    private var newCrewMarker: Marker? = null
+
 
     private const val LONG_DISTANCE_ZOOM = 11f
     private const val SHORT_DISTANCE_ZOOM = 17f
@@ -39,14 +44,37 @@ object MapsUtils {
     }
 
 
-    fun renderCrewMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
-        val options = MarkerOptions()
-            .position(latLng)
-            .title(title)
-            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_group_crew))
+    fun renderCrewMarker(
+        googleMap: GoogleMap,
+        latLng: LatLng,
+        title: String,
+        crewId: String,
+        tag: String
+    ) {
+        crewMarker = crewListMarkers.get(crewId)
+        if (crewMarker != null) {
+            crewMarker.whatIfNotNull(
+                whatIf = {
+                    when (tag) {
+                        BaseParam.APP_TAG_MARKER_CREW_MOVE -> {
+                            it.position = latLng
+                        }
 
-        googleMap.addMarker(options)
-            .tag = BaseParam.APP_TAG_MARKER_CREW
+                        BaseParam.APP_TAG_MARKER_CREW_LOGOUT -> {
+                            it.remove()
+                            crewListMarkers.remove(crewId)
+                        }
+                    }
+                }
+            )
+        } else {
+            val options = MarkerOptions()
+                .position(latLng)
+                .title(title)
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_group_crew))
+            newCrewMarker = googleMap.addMarker(options)
+            crewListMarkers.put(crewId, newCrewMarker)
+        }
     }
 
     fun renderCurrentLocation(googleMap: GoogleMap, lastKnownLocation: Location?) {
@@ -87,53 +115,51 @@ object MapsUtils {
         mMap: GoogleMap?, context: Context, dataDirection: ResponseRoute?,
         startLatLng: LatLng?, endLatLng: LatLng?
     ) {
-        if (mMap != null) {
-            if (dataDirection != null && !dataDirection.routes!!.isNullOrEmpty()) {
-                // get Distance
-                val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
-                val dataDistance: Distance = dataLegs.distance!!
-                // get polyline
-                val polylinePoint: String = dataDirection.routes[0].overviewPolyline!!.points!!
-                // Decode
-                val decodePath = PolyUtil.decode(polylinePoint)
-                mMap.addPolyline(
-                    PolylineOptions().addAll(decodePath)
-                        .width(8f).color(Color.argb(255, 56, 167, 252))
-                ).isGeodesic = true
-                // Add Marker
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(startLatLng!!)
-                        .title("Origin")
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
-                )
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(endLatLng!!)
-                        .title("Destination")
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
-                )
-                val latLongBuilder = LatLngBounds.Builder()
-                latLongBuilder.include(startLatLng)
-                latLongBuilder.include(endLatLng)
-                var bounds = latLongBuilder.build()
-                val center = bounds.center
-                latLongBuilder.include(LatLng(center.latitude - 0.001f, center.longitude - 0.001f))
-                latLongBuilder.include(LatLng(center.latitude + 0.001f, center.longitude + 0.001f))
-                bounds = latLongBuilder.build()
-                val width = context.resources.displayMetrics.widthPixels
-                val height = context.resources.displayMetrics.heightPixels
-                val paddingMap = (width * 0.1).toInt()
-                val cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, paddingMap)
-                Timber.d("renderMapDirection() Distance : %s", dataDistance.value)
-                if (dataDistance.value!! > MAX_DISTANCE) {
-                    mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
-                } else {
-                    mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
-                }
-                mMap.animateCamera(cu)
-            }
 
+        if (mMap != null && dataDirection != null && !dataDirection.routes!!.isNullOrEmpty()) {
+            // get Distance
+            val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
+            val dataDistance: Distance = dataLegs.distance!!
+            // get polyline
+            val polylinePoint: String = dataDirection.routes[0].overviewPolyline!!.points!!
+            // Decode
+            val decodePath = PolyUtil.decode(polylinePoint)
+            mMap.addPolyline(
+                PolylineOptions().addAll(decodePath)
+                    .width(8f).color(Color.argb(255, 56, 167, 252))
+            ).isGeodesic = true
+            // Add Marker
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(startLatLng!!)
+                    .title("Origin")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
+            )
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(endLatLng!!)
+                    .title("Destination")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+            )
+            val latLongBuilder = LatLngBounds.Builder()
+            latLongBuilder.include(startLatLng)
+            latLongBuilder.include(endLatLng)
+            var bounds = latLongBuilder.build()
+            val center = bounds.center
+            latLongBuilder.include(LatLng(center.latitude - 0.001f, center.longitude - 0.001f))
+            latLongBuilder.include(LatLng(center.latitude + 0.001f, center.longitude + 0.001f))
+            bounds = latLongBuilder.build()
+            val width = context.resources.displayMetrics.widthPixels
+            val height = context.resources.displayMetrics.heightPixels
+            val paddingMap = (width * 0.1).toInt()
+            val cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, paddingMap)
+            Timber.d("renderMapDirection() Distance : %s", dataDistance.value)
+            if (dataDistance.value!! > MAX_DISTANCE) {
+                mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
+            } else {
+                mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
+            }
+            mMap.animateCamera(cu)
         }
     }
 

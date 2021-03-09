@@ -76,6 +76,7 @@ class ThorFcmService : FirebaseMessagingService() {
 
     private fun processingRemoteMessage(remoteMessage: RemoteMessage) {
         Timber.tag(TAG).i("processingRemoteMessage() topic: %s", remoteMessage.from)
+
         if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
             val crewId = remoteMessage.data.get("crewId")
             if (!crewId.isNullOrEmpty()) {
@@ -93,7 +94,9 @@ class ThorFcmService : FirebaseMessagingService() {
             //} else {
             //notification when application on foreground
             //}
-        } else if (remoteMessage.from == BaseParam.FIREBASE_LOCATION_TOPIC) {
+        } else if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_LOCATION_TOPIC) {
+            Timber.tag(TAG).i("processingRemoteMessage location: %s", remoteMessage.toString())
+
             if (isBackgroundRunning(applicationContext)) {
                 //firebase location when application on background
             } else {
