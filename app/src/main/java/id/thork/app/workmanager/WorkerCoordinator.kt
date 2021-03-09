@@ -91,22 +91,20 @@ class WorkerCoordinator @Inject constructor(
 
     fun addCrewPositionQueue(remoteMessageMap: MutableMap<String, String>) {
         val CREW_POSITION = "CREW_POSITION"
-        val title = remoteMessageMap.get("title")
-        val message = remoteMessageMap.get("message")
         val crewId = remoteMessageMap.get("crewId")
         val laborcode = remoteMessageMap.get("laborcode")
         val longitude = remoteMessageMap.get("longitude")
         val latitude = remoteMessageMap.get("latitude")
         val tag = remoteMessageMap.get("tag")
 
-        Timber.tag(TAG).i("addCrewPositionQueue() tag: %s", tag)
+        Timber.tag(TAG).i("addCrewPositionQueue() data : %s", remoteMessageMap)
         val inputData = workDataOf(
-            "title" to "$title", "message" to "$message",
             "crewId" to "$crewId", "laborcode" to "$laborcode",
             "longitude" to "$longitude", "latitude" to "$latitude",
-            "tag" to "$tag",
+            "tag" to "$tag"
         )
-        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>()
+
+        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<LocationWorker>()
             .addTag(CREW_POSITION)
             .setInputData(inputData)
             .setConstraints(constraints)

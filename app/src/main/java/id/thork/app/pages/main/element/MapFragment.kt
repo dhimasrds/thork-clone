@@ -23,6 +23,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -78,23 +80,28 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             vm = mapViewModel
         }
         mapViewModel.fetchListWo()
+        mapViewModel.pruneWork()
         return binding.root
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         googleMap?.apply {
             map = googleMap
-            with(map) {
-                setOnInfoWindowClickListener(this@MapFragment)
-                setInfoWindowAdapter(customInfoWindowForGoogleMap)
-                uiSettings.isMyLocationButtonEnabled = false
-                uiSettings.isMapToolbarEnabled = true
-            }
+            onMapReadyState()
         }
         getLocationPermission()
         updateLocationUI()
         getDeviceLocation()
         setupObserver()
+    }
+
+    private fun onMapReadyState() {
+        with(map) {
+            setOnInfoWindowClickListener(this@MapFragment)
+            setInfoWindowAdapter(customInfoWindowForGoogleMap)
+            uiSettings.isMyLocationButtonEnabled = false
+            uiSettings.isMapToolbarEnabled = true
+        }
     }
 
     fun setupObserver() {
@@ -107,7 +114,56 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 }
             }
         })
+        mapViewModel.outputWorkInfos.observe(this, workInfosObserver())
     }
+
+    // Add this functions
+    private fun workInfosObserver(): Observer<List<WorkInfo>> {
+        return Observer { listOfWorkInfo ->
+
+            // Note that these next few lines grab a single WorkInfo if it exists
+            // This code could be in a Transformation in the ViewModel; they are included here
+            // so that the entire process of displaying a WorkInfo is in one location.
+
+            // If there are no matching work info, do nothing
+            if (listOfWorkInfo.isNullOrEmpty()) {
+                return@Observer
+            }
+
+            // We only care about the one output status.
+            // Every continuation has only one worker tagged TAG_OUTPUT
+//            val workInfo = listOfWorkInfo[0]
+
+
+            listOfWorkInfo.forEach { workInfo ->
+
+                val resultLaborcode = workInfo.outputData.getString("laborcode")
+                val resultCrewId = workInfo.outputData.getString("crewId")
+                val resultLongitude = workInfo.outputData.getString("longitude")
+                val resultLatitude = workInfo.outputData.getString("latitude")
+                val resultTag =  workInfo.outputData.getString("tag")
+                Timber.tag(TAG).i(
+                    "workInfosObserver() myResult: %s, myResult2: %s , state: %s",
+                    resultLaborcode.toString(),
+                    resultCrewId.toString(),
+                    workInfo.state
+                )
+                Timber.tag(TAG).i("workInfosObserver() resultLongitude: %s", resultLongitude)
+                Timber.tag(TAG).i("workInfosObserver() resultLatitude: %s", resultLatitude)
+
+                if (!resultLaborcode.isNullOrEmpty() && !resultCrewId.isNullOrEmpty()
+                    && !resultLatitude.isNullOrEmpty() && !resultLongitude.isNullOrEmpty()
+                    && !resultTag.isNullOrEmpty()) {
+
+                    val crewLatLng = LatLng(resultLatitude.toDouble(), resultLongitude.toDouble())
+                    MapsUtils.renderCrewMarker(map, crewLatLng, resultLaborcode, resultCrewId, resultTag)
+                    mapViewModel.pruneWork()
+                }
+            }
+
+        }
+    }
+
 
     private fun getLocationPermission() {
         /*
@@ -197,11 +253,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         }
     }
 
-    override fun onInfoWindowClick(marker: Marker?) {
+    override fun onInfoWindowClick(marker: Marker) {
         if (locationPermissionGranted) {
-            navigateToDetailWo(marker)
+            if (marker.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
+                navigateToDetailWo(marker)
+            }
         } else {
             showDialog()
+
         }
     }
 
