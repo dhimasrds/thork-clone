@@ -356,6 +356,9 @@
     <string name="settings_change_pattern_failed">Ganti Pola Gagal</string>
     <string name="settings_change_pattern_activity">Masukan Pola Saat Ini</string>
 
+    <string name="note">Notes</string>
+    <string name="list_material">List of Material</string>
+
     <!-- Main Activity -->
     <string name="main_workorder">Pekerjaan</string>
     <string name="main_createwo">Membuat WO</string>

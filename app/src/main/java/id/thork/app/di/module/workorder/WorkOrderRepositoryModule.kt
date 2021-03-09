@@ -6,7 +6,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.persistence.dao.MaterialDaoImp
 import id.thork.app.persistence.dao.WoCacheDaoImp
+import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WoActivityRepository
 import id.thork.app.repository.WorkOrderRepository
 
@@ -24,7 +26,7 @@ object WorkOrderRepositoryModule {
     fun provideWorkOrderRepository(
         workOrderClient: WorkOrderClient,
     ): WorkOrderRepository {
-        return WorkOrderRepository(workOrderClient,WoCacheDaoImp())
+        return WorkOrderRepository(workOrderClient, WoCacheDaoImp())
     }
 
     @Provides
@@ -32,6 +34,14 @@ object WorkOrderRepositoryModule {
     fun provideWorkOrderActRepository(
         workOrderClient: WorkOrderClient,
     ): WoActivityRepository {
-        return WoActivityRepository(workOrderClient,WoCacheDaoImp())
+        return WoActivityRepository(workOrderClient, WoCacheDaoImp())
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideMaterialRepository(
+        workOrderClient: WorkOrderClient,
+    ): MaterialRepository {
+        return MaterialRepository(workOrderClient, MaterialDaoImp())
     }
 }

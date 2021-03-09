@@ -36,7 +36,7 @@ import id.thork.app.persistence.entity.Language
  * Created by Raka Putra on 1/2/21
  * Jakarta, Indonesia.
  */
-interface RecyclerViewItemClickListener {
+interface LanguageAdapterItemClickListener {
 
   fun onItemClicked(language: Language)
 }

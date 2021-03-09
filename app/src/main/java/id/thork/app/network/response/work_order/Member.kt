@@ -129,7 +129,7 @@ data class Member(
     @Json(name = "locations_collectionref")
     val locationsCollectionref: String? = null,
     @Json(name = "longdescription")
-    val longdescription: List<Longdescription>? = null,
+    var longdescription: List<Longdescription>? = null,
     @Json(name = "longdescription_collectionref")
     val longdescriptionCollectionref: String? = null,
     @Json(name = "los")
@@ -203,5 +203,7 @@ data class Member(
     @Json(name = "wostatus")
     val wostatus: List<Wostatu>? = null,
     @Json(name = "wostatus_collectionref")
-    val wostatusCollectionref: String? = null
+    val wostatusCollectionref: String? = null,
+    @Json(name = "description_longdescription")
+    var description_longdescription: String? = null
 )

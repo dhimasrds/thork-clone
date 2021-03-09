@@ -44,7 +44,7 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
         }
         customDialogUtils = CustomDialogUtils(this)
 //        setupToolbar()
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false)
 
     }
 
@@ -54,7 +54,7 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
             Language(languageCode = BaseParam.APP_IND_LANG ,language = BaseParam.APP_IND_LANG_DETAIL),
         )
 
-        languageAdapter = LanguageAdapter(object : RecyclerViewItemClickListener {
+        languageAdapter = LanguageAdapter(object : LanguageAdapterItemClickListener {
             override fun onItemClicked(lang: Language) {
                 selectedLanguage = lang.language.toString()
                 selectedLangCode = lang.languageCode.toString()

@@ -154,4 +154,8 @@ class WorkOrderRepository constructor(
     fun findWobyWonum(wonum: String): WoCacheEntity? {
         return woCacheDao.findWoByWonum(wonum)
     }
+
+    fun updateWo(woCacheEntity: WoCacheEntity, username: String){
+        return woCacheDao.updateWo(woCacheEntity, username)
+    }
 }

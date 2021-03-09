@@ -1,5 +1,6 @@
 package id.thork.app.pages.detail_wo
 
+import android.content.Intent
 import android.location.Location
 import androidx.activity.viewModels
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -14,12 +15,15 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailWoBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
+import id.thork.app.pages.list_material.ListMaterialActivity
+import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
 class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     private val TAG = DetailWoActivity::class.java.name
+    private val REQUEST_CODE_DETAIL = 0
 
     private val detailWoViewModel: DetailWoViewModel by viewModels()
     private val binding: ActivityDetailWoBinding by binding(R.layout.activity_detail_wo)
@@ -31,7 +35,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     private var destinationString: String? = null
     private var destinationLatLng: LatLng? = null
     private var isRoute: Int = BaseParam.APP_FALSE
-
+    private var workorderId: Int? = null
+    private var workorderStatus: String? = null
+    private var workorderNumber: String? = null
+    private var workorderLongdesc: String? = null
+    private var valueLongDesc: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -48,7 +56,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this)
 
         customDialogUtils = CustomDialogUtils(this)
-        setupToolbarWithHomeNavigation(getString(R.string.wo_detail), navigation = false)
+        setupToolbarWithHomeNavigation(getString(R.string.wo_detail), navigation = false, filter = true)
         retrieveFromIntent()
     }
 
@@ -61,6 +69,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
                 description.text = it.description
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
+
+                workorderId = it.workorderid
+                workorderNumber = it.wonum
+                workorderStatus = it.status
+                workorderLongdesc = it.description_longdescription
             }
             if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress.get(0).longitudex != null) {
                 isRoute = BaseParam.APP_TRUE
@@ -80,7 +93,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
 
         detailWoViewModel.MapsInfo.observe(this, {
             binding.apply {
-                if(it != null) {
+                if (it != null) {
                     tvDistance.text = it.distanceText
                     tvDuration.text = it.durationText
                 }
@@ -137,5 +150,39 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
         } catch (e: SecurityException) {
             Timber.tag(TAG).d("getDeviceLocation(): %s", e.message)
         }
+    }
+
+    override fun setupListener() {
+        super.setupListener()
+        binding.scanQr.setOnClickListener {
+            gotoListMaterial()
+        }
+
+        binding.longdesc.setOnClickListener {
+            gotoLongDescription()
+        }
+    }
+
+    private fun gotoListMaterial(){
+        val intent = Intent(this, ListMaterialActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        intent.putExtra(BaseParam.STATUS, workorderStatus)
+        startActivity(intent)
+    }
+
+    private fun gotoLongDescription(){
+        val intent = Intent(this, LongDescActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        intent.putExtra(BaseParam.STATUS, workorderStatus)
+        intent.putExtra(BaseParam.LONGDESC, workorderLongdesc)
+        intent.putExtra(BaseParam.WONUM, workorderNumber)
+        startActivityForResult(intent, REQUEST_CODE_DETAIL)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK){
+            valueLongDesc == data!!.getStringExtra("longdesc")
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
