@@ -201,6 +201,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun gotoListMaterial(){
         val intent = Intent(this, ListMaterialActivity::class.java)
+        intent.putExtra(BaseParam.WONUM, tempWonum)
         startActivity(intent)
     }
 
@@ -222,7 +223,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         override fun onLocationChanged(location: Location) {
             latitudey = location.latitude
             longitudex = location.longitude
-            binding.locationWo.setText(latitudey.toString() + ", " + longitudex)
+            binding.locationWo.setText("$latitudey , $longitudex")
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -230,12 +231,16 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     }
 
     override fun onRightButton() {
-        Timber.d("raka description : %s", binding.deskWo.text)
-        Timber.d("raka wo priority : %s", getWorkPriority())
-        Timber.d("raka estdur : %s", estDur)
-        Timber.d("raka latitudey : %s", latitudey)
-        Timber.d("raka longitudex : %s", longitudex)
-        Timber.d("raka longdesc : %s", longDesc)
+        if(isConnected){
+            viewModel.createWorkOrderOnline(binding.deskWo.text.toString(), longitudex!!,
+                latitudey!!, estDur!!, getWorkPriority(), longDesc!!)
+        } else{
+            viewModel.createNewWoCache(longitudex!!, latitudey!!, binding.deskWo.text.toString(), estDur!!, getWorkPriority(), longDesc!!)
+        }
+        Timber.d(
+            "createNewWo() desc:%s, long:%s, lat:%s, estDur:%s, workPriority:%s, longdesc:%s",
+            binding.deskWo.text.toString(), longitudex, latitudey, estDur, workPriority, longDesc
+        )
 
     }
 

@@ -15,11 +15,11 @@ data class Woserviceaddres(
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "latitudey")
-    val latitudey: Double? = null,
+    var latitudey: Double? = null,
     @Json(name = "localref")
     val localref: String? = null,
     @Json(name = "longitudex")
-    val longitudex: Double? = null,
+    var longitudex: Double? = null,
     @Json(name = "orgid")
     val orgid: String? = null,
     @Json(name = "_rowstamp")

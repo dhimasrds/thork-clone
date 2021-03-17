@@ -1,5 +1,6 @@
 package id.thork.app.network.api
 
+import id.thork.app.network.response.work_order.Member
 import javax.inject.Inject
 
 /**
@@ -15,6 +16,9 @@ class WorkOrderClient @Inject constructor(
 
     suspend fun searchWorkOrder(headerParam: String, select: String, where: String) =
         workOrderApi.searchWorkorder(headerParam,LEAN, select, where)
+
+    suspend fun createWo(headerParam: String, properties: String, contentType: String, body: Member) =
+        workOrderApi.createWO(headerParam, properties, contentType, body)
 
     companion object {
         private const val LEAN = 1

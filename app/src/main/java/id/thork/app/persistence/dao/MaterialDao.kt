@@ -10,4 +10,7 @@ interface MaterialDao {
     fun saveMaterial(materialEntity: MaterialEntity): MaterialEntity?
 
     fun listMaterials(workorderId: Int): List<MaterialEntity?>?
+
+    fun listMaterialsByWonum(wonum: Int): List<MaterialEntity?>?
+
 }

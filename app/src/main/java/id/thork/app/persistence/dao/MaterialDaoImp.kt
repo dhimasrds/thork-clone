@@ -27,4 +27,9 @@ class MaterialDaoImp : MaterialDao {
         return materialEntityBox.query().equal(MaterialEntity_.workorderId, workorderid)
             .orderDesc(MaterialEntity_.time).build().find()
     }
+
+    override fun listMaterialsByWonum(wonum: Int): List<MaterialEntity?>? {
+        return materialEntityBox.query().equal(MaterialEntity_.wonum, wonum)
+            .orderDesc(MaterialEntity_.time).build().find()
+    }
 }

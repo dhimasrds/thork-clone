@@ -76,14 +76,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
                 workorderStatus = it.status
                 workorderLongdesc = it.description_longdescription
             }
-            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress.get(0).longitudex != null) {
+            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!!.get(0).longitudex != null) {
                 isRoute = BaseParam.APP_TRUE
                 destinationLatLng = LatLng(
-                    it.woserviceaddress.get(0).latitudey!!,
-                    it.woserviceaddress.get(0).longitudex!!
+                    it.woserviceaddress!!.get(0).latitudey!!,
+                    it.woserviceaddress!!.get(0).longitudex!!
                 )
                 destinationString =
-                    "${it.woserviceaddress.get(0).latitudey!!},${it.woserviceaddress.get(0).longitudex!!}"
+                    "${it.woserviceaddress!!.get(0).latitudey!!},${it.woserviceaddress!!.get(0).longitudex!!}"
             }
         })
 

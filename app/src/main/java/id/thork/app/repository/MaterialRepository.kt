@@ -21,4 +21,8 @@ class MaterialRepository @Inject constructor(
     fun listMaterials(workorderId: Int): List<MaterialEntity?>? {
         return materialDao.listMaterials(workorderId)
     }
+
+    fun listMaterialsByWonum(wonum: Int): List<MaterialEntity?>? {
+        return materialDao.listMaterials(wonum)
+    }
 }

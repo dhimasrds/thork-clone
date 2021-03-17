@@ -3,15 +3,13 @@ package id.thork.app.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.suspendOnSuccess
+import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
@@ -110,6 +108,29 @@ class WorkOrderRepository @Inject constructor(
 
     }
 
+    suspend fun createWo(
+        headerParam: String,
+        properties: String,
+        contentType: String,
+        body: Member,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit
+    ){
+        val response = workOrderClient.createWo(headerParam, properties, contentType, body)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                onSuccess(response)
+            }
+        } .onError {
+            Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
+            onError(message())
+        }
+            .onException {
+                Timber.tag(TAG).i("createWo() exception: %s", message())
+                onError(message())
+            }
+
+    }
     fun saveWoList(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity {
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
@@ -190,12 +211,12 @@ class WorkOrderRepository @Inject constructor(
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress[0].latitudey
+            wo.woserviceaddress!![0].latitudey
         } else {
             null
         }
         woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress[0].longitudex
+            wo.woserviceaddress!![0].longitudex
         } else {
             null
         }

@@ -28,6 +28,7 @@ class ListMaterialActivity : BaseActivity() {
     private lateinit var adapter: ListMaterialAdapter
     private var intentWoId: Int? = null
     private var intentWoStatus: String? = null
+    private var intentWonum: Int? = null
 
     override fun setupView() {
         super.setupView()
@@ -47,14 +48,23 @@ class ListMaterialActivity : BaseActivity() {
     }
 
     private fun initView() {
-        val listA = viewModel.fetchMaterialList(intentWoId!!)
-        if (intentWoStatus != null && intentWoStatus.equals(BaseParam.COMPLETED) && listA?.isEmpty()!!) {
-            Toast.makeText(this, R.string.stat_complete, Toast.LENGTH_SHORT).show()
-        } else if (intentWoStatus != null && intentWoStatus.equals(BaseParam.COMPLETED) && listA != null && listA.isNotEmpty()) {
-            initAdapter()
-        } else if (listA != null && listA.isNotEmpty()) {
-            initAdapter()
-        } else startQRScanner()
+//        if (intentWonum!= null){
+//            val listMaterial = viewModel.fetchMaterialListByWonum(intentWonum!!)
+//            if (listMaterial != null && listMaterial.isNotEmpty()){
+//                initListByWonum()
+//            } else {
+//                startQRScanner()
+//            }
+//        } else {
+            val listA = viewModel.fetchMaterialList(intentWoId!!)
+            if (intentWoStatus != null && intentWoStatus.equals(BaseParam.COMPLETED) && listA?.isEmpty()!!) {
+                Toast.makeText(this, R.string.stat_complete, Toast.LENGTH_SHORT).show()
+            } else if (intentWoStatus != null && intentWoStatus.equals(BaseParam.COMPLETED) && listA != null && listA.isNotEmpty()) {
+                initAdapter()
+            } else if (listA != null && listA.isNotEmpty()) {
+                initAdapter()
+            } else startQRScanner()
+//        }
     }
 
     private fun startQRScanner() {
@@ -65,12 +75,24 @@ class ListMaterialActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
-            if (result.contents != null) {
+            if (result.contents != null && intentWonum != null) {
+                saveMaterialInCreateWo(result.contents, intentWonum!!)
+            } else if (result.contents != null){
                 saveMaterial(result.contents, intentWoId!!)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    fun saveMaterialInCreateWo(result: String?, wonum: Int) {
+        val date = SimpleDateFormat("yyyy MMM dd")
+        val time = SimpleDateFormat("HH:mm")
+        val currentDate = date.format(Date())
+        val currentTime = time.format(Date())
+        viewModel.saveListMaterialByWonum(currentDate, currentTime, result, wonum)
+        binding.tvCodeText.text = result
+        initAdapter()
     }
 
     fun saveMaterial(result: String?, workorderid: Int) {
@@ -86,10 +108,18 @@ class ListMaterialActivity : BaseActivity() {
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         intentWoStatus = intent.getStringExtra(BaseParam.STATUS)
+        intentWonum = intent.getIntExtra(BaseParam.WONUM, 0)
     }
 
     private fun initAdapter() {
         val listMaterial = viewModel.fetchMaterialList(intentWoId!!)
+        adapter = ListMaterialAdapter(listMaterial)
+        binding.listMaterial.adapter = adapter
+        binding.listMaterial.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun initListByWonum() {
+        val listMaterial = viewModel.fetchMaterialListByWonum(intentWonum!!)
         adapter = ListMaterialAdapter(listMaterial)
         binding.listMaterial.adapter = adapter
         binding.listMaterial.layoutManager = LinearLayoutManager(this)
