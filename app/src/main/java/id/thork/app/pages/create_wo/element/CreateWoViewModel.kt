@@ -10,8 +10,9 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.Woserviceaddres
+import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.repository.LoginRepository
+import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
@@ -27,6 +28,7 @@ import kotlin.collections.ArrayList
  */
 class CreateWoViewModel @ViewModelInject constructor(
     private val workOrderRepository: WorkOrderRepository,
+    private val materialRepository: MaterialRepository,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
@@ -54,7 +56,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     fun createWorkOrderOnline(
         deskWo: String,
         longitudex: Double, latitudey: Double,
-        estDur: Double, workPriority: Int, longdesc: String
+        estDur: Double, workPriority: Int, longdesc: String, tempWonum: String
     ) {
 
         val wsa = Woserviceaddres()
@@ -78,7 +80,6 @@ class CreateWoViewModel @ViewModelInject constructor(
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(Member::class.java)
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
-        var raka = Member()
         val maxauth: String? = appSession.userHash
         val properties: String = ("workorderid,wonum")
         val contentType: String = ("application/json")
@@ -86,13 +87,22 @@ class CreateWoViewModel @ViewModelInject constructor(
             workOrderRepository.createWo(
                 maxauth!!, properties, contentType, member,
                 onSuccess = {
+                    saveScannerMaterial(tempWonum, it.workorderid!!)
                     Timber.tag(TAG).i("createWo() success: %s", it)
-                    Timber.tag(TAG).i("createWo() raka: %s", it.workorderid)
                 }, onError = {
                     Timber.tag(TAG).i("createWo() error: %s", it)
                 }
             )
         }
+    }
+
+    private fun saveScannerMaterial(tempWonum: String, woId: Int){
+        val materialList: List<MaterialEntity?>? = materialRepository.listMaterialsByWonum(tempWonum)
+        for (i in materialList!!.indices)
+            if (materialList[i]!!.workorderId == null){
+                materialList[i]!!.workorderId = woId
+            }
+        materialRepository.saveMaterialList(materialList)
     }
 
     fun createNewWoCache(

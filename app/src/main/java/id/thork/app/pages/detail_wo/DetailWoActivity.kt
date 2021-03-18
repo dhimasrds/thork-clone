@@ -57,7 +57,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this)
 
         customDialogUtils = CustomDialogUtils(this)
-        setupToolbarWithHomeNavigation(getString(R.string.wo_detail), navigation = false, filter = true)
+        setupToolbarWithHomeNavigation(getString(R.string.wo_detail), navigation = false, filter = false, scannerIcon = false)
         retrieveFromIntent()
     }
 

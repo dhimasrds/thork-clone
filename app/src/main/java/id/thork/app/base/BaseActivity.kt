@@ -56,6 +56,7 @@ abstract class BaseActivity : AppCompatActivity() {
     lateinit var toolBar: Toolbar
     private var optionMenu: Menu? = null
     private var filterIcon: Boolean = false
+    private var scannerIcon: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +68,12 @@ abstract class BaseActivity : AppCompatActivity() {
         workerCoordinator.ping()
     }
 
-    open fun setupToolbarWithHomeNavigation(title: String, navigation: Boolean, filter: Boolean) {
+    open fun setupToolbarWithHomeNavigation(
+        title: String,
+        navigation: Boolean,
+        filter: Boolean,
+        scannerIcon: Boolean
+    ) {
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
         setSupportActionBar(toolBar)
@@ -89,7 +95,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (filter) {
             filterIcon = filter
-        } 
+        }
+
+        if (scannerIcon){
+            this.scannerIcon = scannerIcon
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -98,6 +108,9 @@ abstract class BaseActivity : AppCompatActivity() {
         if (!filterIcon){
             optionMenu?.findItem(R.id.action_filter)?.isVisible = false
         }
+        if (!scannerIcon){
+            optionMenu?.findItem(R.id.scan_menu)?.isVisible = false
+        }
         return true
     }
 
@@ -105,6 +118,12 @@ abstract class BaseActivity : AppCompatActivity() {
         val id = item.itemId
         if (id == R.id.action_conn) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action conn")
+            return true
+        }
+
+        if (id == R.id.scan_menu){
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action scan menu")
+            gotoScannerActivity()
             return true
         }
 
@@ -199,6 +218,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun onConnection(isConnected: Boolean) {
         this.isConnected = isConnected
+    }
+
+    open fun gotoScannerActivity() {
+
     }
 
     open fun goToSettingsActivity() {

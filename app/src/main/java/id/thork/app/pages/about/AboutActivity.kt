@@ -1,12 +1,8 @@
 package id.thork.app.pages.about
 
 import android.os.Bundle
-import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 
@@ -22,7 +18,7 @@ class AboutActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview_about)
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false, scannerIcon = false)
         
         webView = findViewById(R.id.webview_about)
         webView.webViewClient = WebViewClient()

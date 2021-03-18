@@ -18,11 +18,19 @@ class MaterialRepository @Inject constructor(
         return materialDao.saveMaterial(materialEntity)
     }
 
+    fun saveMaterialList(materialEntity: List<MaterialEntity?>): List<MaterialEntity?>? {
+        return materialDao.saveMaterialList(materialEntity)
+    }
+
     fun listMaterials(workorderId: Int): List<MaterialEntity?>? {
         return materialDao.listMaterials(workorderId)
     }
 
-    fun listMaterialsByWonum(wonum: Int): List<MaterialEntity?>? {
-        return materialDao.listMaterials(wonum)
+    fun listMaterialsByWonum(wonum: String): List<MaterialEntity?>? {
+        return materialDao.listMaterialsByWonum(wonum)
+    }
+
+    fun removeMaterialByWonum(wonum: String): Long{
+        return materialDao.removeMaterialByWonum(wonum)
     }
 }

@@ -43,7 +43,7 @@ class LongDescActivity : BaseActivity() {
             lifecycleOwner = this@LongDescActivity
             vm = viewModel
         }
-        setupToolbarWithHomeNavigation(getString(R.string.note), navigation = false, filter = false)
+        setupToolbarWithHomeNavigation(getString(R.string.note), navigation = false, filter = false, scannerIcon = false)
         retrieveFromIntent()
         initView()
     }

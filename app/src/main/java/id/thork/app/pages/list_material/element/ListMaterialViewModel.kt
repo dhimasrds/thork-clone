@@ -21,7 +21,7 @@ class ListMaterialViewModel @ViewModelInject constructor(private val repository:
         return exist
     }
 
-    fun fetchMaterialListByWonum(wonum: Int): List<MaterialEntity?>? {
+    fun fetchMaterialListByWonum(wonum: String): List<MaterialEntity?>? {
         val material: List<MaterialEntity?>? = repository.listMaterialsByWonum(wonum)
         val exist = material
         return exist
@@ -36,7 +36,7 @@ class ListMaterialViewModel @ViewModelInject constructor(private val repository:
         repository.saveMaterial(materialEntity)
     }
 
-    fun saveListMaterialByWonum(currentDate: String, currentTime: String, result: String?, wonum: Int) {
+    fun saveListMaterialByWonum(currentDate: String, currentTime: String, result: String?, wonum: String) {
         val materialEntity = MaterialEntity()
         materialEntity.time = currentTime
         materialEntity.date = currentDate

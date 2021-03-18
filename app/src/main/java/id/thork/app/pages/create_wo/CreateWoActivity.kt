@@ -46,6 +46,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private lateinit var customDialogUtils: CustomDialogUtils
     private lateinit var dialogUtils: DialogUtils
+    private lateinit var dialogBack: CustomDialogUtils
     private lateinit var radioButtonPriority: RadioButton
     private lateinit var locationManager: LocationManager
 
@@ -76,7 +77,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         setupToolbarWithHomeNavigation(
             getString(R.string.create_wo),
             navigation = false,
-            filter = false
+            filter = false,
+            scannerIcon = false
         )
     }
 
@@ -232,31 +234,49 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     override fun onRightButton() {
         if(isConnected){
-            viewModel.createWorkOrderOnline(binding.deskWo.text.toString(), longitudex!!,
-                latitudey!!, estDur!!, getWorkPriority(), longDesc!!)
+            viewModel.createWorkOrderOnline(
+                binding.deskWo.text.toString(), longitudex!!,
+                latitudey!!, estDur!!, getWorkPriority(), longDesc!!, tempWonum!!
+            )
         } else{
-            viewModel.createNewWoCache(longitudex!!, latitudey!!, binding.deskWo.text.toString(), estDur!!, getWorkPriority(), longDesc!!)
+            viewModel.createNewWoCache(
+                longitudex!!,
+                latitudey!!,
+                binding.deskWo.text.toString(),
+                estDur!!,
+                getWorkPriority(),
+                longDesc!!
+            )
         }
         Timber.d(
             "createNewWo() desc:%s, long:%s, lat:%s, estDur:%s, workPriority:%s, longdesc:%s",
             binding.deskWo.text.toString(), longitudex, latitudey, estDur, workPriority, longDesc
         )
-
+        gotoHome()
     }
+
 
     override fun onLeftButton() {
         customDialogUtils.dismiss()
     }
 
     override fun onMiddleButton() {
-        TODO("Not yet implemented")
+        customDialogUtils.dismiss()
     }
 
     override fun onPositiveButton() {
-        TODO("Not yet implemented")
+        customDialogUtils.dismiss()
     }
 
     override fun onNegativeButton() {
-        TODO("Not yet implemented")
+        customDialogUtils.dismiss()
+    }
+
+    private fun gotoHome(){
+        finish()
+    }
+
+    override fun goToPreviousActivity() {
+        gotoHome()
     }
 }

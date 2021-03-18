@@ -16,8 +16,6 @@ import android.Manifest
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -56,7 +54,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         super.setupView()
         setupMainView(binding.mainLayout)
 
-        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true)
+        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true, scannerIcon = false)
         setupBottomNavigationBar()
 
         binding.apply {
