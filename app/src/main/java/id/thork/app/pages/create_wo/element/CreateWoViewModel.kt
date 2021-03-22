@@ -55,8 +55,8 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     fun createWorkOrderOnline(
         deskWo: String,
-        longitudex: Double, latitudey: Double,
-        estDur: Double, workPriority: Int, longdesc: String, tempWonum: String
+        longitudex: Double?, latitudey: Double?,
+        estDur: Double?, workPriority: Int, longdesc: String?, tempWonum: String
     ) {
 
         val wsa = Woserviceaddres()
@@ -106,8 +106,8 @@ class CreateWoViewModel @ViewModelInject constructor(
     }
 
     fun createNewWoCache(
-        longitudex: Double, latitudey: Double, deskWo: String,
-        estDur: Double, workPriority: Int, longdesc: String
+        longitudex: Double?, latitudey: Double?, deskWo: String,
+        estDur: Double?, workPriority: Int, longdesc: String?
     ) {
         Timber.d(
             "createNewWo() desc:%s, long:%s, lat:%s, estDur:%s, workPriority:%s, longdesc:%s",
