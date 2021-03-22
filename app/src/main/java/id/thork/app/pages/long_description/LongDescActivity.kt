@@ -157,4 +157,8 @@ class LongDescActivity : BaseActivity() {
         return gson.toJson(member)
     }
 
+    override fun goToPreviousActivity() {
+        finish()
+    }
+
 }

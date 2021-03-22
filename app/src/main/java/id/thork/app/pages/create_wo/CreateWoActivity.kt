@@ -60,6 +60,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private var latitudey: Double? = null
     private var longitudex: Double? = null
     private var tempWonum: String? = null
+    private var validateDialogExit: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -72,6 +73,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         binding.complaintDate.setText(DateUtils.getDateTime())
         locationManager = (getSystemService(LOCATION_SERVICE) as LocationManager)
         customDialogUtils = CustomDialogUtils(this)
+        dialogBack = CustomDialogUtils(this)
         dialogUtils = DialogUtils(this)
 
         setupToolbarWithHomeNavigation(
@@ -233,30 +235,53 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     }
 
     override fun onRightButton() {
-        if(isConnected){
-            viewModel.createWorkOrderOnline(
-                binding.deskWo.text.toString(), longitudex!!,
-                latitudey!!, estDur!!, getWorkPriority(), longDesc!!, tempWonum!!
-            )
-        } else{
-            viewModel.createNewWoCache(
-                longitudex!!,
-                latitudey!!,
+        if (validateDialogExit) {
+            viewModel.removeScanner(tempWonum!!)
+        } else {
+            if (isConnected) {
+                viewModel.createWorkOrderOnline(
+                    binding.deskWo.text.toString(), longitudex!!,
+                    latitudey!!, estDur!!, getWorkPriority(), longDesc!!, tempWonum!!
+                )
+                Toast.makeText(
+                    this,
+                    StringUtils.getStringResources(this, R.string.workorder_create_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            } else {
+                viewModel.createNewWoCache(
+                    longitudex!!,
+                    latitudey!!,
+                    binding.deskWo.text.toString(),
+                    estDur!!,
+                    getWorkPriority(),
+                    longDesc!!
+                )
+                Toast.makeText(
+                    this,
+                    StringUtils.getStringResources(this, R.string.workorder_create_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
+            Timber.d(
+                "createNewWo() desc:%s, long:%s, lat:%s, estDur:%s, workPriority:%s, longdesc:%s",
                 binding.deskWo.text.toString(),
-                estDur!!,
-                getWorkPriority(),
-                longDesc!!
+                longitudex,
+                latitudey,
+                estDur,
+                workPriority,
+                longDesc
             )
         }
-        Timber.d(
-            "createNewWo() desc:%s, long:%s, lat:%s, estDur:%s, workPriority:%s, longdesc:%s",
-            binding.deskWo.text.toString(), longitudex, latitudey, estDur, workPriority, longDesc
-        )
         gotoHome()
     }
 
-
     override fun onLeftButton() {
+        if (validateDialogExit){
+            validateDialogExit = false
+        }
         customDialogUtils.dismiss()
     }
 
@@ -276,7 +301,21 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         finish()
     }
 
+    private fun dialogBackButton(){
+        validateDialogExit = true
+        customDialogUtils.setTitle(R.string.service_request_create)
+        customDialogUtils.setDescription(R.string.service_request_cancel)
+        customDialogUtils.setRightButtonText(R.string.dialog_yes)
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+        customDialogUtils.setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onBackPressed() {
+        dialogBackButton()
+    }
+
     override fun goToPreviousActivity() {
-        gotoHome()
+        dialogBackButton()
     }
 }

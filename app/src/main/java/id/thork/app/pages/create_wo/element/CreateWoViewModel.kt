@@ -148,4 +148,8 @@ class CreateWoViewModel @ViewModelInject constructor(
         val gson = Gson()
         return gson.toJson(member)
     }
+
+    fun removeScanner(wonum : String): Long {
+        return materialRepository.removeMaterialByWonum(wonum)
+    }
 }
