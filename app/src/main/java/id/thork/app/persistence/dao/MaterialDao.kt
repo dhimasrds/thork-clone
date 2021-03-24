@@ -15,6 +15,10 @@ interface MaterialDao {
 
     fun listMaterialsByWonum(wonum: String): List<MaterialEntity?>?
 
+    fun listMaterialsByWoid(woid: Int): List<MaterialEntity?>?
+
     fun removeMaterialByWonum(wonum: String): Long
+
+    fun removeMaterialByWoid(woid: Int): Long
 
 }

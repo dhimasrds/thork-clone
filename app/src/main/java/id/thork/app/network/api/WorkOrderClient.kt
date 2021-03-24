@@ -1,6 +1,7 @@
 package id.thork.app.network.api
 
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.WorkOrderResponse
 import javax.inject.Inject
 
 /**
@@ -19,6 +20,9 @@ class WorkOrderClient @Inject constructor(
 
     suspend fun createWo(headerParam: String, properties: String, contentType: String, body: Member) =
         workOrderApi.createWO(headerParam, properties, contentType, body)
+
+    suspend fun updateStatus(headerParam: String, xMethodeOverride: String, workOrderId: Int, body: Member) =
+        workOrderApi.updateStatus(headerParam, xMethodeOverride, workOrderId, LEAN, body)
 
     companion object {
         private const val LEAN = 1

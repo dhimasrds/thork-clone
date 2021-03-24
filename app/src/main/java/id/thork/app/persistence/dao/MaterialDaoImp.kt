@@ -40,9 +40,16 @@ class MaterialDaoImp : MaterialDao {
             .orderDesc(MaterialEntity_.time).build().find()
     }
 
+    override fun listMaterialsByWoid(woid: Int): List<MaterialEntity?>? {
+        return materialEntityBox.query().equal(MaterialEntity_.workorderId, woid)
+            .orderDesc(MaterialEntity_.time).build().find()
+    }
+
     override fun removeMaterialByWonum(wonum: String) : Long {
         return materialEntityBox.query().equal(MaterialEntity_.wonum, wonum).build().remove()
+    }
 
-
+    override fun removeMaterialByWoid(woid: Int) : Long {
+        return materialEntityBox.query().equal(MaterialEntity_.workorderId, woid).build().remove()
     }
 }

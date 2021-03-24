@@ -30,7 +30,15 @@ class MaterialRepository @Inject constructor(
         return materialDao.listMaterialsByWonum(wonum)
     }
 
+    fun listMaterialsByWoid(woid: Int): List<MaterialEntity?>? {
+        return materialDao.listMaterialsByWoid(woid)
+    }
+
     fun removeMaterialByWonum(wonum: String): Long{
         return materialDao.removeMaterialByWonum(wonum)
+    }
+
+    fun removeMaterialByWoid(woid: Int): Long{
+        return materialDao.removeMaterialByWoid(woid)
     }
 }

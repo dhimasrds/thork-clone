@@ -114,6 +114,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             gotoLongDescActivity()
         }
 
+        binding.takePhoto.setOnClickListener {
+            Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
+                .show()
+        }
+
         binding.createWo.setOnClickListener {
             val desc: String = binding.deskWo.text.toString()
             if (desc.isEmpty() || latitudey == null || longitudex == null) {

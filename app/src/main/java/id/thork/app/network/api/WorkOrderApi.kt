@@ -38,4 +38,14 @@ interface WorkOrderApi {
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Body body: Member?
     ): ApiResponse<Member>
+
+    @POST("/maximo/oslc/os/oslcwoupdate/{workorderid}")
+    suspend fun updateStatus(
+        @Header(BaseParam.APP_MAX_AUTH) maxAuth: String?,
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
+//        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Path("workorderid") workorderid: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: Member?
+    ): ApiResponse<WorkOrderResponse>
 }

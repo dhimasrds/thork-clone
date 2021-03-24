@@ -2,7 +2,11 @@ package id.thork.app.pages.detail_wo
 
 import android.content.Intent
 import android.location.Location
+import android.view.View.GONE
+import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -18,11 +22,14 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
+import id.thork.app.pages.main.MainActivity
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
-class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
+class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
+    CustomDialogUtils.DialogActionListener {
     private val TAG = DetailWoActivity::class.java.name
     private val REQUEST_CODE_DETAIL = 0
 
@@ -41,6 +48,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     private var workorderNumber: String? = null
     private var workorderLongdesc: String? = null
     private var valueLongDesc: String? = null
+    private var validateDialogExit: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -57,7 +65,13 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this)
 
         customDialogUtils = CustomDialogUtils(this)
-        setupToolbarWithHomeNavigation(getString(R.string.wo_detail), navigation = false, filter = false, scannerIcon = false)
+
+        setupToolbarWithHomeNavigation(
+            getString(R.string.wo_detail),
+            navigation = false,
+            filter = false,
+            scannerIcon = false
+        )
         retrieveFromIntent()
     }
 
@@ -70,20 +84,30 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
                 description.text = it.description
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
+                location.text = it.location
+                estimatedDuration.text = StringUtils.NVL(
+                    java.lang.String.valueOf(it.estdur),
+                    BaseParam.APP_DASH
+                )
+                reportDate.text = StringUtils.NVL(
+                    DateUtils.convertDateFormat(it.reportdate),
+                    BaseParam.APP_DASH
+                )
 
                 workorderId = it.workorderid
                 workorderNumber = it.wonum
                 workorderStatus = it.status
                 workorderLongdesc = it.description_longdescription
+                it.status?.let { status -> setButtonStatus(status) }
             }
-            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!!.get(0).longitudex != null) {
+            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!![0].longitudex != null) {
                 isRoute = BaseParam.APP_TRUE
                 destinationLatLng = LatLng(
-                    it.woserviceaddress!!.get(0).latitudey!!,
-                    it.woserviceaddress!!.get(0).longitudex!!
+                    it.woserviceaddress!![0].latitudey!!,
+                    it.woserviceaddress!![0].longitudex!!
                 )
                 destinationString =
-                    "${it.woserviceaddress!!.get(0).latitudey!!},${it.woserviceaddress!!.get(0).longitudex!!}"
+                    "${it.woserviceaddress!![0].latitudey!!},${it.woserviceaddress!![0].longitudex!!}"
             }
         })
 
@@ -165,16 +189,21 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
         binding.longdesc.setOnClickListener {
             gotoLongDescription()
         }
+
+        binding.attachment.setOnClickListener {
+            Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
-    private fun gotoListMaterial(){
+    private fun gotoListMaterial() {
         val intent = Intent(this, ListMaterialActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
         intent.putExtra(BaseParam.STATUS, workorderStatus)
         startActivity(intent)
     }
 
-    private fun gotoLongDescription(){
+    private fun gotoLongDescription() {
         val intent = Intent(this, LongDescActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
         intent.putExtra(BaseParam.STATUS, workorderStatus)
@@ -184,9 +213,162 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK){
-            valueLongDesc == data!!.getStringExtra("longdesc")
+        if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK) {
+            valueLongDesc = data!!.getStringExtra("longdesc")
+            workorderLongdesc = valueLongDesc
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun setButtonStatus(workorderStatus: String) {
+        when (workorderStatus) {
+            BaseParam.APPROVED -> {
+                hideMore()
+                binding.apply {
+                    textStatus.text = BaseParam.INPROGRESS
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailWoActivity,
+                            R.color.colorBlueDispatch
+                        )
+                    )
+                    bgStatus.background = ContextCompat.getDrawable(
+                        this@DetailWoActivity,
+                        R.drawable.bg_status_label_appr
+                    )
+                    btnStatusWo.setOnClickListener {
+                        dialogUpdateStatus()
+                    }
+                }
+            }
+            BaseParam.INPROGRESS -> {
+                hideMore()
+                binding.apply {
+                    textStatus.text = BaseParam.COMPLETED
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailWoActivity,
+                            R.color.colorYellow
+                        )
+                    )
+                    bgStatus.background = ContextCompat.getDrawable(
+                        this@DetailWoActivity,
+                        R.drawable.bg_status_label_inprg
+                    )
+                    btnStatusWo.setOnClickListener {
+                        dialogUpdateStatus()
+                    }
+                }
+            }
+            BaseParam.COMPLETED -> {
+                binding.apply {
+                    layoutStatus.visibility = GONE
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailWoActivity,
+                            R.color.colorGreen
+                        )
+                    )
+                    bgStatus.background = ContextCompat.getDrawable(
+                        this@DetailWoActivity,
+                        R.drawable.bg_status_label_comp
+                    )
+                    btnStatusWo.setOnClickListener {
+                        dialogUpdateStatus()
+                    }
+                }
+            }
+            else -> {
+                binding.layoutStatus.visibility = GONE
+            }
+        }
+    }
+
+    private fun hideMore() {
+        binding.btnMore.visibility = GONE
+        val params1 = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+        params1.setMargins(0, 0, 0, 0)
+        binding.textStatus.layoutParams = params1
+    }
+
+    private fun dialogUpdateStatus() {
+        customDialogUtils.setTitle(R.string.information)
+        customDialogUtils.setDescription(R.string.next_step)
+        customDialogUtils.setRightButtonText(R.string.dialog_yes)
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+        customDialogUtils.setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun dialogExit() {
+        validateDialogExit = true
+        customDialogUtils.setTitle(R.string.service_request_create)
+        customDialogUtils.setDescription(R.string.service_request_cancel)
+        customDialogUtils.setRightButtonText(R.string.dialog_yes)
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+        customDialogUtils.setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        if (validateDialogExit) {
+            workorderId?.let { detailWoViewModel.removeScanner(it) }
+        } else {
+            if (isConnected) {
+                if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
+                    detailWoViewModel.updateWo(
+                        workorderId,
+                        workorderStatus,
+                        workorderNumber,
+                        workorderLongdesc,
+                        BaseParam.INPROGRESS
+                    )
+                } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
+                    detailWoViewModel.updateWo(
+                        workorderId,
+                        workorderStatus,
+                        workorderNumber,
+                        workorderLongdesc,
+                        BaseParam.COMPLETED
+                    )
+                }
+            }
+        }
+        gotoHome()
+    }
+
+    override fun onLeftButton() {
+        if (validateDialogExit) {
+            validateDialogExit = false
+        }
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onBackPressed() {
+        dialogExit()
+    }
+
+    private fun gotoHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        finish()
     }
 }
