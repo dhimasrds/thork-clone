@@ -18,8 +18,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
@@ -78,7 +76,6 @@ class LoginViewModel @ViewModelInject constructor(
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
         createTokenApiKey(userHash, username)
-//        fetchUserData(userHash, username)
     }
 
     fun connectionNotAvailable() {
@@ -100,7 +97,7 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun createTokenApiKey(userHash: String, username: String){
+    private fun createTokenApiKey(userHash: String, username: String) {
         val body = TokenApikey()
         body.expiration = -1
 
@@ -109,14 +106,12 @@ class LoginViewModel @ViewModelInject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             loginRepository.createTokenApiKey(userHash, contentType, body,
                 onSuccess = {
-                    Timber.d("raka(): apiToken %s", it.apikey)
                     apiToken.apikey = it.apikey
                     fetchUserData(apiToken.apikey!!, userHash, username)
-                }
-            ) {
-                Timber.tag(TAG).i("fetchUserData() error: %s", it)
-            }
-
+                }, onError = {
+                    Timber.tag(TAG).i("createTokenApiKey() error: %s", it)
+                    _error.postValue(it)
+                })
         }
     }
 
@@ -141,7 +136,7 @@ class LoginViewModel @ViewModelInject constructor(
             userResponse.member.whatIfNotNullOrEmpty(
                 whatIf = {
                     member = userResponse.member[0]
-                    val isFirstLogin = userIsFirstLogin(member, username, userHash)
+                    val isFirstLogin = userIsFirstLogin(member, username, userHash, apiToken)
                     _firstLogin.postValue(isFirstLogin)
                     _loginState.postValue(BaseParam.APP_TRUE)
                     appSession.reinitUser()
@@ -154,7 +149,7 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
+    private fun userIsFirstLogin(member: Member, username: String, userHash: String, apiToken: String): Boolean {
         val userEntity: UserEntity? = loginRepository.findUserByPersonUID(member.personuid)
         Timber.tag(TAG)
             .i("userIsFirstLogin() userEntity: %s personuid: %s", userEntity, member.personuid)
@@ -168,14 +163,14 @@ class LoginViewModel @ViewModelInject constructor(
                 return false
             },
             whatIfNot = {
-                createNewUserSession(member, username, userHash)
+                createNewUserSession(member, username, userHash, apiToken)
                 return true
             }
         )
         return false
     }
 
-    private fun createNewUserSession(member: Member, username: String, userHash: String) {
+    private fun createNewUserSession(member: Member, username: String, userHash: String, apiToken: String) {
         val userEntity = UserEntity()
         userEntity.createdDate = Date()
         userEntity.createdBy = username
@@ -206,6 +201,7 @@ class LoginViewModel @ViewModelInject constructor(
 
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
+        userEntity.apiKey = apiToken
         //userEntity!!.server_address
         loginRepository.createUserSession(userEntity, username)
     }

@@ -23,6 +23,7 @@ class UserEntity : BaseEntity {
     var latitude: String? = null
     var server_address: String? = null
     var laborcode: String? = null
+    var apiKey: String? = null
 
     constructor()
 }
