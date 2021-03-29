@@ -18,6 +18,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
@@ -25,6 +27,8 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
+import id.thork.app.network.model.user.ResponseApiKey
+import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
@@ -73,7 +77,8 @@ class LoginViewModel @ViewModelInject constructor(
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
-        fetchUserData(userHash, username)
+        createTokenApiKey(userHash, username)
+//        fetchUserData(userHash, username)
     }
 
     fun connectionNotAvailable() {
@@ -95,14 +100,34 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun fetchUserData(userHash: String, username: String) {
+    private fun createTokenApiKey(userHash: String, username: String){
+        val body = TokenApikey()
+        body.expiration = -1
+
+        val contentType = ("application/json")
+        val apiToken = ResponseApiKey()
+        viewModelScope.launch(Dispatchers.IO) {
+            loginRepository.createTokenApiKey(userHash, contentType, body,
+                onSuccess = {
+                    Timber.d("raka(): apiToken %s", it.apikey)
+                    apiToken.apikey = it.apikey
+                    fetchUserData(apiToken.apikey!!, userHash, username)
+                }
+            ) {
+                Timber.tag(TAG).i("fetchUserData() error: %s", it)
+            }
+
+        }
+    }
+
+    private fun fetchUserData(apiToken: String, userHash: String, username: String) {
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
-            loginRepository.loginPerson(userHash, selectQuery, whereQuery,
+            loginRepository.loginPerson(apiToken, selectQuery, whereQuery,
                 onSuccess = {
                     userResponse = it
                 },
