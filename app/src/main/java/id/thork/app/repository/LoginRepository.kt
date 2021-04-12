@@ -51,7 +51,6 @@ class LoginRepository constructor(
         val response = loginClient.loginByPerson(headerParam, select, where)
         response.suspendOnSuccess {
             data.whatIfNotNull {response->
-                //TODO
                 //Save user session into local cache
                 onSuccess(response)
             }
@@ -65,9 +64,4 @@ class LoginRepository constructor(
                 onError(message())
             }
     }
-
-    suspend fun getTodo(id: Int) =
-        loginClient.getTodo(id)
-
-
 }

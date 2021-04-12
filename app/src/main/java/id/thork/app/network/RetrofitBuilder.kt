@@ -57,10 +57,16 @@ class RetrofitBuilder constructor(
             .i("provideOkHttpClient() init server address: %s", serverAddress)
         val httpRequestInterceptor = HttpRequestInterceptor()
         httpRequestInterceptor.setHost(serverAddress)
-        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(httpRequestInterceptor)
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
+//        val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+//            .addInterceptor(httpRequestInterceptor)
+//            .addInterceptor(httpLoggingInterceptor)
+//            .build()
+
+//        return okHttpClient
+
+
+        val okHttpUtils = OkHttpUtils()
+        val okHttpClient = okHttpUtils.getTrustedOkHttpClient(httpRequestInterceptor, httpLoggingInterceptor)
         return okHttpClient
     }
 }

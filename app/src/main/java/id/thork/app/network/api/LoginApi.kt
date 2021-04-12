@@ -13,14 +13,11 @@ interface LoginApi {
     /**
      * Login API used for application login
      */
-    @GET("maximo/oslc/os/oslcperson")
+    @GET("maximo/oslc/os/thisfsmusers")
     suspend fun loginByPerson(
         @Header(BaseParam.APP_MAX_AUTH) maxAuth: String,
         @Query("lean") lean: Int = 1,
         @Query("oslc.select") select: String,
         @Query("oslc.where") where: String
     ): ApiResponse<UserResponse>
-
-    @GET("/todos/{id}")
-    suspend fun getTodo(@Path("id") id: Int): Todo
 }
