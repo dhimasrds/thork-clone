@@ -79,15 +79,17 @@ object MapsUtils {
 
     fun renderCurrentLocation(googleMap: GoogleMap, lastKnownLocation: Location?) {
         with(googleMap) {
-            uiSettings.isMyLocationButtonEnabled = true
-            moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                    LatLng(
-                        lastKnownLocation!!.latitude,
-                        lastKnownLocation!!.longitude
-                    ), DEFAULT_ZOOM.toFloat()
+            lastKnownLocation.whatIfNotNull {
+                uiSettings.isMyLocationButtonEnabled = true
+                moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(
+                            it.latitude,
+                            it.longitude
+                        ), DEFAULT_ZOOM.toFloat()
+                    )
                 )
-            )
+            }
         }
     }
 
