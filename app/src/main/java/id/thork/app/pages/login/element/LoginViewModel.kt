@@ -25,6 +25,8 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
+import id.thork.app.network.model.user.ResponseApiKey
+import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
@@ -73,7 +75,7 @@ class LoginViewModel @ViewModelInject constructor(
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
-        fetchUserData(userHash, username)
+        createTokenApiKey(userHash, username)
     }
 
     fun connectionNotAvailable() {
@@ -95,14 +97,32 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun fetchUserData(userHash: String, username: String) {
+    private fun createTokenApiKey(userHash: String, username: String) {
+        val body = TokenApikey()
+        body.expiration = -1
+
+        val contentType = ("application/json")
+        val apiToken = ResponseApiKey()
+        viewModelScope.launch(Dispatchers.IO) {
+            loginRepository.createTokenApiKey(userHash, contentType, body,
+                onSuccess = {
+                    apiToken.apikey = it.apikey
+                    fetchUserData(apiToken.apikey!!, userHash, username)
+                }, onError = {
+                    Timber.tag(TAG).i("createTokenApiKey() error: %s", it)
+                    _error.postValue(it)
+                })
+        }
+    }
+
+    private fun fetchUserData(apiToken: String, userHash: String, username: String) {
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
-            loginRepository.loginPerson(userHash, selectQuery, whereQuery,
+            loginRepository.loginPerson(apiToken, selectQuery, whereQuery,
                 onSuccess = {
                     userResponse = it
                 },
@@ -120,7 +140,7 @@ class LoginViewModel @ViewModelInject constructor(
             userResponse.member.whatIfNotNullOrEmpty(
                 whatIf = {
                     member = userResponse.member[0]
-                    val isFirstLogin = userIsFirstLogin(member, username, userHash)
+                    val isFirstLogin = userIsFirstLogin(member, username, userHash, apiToken)
                     _firstLogin.postValue(isFirstLogin)
                     _loginState.postValue(BaseParam.APP_TRUE)
                     appSession.reinitUser()
@@ -133,7 +153,7 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
+    private fun userIsFirstLogin(member: Member, username: String, userHash: String, apiToken: String): Boolean {
         val userEntity: UserEntity? = loginRepository.findUserByPersonUID(member.personuid)
         Timber.tag(TAG)
             .i("userIsFirstLogin() userEntity: %s personuid: %s", userEntity, member.personuid)
@@ -147,14 +167,14 @@ class LoginViewModel @ViewModelInject constructor(
                 return false
             },
             whatIfNot = {
-                createNewUserSession(member, username, userHash)
+                createNewUserSession(member, username, userHash, apiToken)
                 return true
             }
         )
         return false
     }
 
-    private fun createNewUserSession(member: Member, username: String, userHash: String) {
+    private fun createNewUserSession(member: Member, username: String, userHash: String, apiToken: String) {
         val userEntity = UserEntity()
         userEntity.createdDate = Date()
         userEntity.createdBy = username
@@ -185,6 +205,7 @@ class LoginViewModel @ViewModelInject constructor(
 
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
+        userEntity.apiKey = apiToken
         //userEntity!!.server_address
         loginRepository.createUserSession(userEntity, username)
     }
