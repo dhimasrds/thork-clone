@@ -46,7 +46,8 @@ class LoginRepository constructor(
         select: String,
         where: String,
         onSuccess: (UserResponse) -> Unit,
-        onError: (String) -> Unit
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
     ) {
         val response = loginClient.loginByPerson(headerParam, select, where)
         response.suspendOnSuccess {

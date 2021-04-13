@@ -109,6 +109,10 @@ class LoginViewModel @ViewModelInject constructor(
                 onError = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     _error.postValue(it)
+                },
+                onException = {
+                    Timber.tag(TAG).i("fetchUserData() error: %s", it)
+                    _error.postValue(it)
                 })
 
             //Save user into cache
