@@ -2,9 +2,6 @@ package id.thork.app.repository
 
 import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.ResponseApiKey
@@ -48,12 +45,18 @@ class LoginRepository constructor(
             }
         }
             .onError {
-                Timber.tag(TAG).i("createTokenApiKey() code: %s error: %s", statusCode.code, message())
-                onError(message())
+                var errorText = ""
+                errorText = when(statusCode){
+                    StatusCode.Unauthorized -> "Incorrect Username or Password"
+                    else -> message()
+                }
+                Timber.tag(TAG).i("createTokenApiKey() code: %s error: %s", statusCode.code, errorText)
+                onError(errorText)
             }
             .onException {
-                Timber.tag(TAG).i("createTokenApiKey() exception: %s", message())
-                onError(message())
+                val text = "Server is Down, Please a few minute!"
+                Timber.tag(TAG).i("createTokenApiKey() exception: %s", text)
+                onError(text)
             }
     }
 

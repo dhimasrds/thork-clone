@@ -30,6 +30,7 @@ import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber
 import javax.inject.Inject
@@ -151,26 +152,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun onSlowConnection() {
-        val toast = Toasty.warning(
-            this,
-            resourceProvider.getString(R.string.connection_slow),
-            Toast.LENGTH_LONG,
-            true
-        )
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.show()
+        CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow),)
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
     }
 
     open fun onLostConnection() {
-        val toast = Toasty.error(
-            this,
-            resourceProvider.getString(R.string.connection_not_available),
-            Toast.LENGTH_LONG,
-            true
-        )
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.show()
+        CommonUtils.errorToast(resourceProvider.getString(R.string.connection_not_available))
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_off)
     }
 

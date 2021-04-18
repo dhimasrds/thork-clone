@@ -112,6 +112,7 @@ class LoginViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("createTokenApiKey() error: %s", it)
                     _error.postValue(it)
                 })
+            _progressVisible.postValue(false)
         }
     }
 

@@ -16,6 +16,8 @@ package id.thork.app.utils
 import android.util.Base64
 import android.view.Gravity
 import android.widget.Toast
+import es.dmoral.toasty.Toasty
+import id.thork.app.R
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 
@@ -43,6 +45,20 @@ object CommonUtils {
         if (position == POSITION_CENTER) {
             toast.setGravity(Gravity.CENTER, 0, 0);
         }
+        toast.show()
+    }
+
+    fun errorToast(message: String){
+        val toast = Toasty.error(
+            BaseApplication.getAppContext(), message, Toast.LENGTH_LONG, true)
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
+    }
+
+    fun warningToast(message: String){
+        val toast = Toasty.warning(
+            BaseApplication.getAppContext(), message, Toast.LENGTH_LONG, true)
+        toast.setGravity(Gravity.CENTER, 0, 0)
         toast.show()
     }
 }
