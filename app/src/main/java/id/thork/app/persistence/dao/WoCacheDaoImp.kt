@@ -6,7 +6,6 @@ import id.thork.app.initializer.ObjectBox.boxStore
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import io.objectbox.Box
-import io.objectbox.BoxStore
 import java.util.*
 
 /**
