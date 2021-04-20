@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="id.thork.app.pages.detail_wo.element.DetailWoViewModel" />
