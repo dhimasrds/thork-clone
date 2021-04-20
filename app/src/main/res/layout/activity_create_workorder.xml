@@ -257,6 +257,7 @@
 
                 <!--LongDesc-->
                 <androidx.cardview.widget.CardView
+                    android:visibility="gone"
                     android:id="@+id/longdesc"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"

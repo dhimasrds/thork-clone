@@ -91,10 +91,12 @@ class DetailWoViewModel @ViewModelInject constructor(
 
         val maxauth: String? = appSession.userHash
         val xMethodeOverride: String = BaseParam.APP_PATCH
+        val contentType:String = ("application/json ")
         viewModelScope.launch(Dispatchers.IO) {
             if (woId != null) {
                 workOrderRepository.updateStatus(maxauth!!,
                     xMethodeOverride,
+                    contentType,
                     woId,
                     member,
                     onSuccess = {

@@ -31,19 +31,19 @@ interface WorkOrderApi {
         @Query(value = "oslc.where") where: String?
     ): ApiResponse<WorkOrderResponse>
 
-    @POST("/maximo/oslc/os/oslcwoupdate?lean=1")
+    @POST("/maximo/oslc/os/THISFSMWODETAIL?lean=1")
     suspend fun createWO(
         @Header(BaseParam.APP_MAX_AUTH) maxAuth: String?,
-        @Header(BaseParam.APP_PROPERTIES) properties: String?,
-        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+//        @Header(BaseParam.APP_PROPERTIES) properties: String?,
+//        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Body body: Member?
     ): ApiResponse<Member>
 
-    @POST("/maximo/oslc/os/oslcwoupdate/{workorderid}")
+    @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
     suspend fun updateStatus(
         @Header(BaseParam.APP_MAX_AUTH) maxAuth: String?,
         @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
-//        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Path("workorderid") workorderid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: Member?

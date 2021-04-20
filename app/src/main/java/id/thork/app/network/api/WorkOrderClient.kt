@@ -18,11 +18,11 @@ class WorkOrderClient @Inject constructor(
     suspend fun searchWorkOrder(headerParam: String, select: String, where: String) =
         workOrderApi.searchWorkorder(headerParam,LEAN, select, where)
 
-    suspend fun createWo(headerParam: String, properties: String, contentType: String, body: Member) =
-        workOrderApi.createWO(headerParam, properties, contentType, body)
+    suspend fun createWo(headerParam: String, body: Member) =
+        workOrderApi.createWO(headerParam, body)
 
-    suspend fun updateStatus(headerParam: String, xMethodeOverride: String, workOrderId: Int, body: Member) =
-        workOrderApi.updateStatus(headerParam, xMethodeOverride, workOrderId, LEAN, body)
+    suspend fun updateStatus(headerParam: String, xMethodeOverride: String, contentType: String, workOrderId: Int, body: Member) =
+        workOrderApi.updateStatus(headerParam, xMethodeOverride, contentType, workOrderId, LEAN, body)
 
     companion object {
         private const val LEAN = 1

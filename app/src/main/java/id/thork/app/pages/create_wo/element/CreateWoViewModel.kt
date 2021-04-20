@@ -81,11 +81,11 @@ class CreateWoViewModel @ViewModelInject constructor(
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
         val maxauth: String? = appSession.userHash
-        val properties: String = ("workorderid,wonum")
-        val contentType: String = ("application/json")
+//        val properties: String = ("workorderid,wonum")
+//        val contentType: String = ("application/json")
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.createWo(
-                maxauth!!, properties, contentType, member,
+                maxauth!!, member,
                 onSuccess = {
                     saveScannerMaterial(tempWonum, it.workorderid!!)
                     Timber.tag(TAG).i("createWo() success: %s", it)

@@ -112,13 +112,11 @@ class WorkOrderRepository @Inject constructor(
 
     suspend fun createWo(
         headerParam: String,
-        properties: String,
-        contentType: String,
         body: Member,
         onSuccess: (Member) -> Unit,
         onError: (String) -> Unit
     ) {
-        val response = workOrderClient.createWo(headerParam, properties, contentType, body)
+        val response = workOrderClient.createWo(headerParam, body)
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 onSuccess(response)
@@ -135,12 +133,12 @@ class WorkOrderRepository @Inject constructor(
     }
 
     suspend fun updateStatus(
-        headerParam: String, xMethodeOverride: String,
+        headerParam: String, xMethodeOverride: String, contentType: String,
         workOrderId: Int, body: Member,
         onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit
     ) {
         val response =
-            workOrderClient.updateStatus(headerParam, xMethodeOverride, workOrderId, body)
+            workOrderClient.updateStatus(headerParam, xMethodeOverride, contentType, workOrderId, body)
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 onSuccess(response)
