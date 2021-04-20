@@ -1,15 +1,13 @@
 package id.thork.app.pages
 
 import android.content.pm.PackageManager
-import android.media.Image
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -42,7 +40,6 @@ class ScannerActivity : BaseActivity(), TorchListener {
         backButton.setOnClickListener { finish() }
 
         //set torch listener
-//        barcodeScannerView.setTorchListener(this);
         barcodeScannerView.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult) {}
             override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
@@ -57,33 +54,33 @@ class ScannerActivity : BaseActivity(), TorchListener {
         // if the device does not have flashlight in its camera,
         // then remove the switch flashlight button...
         if (!hasFlash()) {
-            switchFlashlightButton.setVisibility(View.GONE)
+            switchFlashlightButton.visibility = View.GONE
         } else {
             switchFlashlightButton.setOnClickListener(View.OnClickListener { switchFlashlight() })
         }
 
         //start capture
         capture = CaptureManager(this, barcodeScannerView)
-        capture!!.initializeFromIntent(intent, savedInstanceState)
-        capture!!.decode()
+        capture?.initializeFromIntent(intent, savedInstanceState)
+        capture?.decode()
     }
 
     override fun onTorchOn() {
-        imgFlash!!.setImageDrawable(resources.getDrawable(R.drawable.ic_flash_off))
-        txtFlash!!.text = resources.getString(R.string.flash_off)
+        imgFlash?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_flash_off))
+        txtFlash?.text = resources.getString(R.string.flash_off)
     }
 
     override fun onTorchOff() {
-        imgFlash!!.setImageDrawable(resources.getDrawable(R.drawable.ic_flash))
-        txtFlash!!.text = resources.getString(R.string.flash_on)
+        imgFlash?.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_flash))
+        txtFlash?.text = resources.getString(R.string.flash_on)
     }
 
     fun switchFlashlight() {
         isFlashLightOn = if (isFlashLightOn) {
-            barcodeScannerView!!.setTorchOff()
+            barcodeScannerView.setTorchOff()
             false
         } else {
-            barcodeScannerView!!.setTorchOn()
+            barcodeScannerView.setTorchOn()
             true
         }
     }
@@ -100,25 +97,21 @@ class ScannerActivity : BaseActivity(), TorchListener {
 
     override fun onResume() {
         super.onResume()
-        capture!!.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
+        capture?.onResume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        capture!!.onDestroy()
+        capture?.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState!!)
-        capture!!.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
+        capture?.onSaveInstanceState(outState)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return barcodeScannerView!!.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+        return barcodeScannerView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
     }
 
     override fun onRequestPermissionsResult(
@@ -127,9 +120,9 @@ class ScannerActivity : BaseActivity(), TorchListener {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 0 && grantResults.size < 1) {}
-        else {
-            barcodeScannerView!!.resume()
+        if (requestCode == 0 && grantResults.isEmpty()) {
+        } else {
+            barcodeScannerView.resume()
         }
     }
 }

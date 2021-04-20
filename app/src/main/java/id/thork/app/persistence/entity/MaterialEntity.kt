@@ -10,13 +10,15 @@ import io.objectbox.annotation.Entity
 class MaterialEntity : BaseEntity{
     var resultCode: String? = null
     var workorderId: Int? = null
+    var wonum: String? = null
     var time: String? = null
     var date: String? = null
 
     constructor()
-    constructor(resultCode: String?, workorderId: Int?, time: String?, date: String?) : super() {
+    constructor(resultCode: String?, workorderId: Int?, wonum: String?, time: String?, date: String?) : super() {
         this.resultCode = resultCode
         this.workorderId = workorderId
+        this.wonum = wonum
         this.time = time
         this.date = date
 

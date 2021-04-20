@@ -108,6 +108,10 @@ class WoActivityRepository constructor(
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
 
+    fun findWoByWonumAndStatus(wonum: String, status: String): WoCacheEntity? {
+        return woCacheDao.findWoByWonumAndStatus(wonum, status)
+    }
+
     fun getWoList(
         appSession: AppSession,
         repository: WoActivityRepository,

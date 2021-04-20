@@ -323,7 +323,9 @@
     <string name="delete_dialog_negative">Tidak</string>
     <string name="failed_load_image">Gagal memuat gambar</string>
     <string name="create_workorder">Apakah kamu ingin membuat work order?</string>
+    <string name="warning_workorder">Deskripsi dan lokasi tidak boleh kosong?</string>
     <string name="information">Informasi</string>
+    <string name="warning">Peringatan!</string>
     <string name="next_step">Apakah kamu ingin memperbarui wo ini?</string>
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
