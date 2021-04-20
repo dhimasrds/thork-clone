@@ -20,13 +20,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -40,6 +40,7 @@ import id.thork.app.pages.GoogleMapInfoWindow
 import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
 import timber.log.Timber
+import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
     CustomDialogUtils.DialogActionListener {
@@ -47,10 +48,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     val TAG = MapFragment::class.java.name
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
     private var locationPermissionGranted = false
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
     private var lastKnownLocation: Location? = null
-    private val DEFAULT_ZOOM = 17
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
     private lateinit var customDialogUtils: CustomDialogUtils
     private val mapViewModel: MapViewModel by activityViewModels()
@@ -75,6 +77,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         customDialogUtils = CustomDialogUtils(requireContext())
 
         getLocationPermission()
+        getLocationChange()
         binding.apply {
             lifecycleOwner = this@MapFragment
             vm = mapViewModel
@@ -93,6 +96,18 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         updateLocationUI()
         getDeviceLocation()
         setupObserver()
+    }
+
+    // stop receiving location update when activity not visible/foreground
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    // start receiving location update when activity  visible/foreground
+    override fun onResume() {
+        super.onResume()
+        startLocationUpdates()
     }
 
     private fun onMapReadyState() {
@@ -137,7 +152,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 val resultCrewId = workInfo.outputData.getString("crewId")
                 val resultLongitude = workInfo.outputData.getString("longitude")
                 val resultLatitude = workInfo.outputData.getString("latitude")
-                val resultTag =  workInfo.outputData.getString("tag")
+                val resultTag = workInfo.outputData.getString("tag")
                 Timber.tag(TAG).i(
                     "workInfosObserver() myResult: %s, myResult2: %s , state: %s",
                     resultLaborcode.toString(),
@@ -149,10 +164,17 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
                 if (!resultLaborcode.isNullOrEmpty() && !resultCrewId.isNullOrEmpty()
                     && !resultLatitude.isNullOrEmpty() && !resultLongitude.isNullOrEmpty()
-                    && !resultTag.isNullOrEmpty()) {
+                    && !resultTag.isNullOrEmpty()
+                ) {
 
                     val crewLatLng = LatLng(resultLatitude.toDouble(), resultLongitude.toDouble())
-                    MapsUtils.renderCrewMarker(map, crewLatLng, resultLaborcode, resultCrewId, resultTag)
+                    MapsUtils.renderCrewMarker(
+                        map,
+                        crewLatLng,
+                        resultLaborcode,
+                        resultCrewId,
+                        resultTag
+                    )
                     mapViewModel.pruneWork()
                 }
             }
@@ -240,7 +262,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                                 isMyLocationEnabled = true
                             }
                             MapsUtils.renderCurrentLocation(map, lastKnownLocation)
-                            mapViewModel.postCrewPosition(lastKnownLocation!!.latitude.toString(), lastKnownLocation!!.longitude.toString())
                         }
                     }
                 }
@@ -249,6 +270,64 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             Timber.d("getDeviceLocation(): %s", e.message)
         }
     }
+
+    private fun getLocationChange() {
+        locationRequest = LocationRequest()
+        locationRequest.interval = 5000 // 5 sec
+        locationRequest.fastestInterval = 5000
+        locationRequest.smallestDisplacement = 170f //170 m = 0.1 mile
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                super.onLocationResult(locationResult)
+
+                if (locationResult!!.locations.isNotEmpty()) {
+                    val location = locationResult.lastLocation
+                    Timber.d("onLocationChange() moved")
+                    mapViewModel.postCrewPosition(
+                        location.latitude.toString(),
+                        location.longitude.toString()
+                    )
+
+                }
+            }
+        }
+    }
+
+    //start location updates
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            null /* Looper */
+        )
+    }
+
+    // stop location updates
+    private fun stopLocationUpdates() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+    }
+
+
 
     override fun onInfoWindowClick(marker: Marker) {
         if (locationPermissionGranted) {

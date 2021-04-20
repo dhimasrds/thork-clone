@@ -49,7 +49,7 @@
                 android:id="@+id/imageThis"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_logo_gradient" />
+                android:src="@drawable/ic_logo_this_fsm" />
 
             <TextView
                 android:id="@+id/txt_version"
