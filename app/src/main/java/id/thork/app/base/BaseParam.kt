@@ -88,6 +88,7 @@ object BaseParam {
     const val APP_WONUM = "WO. Number "
     const val APP_DETAIL = "Detail"
     const val APP_CREW = "Crew "
+    const val APP_MOVE = "move"
     const val APP_TAG_MARKER_WO = "WO"
     const val APP_TAG_MARKER_CREW = "CREW"
     const val APP_TAG_MARKER_CREW_MOVE = "move"
@@ -108,6 +109,14 @@ object BaseParam {
      */
     const val APP_APIKEY = "AIzaSyBPSt1F9lZcgia7JG4nW5eFPAuJCv68XBQ"
     const val BASE_MAPS_URL = "https://maps.googleapis.com/maps/api/directions/"
+
+    /**
+     * Base Parameter Firebase
+     */
+    const val BASE_FIREBASE_URL = "https://fcm.googleapis.com/"
+    const val APP_APIKEY_FIREBASE = "key=AAAA1bjwolE:APA91bHxc-tlmJw_Slov7QEUECjL6JX3C9sh5njm8kFnXDqH0zrGrB34gnZbWcTjcw6qnq66mdoKeK8kWPaIS1YvHKK4P1qV1N5esT2bdYzLsketNIQ3_tZnw5Na0n0JBfZc9BBhkF2I"
+    const val APP_PRIORITY = "high"
+    const val APP_FIREBASE_TOPIC = "/topics/thor-location"
 
     /**
      * Workorder Adapter Param

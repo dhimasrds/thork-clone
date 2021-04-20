@@ -240,6 +240,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                                 isMyLocationEnabled = true
                             }
                             MapsUtils.renderCurrentLocation(map, lastKnownLocation)
+                            mapViewModel.postCrewPosition(lastKnownLocation!!.latitude.toString(), lastKnownLocation!!.longitude.toString())
                         }
                     }
                 }

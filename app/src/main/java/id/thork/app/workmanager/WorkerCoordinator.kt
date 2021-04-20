@@ -128,7 +128,6 @@ class WorkerCoordinator @Inject constructor(
         val workorderid = data.getString("workorderid")
         Timber.tag(TAG).i("receivePushNotification() wonum: $wonum")
 
-
         val wocache = workOrderRepository.findWobyWonum(wonum)
 
         wocache.whatIfNotNull(

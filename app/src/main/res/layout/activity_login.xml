@@ -46,7 +46,7 @@
                     <ImageView
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:src="@drawable/ic_logo_gradient" />
+                        android:src="@drawable/ic_logo_this_fsm" />
                 </LinearLayout>
             </RelativeLayout>
 

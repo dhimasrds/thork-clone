@@ -76,11 +76,11 @@ class ThorFcmService : FirebaseMessagingService() {
 
     private fun processingRemoteMessage(remoteMessage: RemoteMessage) {
         Timber.tag(TAG).i("processingRemoteMessage() topic: %s", remoteMessage.from)
+        val crewId = remoteMessage.data.get("crewId")
+        val isCrewExists = appSession.personUID.toString().equals(crewId)
 
         if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
-            val crewId = remoteMessage.data.get("crewId")
             if (!crewId.isNullOrEmpty()) {
-                val isCrewExists = appSession.personUID.toString().equals(crewId)
                 Timber.tag(TAG).i(
                     "processingRemoteMessage() local crewId: %s server CrewId: %s Crew Exists: %s",
                     appSession.personUID, crewId, isCrewExists
@@ -99,7 +99,8 @@ class ThorFcmService : FirebaseMessagingService() {
 
             if (isBackgroundRunning(applicationContext)) {
                 //firebase location when application on background
-            } else {
+            }
+            else if (!isCrewExists) {
                 //notification when application on foreground
                 workerCoordinator.addCrewPositionQueue(remoteMessage.data)
             }

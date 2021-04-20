@@ -61,7 +61,7 @@
                 android:layout_height="@dimen/login_pattern_image_height"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/login_pattern_margin_top_icon"
-                android:src="@drawable/ic_logo" />
+                android:src="@drawable/ic_logo_this_fsm" />
 
             <TextView
                 android:id="@+id/et_profile_name"
