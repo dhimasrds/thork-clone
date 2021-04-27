@@ -3,31 +3,31 @@
     <item
         android:state_window_focused="false"
         android:state_enabled="true"
-        android:drawable="@drawable/ic_ip_config" />
+        android:drawable="@drawable/ic_web" />
 
     <item
         android:state_window_focused="false"
         android:state_enabled="false"
-        android:drawable="@drawable/ic_ip_config" />
+        android:drawable="@drawable/ic_web" />
 
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/ic_ip_blue" />
+        android:drawable="@drawable/ic_web_blue" />
 
     <item
         android:state_enabled="true"
         android:state_focused="true"
-        android:drawable="@drawable/ic_ip_blue" />
+        android:drawable="@drawable/ic_web_blue" />
 
     <item
         android:state_enabled="true"
-        android:drawable="@drawable/ic_ip_config" />
+        android:drawable="@drawable/ic_web" />
 
     <item
         android:state_focused="true"
-        android:drawable="@drawable/ic_ip_config" />
+        android:drawable="@drawable/ic_web" />
 
     <item
-        android:drawable="@drawable/ic_ip_config" />
+        android:drawable="@drawable/ic_web" />
 
 </selector>
