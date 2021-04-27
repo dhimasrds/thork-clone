@@ -62,6 +62,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
 
     override fun setupListener() {
         super.setupListener()
+        val pInfo = packageManager.getPackageInfo(packageName, 0)
+        binding.tvVersion.text = BaseParam.APP_VERSION + pInfo.versionName
         binding.btnSwitchUser.setOnClickListener {
             loginPatternViewModel.deleteUserSession()
         }

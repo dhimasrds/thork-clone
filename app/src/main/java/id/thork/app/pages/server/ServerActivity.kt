@@ -23,12 +23,14 @@ import androidx.work.WorkInfo
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityServerBinding
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.server.element.ServerActivityViewModel
 import id.thork.app.utils.CommonUtils
 import timber.log.Timber
+
 
 @AndroidEntryPoint
 class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
@@ -56,15 +58,19 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
 
     override fun setupListener() {
         super.setupListener()
+        val pInfo = packageManager.getPackageInfo(packageName, 0)
+        binding.tvVersion.text = BaseParam.APP_VERSION + pInfo.versionName
         binding.includeServerContent.serverNext.setOnClickListener {
-            viewModel.validateUrl(binding.includeServerContent.switchHttps.isChecked,
-                binding.includeServerContent.serverUrl.text.toString())
+            viewModel.validateUrl(
+                binding.includeServerContent.switchHttps.isChecked,
+                binding.includeServerContent.serverUrl.text.toString()
+            )
         }
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        viewModel.state.observe(this,  {
+        viewModel.state.observe(this, {
             if (CommonUtils.isTrue(it)) {
                 onSuccess()
             } else {
@@ -76,7 +82,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             binding.includeServerContent.serverUrl.setText(it)
         })
 
-        viewModel.outputWorkInfos.observe(this,  workInfosObserver())
+        viewModel.outputWorkInfos.observe(this, workInfosObserver())
     }
 
     // Add this functions
@@ -98,7 +104,11 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             val myResult = workInfo.outputData.getString("data")
             val myResult2 = workInfo.outputData.getInt("angka", 23)
 
-            Timber.tag(TAG).i("workInfosObserver() myResult: %s myResult2: %s", myResult.toString(), myResult2)
+            Timber.tag(TAG).i(
+                "workInfosObserver() myResult: %s myResult2: %s",
+                myResult.toString(),
+                myResult2
+            )
 
 
 //            if (workInfo.state.isFinished) {

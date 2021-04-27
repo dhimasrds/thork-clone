@@ -28,6 +28,8 @@ object BaseParam {
     const val APP_DASH = "-"
 
     const val APP_DEFAULT_LANG = "eng"
+    const val APP_VERSION = "Version "
+
     const val APP_DEFAULT_LANG_DETAIL = "English"
     const val APP_IND_LANG = "ind"
     const val APP_IND_LANG_DETAIL = "Indonesia"

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityLoginBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.login.element.LoginViewModel
@@ -50,6 +51,8 @@ class LoginActivity : BaseActivity(),
 
     override fun setupListener() {
         super.setupListener()
+        val pInfo = packageManager.getPackageInfo(packageName, 0)
+        binding.tvVersion.text = BaseParam.APP_VERSION + pInfo.versionName
         binding.includeLoginContent.loginbt.setOnClickListener {
             if (isConnected) {
                 loginViewModel.validateCredentials(

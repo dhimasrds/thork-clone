@@ -62,43 +62,61 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:id="@+id/mainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/base_margin"
-                android:layout_marginBottom="20dp">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="20dp"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:weightSum="3">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/base_margin"
+                    android:layout_marginBottom="30dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/opensans_bold"
-                        android:gravity="center"
-                        android:text="@string/server_address"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="18sp" />
-
-                    <include
-                        android:id="@+id/include_server_content"
-                        layout="@layout/activity_server_content"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="2" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:layout_margin="20dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:weightSum="3">
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/opensans_bold"
+                            android:gravity="center"
+                            android:text="@string/server_address"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="18sp" />
+
+                        <include
+                            android:id="@+id/include_server_content"
+                            layout="@layout/activity_server_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/tv_version"
+                    android:layout_marginBottom="@dimen/base_text_size_10dp"
+                    android:background="@drawable/ic_rectangle_border_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/opensans_bold"
+                    android:gravity="center"
+                    android:layout_gravity="center|bottom"
+                    android:textColor="@color/blue_ip"
+                    android:textSize="9sp"
+                    android:text="TESTINGGG"/>
+
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 </layout>
