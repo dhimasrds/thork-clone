@@ -350,7 +350,9 @@
     <string name="delete_dialog_negative">No</string>
     <string name="failed_load_image">Failed to load image</string>
     <string name="create_workorder">Do you want to create work order?</string>
+    <string name="warning_workorder">Description and Location cannot empty?</string>
     <string name="information">Information</string>
+    <string name="warning">Warning!</string>
     <string name="next_step">Do you want to update this wo?</string>
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>

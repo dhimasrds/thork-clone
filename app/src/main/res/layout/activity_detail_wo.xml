@@ -128,15 +128,27 @@
                         android:fontFamily="@font/poppins"
                         android:text="Status" />
 
-                    <TextView
-                        android:id="@+id/status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                    <LinearLayout
+                        android:id="@+id/bg_status"
+                        android:layout_width="94dp"
+                        android:layout_height="28dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
                         android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:fontFamily="@font/poppins"
+                            android:paddingTop="2dp"
+                            android:text="test"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -154,6 +166,63 @@
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    <!--Service Address-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/service_address" />
+
+                    <TextView
+                        android:id="@+id/serviceaddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginBottom="20dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/line"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_20" />
+
+                    <!--Location-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/location" />
+
+                    <TextView
+                        android:id="@+id/location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginBottom="20dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/line"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_20" />
+
+                    <!--Estimated work duration-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/estimatedwork" />
+
+                    <TextView
+                        android:id="@+id/estimated_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginBottom="20dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/line"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_20" />
 
                     <!--LongDesc-->
                     <androidx.cardview.widget.CardView
@@ -207,6 +276,58 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
+                    <!--Attachment-->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/attachment"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="8dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_image_wo" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="7"
+                                android:layout_marginLeft="5dp"
+                                android:text="@string/image" />
+
+                            <TextView
+                                android:id="@+id/total_foto"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_arrow_next" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
                     <!--Scan QR-->
                     <androidx.cardview.widget.CardView
                         android:id="@+id/scan_qr"
@@ -241,8 +362,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="7"
                                 android:layout_marginLeft="5dp"
+                                android:layout_weight="7"
                                 android:text="@string/wo_scan_material" />
 
                             <TextView
@@ -259,6 +380,76 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
+                    <!--REPORT DATE-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/reportDate" />
+
+                    <TextView
+                        android:id="@+id/report_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginBottom="20dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/line"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_20" />
+
+                    <!--MARGIN-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"></LinearLayout>
+
+                    <!--Button Wo Update-->
+                    <RelativeLayout
+                        android:id="@+id/layout_status"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="bottom">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="72dp"
+                            android:background="@color/white"
+                            android:gravity="bottom"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:id="@+id/btn_status_wo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_rectangle_long"
+                                android:clickable="true"
+                                android:foreground="?android:attr/selectableItemBackground" />
+
+                            <ImageView
+                                android:id="@+id/btn_more"
+                                android:layout_width="69dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:background="@drawable/ic_rectangle_small"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:src="@drawable/ic_more" />
+
+                            <TextView
+                                android:id="@+id/text_status"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="69dp"
+                                android:fontFamily="@font/poppins"
+                                android:gravity="center"
+                                android:text="@string/lines"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size_wo_detail_16" />
+                        </RelativeLayout>
+                    </RelativeLayout>
                 </LinearLayout>
             </ScrollView>
 

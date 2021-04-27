@@ -47,7 +47,7 @@ data class Member(
     @Json(name = "cxlabor")
     val cxlabor: String? = null,
     @Json(name = "description")
-    val description: String? = null,
+    var description: String? = null,
     @Json(name = "disabled")
     val disabled: Boolean? = null,
     @Json(name = "doclinks")
@@ -73,7 +73,7 @@ data class Member(
     @Json(name = "estatapprtoolcost")
     val estatapprtoolcost: Double? = null,
     @Json(name = "estdur")
-    val estdur: Double? = null,
+    var estdur: Double? = null,
     @Json(name = "estintlabcost")
     val estintlabcost: Double? = null,
     @Json(name = "estintlabhrs")
@@ -123,7 +123,7 @@ data class Member(
     @Json(name = "lms")
     val lms: Boolean? = null,
     @Json(name = "location")
-    val location: String? = null,
+    var location: String? = null,
     @Json(name = "locations")
     val locations: List<Location>? = null,
     @Json(name = "locations_collectionref")
@@ -157,7 +157,7 @@ data class Member(
     @Json(name = "repairlocflag")
     val repairlocflag: Boolean? = null,
     @Json(name = "reportdate")
-    val reportdate: String? = null,
+    var reportdate: String? = null,
     @Json(name = "reportedby")
     val reportedby: String? = null,
     @Json(name = "reqasstdwntime")
@@ -167,9 +167,9 @@ data class Member(
     @Json(name = "_rowstamp")
     val rowstamp: String? = null,
     @Json(name = "siteid")
-    val siteid: String? = null,
+    var siteid: String? = null,
     @Json(name = "status")
-    val status: String? = null,
+    var status: String? = null,
     @Json(name = "status_description")
     val statusDescription: String? = null,
     @Json(name = "statusdate")
@@ -193,11 +193,11 @@ data class Member(
     @Json(name = "wonum")
     val wonum: String? = null,
     @Json(name = "wopriority")
-    val wopriority: Int? = null,
+    var wopriority: Int? = null,
     @Json(name = "workorderid")
     val workorderid: Int? = null,
     @Json(name = "woserviceaddress")
-    val woserviceaddress: List<Woserviceaddres>? = null,
+    var woserviceaddress: List<Woserviceaddres>? = null,
     @Json(name = "woserviceaddress_collectionref")
     val woserviceaddressCollectionref: String? = null,
     @Json(name = "wostatus")

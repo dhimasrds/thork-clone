@@ -12,7 +12,7 @@ interface WoCacheDao {
 
     fun findWoByWonum(wonum: String): WoCacheEntity?
 
-    fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity
+    fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity?
 
     fun findWoByWonumAndIsLatest(wonum: String, isLatest: Int): WoCacheEntity
 

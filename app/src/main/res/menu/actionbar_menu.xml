@@ -24,4 +24,9 @@
         android:title="Send"
         android:icon="@drawable/ic_filter"
         app:showAsAction="always" />
+
+    <item android:id="@+id/scan_menu"
+        android:icon="@drawable/ic_add_black"
+        app:showAsAction="ifRoom"
+        android:title="add" />
 </menu>

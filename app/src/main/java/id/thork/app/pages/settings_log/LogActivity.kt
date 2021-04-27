@@ -2,7 +2,6 @@ package id.thork.app.pages.settings_log
 
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.thork.app.R
@@ -38,7 +37,7 @@ class LogActivity : BaseActivity() {
             lifecycleOwner = this@LogActivity
             logsActivity = viewModel
         }
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false)
+        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false, scannerIcon = false)
 //        setupToolbar()
     }
 

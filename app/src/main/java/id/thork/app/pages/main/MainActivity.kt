@@ -16,8 +16,6 @@ import android.Manifest
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -35,6 +33,7 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
+import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
 import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
@@ -55,7 +54,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         super.setupView()
         setupMainView(binding.mainLayout)
 
-        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true)
+        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true, scannerIcon = false)
         setupBottomNavigationBar()
 
         binding.apply {
@@ -92,7 +91,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.iv_add -> {
-                Toast.makeText(this, "Clicked xxxx!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, CreateWoActivity::class.java))
             }
         }
     }

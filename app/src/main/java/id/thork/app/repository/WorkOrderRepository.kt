@@ -110,6 +110,50 @@ class WorkOrderRepository @Inject constructor(
 
     }
 
+    suspend fun createWo(
+        headerParam: String,
+        body: Member,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = workOrderClient.createWo(headerParam, body)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                onSuccess(response)
+            }
+        }.onError {
+            Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
+            onError(message())
+        }
+            .onException {
+                Timber.tag(TAG).i("createWo() exception: %s", message())
+                onError(message())
+            }
+
+    }
+
+    suspend fun updateStatus(
+        headerParam: String, xMethodeOverride: String, contentType: String,
+        workOrderId: Int, body: Member,
+        onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit
+    ) {
+        val response =
+            workOrderClient.updateStatus(headerParam, xMethodeOverride, contentType, workOrderId, body)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                onSuccess(response)
+            }
+        }
+            .onError {
+                Timber.tag(TAG).i("updateStatus() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("updateStatus() exception: %s", message())
+                onError(message())
+            }
+    }
+
     fun saveWoList(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity {
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
@@ -163,8 +207,8 @@ class WorkOrderRepository @Inject constructor(
         return null
     }
 
-    fun updateWo(woCacheEntity: WoCacheEntity, username: String){
-        return woCacheDao.updateWo(woCacheEntity, username)
+    fun updateWo(woCacheEntity: WoCacheEntity, username: String?) {
+        return woCacheDao.updateWo(woCacheEntity, username!!)
     }
 
     fun addWoToObjectBox(list: List<Member>) {
@@ -190,12 +234,12 @@ class WorkOrderRepository @Inject constructor(
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress[0].latitudey
+            wo.woserviceaddress!![0].latitudey
         } else {
             null
         }
         woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress[0].longitudex
+            wo.woserviceaddress!![0].longitudex
         } else {
             null
         }
