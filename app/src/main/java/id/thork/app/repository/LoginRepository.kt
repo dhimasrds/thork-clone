@@ -54,13 +54,21 @@ class LoginRepository constructor(
             }
         }
             .onError {
-                Timber.tag(TAG)
-                    .i("createTokenApiKey() code: %s error: %s", statusCode.code, message())
-                onError(message())
+//                Timber.tag(TAG)
+//                    .i("createTokenApiKey() code: %s error: %s", statusCode.code, message())
+//                onError(message())
+                var errorText = ""
+                errorText = when(statusCode){
+                    StatusCode.Unauthorized -> "Incorrect Username or Password"
+                    else -> message()
+                }
+                Timber.tag(TAG).i("createTokenApiKey() code: %s error: %s", statusCode.code, errorText)
+                onError(errorText)
             }
             .onException {
-                Timber.tag(TAG).i("createTokenApiKey() exception: %s", message())
-                onError(message())
+                val text = "Server is Down, Please a few minute!"
+                Timber.tag(TAG).i("createTokenApiKey() exception: %s", text)
+                onError(text)
             }
     }
 

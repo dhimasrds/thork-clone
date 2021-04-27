@@ -85,7 +85,7 @@ class LoginActivity : BaseActivity(),
 
         loginViewModel.error.observe(this, { error ->
             Timber.tag(TAG).i("setupObserver() error: %s", error)
-            CommonUtils.showToast(error, CommonUtils.POSITION_CENTER)
+            CommonUtils.errorToast(error)
         })
 
         loginViewModel.firstLogin.observe(this, { firstLogin ->

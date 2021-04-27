@@ -23,6 +23,7 @@
     <string name="log_in">Log in to THIS</string>
     <string name="username_error">Username cannot be empty</string>
     <string name="username_invalid">Username invalid</string>
+    <string name="username_wrong">Wrong Username or Password</string>
     <string name="password_error">Password cannot be empty</string>
     <string name="connection_available">Connection is available</string>
     <string name="connection_not_available">It looks like your connection is NOT available</string>
