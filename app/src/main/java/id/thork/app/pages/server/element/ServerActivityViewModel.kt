@@ -46,10 +46,20 @@ class ServerActivityViewModel @ViewModelInject constructor(
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
     }
 
-    fun validateUrl(serverUrl: String) {
-        if (URLUtil.isValidUrl(serverUrl)) {
-            Timber.tag(TAG).i("validateUrl() serverUrl: %s", serverUrl)
-            preferenceManager.putString(BaseParam.APP_SERVER_ADDRESS, beautifyServerUrl(serverUrl))
+    fun validateUrl(isHttps: Boolean, serverUrl: String) {
+        var completeUrl = StringBuilder()
+        if (isHttps) {
+            completeUrl.append("https://");
+        } else {
+            completeUrl.append("http://")
+        }
+        var tmpServerUrl = serverUrl.replace("http://", "")
+            .replace("https://", "")
+        completeUrl.append(tmpServerUrl)
+
+        if (URLUtil.isValidUrl(completeUrl.toString())) {
+            Timber.tag(TAG).i("validateUrl() serverUrl: %s", completeUrl.toString())
+            preferenceManager.putString(BaseParam.APP_SERVER_ADDRESS, beautifyServerUrl(completeUrl.toString()))
             _state.postValue(BaseParam.APP_TRUE)
         }else {
             _state.postValue(BaseParam.APP_FALSE)
@@ -65,7 +75,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
 
     fun beautifyServerUrl(serverUrl: String): String {
         val beautyUrl: String
-        val lastString = serverUrl.substring(serverUrl.length-1)
+        val lastString = serverUrl.substring(serverUrl.length - 1)
         if (lastString.equals("/")) {
             beautyUrl = serverUrl
         } else {

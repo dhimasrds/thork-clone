@@ -57,7 +57,8 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     override fun setupListener() {
         super.setupListener()
         binding.includeServerContent.serverNext.setOnClickListener {
-            viewModel.validateUrl(binding.includeServerContent.serverUrl.text.toString())
+            viewModel.validateUrl(binding.includeServerContent.switchHttps.isChecked,
+                binding.includeServerContent.serverUrl.text.toString())
         }
     }
 

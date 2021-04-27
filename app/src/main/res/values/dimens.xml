@@ -18,14 +18,19 @@
 <resources>
     <!-- Base Text-->
     <dimen name="base_text_size">12dp</dimen>
+    <dimen name="base_text_size_10dp">10dp</dimen>
     <dimen name="base_text_size_14dp">14dp</dimen>
 
     <!-- Base Margin -->
+    <dimen name="base_component_margin">5dp</dimen>
     <dimen name="base_margin_left">15dp</dimen>
     <dimen name="base_margin_right">15dp</dimen>
     <dimen name="base_margin_top">15dp</dimen>
     <dimen name="base_margin_bottom">15dp</dimen>
     <dimen name="base_margin">15dp</dimen>
+
+    <!-- Base Padding -->
+    <dimen name="base_component_padding">5dp</dimen>
 
     <!-- Settings -->
     <dimen name="settings_start_margin">10dp</dimen>
@@ -67,6 +72,10 @@
     <dimen name="dialog_size_text_top">20sp</dimen>
     <dimen name="dialog_size_text_bottom">14sp</dimen>
     <dimen name="dialog_image_top_bottom">10dp</dimen>
+
+    <!-- Server Address -->
+    <dimen name= "activity_server_hor_margin">20dp</dimen>
+    <dimen name= "activity_server_ver_margin">40dp</dimen>
 
     <!-- -->
     <dimen name= "activity_login_container_hor_margin">40dp</dimen>
