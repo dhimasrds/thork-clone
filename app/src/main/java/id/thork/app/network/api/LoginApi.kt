@@ -3,6 +3,7 @@ package id.thork.app.network.api
 import com.skydoves.sandwich.ApiResponse
 import id.thork.app.base.BaseParam
 import id.thork.app.network.model.Todo
+import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.ResponseApiKey
 import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
@@ -14,12 +15,18 @@ interface LoginApi {
      */
     @GET("maximo/oslc/os/thisfsmusers")
     suspend fun loginByPerson(
-        @Header("apikey") apikey: String,
+//        @Header("apikey") apikey: String,
         @Query("lean") lean: Int = 1,
         @Query("oslc.select") select: String,
         @Query("oslc.where") where: String
     ): ApiResponse<UserResponse>
 
+    @POST("maximo/oslc/login")
+    suspend fun login(
+        @Header("maxauth") maxAuth: String?,
+    ):ApiResponse<LoginCookie>
+
+            
     @POST("maximo/oslc/apitoken/create")
     suspend fun createTokenApi(
         @Header("maxauth") maxAuth: String?,

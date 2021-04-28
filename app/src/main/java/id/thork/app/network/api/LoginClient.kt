@@ -20,7 +20,10 @@ class LoginClient @Inject constructor(
 ) {
 
     suspend fun loginByPerson(apikey: String, select: String, where: String) =
-        loginApi.loginByPerson(apikey, LEAN, select, where)
+        loginApi.loginByPerson( LEAN, select, where)
+
+
+    suspend fun login(maxauth : String) = loginApi.login(maxauth)
 
 
     suspend fun createTokenApiKey(headerParam: String, contentType: String, body: TokenApikey)=

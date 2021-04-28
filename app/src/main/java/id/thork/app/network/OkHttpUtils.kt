@@ -13,7 +13,10 @@
 package id.thork.app.network
 
 import okhttp3.OkHttpClient
+import okhttp3.internal.JavaNetCookieJar
 import okhttp3.logging.HttpLoggingInterceptor
+import java.net.CookieManager
+import java.net.CookiePolicy
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -43,11 +46,16 @@ class OkHttpUtils {
         // Create an ssl socket factory with our all-trusting manager
         val sslSocketFactory = sslContext.socketFactory
 
+
+        val cookieManager = CookieManager()
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+        val cookieJar = JavaNetCookieJar(cookieManager)
         return OkHttpClient.Builder()
             .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
             .hostnameVerifier { _, _ -> true }
             .addInterceptor(httpRequestInterceptor)
             .addInterceptor(httpLoggingInterceptor)
+            .cookieJar(cookieJar = cookieJar)
             .build()
     }
 

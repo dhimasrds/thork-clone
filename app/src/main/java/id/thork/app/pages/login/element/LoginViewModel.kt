@@ -75,7 +75,7 @@ class LoginViewModel @ViewModelInject constructor(
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
-        createTokenApiKey(userHash, username)
+       loginCookie(userHash,username)
     }
 
     fun connectionNotAvailable() {
@@ -115,6 +115,21 @@ class LoginViewModel @ViewModelInject constructor(
             _progressVisible.postValue(false)
         }
     }
+
+    private fun loginCookie(userHash: String,username: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loginRepository.loginCookie(userHash,
+                    onSuccess = {
+                        createTokenApiKey(userHash, username)
+                        Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
+                    }, onError = {
+                Timber.tag(TAG).i("loginCookie() error: %s", it)
+                _error.postValue(it)
+            })
+            _progressVisible.postValue(false)
+        }
+    }
+
 
     private fun fetchUserData(apiToken: String, userHash: String, username: String) {
         Timber.tag(TAG).i("fetchUserData()")
