@@ -15,7 +15,6 @@ interface LoginApi {
      */
     @GET("maximo/oslc/os/thisfsmusers")
     suspend fun loginByPerson(
-//        @Header("apikey") apikey: String,
         @Query("lean") lean: Int = 1,
         @Query("oslc.select") select: String,
         @Query("oslc.where") where: String
