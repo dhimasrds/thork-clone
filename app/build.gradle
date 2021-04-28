@@ -114,6 +114,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okHttpUrlConnectionVersion"
+
 
     implementation "com.squareup.moshi:moshi-adapters:$moshiAdapterVersion"
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
@@ -166,6 +168,7 @@ dependencies {
 
     // Barcode Scanner
     implementation "com.journeyapps:zxing-android-embedded:$rootProject.zxingAndroidVersion"
+
 
 }
 apply plugin: 'io.objectbox'

@@ -7,6 +7,7 @@ buildscript {
         hiltCoreVersion = "2.30.1-alpha"
         hiltVersion = "1.0.0-alpha02"
         assistedInjectVersion = "0.5.2"
+        okHttpUrlConnectionVersion = "3.0.0-RC1"
 
         essentialsVersion = "3.1.0"
         whatIfVersion = '1.0.8'

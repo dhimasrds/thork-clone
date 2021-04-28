@@ -19,12 +19,10 @@ class LoginClient @Inject constructor(
     private val loginApi: LoginApi
 ) {
 
-    suspend fun loginByPerson(apikey: String, select: String, where: String) =
-        loginApi.loginByPerson(apikey, LEAN, select, where)
+    suspend fun loginByPerson( select: String, where: String) =
+        loginApi.loginByPerson(LEAN, select, where)
 
-
-    suspend fun createTokenApiKey(headerParam: String, contentType: String, body: TokenApikey)=
-        loginApi.createTokenApi(headerParam, contentType, body)
+    suspend fun login(maxauth: String) = loginApi.login(maxauth)
 
     suspend fun getSystemProperties(headerParam: String, select: String) =
         loginApi.getSystemProperties(headerParam, LEAN, select)
