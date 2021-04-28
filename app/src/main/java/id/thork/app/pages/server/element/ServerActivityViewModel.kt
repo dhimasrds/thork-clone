@@ -69,6 +69,9 @@ class ServerActivityViewModel @ViewModelInject constructor(
     fun cacheServerUrl() {
         if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isEmpty()) {
             _cacheUrl.value = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
+                .replace("http://","")
+                .replace("https://","")
+                .replace("/", "")
         }
 
     }
