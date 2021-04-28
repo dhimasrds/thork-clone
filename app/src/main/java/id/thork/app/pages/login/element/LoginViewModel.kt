@@ -97,30 +97,12 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun createTokenApiKey(userHash: String, username: String) {
-        val body = TokenApikey()
-        body.expiration = -1
-
-        val contentType = ("application/json")
-        val apiToken = ResponseApiKey()
-        viewModelScope.launch(Dispatchers.IO) {
-            loginRepository.createTokenApiKey(userHash, contentType, body,
-                onSuccess = {
-                    apiToken.apikey = it.apikey
-                    fetchUserData(apiToken.apikey!!, userHash, username)
-                }, onError = {
-                    Timber.tag(TAG).i("createTokenApiKey() error: %s", it)
-                    _error.postValue(it)
-                })
-            _progressVisible.postValue(false)
-        }
-    }
 
     private fun loginCookie(userHash: String,username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loginRepository.loginCookie(userHash,
                     onSuccess = {
-                        createTokenApiKey(userHash, username)
+                        fetchUserData(userHash, username)
                         Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
                     }, onError = {
                 Timber.tag(TAG).i("loginCookie() error: %s", it)
@@ -131,14 +113,14 @@ class LoginViewModel @ViewModelInject constructor(
     }
 
 
-    private fun fetchUserData(apiToken: String, userHash: String, username: String) {
+    private fun fetchUserData(userHash: String, username: String) {
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
-            loginRepository.loginPerson(apiToken, selectQuery, whereQuery,
+            loginRepository.loginPerson( selectQuery, whereQuery,
                 onSuccess = {
                     userResponse = it
                 },
@@ -156,7 +138,7 @@ class LoginViewModel @ViewModelInject constructor(
             userResponse.member.whatIfNotNullOrEmpty(
                 whatIf = {
                     member = userResponse.member[0]
-                    val isFirstLogin = userIsFirstLogin(member, username, userHash, apiToken)
+                    val isFirstLogin = userIsFirstLogin(member, username, userHash)
                     _firstLogin.postValue(isFirstLogin)
                     _loginState.postValue(BaseParam.APP_TRUE)
                     appSession.reinitUser()
@@ -169,7 +151,7 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun userIsFirstLogin(member: Member, username: String, userHash: String, apiToken: String): Boolean {
+    private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
         val userEntity: UserEntity? = loginRepository.findUserByPersonUID(member.personuid)
         Timber.tag(TAG)
             .i("userIsFirstLogin() userEntity: %s personuid: %s", userEntity, member.personuid)
@@ -183,14 +165,14 @@ class LoginViewModel @ViewModelInject constructor(
                 return false
             },
             whatIfNot = {
-                createNewUserSession(member, username, userHash, apiToken)
+                createNewUserSession(member, username, userHash)
                 return true
             }
         )
         return false
     }
 
-    private fun createNewUserSession(member: Member, username: String, userHash: String, apiToken: String) {
+    private fun createNewUserSession(member: Member, username: String, userHash: String) {
         val userEntity = UserEntity()
         userEntity.createdDate = Date()
         userEntity.createdBy = username
@@ -221,7 +203,6 @@ class LoginViewModel @ViewModelInject constructor(
 
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
-        userEntity.apiKey = apiToken
         //userEntity!!.server_address
         loginRepository.createUserSession(userEntity, username)
     }

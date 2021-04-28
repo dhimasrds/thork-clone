@@ -25,13 +25,6 @@ interface LoginApi {
         @Header("maxauth") maxAuth: String?,
     ):ApiResponse<LoginCookie>
 
-            
-    @POST("maximo/oslc/apitoken/create")
-    suspend fun createTokenApi(
-        @Header("maxauth") maxAuth: String?,
-        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
-        @Body body: TokenApikey
-    ): ApiResponse<ResponseApiKey>
 
     @GET("/todos/{id}")
     suspend fun getTodo(@Path("id") id: Int): Todo
