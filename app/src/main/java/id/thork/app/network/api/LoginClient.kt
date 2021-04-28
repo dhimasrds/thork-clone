@@ -26,6 +26,9 @@ class LoginClient @Inject constructor(
     suspend fun createTokenApiKey(headerParam: String, contentType: String, body: TokenApikey)=
         loginApi.createTokenApi(headerParam, contentType, body)
 
+    suspend fun getSystemProperties(headerParam: String, select: String) =
+        loginApi.getSystemProperties(headerParam, LEAN, select)
+
     companion object {
         private const val LEAN = 1
     }

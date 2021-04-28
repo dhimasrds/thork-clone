@@ -7,13 +7,17 @@ import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.ResponseApiKey
 import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
+import id.thork.app.network.response.system_properties.SystemProperties
+import id.thork.app.persistence.dao.SysPropDao
 import id.thork.app.persistence.dao.UserDao
+import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 
 class LoginRepository constructor(
     private val loginClient: LoginClient,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val sysPropDao: SysPropDao
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
@@ -37,6 +41,18 @@ class LoginRepository constructor(
         return userDao.delete(userEntity)
     }
 
+    fun createSystemProperties(sysPropEntity: SysPropEntity, username: String) {
+        return sysPropDao.save(sysPropEntity, username);
+    }
+
+    fun deleteSystemProperties() {
+        return sysPropDao.remove()
+    }
+
+    fun createListSystemProperties(sysPropEntityList : List<SysPropEntity>): List<SysPropEntity> {
+        return sysPropDao.saveListSystemProperties(sysPropEntityList)
+    }
+
     suspend fun createTokenApiKey(
         headerParam: String,
         contentType: String,
@@ -55,11 +71,12 @@ class LoginRepository constructor(
 //                    .i("createTokenApiKey() code: %s error: %s", statusCode.code, message())
 //                onError(message())
                 var errorText = ""
-                errorText = when(statusCode){
+                errorText = when (statusCode) {
                     StatusCode.Unauthorized -> "Incorrect Username or Password"
                     else -> message()
                 }
-                Timber.tag(TAG).i("createTokenApiKey() code: %s error: %s", statusCode.code, errorText)
+                Timber.tag(TAG)
+                    .i("createTokenApiKey() code: %s error: %s", statusCode.code, errorText)
                 onError(errorText)
             }
             .onException {
@@ -91,6 +108,28 @@ class LoginRepository constructor(
             .onException {
                 Timber.tag(TAG).i("loginByPerson() exception: %s", message())
                 onError(message())
+            }
+    }
+
+    suspend fun fetchSystemproperties(
+        headerParam: String,
+        select: String,
+        onSuccess: (SystemProperties) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = loginClient.getSystemProperties(headerParam, select)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //Save system properties
+                onSuccess(response)
+            }
+        }
+            .onError {
+                onError(message())
+            }
+            .onException {
+                onException(message())
             }
     }
 }
