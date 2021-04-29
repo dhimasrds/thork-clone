@@ -5,6 +5,7 @@ import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.LoginClient
+import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.ResponseApiKey
 import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
@@ -90,6 +91,28 @@ class LoginRepository constructor(
                     Timber.tag(TAG).i("loginCookie() exception: %s", message())
                     onError(message())
                 }
+
+    }
+
+    suspend fun logout(
+        maxauth: String,
+        onSuccess: (Logout) -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        val response = loginClient.logout(maxauth)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //Save user session into local cache
+                onSuccess(response)
+            }
+        }.onError {
+                Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("loginCookie() exception: %s", message())
+                onError(message())
+            }
 
     }
 }

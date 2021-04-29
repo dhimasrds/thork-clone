@@ -24,6 +24,8 @@ class LoginClient @Inject constructor(
 
     suspend fun login(maxauth: String) = loginApi.login(maxauth)
 
+    suspend fun logout(maxauth: String) = loginApi.logout(maxauth)
+
     companion object {
         private const val LEAN = 1
     }

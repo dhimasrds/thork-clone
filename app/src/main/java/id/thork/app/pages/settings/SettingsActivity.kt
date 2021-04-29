@@ -162,7 +162,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     private fun goToLogout() {
         LocaleHelper.setLocale(this, BaseParam.APP_DEFAULT_LANG)
-        viewModel.deleteUserSession()
+        viewModel.logout()
     }
 
     private fun setDialogSwitchPattern() {
