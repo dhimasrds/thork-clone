@@ -12,14 +12,13 @@
 
 package id.thork.app.network.api
 
-import id.thork.app.network.model.user.TokenApikey
 import javax.inject.Inject
 
 class LoginClient @Inject constructor(
     private val loginApi: LoginApi
 ) {
 
-    suspend fun loginByPerson( select: String, where: String) =
+    suspend fun loginByPerson(select: String, where: String) =
         loginApi.loginByPerson(LEAN, select, where)
 
     suspend fun login(maxauth: String) = loginApi.login(maxauth)

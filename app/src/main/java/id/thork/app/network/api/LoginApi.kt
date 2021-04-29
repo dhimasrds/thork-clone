@@ -1,9 +1,10 @@
 package id.thork.app.network.api
 
 import com.skydoves.sandwich.ApiResponse
-import id.thork.app.base.BaseParam
 import id.thork.app.network.model.Todo
-import id.thork.app.network.model.user.*
+import id.thork.app.network.model.user.LoginCookie
+import id.thork.app.network.model.user.Logout
+import id.thork.app.network.model.user.UserResponse
 import retrofit2.http.*
 
 interface LoginApi {
@@ -20,12 +21,12 @@ interface LoginApi {
     @POST("maximo/oslc/login")
     suspend fun login(
         @Header("maxauth") maxAuth: String?,
-    ):ApiResponse<LoginCookie>
+    ): ApiResponse<LoginCookie>
 
     @POST("maximo/oslc/logout")
     suspend fun logout(
         @Header("maxauth") maxAuth: String?,
-    ):ApiResponse<Logout>
+    ): ApiResponse<Logout>
 
     @GET("/todos/{id}")
     suspend fun getTodo(@Path("id") id: Int): Todo

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
-import id.thork.app.pages.login.element.LoginViewModel
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
@@ -60,22 +59,22 @@ class SettingsViewModel @ViewModelInject constructor(
         loginRepository.saveLoginPattern(userExisting, appSession.userEntity.username)
     }
 
-    fun deleteUserSession() {
-        val userEntity: UserEntity = appSession.userEntity
-        loginRepository.deleteUserSession(userEntity)
-        _logout.postValue(BaseParam.APP_TRUE)
-    }
-
     fun logout() {
         viewModelScope.launch(Dispatchers.IO) {
-            loginRepository.loginCookie(appSession.userHash!!,
+            loginRepository.logout(appSession.userHash!!,
                 onSuccess = {
                     deleteUserSession()
-                    Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
+                    Timber.tag(TAG).i("loginCookie() sessionTime: %s", it)
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
                 })
         }
+    }
+
+    private fun deleteUserSession() {
+        val userEntity: UserEntity = appSession.userEntity
+        loginRepository.deleteUserSession(userEntity)
+        _logout.postValue(BaseParam.APP_TRUE)
     }
 
 

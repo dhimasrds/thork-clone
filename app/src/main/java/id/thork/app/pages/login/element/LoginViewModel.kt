@@ -124,6 +124,9 @@ class LoginViewModel @ViewModelInject constructor(
                 },
                 onError = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
+                    if (it == BaseParam.STATUS_UNAUTHORIZED) {
+                        loginCookie(userHash, username)
+                    }
                     _error.postValue(it)
                 },
                 onException = {

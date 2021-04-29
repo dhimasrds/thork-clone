@@ -146,4 +146,14 @@ object BaseParam {
     const val PRIORITY_MEDIUM = "1"
     const val PRIORITY_HIGH = "2"
     const val LONGDESC = "longdescription"
+
+    /**
+     * Status Code
+     *
+     */
+    const val STATUS_UNAUTHORIZED = "401"
+    const val STATUS_OK = "200"
+    const val STATUS_NOTFOUND = "404"
+
+
 }
