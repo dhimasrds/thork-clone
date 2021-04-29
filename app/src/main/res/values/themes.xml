@@ -15,6 +15,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:elevation">0dp</item>
+        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
     </style>
 
     <style name="ColdStart" parent="Theme.Thork">
@@ -28,5 +29,11 @@
     <style name="MyActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">@color/white</item>
     </style>
+
+    <style name="MyActionButtonStyle" parent="Theme.Thork">
+        <item name="android:minWidth">20dp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
 
 </resources>
