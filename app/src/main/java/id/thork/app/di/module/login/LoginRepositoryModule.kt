@@ -16,7 +16,7 @@ object LoginRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideLoginRepository(
-        loginClient: LoginClient
+        loginClient: LoginClient,
     ): LoginRepository {
         return LoginRepository(loginClient, UserDaoImp())
     }

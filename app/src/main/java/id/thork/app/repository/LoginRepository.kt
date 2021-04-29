@@ -57,8 +57,6 @@ class LoginRepository constructor(
         }.onError {
             Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode.code, message())
             onError(statusCode.code.toString())
-            Timber.d("raka statusCode.code %s",statusCode.code)
-            Timber.d("raka statusCode %s",statusCode)
         }
             .onException {
                 Timber.tag(TAG).i("loginByPerson() exception: %s", message())

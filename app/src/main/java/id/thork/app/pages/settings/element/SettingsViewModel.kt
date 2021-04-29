@@ -19,7 +19,7 @@ import timber.log.Timber
  */
 class SettingsViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
-    private val appSession: AppSession
+    private val appSession: AppSession,
 ) : LiveCoroutinesViewModel() {
     val TAG = SettingsViewModel::class.java.name
 

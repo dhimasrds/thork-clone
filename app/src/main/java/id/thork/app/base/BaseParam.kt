@@ -116,7 +116,8 @@ object BaseParam {
      * Base Parameter Firebase
      */
     const val BASE_FIREBASE_URL = "https://fcm.googleapis.com/"
-    const val APP_APIKEY_FIREBASE = "key=AAAA1bjwolE:APA91bHxc-tlmJw_Slov7QEUECjL6JX3C9sh5njm8kFnXDqH0zrGrB34gnZbWcTjcw6qnq66mdoKeK8kWPaIS1YvHKK4P1qV1N5esT2bdYzLsketNIQ3_tZnw5Na0n0JBfZc9BBhkF2I"
+    const val APP_APIKEY_FIREBASE =
+        "key=AAAA1bjwolE:APA91bHxc-tlmJw_Slov7QEUECjL6JX3C9sh5njm8kFnXDqH0zrGrB34gnZbWcTjcw6qnq66mdoKeK8kWPaIS1YvHKK4P1qV1N5esT2bdYzLsketNIQ3_tZnw5Na0n0JBfZc9BBhkF2I"
     const val APP_PRIORITY = "high"
     const val APP_FIREBASE_TOPIC = "/topics/thor-location"
 

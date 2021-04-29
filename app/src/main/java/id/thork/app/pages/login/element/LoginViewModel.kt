@@ -37,7 +37,7 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val appSession: AppSession
+    private val appSession: AppSession,
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 

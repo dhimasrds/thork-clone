@@ -15,7 +15,6 @@ package id.thork.app.network
 import okhttp3.OkHttpClient
 import okhttp3.internal.JavaNetCookieJar
 import okhttp3.logging.HttpLoggingInterceptor
-import timber.log.Timber
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.security.cert.X509Certificate
@@ -28,8 +27,10 @@ class OkHttpUtils {
 
     private val SSL = "SSL"
 
-    fun getTrustedOkHttpClient(httpRequestInterceptor: HttpRequestInterceptor,
-                               httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun getTrustedOkHttpClient(
+        httpRequestInterceptor: HttpRequestInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient {
         // Create a trust manager that does not validate certificate chains
         val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
             override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
@@ -51,7 +52,6 @@ class OkHttpUtils {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         val cookieJar = JavaNetCookieJar(cookieManager)
-        Timber.d("raka %s", cookieJar )
         return OkHttpClient.Builder()
             .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
             .hostnameVerifier { _, _ -> true }

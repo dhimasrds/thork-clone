@@ -15,14 +15,10 @@ package id.thork.app.pages.main.element
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.network.api.LoginApi
-import id.thork.app.repository.LoginRepository
-import retrofit2.Retrofit
-import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(
-    private val context: Context
-    ) : LiveCoroutinesViewModel() {
+    private val context: Context,
+) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
 
