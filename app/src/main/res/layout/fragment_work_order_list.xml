@@ -26,6 +26,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
+            android:textColor="@color/black"
             android:inputType="number"
             android:background="@drawable/bg_edit_text"
             android:textSize="16sp"

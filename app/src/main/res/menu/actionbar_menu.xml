@@ -13,10 +13,17 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    
     <item
         android:id="@+id/action_conn"
         android:title="Connection"
         android:icon="@drawable/ic_conn_on"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_notif"
+        android:title="Send"
+        android:icon="@drawable/ic_notification"
         app:showAsAction="always" />
 
     <item
@@ -24,6 +31,9 @@
         android:title="Send"
         android:icon="@drawable/ic_filter"
         app:showAsAction="always" />
+
+
+
 
     <item android:id="@+id/scan_menu"
         android:icon="@drawable/ic_add_black"
