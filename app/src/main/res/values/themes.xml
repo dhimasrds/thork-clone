@@ -15,7 +15,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:elevation">0dp</item>
-        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
+        <item name="android:actionButtonStyle">@style/ThorkMenuItemStyle</item>
     </style>
 
     <style name="ColdStart" parent="Theme.Thork">
@@ -30,7 +30,7 @@
         <item name="android:textColorPrimary">@color/white</item>
     </style>
 
-    <style name="MyActionButtonStyle" parent="Theme.Thork">
+    <style name="ThorkMenuItemStyle" parent="Theme.Thork">
         <item name="android:minWidth">20dp</item>
         <item name="android:padding">5dp</item>
     </style>
