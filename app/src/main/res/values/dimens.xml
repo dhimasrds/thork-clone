@@ -17,9 +17,15 @@
 
 <resources>
     <!-- Base Text-->
-    <dimen name="base_text_size">12dp</dimen>
-    <dimen name="base_text_size_10dp">10dp</dimen>
-    <dimen name="base_text_size_14dp">14dp</dimen>
+    <dimen name="base_text_size_8">8sp</dimen>
+    <dimen name="base_text_size_10">10sp</dimen>
+    <dimen name="base_text_size_12">12sp</dimen>
+    <dimen name="base_text_size_14">14sp</dimen>
+    <dimen name="base_text_size_16">16sp</dimen>
+    <dimen name="base_text_size_18">18sp</dimen>
+    <dimen name="base_text_size_20">20sp</dimen>
+    <dimen name="base_text_size_22">22sp</dimen>
+    <dimen name="base_text_size_24">24sp</dimen>
 
     <!-- Base Margin -->
     <dimen name="base_component_margin">5dp</dimen>
@@ -161,6 +167,48 @@
     <dimen name="margin_bottom_desc_intro">50dp</dimen>
     <dimen name="text_size_title_intro">16sp</dimen>
     <dimen name="text_size_desc_intro">12sp</dimen>
+
+
+    <!-- general padding x5 -->
+    <dimen name="general_padding_5dp">5dp</dimen>
+    <dimen name="general_padding_10dp">10dp</dimen>
+    <dimen name="general_padding_15dp">15dp</dimen>
+    <dimen name="general_padding_25dp">25dp</dimen>
+    <dimen name="general_padding_30dp">30dp</dimen>
+    <dimen name="general_padding_35dp">35dp</dimen>
+
+    <!-- general padding x2 -->
+    <dimen name="general_padding_2dp">2dp</dimen>
+    <dimen name="general_padding_4dp">4dp</dimen>
+    <dimen name="general_padding_6dp">6dp</dimen>
+    <dimen name="general_padding_8dp">8dp</dimen>
+    <dimen name="general_padding_12dp">12dp</dimen>
+    <dimen name="general_padding_14dp">14dp</dimen>
+    <dimen name="general_padding_16dp">16dp</dimen>
+
+    <!-- general margin x5 -->
+    <dimen name="general_margin_5dp">5dp</dimen>
+    <dimen name="general_margin_10dp">10dp</dimen>
+    <dimen name="general_margin_15dp">15dp</dimen>
+    <dimen name="general_margin_20dp">20dp</dimen>
+    <dimen name="general_margin_25dp">25dp</dimen>
+    <dimen name="general_margin_30dp">30dp</dimen>
+    <dimen name="general_margin_35dp">35dp</dimen>
+
+    <!-- general margin x2 -->
+    <dimen name="general_margin_2dp">2dp</dimen>
+    <dimen name="general_margin_4dp">4dp</dimen>
+    <dimen name="general_margin_6dp">6dp</dimen>
+    <dimen name="general_margin_8dp">8dp</dimen>
+    <dimen name="general_margin_12dp">12dp</dimen>
+    <dimen name="general_margin_14dp">14dp</dimen>
+    <dimen name="general_margin_16dp">16dp</dimen>
+    <dimen name="general_margin_18dp">16dp</dimen>
+    <dimen name="general_margin_28dp">16dp</dimen>
+    <dimen name="general_margin_22dp">16dp</dimen>
+    <dimen name="general_margin_24dp">16dp</dimen>
+    <dimen name="general_margin_26dp">16dp</dimen>
+    <dimen name="login_pattern_text25sp">25sp</dimen>
 
 
 </resources>

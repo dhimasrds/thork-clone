@@ -68,7 +68,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
 
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="@dimen/general_margin_20dp">
 
                 <LinearLayout
                     android:layout_width="328dp"
@@ -79,12 +79,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/general_margin_24dp"
                         android:fontFamily="@font/opensans_bold"
                         android:gravity="center"
                         android:text="@string/log_in"
                         android:textColor="@color/colorBlack"
-                        android:textSize="18sp" />
+                        android:textSize="@dimen/base_text_size_18" />
 
                     <include
                         android:id="@+id/include_login_content"
@@ -94,7 +94,7 @@
 
             <TextView
                 android:id="@+id/tv_version"
-                android:layout_marginBottom="@dimen/base_text_size_10dp"
+                android:layout_marginBottom="@dimen/base_text_size_10"
                 android:background="@drawable/ic_rectangle_border_blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                 android:gravity="center"
                 android:layout_gravity="center|bottom"
                 android:textColor="@color/blue_ip"
-                android:textSize="9sp"
+                android:textSize="@dimen/base_text_size_10"
                 android:text="TESTINGGG"/>
             </LinearLayout>
 

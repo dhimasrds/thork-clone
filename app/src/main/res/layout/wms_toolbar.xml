@@ -31,7 +31,7 @@
                 android:fontFamily="@font/opensans_bold"
                 android:text="Toolbar Title"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="@dimen/base_text_size_14" />
         </androidx.appcompat.widget.Toolbar>
 
 </LinearLayout>

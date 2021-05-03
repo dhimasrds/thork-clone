@@ -99,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_16" />
@@ -143,7 +143,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:fontFamily="@font/poppins"
-                            android:paddingTop="2dp"
+                            android:paddingTop="@dimen/general_padding_2dp"
                             android:text="test"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/text_size_wo_detail_16" />
@@ -393,7 +393,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:fontFamily="@font/poppins"
                         android:text="@string/line"
                         android:textColor="@color/colorBlack"
@@ -417,7 +417,7 @@
                             android:background="@color/white"
                             android:gravity="bottom"
                             android:orientation="horizontal"
-                            android:padding="16dp">
+                            android:padding="@dimen/general_padding_16dp">
 
                             <ImageView
                                 android:id="@+id/btn_status_wo"
@@ -433,8 +433,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:background="@drawable/ic_rectangle_small"
-                                android:paddingTop="8dp"
-                                android:paddingBottom="8dp"
+                                android:paddingTop="@dimen/general_padding_8dp"
+                                android:paddingBottom="@dimen/general_padding_8dp"
                                 android:src="@drawable/ic_more" />
 
                             <TextView

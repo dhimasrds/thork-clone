@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="25dp"
+        android:padding="@dimen/general_padding_25dp"
         android:background="@drawable/estdur_dialog_bg">
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_marginBottom="20dp"
             android:textStyle="bold"
             android:fontFamily="@font/poppins"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/base_text_size_20"/>
 
         <LinearLayout
             android:orientation="horizontal"

@@ -82,7 +82,7 @@
                 android:layout_marginLeft="@dimen/button_skip_left_right_intro"
                 android:layout_marginRight="@dimen/button_skip_left_right_intro"
                 android:layout_weight="0.5"
-                android:textSize="12sp"
+                android:textSize="@dimen/base_text_size_12"
                 android:background="@drawable/btn_rounded"
                 android:fontFamily="@font/opensans_bold"
                 android:text="@string/start"

@@ -59,7 +59,7 @@
             android:background="@drawable/bg_center_nav_option"
             android:contentDescription="@string/bottom_sheet_behavior"
             android:onClick="onClick"
-            android:padding="15dp"
+            android:padding="@dimen/general_padding_15dp"
             android:src="@drawable/ic_notifications"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
