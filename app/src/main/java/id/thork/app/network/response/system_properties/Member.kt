@@ -22,8 +22,8 @@ data class Member(
     val thisfsmresource: List<Thisfsmresource>? = null,
     @Json(name = "thisfsmresource_collectionref")
     val thisfsmresourceCollectionref: String? = null,
-    @Json(name = "thisfsmsyspropvalue")
-    val thisfsmsyspropvalue: List<Thisfsmsyspropvalue>? = null,
-    @Json(name = "thisfsmsyspropvalue_collectionref")
-    val thisfsmsyspropvalueCollectionref: String? = null
+    @Json(name = "thisfsmsysprop")
+    val thisfsmsysprop: List<Thisfsmsysprop>? = null,
+    @Json(name = "thisfsmsysprop_collectionref")
+    val thisfsmsyspropCollectionref: String? = null
 )

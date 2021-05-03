@@ -18,8 +18,8 @@ data class Thisfsmresvalue(
     val thisfsmblindcount: Boolean? = null,
     @Json(name = "thisfsmisdefault")
     val thisfsmisdefault: Boolean? = null,
-    @Json(name = "thisfsmresourceid")
-    val thisfsmresourceid: String? = null,
+    @Json(name = "thisfsmmaxgroupid")
+    val thisfsmmaxgroupid: String? = null,
     @Json(name = "thisfsmresvalueid")
     val thisfsmresvalueid: Int? = null
 )

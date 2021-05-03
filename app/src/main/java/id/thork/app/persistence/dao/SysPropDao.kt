@@ -10,4 +10,5 @@ interface SysPropDao {
     fun remove()
     fun save(sysPropEntity: SysPropEntity, username: String)
     fun saveListSystemProperties(sysPropEntitylist: List<SysPropEntity>): List<SysPropEntity>
+    fun findBypropertiesKey(propertiesKey: String): SysPropEntity?
 }

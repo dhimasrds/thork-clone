@@ -23,32 +23,32 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
+import id.thork.app.di.module.SystemPropertiesMx
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
-import id.thork.app.network.model.user.ResponseApiKey
-import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.system_properties.SystemProperties
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
+import id.thork.app.utils.StringUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
-import kotlin.collections.ArrayList
 
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val appSession: AppSession
+    private val appSession: AppSession,
+    private val systemPropertiesMx: SystemPropertiesMx
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 
     private val _progressVisible = MutableLiveData<Boolean>(false)
     private val _fetchProgressVisible = MutableLiveData<Boolean>(false)
-//    private val _lytVisible = MutableLiveData<Boolean>(true)
+
     private val _success = MutableLiveData<String>()
     private val _error = MutableLiveData<String>()
     private val _loginState = MutableLiveData<Int>()
@@ -57,7 +57,7 @@ class LoginViewModel @ViewModelInject constructor(
     private val _firstLogin = MutableLiveData<Boolean>()
     val progressVisible: LiveData<Boolean> get() = _progressVisible
     val fetchProgressVisible: LiveData<Boolean> get() = _fetchProgressVisible
-//    val lytVisible : LiveData<Boolean> get() = _lytVisible
+
     val success: LiveData<String> get() = _success
     val error: LiveData<String> get() = _error
     val loginState: LiveData<Int> get() = _loginState
@@ -77,12 +77,24 @@ class LoginViewModel @ViewModelInject constructor(
         }
 
         _progressVisible.value = true
+        val encodeSysProp =
+            StringUtils.encodeToBase64(systemPropertiesMx.FSM_APP_GOOGLE_MAP_WHATEVER)
         Timber.tag(TAG).i("validateCredentials() username: %s password: %s", username, password)
+        Timber.tag(TAG).i(
+            "validateCredentials() systemProperties: %s",
+            systemPropertiesMx.FSM_APP_GOOGLE_MAP_WHATEVER
+        )
+        Timber.tag(TAG).i("validateCredentials() systemProperties encode: %s", encodeSysProp)
+        Timber.tag(TAG).i(
+            "validateCredentials() systemProperties decode: %s",
+            StringUtils.decodeToBase64(encodeSysProp.toString())
+        )
+
         validateWithActiveSession(username)
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
-       loginCookie(userHash,username)
+        loginCookie(userHash, username)
     }
 
     fun connectionNotAvailable() {
@@ -105,16 +117,16 @@ class LoginViewModel @ViewModelInject constructor(
     }
 
 
-    private fun loginCookie(userHash: String,username: String) {
+    private fun loginCookie(userHash: String, username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loginRepository.loginCookie(userHash,
-                    onSuccess = {
-                        fetchUserData(userHash, username)
-                        Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
-                    }, onError = {
-                Timber.tag(TAG).i("loginCookie() error: %s", it)
-                _error.postValue(it)
-            })
+                onSuccess = {
+                    fetchUserData(userHash, username)
+                    Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
+                }, onError = {
+                    Timber.tag(TAG).i("loginCookie() error: %s", it)
+                    _error.postValue(it)
+                })
             _progressVisible.postValue(false)
         }
     }
@@ -127,7 +139,7 @@ class LoginViewModel @ViewModelInject constructor(
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
-            loginRepository.loginPerson( selectQuery, whereQuery,
+            loginRepository.loginPerson(selectQuery, whereQuery,
                 onSuccess = {
                     userResponse = it
                 },
@@ -248,9 +260,9 @@ class LoginViewModel @ViewModelInject constructor(
     private fun saveSystemProperties(member: id.thork.app.network.response.system_properties.Member) {
         val username = appSession.userEntity.username
         val sysPropEntitylist = mutableListOf<SysPropEntity>()
-        if(username != null) {
+        if (username != null) {
             Timber.tag(TAG).i("saveSystemProperties() username: $username")
-            member.thisfsmsyspropvalue?.forEach {
+            member.thisfsmsysprop?.forEach {
                 val sysPropEntity = SysPropEntity()
                 sysPropEntity.createdDate = Date()
                 sysPropEntity.createdBy = username
@@ -262,12 +274,13 @@ class LoginViewModel @ViewModelInject constructor(
                 sysPropEntity.fsmappdescription = member.description
                 sysPropEntity.siteid = appSession.siteId
                 sysPropEntity.orgid = appSession.orgId
-
-                sysPropEntity.propertiesid = it.thisfsmsyspropvalueid.toString()
-                sysPropEntity.propertieskey = it.thisfsmpropvalue
-                sysPropEntity.propertiesvalue = it.thisfsmpropid
-                val fsmisglobal = it.thisfsmsysprop?.get(0)
-                sysPropEntity.fsmisglobal = fsmisglobal?.thisfsmisglobal
+                sysPropEntity.propertiesid =
+                    it.thisfsmsyspropvalue?.get(0)?.thisfsmsyspropvalueid.toString()
+                sysPropEntity.propertieskey = it.thisfsmpropid
+                val encodePropertiesValue =
+                    StringUtils.encodeToBase64(it.thisfsmsyspropvalue?.get(0)?.thisfsmpropvalue.toString())
+                sysPropEntity.propertiesvalue = encodePropertiesValue
+                sysPropEntity.fsmisglobal = it.thisfsmisglobal
 //                loginRepository.createSystemProperties(sysPropEntity, username)
                 sysPropEntitylist.add(sysPropEntity)
                 Timber.tag(TAG).i("saveSystemProperties() add to object box")

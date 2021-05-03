@@ -15,6 +15,7 @@
  */
 package id.thork.app.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import id.thork.app.base.BaseParam
 import java.io.File
@@ -36,17 +37,24 @@ object StringUtils {
         return context.resources.getString(stringResource)
     }
 
-    
+
     /**
      * Encode string to base64
      *
      * @param string
      * @return
      */
-    //TODO
-//    fun encodeToBase64(string: String): String {
-//        return Base64.encodeBytes(string.toByteArray())
-//    }
+    @SuppressLint("NewApi")
+    fun encodeToBase64(string: String): String? {
+        return Base64.getEncoder().encodeToString(string.toByteArray())
+    }
+
+    @SuppressLint("NewApi")
+    fun decodeToBase64(string: String): String {
+        val decodedBytes = Base64.getDecoder().decode(string)
+        return String(decodedBytes)
+    }
+
 
     fun generateUUID(): String {
         return UUID.randomUUID().toString().replace("-", "")

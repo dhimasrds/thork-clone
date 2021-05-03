@@ -6,6 +6,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Thisfsmresource(
+    @Json(name = "description")
+    val description: String? = null,
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "localref")

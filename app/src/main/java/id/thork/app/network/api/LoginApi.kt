@@ -1,11 +1,8 @@
 package id.thork.app.network.api
 
 import com.skydoves.sandwich.ApiResponse
-import id.thork.app.base.BaseParam
 import id.thork.app.network.model.Todo
 import id.thork.app.network.model.user.LoginCookie
-import id.thork.app.network.model.user.ResponseApiKey
-import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.system_properties.SystemProperties
 import retrofit2.http.*

@@ -16,8 +16,14 @@ data class Thisfsmsysprop(
     val rowstamp: String? = null,
     @Json(name = "thisfsmisglobal")
     val thisfsmisglobal: Boolean? = null,
+    @Json(name = "thisfsmpropid")
+    val thisfsmpropid: String? = null,
     @Json(name = "thisfsmpropvalue")
     val thisfsmpropvalue: String? = null,
     @Json(name = "thisfsmsyspropid")
-    val thisfsmsyspropid: Int? = null
+    val thisfsmsyspropid: Int? = null,
+    @Json(name = "thisfsmsyspropvalue")
+    val thisfsmsyspropvalue: List<Thisfsmsyspropvalue>? = null,
+    @Json(name = "thisfsmsyspropvalue_collectionref")
+    val thisfsmsyspropvalueCollectionref: String? = null
 )
