@@ -21,6 +21,7 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.base.Maximo_Response
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
@@ -124,10 +125,14 @@ class LoginViewModel @ViewModelInject constructor(
                 },
                 onError = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
-                    if (it == BaseParam.STATUS_UNAUTHORIZED) {
-                        loginCookie(userHash, username)
+                    when (it) {
+                        Maximo_Response.BMXAA0021E -> {
+                            loginCookie(userHash, username)
+                        }
+                        else -> {
+                            _error.postValue(it)
+                        }
                     }
-                    _error.postValue(it)
                 },
                 onException = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
