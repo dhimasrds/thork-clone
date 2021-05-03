@@ -10,22 +10,16 @@
  * permission of This.ID.
  */
 
-package id.thork.app.network.api
+package id.thork.app.base
 
-import javax.inject.Inject
+import android.content.Context
 
-class LoginClient @Inject constructor(
-    private val loginApi: LoginApi
-) {
-
-    suspend fun loginByPerson(select: String, where: String) =
-        loginApi.loginByPerson(LEAN, select, where)
-
-    suspend fun login(maxauth: String) = loginApi.login(maxauth)
-
-    suspend fun logout(cookie: String, maxauth: String) = loginApi.logout(cookie, maxauth)
-
+class TempSession {
     companion object {
-        private const val LEAN = 1
+        var v  = "TEST"
+
+        fun updateCookie(cookie: String) {
+            v = cookie
+        }
     }
 }

@@ -14,6 +14,7 @@ package id.thork.app.network
 
 import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import id.thork.app.base.BaseParam
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.NetworkModule
 import id.thork.app.di.module.PreferenceManager
 import okhttp3.OkHttpClient

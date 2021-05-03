@@ -7,6 +7,7 @@ import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.MxResponse
+import id.thork.app.base.TempSession
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
@@ -79,6 +80,9 @@ class LoginRepository constructor(
             data.whatIfNotNull { response ->
                 //Save user session into local cache
                 onSuccess(response)
+                val cookielist: List<String> = headers.values("Set-Cookie")
+                val jsessionid = cookielist[0].split(";").toTypedArray()[0]
+                TempSession.updateCookie(jsessionid)
             }
         }.onError {
             Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())
@@ -119,11 +123,12 @@ class LoginRepository constructor(
     }
 
     suspend fun logout(
+        cookie: String,
         maxauth: String,
         onSuccess: (Logout) -> Unit,
         onError: (String) -> Unit,
     ) {
-        val response = loginClient.logout(maxauth)
+        val response = loginClient.logout(cookie, maxauth)
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 //Save user session into local cache

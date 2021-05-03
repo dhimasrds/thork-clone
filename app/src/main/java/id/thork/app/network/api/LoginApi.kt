@@ -25,6 +25,7 @@ interface LoginApi {
 
     @POST("maximo/oslc/logout")
     suspend fun logout(
+        @Header("Cookie") cookie: String?,
         @Header("maxauth") maxAuth: String?,
     ): ApiResponse<Logout>
 
