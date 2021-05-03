@@ -169,6 +169,9 @@ dependencies {
     // Barcode Scanner
     implementation "com.journeyapps:zxing-android-embedded:$rootProject.zxingAndroidVersion"
 
+    //circle imageView
+    implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
+
 
 }
 apply plugin: 'io.objectbox'
