@@ -12,7 +12,18 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_scrollFlags="scroll|enterAlways">
 
+            <EditText
+                android:id="@+id/toolbartext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:hint="Search here"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_notification"
+                android:imeOptions="actionSearch"
+                android:layout_marginLeft="2dp"  />
             <TextView
+                android:visibility="gone"
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

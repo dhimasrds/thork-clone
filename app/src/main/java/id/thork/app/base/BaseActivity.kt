@@ -13,10 +13,9 @@
 package id.thork.app.base
 
 import android.os.Bundle
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.*
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
@@ -77,17 +76,24 @@ abstract class BaseActivity : AppCompatActivity() {
     ) {
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
+        val editTextToolbar: EditText = findViewById(R.id.toolbartext)
         setSupportActionBar(toolBar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         toolBarTitle.text = title
+        toolBarTitle.visibility = View.GONE
 
         if (navigation) {
-            toolBar.setNavigationIcon(R.drawable.ic_settings)
-            toolBar.setNavigationOnClickListener {
+            val profile : ImageView = findViewById(R.id.profile_image)
+            profile.visibility = View.VISIBLE
+            profile.setOnClickListener {
                 goToSettingsActivity()
+            }
+            toolBar.setNavigationOnClickListener {
             }
             toolBar.inflateMenu(R.menu.filter_menu)
         } else {
+            editTextToolbar.visibility =View.GONE
+            toolBarTitle.visibility = View.VISIBLE
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
                 goToPreviousActivity()

@@ -369,6 +369,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="approve">Approve</string>
+    <string name="search_here">Search here</string>
     <string-array name="work_type_wo">
         <item>ORR</item>
     </string-array>
