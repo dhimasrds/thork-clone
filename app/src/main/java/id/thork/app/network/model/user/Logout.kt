@@ -9,7 +9,7 @@ import com.squareup.moshi.JsonClass
  */
 
 @JsonClass(generateAdapter = true)
-class Logout {
+data class Logout (
     @Json(name = "appserversecurity")
     val appserversecurity: Boolean? = null
-}
+)

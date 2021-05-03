@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
-import id.thork.app.base.Maximo_Response
+import id.thork.app.base.MxResponse
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
@@ -93,8 +93,8 @@ class LoginRepository constructor(
                     Timber.tag(TAG).i("loginCookie() reasonCode: %s", jsonResponse.oslcError?.spiReasonCode)
                     var errorText = ""
                     errorText = when(reasonCode){
-                        Maximo_Response.BMXAA7901E -> "Incorrect Username or Password"
-                        Maximo_Response.BMXAA0021E -> Maximo_Response.BMXAA0021E
+                        MxResponse.BMXAA7901E -> "Incorrect Username or Password"
+                        MxResponse.BMXAA0021E -> MxResponse.BMXAA0021E
                         else -> message()
                     }
                     onError(errorText)

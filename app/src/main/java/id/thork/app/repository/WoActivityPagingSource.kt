@@ -97,7 +97,7 @@ class WoActivityPagingSource @Inject constructor(
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_COMP + "}"
 
         repository.getWorkOrderList(
-            appSession.userHash!!, select, where, pageno = position, pagesize = 10,
+            select, where, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)

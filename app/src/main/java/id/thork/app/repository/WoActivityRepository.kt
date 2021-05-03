@@ -27,7 +27,6 @@ class WoActivityRepository constructor(
     val TAG = WorkOrderRepository::class.java.name
 
     suspend fun getWorkOrderList(
-        headerParam: String,
         select: String,
         where: String,
         pageno: Int,
@@ -37,7 +36,6 @@ class WoActivityRepository constructor(
         onException: (String) -> Unit
     ) {
         val response = workOrderClient.getWorkOrderList(
-            headerParam,
             select,
             where,
             pageno,
