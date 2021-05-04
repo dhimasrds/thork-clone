@@ -12,11 +12,9 @@
 
 package id.thork.app.base
 
-import android.content.Context
-
 class TempSession {
     companion object {
-        var v  = "TEST"
+        var v = "TEST"
 
         fun updateCookie(cookie: String) {
             v = cookie

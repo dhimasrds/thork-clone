@@ -3,11 +3,15 @@ package id.thork.app.repository
 import android.annotation.SuppressLint
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.skydoves.sandwich.*
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.MxResponse
-import id.thork.app.base.TempSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
@@ -21,6 +25,7 @@ import timber.log.Timber
 class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao,
+    private val preferenceManager: PreferenceManager,
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
@@ -82,7 +87,10 @@ class LoginRepository constructor(
                 onSuccess(response)
                 val cookielist: List<String> = headers.values("Set-Cookie")
                 val jsessionid = cookielist[0].split(";").toTypedArray()[0]
-                TempSession.updateCookie(jsessionid)
+                preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
+                Timber.d("raka %s", preferenceManager.getString(BaseParam.APP_MX_COOKIE))
+                Timber.d("raka %s", jsessionid)
+                //                TempSession.updateCookie(jsessionid)
             }
         }.onError {
             Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())
@@ -91,12 +99,14 @@ class LoginRepository constructor(
                 val jsonString: String = errorBody!!.string()
                 Timber.tag(TAG).i("loginCookie() jsonStringResponse: %s", jsonString)
                 val gson = Gson()
-                val jsonResponse: ErrorResponse = gson.fromJson(jsonString, object : TypeToken<ErrorResponse?>() {}.type)
+                val jsonResponse: ErrorResponse =
+                    gson.fromJson(jsonString, object : TypeToken<ErrorResponse?>() {}.type)
                 if (jsonResponse.oslcError?.spiReasonCode != null) {
                     val reasonCode: String = jsonResponse.oslcError?.spiReasonCode!!
-                    Timber.tag(TAG).i("loginCookie() reasonCode: %s", jsonResponse.oslcError?.spiReasonCode)
+                    Timber.tag(TAG)
+                        .i("loginCookie() reasonCode: %s", jsonResponse.oslcError?.spiReasonCode)
                     var errorText = ""
-                    errorText = when(reasonCode){
+                    errorText = when (reasonCode) {
                         MxResponse.BMXAA7901E -> "Incorrect Username or Password"
                         MxResponse.BMXAA0021E -> MxResponse.BMXAA0021E
                         else -> message()
@@ -106,14 +116,6 @@ class LoginRepository constructor(
             } else {
                 onError(message())
             }
-
-            var errorText = ""
-            errorText = when(statusCode){
-                StatusCode.Unauthorized -> "Incorrect Username or Password"
-                else -> message()
-            }
-            Timber.tag(TAG).i("createTokenApiKey() code: %s error: %s", statusCode.code, errorText)
-            onError(errorText)
         }
             .onException {
                 Timber.tag(TAG).i("loginCookie() exception: %s", message())

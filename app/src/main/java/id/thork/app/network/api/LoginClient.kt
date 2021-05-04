@@ -15,7 +15,7 @@ package id.thork.app.network.api
 import javax.inject.Inject
 
 class LoginClient @Inject constructor(
-    private val loginApi: LoginApi
+    private val loginApi: LoginApi,
 ) {
 
     suspend fun loginByPerson(select: String, where: String) =

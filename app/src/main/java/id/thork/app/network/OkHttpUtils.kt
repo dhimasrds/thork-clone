@@ -15,7 +15,6 @@ package id.thork.app.network
 import okhttp3.OkHttpClient
 import okhttp3.internal.JavaNetCookieJar
 import okhttp3.logging.HttpLoggingInterceptor
-import timber.log.Timber
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.security.cert.X509Certificate
@@ -53,7 +52,6 @@ class OkHttpUtils {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         val cookieJar = JavaNetCookieJar(cookieManager)
-        Timber.d("raka %s", cookieJar.toString() )
         return OkHttpClient.Builder()
             .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
             .hostnameVerifier { _, _ -> true }

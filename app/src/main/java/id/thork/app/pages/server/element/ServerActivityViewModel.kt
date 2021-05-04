@@ -33,7 +33,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
     val TAG = ServerActivityViewModel::class.java.name
 
     private val _state = MutableLiveData<Int>()
-    val state:LiveData<Int> get() = _state
+    val state: LiveData<Int> get() = _state
 
     private val _cacheUrl = MutableLiveData<String>()
     val cacheUrl: LiveData<String> get() = _cacheUrl
@@ -49,7 +49,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
     fun validateUrl(isHttps: Boolean, serverUrl: String) {
         var completeUrl = StringBuilder()
         if (isHttps) {
-            completeUrl.append("https://");
+            completeUrl.append("https://")
         } else {
             completeUrl.append("http://")
         }
@@ -59,18 +59,19 @@ class ServerActivityViewModel @ViewModelInject constructor(
 
         if (URLUtil.isValidUrl(completeUrl.toString())) {
             Timber.tag(TAG).i("validateUrl() serverUrl: %s", completeUrl.toString())
-            preferenceManager.putString(BaseParam.APP_SERVER_ADDRESS, beautifyServerUrl(completeUrl.toString()))
+            preferenceManager.putString(BaseParam.APP_SERVER_ADDRESS,
+                beautifyServerUrl(completeUrl.toString()))
             _state.postValue(BaseParam.APP_TRUE)
-        }else {
+        } else {
             _state.postValue(BaseParam.APP_FALSE)
         }
     }
 
     fun cacheServerUrl() {
-        if(!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isEmpty()) {
+        if (!preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS).isEmpty()) {
             _cacheUrl.value = preferenceManager.getString(BaseParam.APP_SERVER_ADDRESS)
-                .replace("http://","")
-                .replace("https://","")
+                .replace("http://", "")
+                .replace("https://", "")
                 .replace("/", "")
         }
 
