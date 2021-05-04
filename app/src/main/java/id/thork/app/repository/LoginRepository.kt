@@ -84,7 +84,6 @@ class LoginRepository constructor(
         }.onError {
             Timber.tag(TAG).i("loginByPerson() code: %s error: %s", statusCode.code, message())
             onError(statusCode.code.toString())
-            Timber.d("raka %s", errorBody)
         }
             .onException {
                 Timber.tag(TAG).i("loginByPerson() exception: %s", message())
@@ -105,10 +104,6 @@ class LoginRepository constructor(
                 val cookielist: List<String> = headers.values("Set-Cookie")
                 val jsessionid = cookielist[0].split(";").toTypedArray()[0]
                 preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
-                Timber.d("raka %s", preferenceManager.getString(BaseParam.APP_MX_COOKIE))
-                Timber.d("raka %s", jsessionid)
-                //                TempSession.updateCookie(jsessionid)
-                CookieSession.updateCookie(headers)
             }
         }.onError {
             Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())

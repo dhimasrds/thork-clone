@@ -64,7 +64,6 @@ class SettingsViewModel @ViewModelInject constructor(
 
     fun logout() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        Timber.d("raka %s", cookie)
         viewModelScope.launch(Dispatchers.IO) {
             loginRepository.logout(cookie, appSession.userHash!!,
                 onSuccess = {
