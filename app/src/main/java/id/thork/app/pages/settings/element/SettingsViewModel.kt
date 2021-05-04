@@ -9,6 +9,7 @@ import id.thork.app.base.CookieSession
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.helper.ConnectionState
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +81,7 @@ class SettingsViewModel @ViewModelInject constructor(
         loginRepository.deleteUserSession(userEntity)
         //TODO delete system properties
         loginRepository.deleteSystemProperties()
-        _logout.value = BaseParam.APP_TRUE
+        _logout.postValue(BaseParam.APP_TRUE)
     }
 
 

@@ -62,7 +62,7 @@ class LoginRepository constructor(
         return sysPropDao.remove()
     }
 
-    fun createListSystemProperties(sysPropEntityList : List<SysPropEntity>): List<SysPropEntity> {
+    fun createListSystemProperties(sysPropEntityList: List<SysPropEntity>): List<SysPropEntity> {
         return sysPropDao.saveListSystemProperties(sysPropEntityList)
     }
 
