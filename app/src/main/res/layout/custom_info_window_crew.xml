@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#158441"
-                android:textSize="12sp"
+                android:textSize="@dimen/base_text_size_12"
                 android:textStyle="bold" />
 
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#158441"
-                android:textSize="12sp"
+                android:textSize="@dimen/base_text_size_12"
                 android:textStyle="bold" />
         </LinearLayout>
 

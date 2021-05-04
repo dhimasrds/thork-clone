@@ -36,15 +36,15 @@
                 android:id="@+id/server_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="@dimen/general_padding_10dp"
+                android:paddingBottom="@dimen/general_padding_10dp"
                 android:background="@drawable/bg_rectangle_white"
                 android:drawableStart="@drawable/ic_on_focus_ip"
-                android:drawablePadding="10dp"
+                android:drawablePadding="@dimen/general_padding_10dp"
                 android:fontFamily="@font/opensans_regular"
                 android:hint="@string/ip_config_Server"
                 android:inputType="textWebEditText"
-                android:textSize="12sp" />
+                android:textSize="@dimen/base_text_size_12" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right|center"
                 android:text="HTTPS"
-                android:textSize="@dimen/base_text_size_10dp" />
+                android:textSize="@dimen/base_text_size_10" />
 
             <Switch
                 android:id="@+id/switch_https"

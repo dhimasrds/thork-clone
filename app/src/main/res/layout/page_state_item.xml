@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="2dp"
+        android:padding="@dimen/general_padding_2dp"
         tools:ignore="MissingConstraints">
 
         <ProgressBar

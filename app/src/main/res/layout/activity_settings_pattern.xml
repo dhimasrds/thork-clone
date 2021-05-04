@@ -130,7 +130,7 @@
             android:background="@drawable/bg_round"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="@dimen/general_padding_10dp"
             android:visibility="gone">
 
             <pl.droidsonroids.gif.GifImageView

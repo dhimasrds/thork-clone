@@ -27,7 +27,7 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/opensans_bold"
                 android:text="Title"
-                android:textSize="16sp"
+                android:textSize="@dimen/base_text_size_16"
                 android:textColor="@color/colorBlack" />
 
             <TextView
@@ -37,10 +37,10 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/desc"
                 android:fontFamily="@font/opensans_regular"
-                android:padding="10dp"
+                android:padding="@dimen/general_padding_10dp"
                 android:gravity="center"
                 android:textColor="@color/colorBlack"
-                android:textSize="16sp" />
+                android:textSize="@dimen/base_text_size_16" />
 
             <LinearLayout
                 android:id="@+id/layout_two_button"

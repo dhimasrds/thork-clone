@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="#AD1919"
-            android:textSize="12sp"
+            android:textSize="@dimen/base_text_size_12"
             android:textStyle="bold" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="#AD1919"
-            android:textSize="12sp"
+            android:textSize="@dimen/base_text_size_12"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -60,7 +60,7 @@
             android:focusable="true"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="11sp" />
+            android:textSize="@dimen/base_text_size_12" />
 
     </LinearLayout>
 

@@ -93,7 +93,7 @@
                             android:gravity="center"
                             android:text="@string/server_address"
                             android:textColor="@color/colorBlack"
-                            android:textSize="18sp" />
+                            android:textSize="@dimen/base_text_size_18" />
 
                         <include
                             android:id="@+id/include_server_content"
@@ -105,7 +105,7 @@
                 </androidx.cardview.widget.CardView>
                 <TextView
                     android:id="@+id/tv_version"
-                    android:layout_marginBottom="@dimen/base_text_size_10dp"
+                    android:layout_marginBottom="@dimen/base_text_size_10"
                     android:background="@drawable/ic_rectangle_border_blue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                     android:gravity="center"
                     android:layout_gravity="center|bottom"
                     android:textColor="@color/blue_ip"
-                    android:textSize="9sp"
+                    android:textSize="@dimen/base_text_size_10"
                     android:text="TESTINGGG"/>
 
             </LinearLayout>
