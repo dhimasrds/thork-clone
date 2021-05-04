@@ -23,7 +23,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
-import id.thork.app.di.module.SystemPropertiesMx
+import id.thork.app.di.module.AppPropertiesMx
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
@@ -42,7 +42,7 @@ class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
     private val appSession: AppSession,
-    private val systemPropertiesMx: SystemPropertiesMx
+    private val appPropertiesMx: AppPropertiesMx
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 
@@ -77,19 +77,6 @@ class LoginViewModel @ViewModelInject constructor(
         }
 
         _progressVisible.value = true
-        val encodeSysProp =
-            StringUtils.encodeToBase64(systemPropertiesMx.FSM_APP_GOOGLE_MAP_WHATEVER)
-        Timber.tag(TAG).i("validateCredentials() username: %s password: %s", username, password)
-        Timber.tag(TAG).i(
-            "validateCredentials() systemProperties: %s",
-            systemPropertiesMx.FSM_APP_GOOGLE_MAP_WHATEVER
-        )
-        Timber.tag(TAG).i("validateCredentials() systemProperties encode: %s", encodeSysProp)
-        Timber.tag(TAG).i(
-            "validateCredentials() systemProperties decode: %s",
-            StringUtils.decodeToBase64(encodeSysProp.toString())
-        )
-
         validateWithActiveSession(username)
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
