@@ -10,7 +10,6 @@ import id.thork.app.persistence.dao.LogDao
 import id.thork.app.persistence.dao.LogDaoImp
 import id.thork.app.persistence.entity.LogEntity
 import id.thork.app.repository.LogRepository
-import kotlin.math.log
 
 /**
  * Created by Raka Putra on 1/14/21

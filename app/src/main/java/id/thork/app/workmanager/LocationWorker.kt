@@ -4,9 +4,6 @@ import android.content.Context
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import id.thork.app.helper.NotificationData
-import id.thork.app.utils.NotificationUtils
-import org.json.JSONObject
 import timber.log.Timber
 
 /**

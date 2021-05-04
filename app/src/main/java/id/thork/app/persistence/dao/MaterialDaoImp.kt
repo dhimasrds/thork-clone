@@ -1,11 +1,9 @@
 package id.thork.app.persistence.dao
 
-import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.MaterialEntity_
 import io.objectbox.Box
-import io.objectbox.BoxStore
 import io.objectbox.kotlin.equal
 
 /**

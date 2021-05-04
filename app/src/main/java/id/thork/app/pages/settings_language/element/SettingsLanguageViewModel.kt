@@ -5,7 +5,6 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
-import timber.log.Timber
 
 /**
  * Created by Raka Putra on 1/14/21

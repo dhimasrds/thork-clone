@@ -17,7 +17,6 @@ import android.util.Base64
 import android.view.Gravity
 import android.widget.Toast
 import es.dmoral.toasty.Toasty
-import id.thork.app.R
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 

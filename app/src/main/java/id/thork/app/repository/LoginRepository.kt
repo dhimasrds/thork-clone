@@ -6,8 +6,8 @@ import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
-import id.thork.app.base.MxResponse
 import id.thork.app.base.CookieSession
+import id.thork.app.base.MxResponse
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
@@ -22,8 +22,6 @@ import timber.log.Timber
 
 
 class LoginRepository constructor(
-    private val loginClient: LoginClient,
-    private val userDao: UserDao,
     private val loginClient: LoginClient,
     private val userDao: UserDao,
     private val sysPropDao: SysPropDao

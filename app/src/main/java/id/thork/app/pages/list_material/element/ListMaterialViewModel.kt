@@ -1,11 +1,8 @@
 package id.thork.app.pages.list_material.element
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.persistence.entity.MaterialEntity
-import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.MaterialRepository
 
 /**

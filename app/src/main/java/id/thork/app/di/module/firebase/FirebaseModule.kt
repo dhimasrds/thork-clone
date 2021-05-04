@@ -7,13 +7,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.base.BaseParam
-import id.thork.app.di.module.googlemaps.GoogleMapsModule
-import id.thork.app.di.module.login.LoginModule
 import id.thork.app.network.HttpRequestInterceptor
 import id.thork.app.network.api.FirebaseApi
 import id.thork.app.network.api.FirebaseClient
-import id.thork.app.network.api.GoogleMapsApi
-import id.thork.app.network.api.GoogleMapsClient
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

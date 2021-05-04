@@ -1,8 +1,6 @@
 package id.thork.app.pages.main.work_order_list
 
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -15,8 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
-import androidx.paging.LoadStates
-import androidx.paging.LoadType
 import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -24,7 +20,6 @@ import id.thork.app.databinding.FragmentActivityBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderActvityViewModel
 import id.thork.app.pages.main.element.WorkOrderAdapter
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*

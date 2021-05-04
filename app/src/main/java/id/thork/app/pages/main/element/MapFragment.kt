@@ -28,7 +28,6 @@ import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
