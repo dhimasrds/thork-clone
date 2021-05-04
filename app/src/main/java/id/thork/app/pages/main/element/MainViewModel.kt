@@ -15,12 +15,13 @@ package id.thork.app.pages.main.element
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.PreferenceManager
 
 class MainViewModel @ViewModelInject constructor(
     private val context: Context,
-) : LiveCoroutinesViewModel() {
+    private val preferenceManager: PreferenceManager
+    ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
-
 
 //    fun checkRepo() {
 //        Timber.tag(TAG).i("checkRepo() loginRepository: %s retrofit: %s", loginRepository, retrofit)

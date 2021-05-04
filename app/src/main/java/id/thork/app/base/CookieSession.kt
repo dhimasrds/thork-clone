@@ -12,14 +12,21 @@
 
 package id.thork.app.base
 
-import android.content.Context
+import okhttp3.Headers
 
-class TempSession {
+
+class CookieSession {
     companion object {
-        var v  = "TEST"
+        var cookieCache  = "-"
 
         fun updateCookie(cookie: String) {
-            v = cookie
+            cookieCache = cookie
+        }
+
+        fun updateCookie(headers: Headers) {
+            //val cookielist: List<String> = headers.values("Set-Cookie")
+            //val jsessionid = cookielist[0].split(";").toTypedArray()[0]
+            //cookieCache = jsessionid
         }
     }
 }

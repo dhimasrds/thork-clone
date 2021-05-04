@@ -30,6 +30,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.CookieSession
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
@@ -52,6 +53,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     override fun setupView() {
         super.setupView()
+
+        Timber.tag(TAG).d("setupView() cookie: %s", CookieSession.cookieCache)
+
         setupMainView(binding.mainLayout)
 
         setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true, scannerIcon = false)

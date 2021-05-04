@@ -58,7 +58,7 @@
     <style name="PrimaryCaption" parent="Theme.AppCompat.Light">
         <item name="android:textStyle">bold</item>
         <item name="colorAccent">@color/colorBlack</item>
-        <item name="android:textSize">@dimen/base_text_size</item>
+        <item name="android:textSize">@dimen/base_text_size_10</item>
     </style>
 
 <!--    <style name="PrimaryFlatButton" parent="Theme.AppCompat.Light">-->
