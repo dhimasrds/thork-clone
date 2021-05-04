@@ -28,6 +28,7 @@ import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -41,6 +42,7 @@ import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
 import timber.log.Timber
 import java.util.*
+
 
 class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
     CustomDialogUtils.DialogActionListener {

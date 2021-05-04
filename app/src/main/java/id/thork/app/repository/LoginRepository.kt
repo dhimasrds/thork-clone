@@ -13,7 +13,10 @@ import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.ErrorResponse.ErrorResponse
+import id.thork.app.network.response.system_properties.SystemProperties
+import id.thork.app.persistence.dao.SysPropDao
 import id.thork.app.persistence.dao.UserDao
+import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 
@@ -21,6 +24,9 @@ import timber.log.Timber
 class LoginRepository constructor(
     private val loginClient: LoginClient,
     private val userDao: UserDao,
+    private val loginClient: LoginClient,
+    private val userDao: UserDao,
+    private val sysPropDao: SysPropDao
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
@@ -42,6 +48,18 @@ class LoginRepository constructor(
 
     fun deleteUserSession(userEntity: UserEntity) {
         return userDao.delete(userEntity)
+    }
+
+    fun createSystemProperties(sysPropEntity: SysPropEntity, username: String) {
+        return sysPropDao.save(sysPropEntity, username);
+    }
+
+    fun deleteSystemProperties() {
+        return sysPropDao.remove()
+    }
+
+    fun createListSystemProperties(sysPropEntityList : List<SysPropEntity>): List<SysPropEntity> {
+        return sysPropDao.saveListSystemProperties(sysPropEntityList)
     }
 
 
@@ -142,4 +160,28 @@ class LoginRepository constructor(
             }
 
     }
+
+    suspend fun fetchSystemproperties(
+        headerParam: String,
+        select: String,
+        onSuccess: (SystemProperties) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = loginClient.getSystemProperties(headerParam, select)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //Save system properties
+                onSuccess(response)
+            }
+        }
+            .onError {
+                onError(message())
+            }
+            .onException {
+                onException(message())
+            }
+    }
+
+
 }

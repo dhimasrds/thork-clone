@@ -24,12 +24,16 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.base.MxResponse
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
+import id.thork.app.di.module.AppPropertiesMx
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
+import id.thork.app.network.response.system_properties.SystemProperties
+import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
+import id.thork.app.utils.StringUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -39,10 +43,14 @@ class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
     private val appSession: AppSession,
+    private val appSession: AppSession,
+    private val appPropertiesMx: AppPropertiesMx
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 
     private val _progressVisible = MutableLiveData<Boolean>(false)
+    private val _fetchProgressVisible = MutableLiveData<Boolean>(false)
+
     private val _success = MutableLiveData<String>()
     private val _error = MutableLiveData<String>()
     private val _loginState = MutableLiveData<Int>()
@@ -50,6 +58,8 @@ class LoginViewModel @ViewModelInject constructor(
 
     private val _firstLogin = MutableLiveData<Boolean>()
     val progressVisible: LiveData<Boolean> get() = _progressVisible
+    val fetchProgressVisible: LiveData<Boolean> get() = _fetchProgressVisible
+
     val success: LiveData<String> get() = _success
     val error: LiveData<String> get() = _error
     val loginState: LiveData<Int> get() = _loginState
@@ -69,7 +79,6 @@ class LoginViewModel @ViewModelInject constructor(
         }
 
         _progressVisible.value = true
-        Timber.tag(TAG).i("validateCredentials() username: %s password: %s", username, password)
         validateWithActiveSession(username)
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
@@ -152,8 +161,9 @@ class LoginViewModel @ViewModelInject constructor(
                 whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
             )
 
-            // When user founded and stored into cache, then hide progressbar
+            // When user founded and stored into cache, then hide progressbarSet
             _progressVisible.postValue(false)
+            fetchSystemProperties(userHash)
         }
     }
 
@@ -211,5 +221,70 @@ class LoginViewModel @ViewModelInject constructor(
         userEntity.userHash = userHash
         //userEntity!!.server_address
         loginRepository.createUserSession(userEntity, username)
+    }
+
+    private fun fetchSystemProperties(userHash: String) {
+        Timber.tag(TAG).i("fetchSystemProperties()")
+        _fetchProgressVisible.postValue(true)
+        _progressVisible.postValue(true)
+        val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
+        var systemProperties = SystemProperties()
+        viewModelScope.launch(Dispatchers.IO) {
+            //fetch system properties
+            loginRepository.fetchSystemproperties(userHash, selectQuery,
+                onSuccess = {
+                    systemProperties = it
+                },
+                onError = {
+                    Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
+                    _error.postValue(it)
+                },
+                onException = {
+                    Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
+                    _error.postValue(it)
+                })
+
+            var member: id.thork.app.network.response.system_properties.Member
+            systemProperties.member.whatIfNotNullOrEmpty(
+                whatIf = {
+                    member = systemProperties.member?.get(0)!!
+                    saveSystemProperties(member)
+                })
+        }
+    }
+
+    private fun saveSystemProperties(member: id.thork.app.network.response.system_properties.Member) {
+        val username = appSession.userEntity.username
+        val sysPropEntitylist = mutableListOf<SysPropEntity>()
+        if (username != null) {
+            Timber.tag(TAG).i("saveSystemProperties() username: $username")
+            member.thisfsmsysprop?.forEach {
+                val sysPropEntity = SysPropEntity()
+                sysPropEntity.createdDate = Date()
+                sysPropEntity.createdBy = username
+                sysPropEntity.updatedDate = Date()
+                sysPropEntity.updatedBy = username
+
+                sysPropEntity.fsmappid = member.thisfsmappid
+                sysPropEntity.fsmapp = member.thisfsmapp
+                sysPropEntity.fsmappdescription = member.description
+                sysPropEntity.siteid = appSession.siteId
+                sysPropEntity.orgid = appSession.orgId
+                sysPropEntity.propertiesid =
+                    it.thisfsmsyspropvalue?.get(0)?.thisfsmsyspropvalueid.toString()
+                sysPropEntity.propertieskey = it.thisfsmpropid
+                val encodePropertiesValue =
+                    StringUtils.encodeToBase64(it.thisfsmsyspropvalue?.get(0)?.thisfsmpropvalue.toString())
+                sysPropEntity.propertiesvalue = encodePropertiesValue
+                sysPropEntity.fsmisglobal = it.thisfsmisglobal
+//                loginRepository.createSystemProperties(sysPropEntity, username)
+                sysPropEntitylist.add(sysPropEntity)
+                Timber.tag(TAG).i("saveSystemProperties() add to object box")
+            }
+            loginRepository.createListSystemProperties(sysPropEntitylist)
+            _fetchProgressVisible.postValue(false)
+            _progressVisible.postValue(false)
+
+        }
     }
 }

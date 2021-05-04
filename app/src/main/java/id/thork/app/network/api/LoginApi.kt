@@ -5,6 +5,7 @@ import id.thork.app.network.model.Todo
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
+import id.thork.app.network.response.system_properties.SystemProperties
 import retrofit2.http.*
 
 interface LoginApi {
@@ -31,4 +32,11 @@ interface LoginApi {
 
     @GET("/todos/{id}")
     suspend fun getTodo(@Path("id") id: Int): Todo
+
+    @GET("/maximo/oslc/os/thisfsmapp")
+    suspend fun getSystemProperties(
+        @Header("maxauth") maxAuth: String?,
+        @Query("lean") lean: Int = 1,
+        @Query("oslc.select") select: String
+    ) : ApiResponse<SystemProperties>
 }

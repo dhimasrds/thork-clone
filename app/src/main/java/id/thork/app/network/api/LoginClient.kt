@@ -25,6 +25,9 @@ class LoginClient @Inject constructor(
 
     suspend fun logout(cookie: String, maxauth: String) = loginApi.logout(cookie, maxauth)
 
+    suspend fun getSystemProperties(headerParam: String, select: String) =
+        loginApi.getSystemProperties(headerParam, LEAN, select)
+
     companion object {
         private const val LEAN = 1
     }
