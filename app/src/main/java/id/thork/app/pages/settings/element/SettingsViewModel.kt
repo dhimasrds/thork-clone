@@ -8,6 +8,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.CookieSession
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ import timber.log.Timber
 class SettingsViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val appSession: AppSession,
+    private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     val TAG = SettingsViewModel::class.java.name
 
@@ -61,8 +63,10 @@ class SettingsViewModel @ViewModelInject constructor(
     }
 
     fun logout() {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        Timber.d("raka %s", cookie)
         viewModelScope.launch(Dispatchers.IO) {
-            loginRepository.logout(CookieSession.cookieCache,appSession.userHash!!,
+            loginRepository.logout(cookie, appSession.userHash!!,
                 onSuccess = {
                     deleteUserSession()
                     Timber.tag(TAG).i("logoutCookie() sessionTime: %s", it)

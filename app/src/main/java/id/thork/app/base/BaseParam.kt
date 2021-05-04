@@ -41,6 +41,10 @@ object BaseParam {
     const val APP_SERVER_ADDRESS = "serverAddress"
     const val APP_FIRST_LAUNCH = "firstLaunch"
     const val REPORT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
+    const val APP_MX_COOKIE = "cookie"
+
+
+
 
 
     /**
