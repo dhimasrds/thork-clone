@@ -41,6 +41,7 @@
                 android:layout_height="match_parent"
                 tools:context=".pages.main.MainActivity"
                 map:uiCompass="true" />
+            
             <Button
                 android:visibility="gone"
                 android:layout_width="wrap_content"
