@@ -116,7 +116,8 @@ object BaseParam {
      * Base Parameter Firebase
      */
     const val BASE_FIREBASE_URL = "https://fcm.googleapis.com/"
-    const val APP_APIKEY_FIREBASE = "key=AAAA1bjwolE:APA91bHxc-tlmJw_Slov7QEUECjL6JX3C9sh5njm8kFnXDqH0zrGrB34gnZbWcTjcw6qnq66mdoKeK8kWPaIS1YvHKK4P1qV1N5esT2bdYzLsketNIQ3_tZnw5Na0n0JBfZc9BBhkF2I"
+    const val APP_APIKEY_FIREBASE =
+        "key=AAAA1bjwolE:APA91bHxc-tlmJw_Slov7QEUECjL6JX3C9sh5njm8kFnXDqH0zrGrB34gnZbWcTjcw6qnq66mdoKeK8kWPaIS1YvHKK4P1qV1N5esT2bdYzLsketNIQ3_tZnw5Na0n0JBfZc9BBhkF2I"
     const val APP_PRIORITY = "high"
     const val APP_FIREBASE_TOPIC = "/topics/thor-location"
 
@@ -146,4 +147,14 @@ object BaseParam {
     const val PRIORITY_MEDIUM = "1"
     const val PRIORITY_HIGH = "2"
     const val LONGDESC = "longdescription"
+
+    /**
+     * Status Code
+     *
+     */
+    const val STATUS_UNAUTHORIZED = "401"
+    const val STATUS_OK = "200"
+    const val STATUS_NOTFOUND = "404"
+
+
 }

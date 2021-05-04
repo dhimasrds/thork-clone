@@ -15,7 +15,6 @@ interface WorkOrderApi {
 
     @GET("maximo/oslc/os/oslcwo")
     suspend fun getListWorkorder(
-        @Header("MAXAUTH") userHash: String?,
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,
         @Query(value = "oslc.where") where: String?,

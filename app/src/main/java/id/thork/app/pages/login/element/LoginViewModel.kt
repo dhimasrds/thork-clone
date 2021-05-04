@@ -21,12 +21,11 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.base.MxResponse
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
-import id.thork.app.network.model.user.ResponseApiKey
-import id.thork.app.network.model.user.TokenApikey
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
@@ -39,7 +38,7 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val appSession: AppSession
+    private val appSession: AppSession,
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 
@@ -75,7 +74,7 @@ class LoginViewModel @ViewModelInject constructor(
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
-       loginCookie(userHash,username)
+        loginCookie(userHash, username)
     }
 
     fun connectionNotAvailable() {
@@ -98,16 +97,16 @@ class LoginViewModel @ViewModelInject constructor(
     }
 
 
-    private fun loginCookie(userHash: String,username: String) {
+    private fun loginCookie(userHash: String, username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             loginRepository.loginCookie(userHash,
-                    onSuccess = {
-                        fetchUserData(userHash, username)
-                        Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
-                    }, onError = {
-                Timber.tag(TAG).i("loginCookie() error: %s", it)
-                _error.postValue(it)
-            })
+                onSuccess = {
+                    fetchUserData(userHash, username)
+                    Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
+                }, onError = {
+                    Timber.tag(TAG).i("loginCookie() error: %s", it)
+                    _error.postValue(it)
+                })
             _progressVisible.postValue(false)
         }
     }
@@ -120,13 +119,20 @@ class LoginViewModel @ViewModelInject constructor(
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
-            loginRepository.loginPerson( selectQuery, whereQuery,
+            loginRepository.loginPerson(selectQuery, whereQuery,
                 onSuccess = {
                     userResponse = it
                 },
                 onError = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
-                    _error.postValue(it)
+                    when (it) {
+                        MxResponse.BMXAA0021E -> {
+                            loginCookie(userHash, username)
+                        }
+                        else -> {
+                            _error.postValue(it)
+                        }
+                    }
                 },
                 onException = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)

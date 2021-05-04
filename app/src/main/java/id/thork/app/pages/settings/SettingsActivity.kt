@@ -52,7 +52,12 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         }
         customDialogUtils = CustomDialogUtils(this)
 
-        setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false, filter = false, scannerIcon = false)
+        setupToolbarWithHomeNavigation(
+            getString(R.string.action_settings),
+            navigation = false,
+            filter = false,
+            scannerIcon = false
+        )
     }
 
     override fun setupObserver() {
@@ -162,7 +167,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
     private fun goToLogout() {
         LocaleHelper.setLocale(this, BaseParam.APP_DEFAULT_LANG)
-        viewModel.deleteUserSession()
+        viewModel.logout()
     }
 
     private fun setDialogSwitchPattern() {

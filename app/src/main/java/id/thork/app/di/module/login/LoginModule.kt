@@ -17,11 +17,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import id.thork.app.base.BaseParam
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.LoginApi
 import id.thork.app.network.api.LoginClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -30,8 +32,16 @@ object LoginModule {
 
     @Provides
     @ActivityRetainedScoped
-    fun provideLoginApi(preferenceManager: PreferenceManager, httpLoggingInterceptor: HttpLoggingInterceptor): LoginApi {
-        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+    fun provideRetrofit(
+        preferenceManager: PreferenceManager,
+        httpLoggingInterceptor: HttpLoggingInterceptor
+    ): Retrofit {
+        return RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideLoginApi(retrofit: Retrofit): LoginApi {
         return retrofit.create(LoginApi::class.java)
     }
 

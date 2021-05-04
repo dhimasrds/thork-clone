@@ -1,7 +1,7 @@
 package id.thork.app.network.model.user
+
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import id.thork.app.network.model.user.ResponseInfo
 
 @JsonClass(generateAdapter = true)
 data class LoginCookie(

@@ -3,11 +3,16 @@ package id.thork.app.pages.settings.element
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.base.TempSession
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * Created by Raka Putra on 1/14/21
@@ -15,8 +20,9 @@ import id.thork.app.repository.LoginRepository
  */
 class SettingsViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
-    private val appSession: AppSession
+    private val appSession: AppSession,
 ) : LiveCoroutinesViewModel() {
+    val TAG = SettingsViewModel::class.java.name
 
     val selectedLang: LiveData<String> get() = _selectedLang
     val pattern: LiveData<String> get() = _pattern
@@ -54,10 +60,22 @@ class SettingsViewModel @ViewModelInject constructor(
         loginRepository.saveLoginPattern(userExisting, appSession.userEntity.username)
     }
 
-    fun deleteUserSession() {
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            loginRepository.logout(TempSession.v,appSession.userHash!!,
+                onSuccess = {
+                    deleteUserSession()
+                    Timber.tag(TAG).i("logoutCookie() sessionTime: %s", it)
+                }, onError = {
+                    Timber.tag(TAG).i("logoutCookie() error: %s", it)
+                })
+        }
+    }
+
+    private fun deleteUserSession() {
         val userEntity: UserEntity = appSession.userEntity
         loginRepository.deleteUserSession(userEntity)
-        _logout.value = BaseParam.APP_TRUE
+        _logout.postValue(BaseParam.APP_TRUE)
     }
 
 
