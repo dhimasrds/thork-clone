@@ -37,6 +37,7 @@
             android:gravity="right">
 
             <Button
+                android:visibility="invisible"
                 android:id="@+id/btn_switch_user"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/login_pattern_button_height"

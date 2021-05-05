@@ -23,6 +23,7 @@ class AppPropertiesMx @Inject constructor(context: Context) {
     //TODO hardcode param properties api key for query
 
     var fsmGoogleMapsApikey: String? = null
+    var fsmEnableSwitchUser: String? = null
     var sysPropDao: SysPropDao = SysPropDaoImp()
 
     init {
@@ -30,13 +31,21 @@ class AppPropertiesMx @Inject constructor(context: Context) {
     }
 
     fun reinitApiKey() {
-        val sysPropEntity: SysPropEntity? =
+        val apiKeyGoogleMaps: SysPropEntity? =
             sysPropDao.findBypropertiesKey(PropertiesMxParam.FSM_APP_GOOGLE_MAP)
-        sysPropEntity.whatIfNotNull(
+        apiKeyGoogleMaps.whatIfNotNull(
             whatIf = {
                 fsmGoogleMapsApikey = StringUtils.decodeToBase64(it.propertiesvalue.toString())
             }
         )
+
+        val switchUser: SysPropEntity? = sysPropDao.findBypropertiesKey(PropertiesMxParam.FSM_APP_SWITCH_USER)
+        switchUser.whatIfNotNull(
+            whatIf = {
+                fsmEnableSwitchUser = StringUtils.decodeToBase64(it.propertiesvalue.toString())
+            }
+        )
+
     }
 
     fun findApikey(propertiesKey: String): String? {

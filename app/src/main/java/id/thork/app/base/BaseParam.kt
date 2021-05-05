@@ -24,6 +24,9 @@ object BaseParam {
     const val APP_TRUE = 1
     const val APP_FALSE = 0
 
+    const val APP_TRUE_STRING = "true"
+    const val APP_FALSE_STRING = "false"
+
     const val APP_EMPTY_STRING = ""
     const val APP_DASH = "-"
 

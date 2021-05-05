@@ -65,7 +65,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         val pInfo = packageManager.getPackageInfo(packageName, 0)
         binding.tvVersion.text = BaseParam.APP_VERSION + pInfo.versionName
         binding.btnSwitchUser.setOnClickListener {
-            loginPatternViewModel.deleteUserSession()
+            loginPatternViewModel.switchUser()
         }
     }
 
@@ -73,18 +73,24 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         super.setupObserver()
         loginPatternViewModel.validateUsername()
         loginPatternViewModel.username.observe(this, {
-            if(changePatternSetting == TAG_SETTING){
+            if (changePatternSetting == TAG_SETTING) {
                 binding.etProfileName.setText(R.string.change_pattern)
             } else {
                 binding.etProfileName.text = it
+            }
+        })
+        loginPatternViewModel.isSwitchUser.observe(this, {
+            if (it == BaseParam.APP_TRUE_STRING) {
+                binding.btnSwitchUser.visibility = View.VISIBLE
             }
         })
 
         loginPatternViewModel.isPatttern.observe(this, {
             isDoPatternValidation = it
             if (it == BaseParam.APP_FALSE) {
-                binding.btnSwitchUser.visibility = View.GONE
+                binding.btnSwitchUser.visibility = View.INVISIBLE
             }
+
             Timber.d("isDoPattern %s", isDoPatternValidation)
         })
 
@@ -130,7 +136,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
 //                    PatternLockUtils.patternToString(binding.patternLockView, pattern)
 //                )
                 if (changePatternSetting == TAG_SETTING) {
-                    Timber.tag(TAG).d("patternLockViewListener() onComplete 1 %s", changePatternSetting)
+                    Timber.tag(TAG)
+                        .d("patternLockViewListener() onComplete 1 %s", changePatternSetting)
                     reinputPattern(pattern)
                 } else if (isDoPatternValidation == BaseParam.APP_TRUE) {
                     Timber.tag(TAG).d(
@@ -239,7 +246,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private fun navigateToMainActivity() {
         Timber.tag(TAG).d("navigateToMainActivity()")
         if (changePatternSetting == TAG_SETTING) {
-            Toast.makeText(this, R.string.settings_change_pattern_success, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.settings_change_pattern_success, Toast.LENGTH_SHORT)
+                .show()
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             finish()
