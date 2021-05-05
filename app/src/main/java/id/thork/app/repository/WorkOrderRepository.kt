@@ -11,6 +11,7 @@ import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
@@ -33,19 +34,16 @@ class WorkOrderRepository @Inject constructor(
     val TAG = WorkOrderRepository::class.java.name
 
     suspend fun getWorkOrderList(
+        cookie: String,
+        savedQuery: String,
         select: String,
-        where: String,
-        pageno: Int,
-        pagesize: Int,
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
         onException: (String) -> Unit
     ) {
         val response = workOrderClient.getWorkOrderList(
-            select,
-            where,
-            pageno,
-            pagesize
+            cookie, savedQuery,
+            select
         )
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
@@ -159,6 +157,7 @@ class WorkOrderRepository @Inject constructor(
     fun getWoList(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
+        preferenceManager: PreferenceManager
     ) =
         Pager(
             config = PagingConfig(
@@ -170,7 +169,8 @@ class WorkOrderRepository @Inject constructor(
                     appSession = appSession,
                     repository = workOrderRepository,
                     woCacheDao,
-                    null
+                    null,
+                    preferenceManager
                 )
             }
         ).liveData
@@ -178,7 +178,8 @@ class WorkOrderRepository @Inject constructor(
     fun getSearchWo(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
-        query: String
+        query: String,
+        preferenceManager: PreferenceManager
     ) =
         Pager(
             config = PagingConfig(
@@ -190,7 +191,8 @@ class WorkOrderRepository @Inject constructor(
                     appSession = appSession,
                     repository = workOrderRepository,
                     woCacheDao,
-                    query
+                    query,
+                    preferenceManager
                 )
             }
         ).liveData
@@ -219,7 +221,7 @@ class WorkOrderRepository @Inject constructor(
                 isChanged = BaseParam.APP_TRUE,
                 isLatest = BaseParam.APP_TRUE,
                 syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.cxlabor
+                laborCode = wo.assignment?.get(0)?.laborcode
             )
             setupWoLocation(woCacheEntity, wo)
             woCacheEntity.createdDate = Date()

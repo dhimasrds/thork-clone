@@ -97,7 +97,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 workorderId = it.workorderid
                 workorderNumber = it.wonum
                 workorderStatus = it.status
-                workorderLongdesc = it.description_longdescription
+//                workorderLongdesc = it.description_longdescription
                 it.status?.let { status -> setButtonStatus(status) }
             }
             if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!![0].longitudex != null) {

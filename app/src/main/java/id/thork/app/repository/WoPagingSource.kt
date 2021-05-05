@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
@@ -34,8 +35,9 @@ class WoPagingSource @Inject constructor(
     private val appSession: AppSession,
     private val repository: WorkOrderRepository,
     private val woCacheDao: WoCacheDao,
-    private val query: String?
-) : PagingSource<Int, Member>() {
+    private val query: String?,
+    private val preferenceManager: PreferenceManager,
+    ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
     var offset = 0
@@ -87,13 +89,16 @@ class WoPagingSource @Inject constructor(
 
 
     private suspend fun fetchWo(position: Int): Boolean {
-        val laborcode: String? = appSession.laborCode
+//        val laborcode: String? = appSession.laborCode
+//        val where: String =
+//            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
-        val where: String =
-            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
+        val savedQuery = "THISFSMMOBILE"
 
         repository.getWorkOrderList(
-            select, where, pageno = position, pagesize = 10,
+            cookie, savedQuery, select,
+//            select, where, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)
@@ -170,7 +175,7 @@ class WoPagingSource @Inject constructor(
                 isChanged = BaseParam.APP_TRUE,
                 isLatest = BaseParam.APP_TRUE,
                 syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.cxlabor
+                laborCode = wo.assignment?.get(0)?.laborcode
             )
             setupWoLocation(woCacheEntity, wo)
             woCacheEntity.createdDate = Date()
@@ -202,7 +207,7 @@ class WoPagingSource @Inject constructor(
             isChanged = BaseParam.APP_TRUE,
             isLatest = BaseParam.APP_TRUE,
             syncStatus = BaseParam.APP_TRUE,
-            laborCode = wo.cxlabor
+            laborCode = wo.assignment?.get(0)?.laborcode
         )
         setupWoLocation(woCacheEntity, wo)
         woCacheEntity.createdDate = Date()
