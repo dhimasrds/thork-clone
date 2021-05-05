@@ -58,7 +58,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
         setupMainView(binding.mainLayout)
 
-        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true, scannerIcon = false)
+        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = false, filter = true, scannerIcon = false)
         setupBottomNavigationBar()
 
         binding.apply {

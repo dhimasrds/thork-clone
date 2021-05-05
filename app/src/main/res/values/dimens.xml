@@ -173,6 +173,7 @@
     <dimen name="general_padding_5dp">5dp</dimen>
     <dimen name="general_padding_10dp">10dp</dimen>
     <dimen name="general_padding_15dp">15dp</dimen>
+    <dimen name="general_padding_20dp">20dp</dimen>
     <dimen name="general_padding_25dp">25dp</dimen>
     <dimen name="general_padding_30dp">30dp</dimen>
     <dimen name="general_padding_35dp">35dp</dimen>
@@ -185,6 +186,7 @@
     <dimen name="general_padding_12dp">12dp</dimen>
     <dimen name="general_padding_14dp">14dp</dimen>
     <dimen name="general_padding_16dp">16dp</dimen>
+    <dimen name="general_padding_18dp">18dp</dimen>
 
     <!-- general margin x5 -->
     <dimen name="general_margin_5dp">5dp</dimen>

@@ -25,9 +25,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import id.thork.app.R
+import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.FragmentWorkorderBinding
 
-class WorkorderFragment : Fragment() {
+class WorkorderFragment :  Fragment() {
     private lateinit var binding: FragmentWorkorderBinding
     private val NUMBER_OF_TAB = 2
 
@@ -35,6 +36,8 @@ class WorkorderFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
         binding = FragmentWorkorderBinding.inflate(inflater, container, false)
         return binding.root
