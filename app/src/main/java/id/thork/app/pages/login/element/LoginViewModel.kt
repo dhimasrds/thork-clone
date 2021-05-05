@@ -31,7 +31,6 @@ import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.system_properties.SystemProperties
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.UserEntity
-import id.thork.app.propertiesMx.PropertiesMxParam
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.StringUtils
@@ -82,8 +81,6 @@ class LoginViewModel @ViewModelInject constructor(
         validateWithActiveSession(username)
 
         val userHash = CommonUtils.encodeToBase64(username + ":" + password)
-        val apikey = appPropertiesMx.fsmGoogleMapsApikey
-        val apikeyManual = appPropertiesMx.findApikey(PropertiesMxParam.FSM_APP_GOOGLE_MAP)
         Timber.tag(TAG).i("validateCredentials() user hash: %s", userHash)
         loginCookie(userHash, username)
     }
