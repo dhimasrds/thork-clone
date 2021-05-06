@@ -37,13 +37,14 @@ class WorkOrderRepository @Inject constructor(
         cookie: String,
         savedQuery: String,
         select: String,
+        pageno: Int,
+        pagesize: Int,
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
         onException: (String) -> Unit
     ) {
         val response = workOrderClient.getWorkOrderList(
-            cookie, savedQuery,
-            select
+            cookie, savedQuery, select, pageno, pagesize
         )
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->

@@ -37,7 +37,7 @@ class WoActivityPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
-    ) : PagingSource<Int, Member>() {
+) : PagingSource<Int, Member>() {
 
     val TAG = WoActivityPagingSource::class.java.name
     var offset = 0
@@ -56,7 +56,7 @@ class WoActivityPagingSource @Inject constructor(
                 checkWoOnLocal()
                 if (error && checkWoOnLocal().isEmpty()) {
                     return LoadResult.Error(Exception())
-                }else if(error && checkWoOnLocal().isNotEmpty() && position > 1){
+                } else if (error && checkWoOnLocal().isNotEmpty() && position > 1) {
                     return LoadResult.Error(Exception())
                 }
             }
@@ -87,19 +87,17 @@ class WoActivityPagingSource @Inject constructor(
         }
     }
 
-    private fun checkWoOnLocal() : List<WoCacheEntity>{
+    private fun checkWoOnLocal(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
     }
-
 
     private suspend fun fetchWo(position: Int): Boolean {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
-        val savedQuery = "THISFSMMOBILE"
+        val savedQuery = BaseParam.SAVEDQUERY_THISFSMMOBILE
 
         repository.getWorkOrderList(
-//            select, where, pageno = position, pagesize = 10,
-            cookie, savedQuery, select,
+            cookie, savedQuery, select, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)
@@ -158,13 +156,13 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
-        var listwo : List<WoCacheEntity> = woCacheDao.findAllWo(offset)
-        Timber.d("checkingWoInObjectBox savelocal :%s",listwo.size)
+        var listwo: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
+        Timber.d("checkingWoInObjectBox savelocal :%s", listwo.size)
         if (listwo.isEmpty()) {
-            Timber.d("checkingWoInObjectBox savelocal :%s",list.size)
+            Timber.d("checkingWoInObjectBox savelocal :%s", list.size)
             addWoToObjectBox(list)
         } else {
-            Timber.d("checkingWoInObjectBox compare :%s","TEST")
+            Timber.d("checkingWoInObjectBox compare :%s", "TEST")
             addObjectBoxToHashMap()
             compareWoLocalWithServer(list)
         }
@@ -190,7 +188,7 @@ class WoActivityPagingSource @Inject constructor(
     }
 
 
-    private fun createNewWo(wo: Member){
+    private fun createNewWo(wo: Member) {
         val woCacheEntity = WoCacheEntity(
             syncBody = convertToJson(wo),
             woId = wo.workorderid,
@@ -214,9 +212,10 @@ class WoActivityPagingSource @Inject constructor(
             val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
             for (i in cacheEntities.indices) {
                 if (cacheEntities[i].status != null
-                    && cacheEntities[i].status.equals(BaseParam.COMPLETED)){
-                woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
-                Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
+                    && cacheEntities[i].status.equals(BaseParam.COMPLETED)
+                ) {
+                    woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
+                    Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
                 }
             }
         }
@@ -239,7 +238,8 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun findWo(offset: Int): String {
-        val cacheEntities: List<WoCacheEntity> = woCacheDao.findListWoByStatus(BaseParam.COMPLETED,offset)
+        val cacheEntities: List<WoCacheEntity> =
+            woCacheDao.findListWoByStatus(BaseParam.COMPLETED, offset)
         val body = ArrayList<String>()
         for (i in cacheEntities.indices) {
             if (cacheEntities[i].status != null) {
@@ -251,7 +251,8 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun searchFindWo(offset: Int, query: String): String {
-        val list: List<WoCacheEntity> = woCacheDao.findWoByWonumComp(offset, query,BaseParam.COMPLETED)
+        val list: List<WoCacheEntity> =
+            woCacheDao.findWoByWonumComp(offset, query, BaseParam.COMPLETED)
         Timber.d("searchFindWo list :%s", list.size)
         val body = ArrayList<String>()
         for (i in list.indices) {

@@ -37,7 +37,7 @@ class WoPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
-    ) : PagingSource<Int, Member>() {
+) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
     var offset = 0
@@ -56,7 +56,7 @@ class WoPagingSource @Inject constructor(
                 checkWoOnLocal()
                 if (error && checkWoOnLocal().isEmpty()) {
                     return LoadResult.Error(Exception())
-                }else if(error && checkWoOnLocal().isNotEmpty() && position > 1){
+                } else if (error && checkWoOnLocal().isNotEmpty() && position > 1) {
                     return LoadResult.Error(Exception())
                 }
             }
@@ -89,16 +89,12 @@ class WoPagingSource @Inject constructor(
 
 
     private suspend fun fetchWo(position: Int): Boolean {
-//        val laborcode: String? = appSession.laborCode
-//        val where: String =
-//            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
-        val savedQuery = "THISFSMMOBILE"
+        val savedQuery = BaseParam.SAVEDQUERY_THISFSMMOBILE
 
         repository.getWorkOrderList(
-            cookie, savedQuery, select,
-//            select, where, pageno = position, pagesize = 10,
+            cookie, savedQuery, select, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)
@@ -113,7 +109,7 @@ class WoPagingSource @Inject constructor(
         return error
     }
 
-    private fun checkWoOnLocal() : List<WoCacheEntity>{
+    private fun checkWoOnLocal(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
     }
 
@@ -186,19 +182,19 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
-        woCacheEntity.latitude = if(!wo.woserviceaddress.isNullOrEmpty()){
+        woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
             wo.woserviceaddress!![0].latitudey
         } else {
             null
         }
-        woCacheEntity.longitude = if(!wo.woserviceaddress.isNullOrEmpty()){
+        woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
             wo.woserviceaddress!![0].longitudex
         } else {
             null
         }
     }
 
-    private fun createNewWo(wo: Member){
+    private fun createNewWo(wo: Member) {
         val woCacheEntity = WoCacheEntity(
             syncBody = convertToJson(wo),
             woId = wo.workorderid,
@@ -250,7 +246,8 @@ class WoPagingSource @Inject constructor(
         for (i in cacheEntities.indices) {
             if (cacheEntities[i].status != null
                 && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)) {
+                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
+            ) {
                 body.add(cacheEntities[i].syncBody!!)
             }
         }
@@ -259,7 +256,7 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun searchFindWo(offset: Int, query: String): String {
-        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query,BaseParam.COMPLETED)
+        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query, BaseParam.COMPLETED)
         Timber.d("searchFindWo list :%s", list.size)
         val body = ArrayList<String>()
         for (i in list.indices) {
