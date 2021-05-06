@@ -54,7 +54,7 @@ object LocaleHelper {
         } else {
             sysLocale = config.locale
         }
-        if (language != "" && sysLocale!!.language != language) {
+        if (language != "" && sysLocale != null &&  sysLocale.language != language) {
             val locale = Locale(language)
             Locale.setDefault(locale)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

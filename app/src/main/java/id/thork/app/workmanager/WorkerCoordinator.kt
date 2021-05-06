@@ -133,10 +133,14 @@ class WorkerCoordinator @Inject constructor(
         wocache.whatIfNotNull(
             whatIf = {
                 Timber.d("sendPushNotification() wocache available")
-                generatePushNotificationWorker(remoteMessageString!!)
+                remoteMessageString.whatIfNotNullOrEmpty {
+                    generatePushNotificationWorker(it)
+                }
             },
             whatIfNot = {
-                searchWoFromServer(workorderid.toInt(), remoteMessageString!!)
+                remoteMessageString.whatIfNotNullOrEmpty {
+                    searchWoFromServer(workorderid.toInt(), it)
+                }
             }
         )
     }

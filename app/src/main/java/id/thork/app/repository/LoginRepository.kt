@@ -7,7 +7,9 @@ import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
+import com.skydoves.whatif.whatIf
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.CookieSession
@@ -47,7 +49,9 @@ class LoginRepository constructor(
     }
 
     fun saveLoginPattern(userEntity: UserEntity, username: String?) {
-        return userDao.save(userEntity, username!!)
+        username.whatIfNotNullOrEmpty {
+            userDao.save(userEntity, it)
+        }
     }
 
     fun deleteUserSession(userEntity: UserEntity) {
@@ -107,28 +111,33 @@ class LoginRepository constructor(
             }
         }.onError {
             Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())
-
-            if (errorBody != null) {
-                val jsonString: String = errorBody!!.string()
-                Timber.tag(TAG).i("loginCookie() jsonStringResponse: %s", jsonString)
-                val gson = Gson()
-                val jsonResponse: ErrorResponse =
-                    gson.fromJson(jsonString, object : TypeToken<ErrorResponse?>() {}.type)
-                if (jsonResponse.oslcError?.spiReasonCode != null) {
-                    val reasonCode: String = jsonResponse.oslcError?.spiReasonCode!!
-                    Timber.tag(TAG)
-                        .i("loginCookie() reasonCode: %s", jsonResponse.oslcError?.spiReasonCode)
-                    var errorText = ""
-                    errorText = when (reasonCode) {
-                        MxResponse.BMXAA7901E -> "Incorrect Username or Password"
-                        MxResponse.BMXAA0021E -> MxResponse.BMXAA0021E
-                        else -> message()
+            errorBody.whatIfNotNull(
+                whatIf = {
+                    val jsonString: String = it.string()
+                    Timber.tag(TAG).i("loginCookie() jsonStringResponse: %s", jsonString)
+                    val gson = Gson()
+                    val jsonResponse: ErrorResponse =
+                        gson.fromJson(jsonString, object : TypeToken<ErrorResponse?>() {}.type)
+                    if (jsonResponse.oslcError?.spiReasonCode != null) {
+                        val reasonCode: String = jsonResponse.oslcError?.spiReasonCode!!
+                        Timber.tag(TAG)
+                            .i(
+                                "loginCookie() reasonCode: %s",
+                                jsonResponse.oslcError?.spiReasonCode
+                            )
+                        var errorText = ""
+                        errorText = when (reasonCode) {
+                            MxResponse.BMXAA7901E -> "Incorrect Username or Password"
+                            MxResponse.BMXAA0021E -> MxResponse.BMXAA0021E
+                            else -> message()
+                        }
+                        onError(errorText)
                     }
-                    onError(errorText)
+                },
+                whatIfNot = {
+                    onError(message())
                 }
-            } else {
-                onError(message())
-            }
+            )
         }
             .onException {
                 Timber.tag(TAG).i("loginCookie() exception: %s", message())
