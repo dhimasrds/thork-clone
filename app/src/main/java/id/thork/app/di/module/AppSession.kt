@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppSession @Inject constructor(context: Context){
+class AppSession @Inject constructor(context: Context) {
     val TAG = AppSession::class.java.name
 
     var userEntity: UserEntity
@@ -50,43 +50,42 @@ class AppSession @Inject constructor(context: Context){
         Timber.tag(TAG).i("reinitUser() existingUser: %s", existingUser)
         existingUser.whatIfNotNull(
             whatIf = {
-                userEntity = existingUser!!
-                existingUser.personUID.whatIfNotNull(
+                userEntity = it
+                userEntity.personUID.whatIfNotNull(
                     whatIf = {
-                        personUID = existingUser.personUID!!
+                        personUID = it
                     }
                 )
 
-                existingUser.userHash.whatIfNotNull(
+                userEntity.userHash.whatIfNotNull(
                     whatIf = {
-                        userHash = existingUser.userHash!!
+                        userHash = it
                     }
                 )
 
-                existingUser.laborcode.whatIfNotNull(
+                userEntity.laborcode.whatIfNotNull(
                     whatIf = {
-                        laborCode = existingUser.laborcode!!
+                        laborCode = it
                     }
                 )
 
-                existingUser.siteid.whatIfNotNull(
+                userEntity.siteid.whatIfNotNull(
                     whatIf = {
-                        siteId = existingUser.siteid!!
+                        siteId = it
                     }
                 )
 
-                existingUser.orgid.whatIfNotNull(
+                userEntity.orgid.whatIfNotNull(
                     whatIf = {
-                        orgId = existingUser.orgid!!
+                        orgId = it
                     }
                 )
 
-                existingUser.server_address.whatIfNotNull(
+                userEntity.server_address.whatIfNotNull(
                     whatIf = {
-                        serverAddress = existingUser.server_address!!
+                        serverAddress = it
                     }
                 )
-
             }
         )
     }
