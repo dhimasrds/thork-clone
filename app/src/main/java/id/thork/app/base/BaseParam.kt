@@ -163,5 +163,11 @@ object BaseParam {
     const val STATUS_OK = "200"
     const val STATUS_NOTFOUND = "404"
 
+    /**
+     * SavedQuery
+     *
+     */
+
+    const val SAVEDQUERY_THISFSMMOBILE = "THISFSMMOBILE"
 
 }

@@ -10,6 +10,7 @@ import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
@@ -27,8 +28,9 @@ class WoActivityRepository constructor(
     val TAG = WorkOrderRepository::class.java.name
 
     suspend fun getWorkOrderList(
+        cookie: String,
+        savedQuery: String,
         select: String,
-        where: String,
         pageno: Int,
         pagesize: Int,
         onSuccess: (WorkOrderResponse) -> Unit,
@@ -36,10 +38,7 @@ class WoActivityRepository constructor(
         onException: (String) -> Unit
     ) {
         val response = workOrderClient.getWorkOrderList(
-            select,
-            where,
-            pageno,
-            pagesize
+            cookie, savedQuery, select, pageno, pagesize
         )
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
@@ -113,6 +112,7 @@ class WoActivityRepository constructor(
     fun getWoList(
         appSession: AppSession,
         repository: WoActivityRepository,
+        preferenceManager: PreferenceManager
     ) =
         Pager(
             config = PagingConfig(
@@ -124,7 +124,8 @@ class WoActivityRepository constructor(
                     appSession = appSession,
                     repository = repository,
                     woCacheDao,
-                    null
+                    null,
+                    preferenceManager
                 )
             }
         ).liveData
@@ -132,8 +133,9 @@ class WoActivityRepository constructor(
     fun getSearchWo(
         appSession: AppSession,
         repository: WoActivityRepository,
-        query: String
-    ) =
+        query: String,
+        preferenceManager: PreferenceManager,
+        ) =
         Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -144,7 +146,8 @@ class WoActivityRepository constructor(
                     appSession = appSession,
                     repository = repository,
                     woCacheDao,
-                    query
+                    query,
+                    preferenceManager
                 )
             }
         ).liveData

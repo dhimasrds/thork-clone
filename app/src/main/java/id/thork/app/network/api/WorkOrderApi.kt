@@ -12,13 +12,14 @@ import retrofit2.http.*
  */
 interface WorkOrderApi {
 
-    @GET("maximo/oslc/os/oslcwo")
+    @GET("maximo/oslc/os/THISFSMWODETAIL")
     suspend fun getListWorkorder(
+        @Header("Cookie") cookie: String?,
         @Query(value = "lean") lean: Int,
+        @Query("savedQuery") savedQuery: String?,
         @Query(value = "oslc.select") select: String?,
-        @Query(value = "oslc.where") where: String?,
         @Query(value = "pageno") pageno: Int?,
-        @Query(value = "oslc.pageSize") pagesize: Int?
+        @Query(value = "pageSize") pagesize: Int?,
     ): ApiResponse<WorkOrderResponse>
 
     @GET("maximo/oslc/os/oslcwo")
@@ -26,15 +27,13 @@ interface WorkOrderApi {
         @Header("MAXAUTH") userHash: String?,
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,
-        @Query(value = "oslc.where") where: String?
+        @Query(value = "oslc.where") where: String?,
     ): ApiResponse<WorkOrderResponse>
 
     @POST("/maximo/oslc/os/THISFSMWODETAIL?lean=1")
     suspend fun createWO(
         @Header(BaseParam.APP_MAX_AUTH) maxAuth: String?,
-//        @Header(BaseParam.APP_PROPERTIES) properties: String?,
-//        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
-        @Body body: Member?
+        @Body body: Member?,
     ): ApiResponse<Member>
 
     @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
@@ -44,6 +43,6 @@ interface WorkOrderApi {
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Path("workorderid") workorderid: Int,
         @Query(value = "lean") lean: Int,
-        @Body body: Member?
+        @Body body: Member?,
     ): ApiResponse<WorkOrderResponse>
 }

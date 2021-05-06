@@ -2,6 +2,7 @@ package id.thork.app.repository
 
 import androidx.paging.PagingSource
 import com.google.gson.Gson
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.Module
@@ -9,7 +10,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
@@ -34,7 +37,8 @@ class WoPagingSource @Inject constructor(
     private val appSession: AppSession,
     private val repository: WorkOrderRepository,
     private val woCacheDao: WoCacheDao,
-    private val query: String?
+    private val query: String?,
+    private val preferenceManager: PreferenceManager,
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -54,7 +58,7 @@ class WoPagingSource @Inject constructor(
                 checkWoOnLocal()
                 if (error && checkWoOnLocal().isEmpty()) {
                     return LoadResult.Error(Exception())
-                }else if(error && checkWoOnLocal().isNotEmpty() && position > 1){
+                } else if (error && checkWoOnLocal().isNotEmpty() && position > 1) {
                     return LoadResult.Error(Exception())
                 }
             }
@@ -87,13 +91,12 @@ class WoPagingSource @Inject constructor(
 
 
     private suspend fun fetchWo(position: Int): Boolean {
-        val laborcode: String? = appSession.laborCode
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
-        val where: String =
-            ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS + "}"
+        val savedQuery = BaseParam.SAVEDQUERY_THISFSMMOBILE
 
         repository.getWorkOrderList(
-            select, where, pageno = position, pagesize = 10,
+            cookie, savedQuery, select, pageno = position, pagesize = 10,
             onSuccess = {
                 response = it
                 checkingWoInObjectBox(response.member)
@@ -108,7 +111,7 @@ class WoPagingSource @Inject constructor(
         return error
     }
 
-    private fun checkWoOnLocal() : List<WoCacheEntity>{
+    private fun checkWoOnLocal(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
     }
 
@@ -162,53 +165,65 @@ class WoPagingSource @Inject constructor(
 
     private fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            val woCacheEntity = WoCacheEntity(
-                syncBody = convertToJson(wo),
-                woId = wo.workorderid,
-                wonum = wo.wonum,
-                status = wo.status,
-                isChanged = BaseParam.APP_TRUE,
-                isLatest = BaseParam.APP_TRUE,
-                syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.cxlabor
-            )
-            setupWoLocation(woCacheEntity, wo)
-            woCacheEntity.createdDate = Date()
-            woCacheEntity.createdBy = appSession.userEntity.username
-            woCacheEntity.updatedBy = appSession.userEntity.username
-            repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+            var assignment: Assignment
+            wo.assignment.whatIfNotNullOrEmpty(
+                whatIf = {
+                    assignment = it.get(0)
+                    val laborCode: String = assignment.laborcode!!
+                    val woCacheEntity = WoCacheEntity(
+                        syncBody = convertToJson(wo),
+                        woId = wo.workorderid,
+                        wonum = wo.wonum,
+                        status = wo.status,
+                        isChanged = BaseParam.APP_TRUE,
+                        isLatest = BaseParam.APP_TRUE,
+                        syncStatus = BaseParam.APP_TRUE,
+                        laborCode = laborCode
+                    )
+                    setupWoLocation(woCacheEntity, wo)
+                    woCacheEntity.createdDate = Date()
+                    woCacheEntity.createdBy = appSession.userEntity.username
+                    woCacheEntity.updatedBy = appSession.userEntity.username
+                    repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+                })
         }
     }
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
-        woCacheEntity.latitude = if(!wo.woserviceaddress.isNullOrEmpty()){
+        woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
             wo.woserviceaddress!![0].latitudey
         } else {
             null
         }
-        woCacheEntity.longitude = if(!wo.woserviceaddress.isNullOrEmpty()){
+        woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
             wo.woserviceaddress!![0].longitudex
         } else {
             null
         }
     }
 
-    private fun createNewWo(wo: Member){
-        val woCacheEntity = WoCacheEntity(
-            syncBody = convertToJson(wo),
-            woId = wo.workorderid,
-            wonum = wo.wonum,
-            status = wo.status,
-            isChanged = BaseParam.APP_TRUE,
-            isLatest = BaseParam.APP_TRUE,
-            syncStatus = BaseParam.APP_TRUE,
-            laborCode = wo.cxlabor
-        )
-        setupWoLocation(woCacheEntity, wo)
-        woCacheEntity.createdDate = Date()
-        woCacheEntity.createdBy = appSession.userEntity.username
-        woCacheEntity.updatedBy = appSession.userEntity.username
-        repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+    private fun createNewWo(wo: Member) {
+        var assignment: Assignment
+        wo.assignment.whatIfNotNullOrEmpty(
+            whatIf = {
+                assignment = it.get(0)
+                val laborCode: String = assignment.laborcode!!
+                val woCacheEntity = WoCacheEntity(
+                    syncBody = convertToJson(wo),
+                    woId = wo.workorderid,
+                    wonum = wo.wonum,
+                    status = wo.status,
+                    isChanged = BaseParam.APP_TRUE,
+                    isLatest = BaseParam.APP_TRUE,
+                    syncStatus = BaseParam.APP_TRUE,
+                    laborCode = laborCode
+                )
+                setupWoLocation(woCacheEntity, wo)
+                woCacheEntity.createdDate = Date()
+                woCacheEntity.createdBy = appSession.userEntity.username
+                woCacheEntity.updatedBy = appSession.userEntity.username
+                repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+            })
     }
 
     private fun addObjectBoxToHashMap() {
@@ -245,7 +260,8 @@ class WoPagingSource @Inject constructor(
         for (i in cacheEntities.indices) {
             if (cacheEntities[i].status != null
                 && !cacheEntities[i].status.equals(BaseParam.WAPPR)
-                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)) {
+                && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
+            ) {
                 body.add(cacheEntities[i].syncBody!!)
             }
         }
@@ -254,7 +270,7 @@ class WoPagingSource @Inject constructor(
     }
 
     private fun searchFindWo(offset: Int, query: String): String {
-        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query,BaseParam.COMPLETED)
+        val list: List<WoCacheEntity> = woCacheDao.findWoByWonum(offset, query, BaseParam.COMPLETED)
         Timber.d("searchFindWo list :%s", list.size)
         val body = ArrayList<String>()
         for (i in list.indices) {
