@@ -8,11 +8,13 @@ import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
@@ -29,7 +31,7 @@ import javax.inject.Inject
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
-    private val appSession: AppSession
+    private val appSession: AppSession,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -41,7 +43,7 @@ class WorkOrderRepository @Inject constructor(
         pagesize: Int,
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
-        onException: (String) -> Unit
+        onException: (String) -> Unit,
     ) {
         val response = workOrderClient.getWorkOrderList(
             cookie, savedQuery, select, pageno, pagesize
@@ -76,7 +78,7 @@ class WorkOrderRepository @Inject constructor(
         where: String,
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
-        onException: (String) -> Unit
+        onException: (String) -> Unit,
     ) {
         val response = workOrderClient.searchWorkOrder(
             headerParam,
@@ -111,7 +113,7 @@ class WorkOrderRepository @Inject constructor(
         headerParam: String,
         body: Member,
         onSuccess: (Member) -> Unit,
-        onError: (String) -> Unit
+        onError: (String) -> Unit,
     ) {
         val response = workOrderClient.createWo(headerParam, body)
         response.suspendOnSuccess {
@@ -132,10 +134,14 @@ class WorkOrderRepository @Inject constructor(
     suspend fun updateStatus(
         headerParam: String, xMethodeOverride: String, contentType: String,
         workOrderId: Int, body: Member,
-        onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit
+        onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit,
     ) {
         val response =
-            workOrderClient.updateStatus(headerParam, xMethodeOverride, contentType, workOrderId, body)
+            workOrderClient.updateStatus(headerParam,
+                xMethodeOverride,
+                contentType,
+                workOrderId,
+                body)
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 onSuccess(response)
@@ -158,7 +164,7 @@ class WorkOrderRepository @Inject constructor(
     fun getWoList(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
-        preferenceManager: PreferenceManager
+        preferenceManager: PreferenceManager,
     ) =
         Pager(
             config = PagingConfig(
@@ -180,7 +186,7 @@ class WorkOrderRepository @Inject constructor(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
         query: String,
-        preferenceManager: PreferenceManager
+        preferenceManager: PreferenceManager,
     ) =
         Pager(
             config = PagingConfig(
@@ -214,21 +220,27 @@ class WorkOrderRepository @Inject constructor(
 
     fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            val woCacheEntity = WoCacheEntity(
-                syncBody = WoUtils.convertMemberToBody(wo),
-                woId = wo.workorderid,
-                wonum = wo.wonum,
-                status = wo.status,
-                isChanged = BaseParam.APP_TRUE,
-                isLatest = BaseParam.APP_TRUE,
-                syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.assignment?.get(0)?.laborcode
-            )
-            setupWoLocation(woCacheEntity, wo)
-            woCacheEntity.createdDate = Date()
-            woCacheEntity.createdBy = appSession.userEntity.username
-            woCacheEntity.updatedBy = appSession.userEntity.username
-            saveWoList(woCacheEntity, appSession.userEntity.username)
+            var assignment: Assignment
+            wo.assignment.whatIfNotNullOrEmpty(
+                whatIf = {
+                    assignment = wo.assignment?.get(0)!!
+                    val laborCode: String = assignment.laborcode!!
+                    val woCacheEntity = WoCacheEntity(
+                        syncBody = WoUtils.convertMemberToBody(wo),
+                        woId = wo.workorderid,
+                        wonum = wo.wonum,
+                        status = wo.status,
+                        isChanged = BaseParam.APP_TRUE,
+                        isLatest = BaseParam.APP_TRUE,
+                        syncStatus = BaseParam.APP_TRUE,
+                        laborCode = laborCode
+                    )
+                    setupWoLocation(woCacheEntity, wo)
+                    woCacheEntity.createdDate = Date()
+                    woCacheEntity.createdBy = appSession.userEntity.username
+                    woCacheEntity.updatedBy = appSession.userEntity.username
+                    saveWoList(woCacheEntity, appSession.userEntity.username)
+                })
         }
     }
 

@@ -2,6 +2,7 @@ package id.thork.app.repository
 
 import androidx.paging.PagingSource
 import com.google.gson.Gson
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.Module
@@ -11,6 +12,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
@@ -170,39 +172,51 @@ class WoActivityPagingSource @Inject constructor(
 
     private fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            val woCacheEntity = WoCacheEntity(
-                syncBody = convertToJson(wo),
-                woId = wo.workorderid,
-                wonum = wo.wonum,
-                status = wo.status,
-                isChanged = BaseParam.APP_TRUE,
-                isLatest = BaseParam.APP_TRUE,
-                syncStatus = BaseParam.APP_TRUE,
-                laborCode = wo.assignment?.get(0)?.laborcode
-            )
-            woCacheEntity.createdDate = Date()
-            woCacheEntity.createdBy = appSession.userEntity.username
-            woCacheEntity.updatedBy = appSession.userEntity.username
-            repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+            var assignment: Assignment
+            wo.assignment.whatIfNotNullOrEmpty(
+                whatIf = {
+                    assignment = wo.assignment?.get(0)!!
+                    val laborCode: String = assignment.laborcode!!
+                    val woCacheEntity = WoCacheEntity(
+                        syncBody = convertToJson(wo),
+                        woId = wo.workorderid,
+                        wonum = wo.wonum,
+                        status = wo.status,
+                        isChanged = BaseParam.APP_TRUE,
+                        isLatest = BaseParam.APP_TRUE,
+                        syncStatus = BaseParam.APP_TRUE,
+                        laborCode = laborCode
+                    )
+                    woCacheEntity.createdDate = Date()
+                    woCacheEntity.createdBy = appSession.userEntity.username
+                    woCacheEntity.updatedBy = appSession.userEntity.username
+                    repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+                })
         }
     }
 
 
     private fun createNewWo(wo: Member) {
-        val woCacheEntity = WoCacheEntity(
-            syncBody = convertToJson(wo),
-            woId = wo.workorderid,
-            wonum = wo.wonum,
-            status = wo.status,
-            isChanged = BaseParam.APP_TRUE,
-            isLatest = BaseParam.APP_TRUE,
-            syncStatus = BaseParam.APP_TRUE,
-            laborCode = wo.assignment?.get(0)?.laborcode
-        )
-        woCacheEntity.createdDate = Date()
-        woCacheEntity.createdBy = appSession.userEntity.username
-        woCacheEntity.updatedBy = appSession.userEntity.username
-        repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+        var assignment: Assignment
+        wo.assignment.whatIfNotNullOrEmpty(
+            whatIf = {
+                assignment = wo.assignment?.get(0)!!
+                val laborCode: String = assignment.laborcode!!
+                val woCacheEntity = WoCacheEntity(
+                    syncBody = convertToJson(wo),
+                    woId = wo.workorderid,
+                    wonum = wo.wonum,
+                    status = wo.status,
+                    isChanged = BaseParam.APP_TRUE,
+                    isLatest = BaseParam.APP_TRUE,
+                    syncStatus = BaseParam.APP_TRUE,
+                    laborCode = laborCode
+                )
+                woCacheEntity.createdDate = Date()
+                woCacheEntity.createdBy = appSession.userEntity.username
+                woCacheEntity.updatedBy = appSession.userEntity.username
+                repository.saveWoList(woCacheEntity, appSession.userEntity.username)
+            })
     }
 
     private fun addObjectBoxToHashMap() {
