@@ -223,7 +223,7 @@ class WorkOrderRepository @Inject constructor(
             var assignment: Assignment
             wo.assignment.whatIfNotNullOrEmpty(
                 whatIf = {
-                    assignment = wo.assignment?.get(0)!!
+                    assignment = it.get(0)
                     val laborCode: String = assignment.laborcode!!
                     val woCacheEntity = WoCacheEntity(
                         syncBody = WoUtils.convertMemberToBody(wo),

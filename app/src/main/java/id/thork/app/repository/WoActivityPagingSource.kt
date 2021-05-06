@@ -175,7 +175,7 @@ class WoActivityPagingSource @Inject constructor(
             var assignment: Assignment
             wo.assignment.whatIfNotNullOrEmpty(
                 whatIf = {
-                    assignment = wo.assignment?.get(0)!!
+                    assignment = it.get(0)
                     val laborCode: String = assignment.laborcode!!
                     val woCacheEntity = WoCacheEntity(
                         syncBody = convertToJson(wo),
@@ -200,7 +200,7 @@ class WoActivityPagingSource @Inject constructor(
         var assignment: Assignment
         wo.assignment.whatIfNotNullOrEmpty(
             whatIf = {
-                assignment = wo.assignment?.get(0)!!
+                assignment = it.get(0)
                 val laborCode: String = assignment.laborcode!!
                 val woCacheEntity = WoCacheEntity(
                     syncBody = convertToJson(wo),
