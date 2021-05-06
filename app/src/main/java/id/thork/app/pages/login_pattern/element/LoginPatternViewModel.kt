@@ -81,6 +81,7 @@ class LoginPatternViewModel @ViewModelInject constructor(
         val userEntity: UserEntity = appSession.userEntity
         loginRepository.deleteUserSession(userEntity)
         loginRepository.deleteSystemProperties()
+        loginRepository.deleteSystemResource()
         _switchUser.postValue(BaseParam.APP_TRUE)
     }
 

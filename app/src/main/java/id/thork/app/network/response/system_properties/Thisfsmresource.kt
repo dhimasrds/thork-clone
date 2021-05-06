@@ -14,8 +14,12 @@ data class Thisfsmresource(
     val localref: String? = null,
     @Json(name = "_rowstamp")
     val rowstamp: String? = null,
+    @Json(name = "thisfsmchangedt")
+    val thisfsmchangedt: String? = null,
     @Json(name = "thisfsmdescby")
     val thisfsmdescby: String? = null,
+    @Json(name = "thisfsmobj")
+    val thisfsmobj: String? = null,
     @Json(name = "thisfsmresource")
     val thisfsmresource: String? = null,
     @Json(name = "thisfsmresourceid")
