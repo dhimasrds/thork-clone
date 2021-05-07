@@ -9,6 +9,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
+import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
@@ -112,7 +113,8 @@ class WoActivityRepository constructor(
     fun getWoList(
         appSession: AppSession,
         repository: WoActivityRepository,
-        preferenceManager: PreferenceManager
+        preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx
     ) =
         Pager(
             config = PagingConfig(
@@ -125,7 +127,8 @@ class WoActivityRepository constructor(
                     repository = repository,
                     woCacheDao,
                     null,
-                    preferenceManager
+                    preferenceManager,
+                    appResourceMx
                 )
             }
         ).liveData
@@ -135,6 +138,7 @@ class WoActivityRepository constructor(
         repository: WoActivityRepository,
         query: String,
         preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx
         ) =
         Pager(
             config = PagingConfig(
@@ -147,7 +151,8 @@ class WoActivityRepository constructor(
                     repository = repository,
                     woCacheDao,
                     query,
-                    preferenceManager
+                    preferenceManager,
+                    appResourceMx
                 )
             }
         ).liveData

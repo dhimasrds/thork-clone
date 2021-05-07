@@ -5,6 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.dao.WoCacheDao
@@ -21,6 +22,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val workOrderRepository: WorkOrderRepository,
     private val preferenceManager: PreferenceManager,
+    private val appResourceMx: AppResourceMx,
     @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
 
@@ -43,10 +45,10 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     val woList = currentQuery.switchMap { query ->
         if (!query.isEmpty()) {
             Timber.d("filter on  viewmodel :%s", query)
-            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager)
+            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager, appResourceMx)
         } else {
             Timber.d("filter off viewmodel :%s", query)
-            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager).cachedIn(viewModelScope)
+            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
         }
     }
 

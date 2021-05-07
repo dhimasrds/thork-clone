@@ -11,6 +11,7 @@ import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
+import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
@@ -165,6 +166,7 @@ class WorkOrderRepository @Inject constructor(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
         preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx
     ) =
         Pager(
             config = PagingConfig(
@@ -177,7 +179,8 @@ class WorkOrderRepository @Inject constructor(
                     repository = workOrderRepository,
                     woCacheDao,
                     null,
-                    preferenceManager
+                    preferenceManager,
+                    appResourceMx
                 )
             }
         ).liveData
@@ -187,6 +190,7 @@ class WorkOrderRepository @Inject constructor(
         workOrderRepository: WorkOrderRepository,
         query: String,
         preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx
     ) =
         Pager(
             config = PagingConfig(
@@ -199,7 +203,8 @@ class WorkOrderRepository @Inject constructor(
                     repository = workOrderRepository,
                     woCacheDao,
                     query,
-                    preferenceManager
+                    preferenceManager,
+                    appResourceMx
                 )
             }
         ).liveData

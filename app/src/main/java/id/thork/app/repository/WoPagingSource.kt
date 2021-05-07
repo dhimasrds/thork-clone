@@ -9,6 +9,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import id.thork.app.base.BaseParam
+import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
@@ -39,6 +40,7 @@ class WoPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
+    private val appResourceMx: AppResourceMx
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -93,21 +95,23 @@ class WoPagingSource @Inject constructor(
     private suspend fun fetchWo(position: Int): Boolean {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
-        val savedQuery = BaseParam.SAVEDQUERY_THISFSMMOBILE
+        val savedQuery = appResourceMx.fsmResWorkorder
 
-        repository.getWorkOrderList(
-            cookie, savedQuery, select, pageno = position, pagesize = 10,
-            onSuccess = {
-                response = it
-                checkingWoInObjectBox(response.member)
-                error = false
-            },
-            onError = {
-                error = false
-            },
-            onException = {
-                error = true
-            })
+        savedQuery?.let {
+            repository.getWorkOrderList(
+                cookie, it, select, pageno = position, pagesize = 10,
+                onSuccess = {
+                    response = it
+                    checkingWoInObjectBox(response.member)
+                    error = false
+                },
+                onError = {
+                    error = false
+                },
+                onException = {
+                    error = true
+                })
+        }
         return error
     }
 
