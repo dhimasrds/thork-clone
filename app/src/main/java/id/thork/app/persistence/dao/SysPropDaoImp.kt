@@ -55,6 +55,4 @@ class SysPropDaoImp : SysPropDao {
         }
         return null
     }
-
-
 }

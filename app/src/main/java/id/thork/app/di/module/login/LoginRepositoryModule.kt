@@ -8,6 +8,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.LoginClient
 import id.thork.app.persistence.dao.SysPropDaoImp
+import id.thork.app.persistence.dao.SysResDaoImp
 import id.thork.app.persistence.dao.UserDaoImp
 import id.thork.app.repository.LoginRepository
 
@@ -21,6 +22,6 @@ object LoginRepositoryModule {
         loginClient: LoginClient,
         preferenceManager: PreferenceManager
     ): LoginRepository {
-        return LoginRepository(loginClient, UserDaoImp(), preferenceManager, SysPropDaoImp())
+        return LoginRepository(loginClient, UserDaoImp(), preferenceManager, SysPropDaoImp(), SysResDaoImp())
     }
 }

@@ -81,6 +81,7 @@ class SettingsViewModel @ViewModelInject constructor(
         loginRepository.deleteUserSession(userEntity)
         //TODO delete system properties
         loginRepository.deleteSystemProperties()
+        loginRepository.deleteSystemResource()
         _logout.postValue(BaseParam.APP_TRUE)
     }
 

@@ -6,8 +6,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Thisfsmresvalue(
-    @Json(name = "description")
-    val description: String? = null,
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "localref")
@@ -18,8 +16,8 @@ data class Thisfsmresvalue(
     val thisfsmblindcount: Boolean? = null,
     @Json(name = "thisfsmisdefault")
     val thisfsmisdefault: Boolean? = null,
-    @Json(name = "thisfsmmaxgroupid")
-    val thisfsmmaxgroupid: String? = null,
+    @Json(name = "thisfsmqueryid")
+    val thisfsmqueryid: String? = null,
     @Json(name = "thisfsmresvalueid")
     val thisfsmresvalueid: Int? = null
 )

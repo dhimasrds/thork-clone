@@ -62,7 +62,6 @@ class AppPropertiesMx @Inject constructor(context: Context) {
             }
         )
         return null
-
     }
 
 }

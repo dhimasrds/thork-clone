@@ -30,6 +30,7 @@ import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.system_properties.SystemProperties
 import id.thork.app.persistence.entity.SysPropEntity
+import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
@@ -247,6 +248,7 @@ class LoginViewModel @ViewModelInject constructor(
             systemProperties.member.whatIfNotNullOrEmpty(
                 whatIf = {
                     member = systemProperties.member?.get(0)!!
+                    saveSystemResource(member)
                     saveSystemProperties(member)
                 })
         }
@@ -286,4 +288,33 @@ class LoginViewModel @ViewModelInject constructor(
 
         }
     }
+
+    private fun saveSystemResource(member: id.thork.app.network.response.system_properties.Member) {
+        val username =  appSession.userEntity.username
+        val sysResEntityList = mutableListOf<SysResEntity>()
+        member.thisfsmresource.whatIfNotNullOrEmpty {
+            member.thisfsmresource?.forEach {
+                val sysResEntity =  SysResEntity()
+                sysResEntity.createdDate = Date()
+                sysResEntity.createdBy = username
+                sysResEntity.updatedDate = Date()
+                sysResEntity.updatedBy = username
+
+                sysResEntity.fsmappid = member.thisfsmappid
+                sysResEntity.fsmapp = member.thisfsmapp
+                sysResEntity.fsmappdescription = member.description
+                sysResEntity.siteid = appSession.siteId
+                sysResEntity.orgid = appSession.orgId
+
+                sysResEntity.resourceid = it.thisfsmresourceid.toString()
+                sysResEntity.resourcekey = it.thisfsmresource
+                sysResEntity.resourcevalue = it.thisfsmresvalue?.get(0)?.thisfsmqueryid
+                sysResEntity.type = it.thisfsmtype
+
+                sysResEntityList.add(sysResEntity)
+            }
+            loginRepository.createListSystemResource(sysResEntityList)
+        }
+    }
+
 }

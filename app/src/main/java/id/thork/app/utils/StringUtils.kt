@@ -155,7 +155,7 @@ object StringUtils {
         return string != null && !string.isEmpty()
     }
 
-    fun convertTimeString(string: String): String? {
+    fun convertTimeString(string: String): String {
         var string = string
         if (string.length < 2) {
             string = "0$string"
