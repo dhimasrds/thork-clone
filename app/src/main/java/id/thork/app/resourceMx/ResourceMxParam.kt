@@ -7,4 +7,6 @@ package id.thork.app.resourceMx
 object ResourceMxParam {
     const val FMS_RES_ASSET = "THISFSMRESasset"
     const val FMS_RES_LOCATIONS = "THISFSMRESlocations"
+    const val FMS_RES_WORKORDER = "THISFSMRESworkorder"
+
 }

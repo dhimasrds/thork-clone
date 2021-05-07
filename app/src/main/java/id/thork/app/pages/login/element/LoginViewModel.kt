@@ -161,9 +161,9 @@ class LoginViewModel @ViewModelInject constructor(
                 whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
             )
 
+            fetchSystemProperties(userHash)
             // When user founded and stored into cache, then hide progressbarSet
             _progressVisible.postValue(false)
-            fetchSystemProperties(userHash)
         }
     }
 

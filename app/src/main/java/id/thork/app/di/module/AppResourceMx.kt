@@ -23,6 +23,7 @@ class AppResourceMx @Inject constructor(context: Context) {
     //TODO hardcode param properties api key for query
     var fsmResAsset: String? = null
     var fsmResLocations: String? = null
+    var fsmResWorkorder: String? = null
     var sysResDao: SysResDao = SysResDaoImp()
 
     init {
@@ -40,6 +41,12 @@ class AppResourceMx @Inject constructor(context: Context) {
             sysResDao.findBypropertiesKey(ResourceMxParam.FMS_RES_LOCATIONS)
         resourceLocations.whatIfNotNull {
             fsmResLocations = it.resourcevalue
+        }
+
+        val resourceWorkorder: SysResEntity? =
+            sysResDao.findBypropertiesKey(ResourceMxParam.FMS_RES_WORKORDER)
+        resourceWorkorder.whatIfNotNull {
+            fsmResWorkorder = it.resourcevalue
         }
     }
 
