@@ -60,7 +60,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
         setupMainView(binding.mainLayout)
 
-        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = false, filter = true, scannerIcon = false)
+        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true, scannerIcon = false)
         setupBottomNavigationBar()
 
         binding.apply {
@@ -73,8 +73,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain
-        bottomNavigationView.menu.findItem(R.id.nav_graph_create).isEnabled = false
-        val navGraphIds = listOf(R.navigation.nav_graph_wo, R.navigation.nav_graph_map)
+        val navGraphIds = listOf(R.navigation.nav_graph_wo,R.navigation.nav_graph_history,R.navigation.nav_graph_map)
         Timber.tag(TAG).i("setupBottomNavigationBar() navGraphIds: %s", navGraphIds.toString())
 
         val navController = bottomNavigationView.setupWithNavController(

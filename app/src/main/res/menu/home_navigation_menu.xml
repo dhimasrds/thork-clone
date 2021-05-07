@@ -5,10 +5,10 @@
         android:icon="@drawable/ic_nav_wo"
         android:title="@string/workorder" />
     <item
-        android:id="@+id/nav_graph_create"
+        android:id="@+id/nav_graph_map"
         android:title="@string/main_maps" />
     <item
-        android:id="@+id/nav_graph_map"
+        android:id="@+id/nav_graph_history"
         android:icon="@drawable/ic_wo_history"
         android:title="@string/wo_history" />
 </menu>

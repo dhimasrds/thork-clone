@@ -24,22 +24,22 @@
         tools:context=".pages.main.element.WorkorderFragment"
         android:orientation="vertical">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:tabMaxWidth="0dp"
-            android:padding="@dimen/general_padding_4dp"
-            app:tabTextAppearance="?android:attr/textAppearanceMedium"
-            app:textAllCaps="false" />
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/tab_layout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@android:color/white"-->
+<!--            app:tabMaxWidth="0dp"-->
+<!--            android:padding="@dimen/general_padding_4dp"-->
+<!--            app:tabTextAppearance="?android:attr/textAppearanceMedium"-->
+<!--            app:textAllCaps="false" />-->
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/tabs_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1" />
+<!--        <androidx.viewpager2.widget.ViewPager2-->
+<!--            android:id="@+id/tabs_viewpager"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_weight="1" />-->
 
     </LinearLayout>
 </layout>
