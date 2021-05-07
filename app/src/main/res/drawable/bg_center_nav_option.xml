@@ -2,9 +2,18 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape  android:shape="oval">
+            <gradient
+                android:startColor="#85919191"
+                android:centerColor="@android:color/transparent"
+                android:endColor="@color/white"
+                android:angle="270"
+                />
             <padding
-                android:top="3dp"/>
-            <solid android:color="#1F000000" />
+                android:top="5dp"
+                android:left="4dp"
+                android:right="4dp"
+                android:bottom="@dimen/general_margin_5dp"
+                />
             <size
                 android:width="170dp"
                 android:height="170dp" />

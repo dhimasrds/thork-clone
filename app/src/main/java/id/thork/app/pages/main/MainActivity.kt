@@ -36,8 +36,10 @@ import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
+import id.thork.app.pages.main.element.MapFragment
 import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.DialogActionListener {
@@ -86,6 +88,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
             setupActionBarWithNavController(nav)
         })
         currentNavController = navController
+
+        val fabCreateWo = binding.fabCreateWo
+        fabCreateWo.setOnClickListener {
+            startActivity(Intent(this, CreateWoActivity::class.java))
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -95,7 +102,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.iv_add -> {
-                startActivity(Intent(this, CreateWoActivity::class.java))
+
             }
         }
     }
