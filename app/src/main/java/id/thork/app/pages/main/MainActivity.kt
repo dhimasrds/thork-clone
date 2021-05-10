@@ -35,8 +35,10 @@ import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
+import id.thork.app.pages.main.element.MapFragment
 import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.DialogActionListener {
@@ -67,8 +69,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain
-        bottomNavigationView.menu.findItem(R.id.nav_graph_create).isEnabled = false
-        val navGraphIds = listOf(R.navigation.nav_graph_wo, R.navigation.nav_graph_map)
+        val navGraphIds = listOf(R.navigation.nav_graph_wo,R.navigation.nav_graph_history,R.navigation.nav_graph_map)
         Timber.tag(TAG).i("setupBottomNavigationBar() navGraphIds: %s", navGraphIds.toString())
 
         val navController = bottomNavigationView.setupWithNavController(
@@ -82,6 +83,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
             setupActionBarWithNavController(nav)
         })
         currentNavController = navController
+
+        val fabCreateWo = binding.fabCreateWo
+        fabCreateWo.setOnClickListener {
+            startActivity(Intent(this, CreateWoActivity::class.java))
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -91,7 +97,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.iv_add -> {
-                startActivity(Intent(this, CreateWoActivity::class.java))
+
             }
         }
     }

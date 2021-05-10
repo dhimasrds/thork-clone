@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/nav_graph_wo"
-            android:icon="@drawable/ic_nav_wo"
-            android:title="@string/main_workorder" />
+        android:id="@+id/nav_graph_wo"
+        android:icon="@drawable/ic_nav_wo"
+        android:title="@string/workorder" />
     <item
-            android:id="@+id/nav_graph_create"
-            android:title="@string/main_createwo" />
+        android:id="@+id/nav_graph_map"
+        android:title="@string/main_maps" />
     <item
-            android:id="@+id/nav_graph_map"
-            android:icon="@drawable/ic_nav_map"
-            android:title="@string/main_maps" />
+        android:id="@+id/nav_graph_history"
+        android:icon="@drawable/ic_wo_history"
+        android:title="@string/wo_history" />
 </menu>
