@@ -32,7 +32,7 @@ import javax.inject.Inject
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
-    private val appSession: AppSession,
+    private val appSession: AppSession
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -138,11 +138,13 @@ class WorkOrderRepository @Inject constructor(
         onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit,
     ) {
         val response =
-            workOrderClient.updateStatus(headerParam,
+            workOrderClient.updateStatus(
+                headerParam,
                 xMethodeOverride,
                 contentType,
                 workOrderId,
-                body)
+                body
+            )
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 onSuccess(response)

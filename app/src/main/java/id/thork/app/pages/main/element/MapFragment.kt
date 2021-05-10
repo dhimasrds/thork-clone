@@ -83,7 +83,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             lifecycleOwner = this@MapFragment
             vm = mapViewModel
         }
-        mapViewModel.fetchListWo()
+//        mapViewModel.fetchListWoOffline()
         mapViewModel.pruneWork()
         return binding.root
     }
@@ -366,4 +366,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
     }
+
+
 }

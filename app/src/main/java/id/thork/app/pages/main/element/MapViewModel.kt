@@ -10,11 +10,15 @@ import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.ApiParam
 import id.thork.app.network.response.firebase.FirebaseAndroid
 import id.thork.app.network.response.firebase.FirebaseBody
 import id.thork.app.network.response.firebase.FirebaseData
 import id.thork.app.network.response.firebase.ResponseFirebase
+import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -31,7 +35,9 @@ import timber.log.Timber
 class MapViewModel @ViewModelInject constructor(
     private val workOrderRepository: WorkOrderRepository,
     private val firebaseRepository: FirebaseRepository,
-    private val appSession: AppSession
+    private val appSession: AppSession,
+    private val appResourceMx: AppResourceMx,
+    private val preferenceManager: PreferenceManager
 ) : LiveCoroutinesViewModel() {
     val TAG = MapViewModel::class.java.name
 
@@ -46,7 +52,16 @@ class MapViewModel @ViewModelInject constructor(
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
     }
 
-    fun fetchListWo() {
+    suspend fun isConnected(){
+        if (appSession.isConnected){
+            fectlistWoOnline()
+        } else {
+            fetchListWoOffline()
+        }
+    }
+
+
+    fun fetchListWoOffline() {
         Timber.d("MapViewModel() fetchListWo")
         val listWoLocal = workOrderRepository.fetchWoList()
         _listWo.value = listWoLocal
@@ -95,6 +110,31 @@ class MapViewModel @ViewModelInject constructor(
             onError = {
 
             })
+        }
+    }
+
+    suspend fun fectlistWoOnline() {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val select: String = ApiParam.WORKORDER_SELECT
+        val savedQuery = appResourceMx.fsmResWorkorder
+        var response = WorkOrderResponse()
+        var error = false
+
+
+        savedQuery?.let {
+            workOrderRepository.getWorkOrderList(
+                cookie, it, select, pageno = 1, pagesize = 10,
+                onSuccess = {
+                    response = it
+//                    checkingWoInObjectBox(response.member)
+                    error = false
+                },
+                onError = {
+                    error = false
+                },
+                onException = {
+                    error = true
+                })
         }
     }
 }
