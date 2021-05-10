@@ -18,7 +18,9 @@ import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.WoUtils
 import timber.log.Timber
@@ -32,6 +34,7 @@ import javax.inject.Inject
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
+//    private val assetDao: AssetDao,
     private val appSession: AppSession,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
@@ -262,6 +265,10 @@ class WorkOrderRepository @Inject constructor(
             null
         }
     }
+
+//    fun fetchAsset(): List<AssetEntity> {
+//        return assetDao.findAllAsset()
+//    }
 
 
 }

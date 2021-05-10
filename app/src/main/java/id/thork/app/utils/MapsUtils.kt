@@ -44,6 +44,16 @@ object MapsUtils {
             .tag = BaseParam.APP_TAG_MARKER_WO
     }
 
+    fun renderAssetMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
+        val options = MarkerOptions()
+            .position(latLng)
+            .title(title)
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_asset))
+
+        googleMap.addMarker(options)
+            .tag = BaseParam.APP_TAG_MARKER_ASSET
+    }
+
 
     fun renderCrewMarker(
         googleMap: GoogleMap,

@@ -9,6 +9,7 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.repository.WoActivityRepository
@@ -23,6 +24,7 @@ class WorkOrderActvityViewModel  @ViewModelInject constructor(
     private val repository: WoActivityRepository,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
+    private val assetDao: AssetDao,
     @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
 
@@ -48,7 +50,7 @@ class WorkOrderActvityViewModel  @ViewModelInject constructor(
             repository.getSearchWo(appSession, repository, query, preferenceManager, appResourceMx)
         } else {
             Timber.d("filter off viewmodel :%s", query)
-            repository.getWoList(appSession, repository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
+            repository.getWoList(appSession, repository, preferenceManager, appResourceMx, assetDao).cachedIn(viewModelScope)
         }
     }
 

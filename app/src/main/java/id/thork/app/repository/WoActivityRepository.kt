@@ -13,8 +13,12 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.work_order.Asset
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import timber.log.Timber
 
@@ -25,6 +29,7 @@ import timber.log.Timber
 class WoActivityRepository constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
+    private val assetDao: AssetDao,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -114,7 +119,8 @@ class WoActivityRepository constructor(
         appSession: AppSession,
         repository: WoActivityRepository,
         preferenceManager: PreferenceManager,
-        appResourceMx: AppResourceMx
+        appResourceMx: AppResourceMx,
+        assetDao: AssetDao
     ) =
         Pager(
             config = PagingConfig(
@@ -126,7 +132,7 @@ class WoActivityRepository constructor(
                     appSession = appSession,
                     repository = repository,
                     woCacheDao,
-                    null,
+                    assetDao,
                     preferenceManager,
                     appResourceMx
                 )
@@ -156,5 +162,43 @@ class WoActivityRepository constructor(
                 )
             }
         ).liveData
+
+    suspend fun getAssetList(
+        cookie: String,
+        savedQuery: String,
+        select: String,
+        onSuccess: (AssetResponse) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = workOrderClient.getAssetList(
+            cookie, savedQuery, select
+        )
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //TODO
+                //Save user session into local cache
+                onSuccess(response)
+                Timber.tag(TAG).i("repository getWorkOrderList() code:%s", statusCode.code)
+            }
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "getWorkOrderList() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("reposs getWorkOrderList() exception: %s", message())
+                onException(message())
+            }
+
+    }
+
+    fun saveAssetList(assetEntity: AssetEntity, username: String?): AssetEntity {
+        return assetDao.createAssetCache(assetEntity, username)
+    }
 
 }
