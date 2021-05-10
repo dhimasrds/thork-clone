@@ -35,7 +35,6 @@ import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
-import id.thork.app.pages.main.element.MapFragment
 import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 

@@ -12,20 +12,11 @@
 
 package id.thork.app.pages.main.element
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.BlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import id.thork.app.R
-import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.FragmentWorkorderBinding
 
 class WorkorderFragment :  Fragment() {
