@@ -8,6 +8,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.helper.MapsLocation
@@ -94,20 +95,29 @@ object MapsUtils {
     }
 
     fun getLocationInfo(dataDirection: ResponseRoute?): MapsLocation? {
-        if (dataDirection != null && !dataDirection.routes!!.isNullOrEmpty()) {
+        if (dataDirection != null && !dataDirection.routes.isNullOrEmpty()) {
             val mapsLocation = MapsLocation()
-            val dataLegs: Leg = dataDirection.routes!![0].legs!![0]
-
-            // get distance and duration
-            val dataDistance: Distance? = dataLegs.distance
-            val dataDuration: Duration? = dataLegs.duration
-            mapsLocation.startAddress = dataLegs.startAddress
-            mapsLocation.endAddress = dataLegs.endAddress
-            mapsLocation.distanceText = dataDistance!!.text
-            mapsLocation.distanceValue = dataDistance.value!!
-            mapsLocation.durationText = dataDuration!!.text
-            mapsLocation.durationValue = dataDuration.value!!
-            return mapsLocation
+            dataDirection.routes[0].legs.whatIfNotNullOrEmpty {
+                val dataLegs: Leg = it[0]
+                // get distance and duration
+                val dataDistance: Distance? = dataLegs.distance
+                val dataDuration: Duration? = dataLegs.duration
+                mapsLocation.startAddress = dataLegs.startAddress
+                mapsLocation.endAddress = dataLegs.endAddress
+                dataDistance.whatIfNotNull {
+                    mapsLocation.distanceText = it.text
+                    it.value.whatIfNotNull { distanceValue ->
+                        mapsLocation.distanceValue = distanceValue
+                    }
+                }
+                dataDuration.whatIfNotNull {
+                    mapsLocation.durationText = it.text
+                    it.value.whatIfNotNull { durationValue ->
+                        mapsLocation.durationValue = durationValue
+                    }
+                }
+                return mapsLocation
+            }
         }
         return null
     }
@@ -117,10 +127,9 @@ object MapsUtils {
         mMap: GoogleMap?, context: Context, dataDirection: ResponseRoute?,
         startLatLng: LatLng?, endLatLng: LatLng?
     ) {
-
-        if (mMap != null && dataDirection != null && !dataDirection.routes!!.isNullOrEmpty()) {
+        if (mMap != null && dataDirection != null && !dataDirection.routes.isNullOrEmpty()) {
             // get Distance
-            val dataLegs: Leg = dataDirection?.routes!![0].legs!![0]
+            val dataLegs: Leg = dataDirection.routes[0].legs!![0]
             val dataDistance: Distance = dataLegs.distance!!
             // get polyline
             val polylinePoint: String = dataDirection.routes[0].overviewPolyline!!.points!!
