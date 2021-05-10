@@ -12,21 +12,19 @@
 
 package id.thork.app.base
 
-import okhttp3.Headers
 
-
-class CookieSession {
-    companion object {
-        var cookieCache  = "-"
-
-        fun updateCookie(cookie: String) {
-            cookieCache = cookie
-        }
-
-        fun updateCookie(headers: Headers) {
-            //val cookielist: List<String> = headers.values("Set-Cookie")
-            //val jsessionid = cookielist[0].split(";").toTypedArray()[0]
-            //cookieCache = jsessionid
-        }
-    }
-}
+//class CookieSession {
+//    companion object {
+//        var cookieCache  = "-"
+//
+//        fun updateCookie(cookie: String) {
+//            cookieCache = cookie
+//        }
+//
+//        fun updateCookie(headers: Headers) {
+//            //val cookielist: List<String> = headers.values("Set-Cookie")
+//            //val jsessionid = cookielist[0].split(";").toTypedArray()[0]
+//            //cookieCache = jsessionid
+//        }
+//    }
+//}

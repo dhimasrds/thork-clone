@@ -28,5 +28,5 @@ class IntroViewPagerAdapter(
             return screens.size
         }
 
-        inner class SliderViewHolder(view: View?) : RecyclerView.ViewHolder(view!!)
+        inner class SliderViewHolder(view: View) : RecyclerView.ViewHolder(view)
     }

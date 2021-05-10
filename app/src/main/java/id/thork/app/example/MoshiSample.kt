@@ -14,7 +14,6 @@ package id.thork.app.example
 
 import com.squareup.moshi.*
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
-import id.thork.app.base.CookieSession
 import id.thork.app.utils.MoshiUtils
 import java.lang.reflect.Type
 import java.util.*
@@ -36,11 +35,6 @@ fun main() {
 //    createJsonArrayFromObject()
 
     //convertMapToJson()
-
-    println("v " + CookieSession.cookieCache);
-
-    CookieSession.updateCookie("12345")
-    println("v2 " + CookieSession.cookieCache)
 }
 
 fun createPersonObjectFromJson() {

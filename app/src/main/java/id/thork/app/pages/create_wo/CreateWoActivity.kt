@@ -92,18 +92,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         binding.editEstimdur.setOnClickListener(setEstimdur)
 
         binding.pickMap.setOnClickListener {
-            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                vibrator.vibrate(
-                    VibrationEffect.createOneShot(
-                        100,
-                        VibrationEffect.DEFAULT_AMPLITUDE
-                    )
-                )
-            } else {
-                vibrator.vibrate(100)
-            }
-            pickLocation()
+            vibrateAndPickLocation()
         }
 
         binding.scanQr.setOnClickListener {
@@ -173,8 +162,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
                 val estM: Int = esdurMinutes.text.toString().toInt()
                 var estHour = estH.toString()
                 var estMinute = estM.toString()
-                estHour = StringUtils.convertTimeString(estHour)!!
-                estMinute = StringUtils.convertTimeString(estMinute)!!
+                estHour = StringUtils.convertTimeString(estHour)
+                estMinute = StringUtils.convertTimeString(estMinute)
                 binding.editEstimdur.text = "$estHour " + StringUtils.getStringResources(
                     this,
                     R.string.estHour
@@ -351,6 +340,22 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         customDialogUtils.setMiddleButtonText(R.string.dialog_yes)
         customDialogUtils.setListener(this)
         customDialogUtils.show()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun vibrateAndPickLocation() {
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    100,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
+            )
+        } else {
+            vibrator.vibrate(100)
+        }
+        pickLocation()
     }
 
     private fun gotoHome() {
