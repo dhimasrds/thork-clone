@@ -16,7 +16,7 @@ class WoCacheDaoImp : WoCacheDao {
     private var woCacheEntityBox = ObjectBox.boxStore.boxFor(WoCacheEntity::class.java)
 
 
-    private fun addUpdateInfo(woCacheEntity: WoCacheEntity, username: String) {
+    private fun addUpdateInfo(woCacheEntity: WoCacheEntity, username: String?) {
         woCacheEntity.createdBy.whatIfNotNullOrEmpty(
             whatIf = {
                 woCacheEntity.createdDate = Date()
@@ -28,7 +28,7 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun createWoCache(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity {
-        addUpdateInfo(woCacheEntity, username!!)
+        addUpdateInfo(woCacheEntity, username)
         woCacheEntityBox.put(woCacheEntity)
         return woCacheEntity
     }
@@ -71,12 +71,14 @@ class WoCacheDaoImp : WoCacheDao {
     }
 
     override fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity? {
-        val woCacheEntities: List<WoCacheEntity> =
-            woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum)
-                .equal(WoCacheEntity_.status, status).build().find()
-        if (woCacheEntities.isNotEmpty()) {
-            return woCacheEntities[0]
-        } 
+        status.whatIfNotNullOrEmpty {
+            val woCacheEntities: List<WoCacheEntity> =
+                woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum)
+                    .equal(WoCacheEntity_.status, it).build().find()
+            woCacheEntities.whatIfNotNullOrEmpty {
+                return it[0]
+            }
+        }
         return null
     }
 
@@ -113,7 +115,8 @@ class WoCacheDaoImp : WoCacheDao {
     override fun updateWo(woCacheEntity: WoCacheEntity, username: String) {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         addUpdateInfo(woCacheEntity, username)
-        woCacheBox.put(woCacheEntity)    }
+        woCacheBox.put(woCacheEntity)
+    }
 
     override fun findApprWo(): WoCacheEntity? {
         TODO("Not yet implemented")

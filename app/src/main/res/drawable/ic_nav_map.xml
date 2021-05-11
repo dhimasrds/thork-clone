@@ -1,21 +1,11 @@
-<!--
-  ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
-  ~
-  ~ This software is the confidential and proprietary information of
-  ~ This.ID. ("Confidential Information").
-  ~
-  ~ Such Confidential Information shall not be disclosed and shall
-  ~ use it only	 in accordance with the terms of the license agreement
-  ~ entered into with This.ID; other than in accordance with the written
-  ~ permission of This.ID.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="16dp"
-    android:height="20dp"
-    android:viewportWidth="16"
-    android:viewportHeight="20">
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
   <path
-      android:pathData="M8,0C3.5891,0 0.0001,3.589 0.0001,7.995C-0.0289,14.44 7.696,19.784 8,20C8,20 16.0289,14.44 15.9999,8C15.9999,3.589 12.411,0 8,0ZM8,12C5.79,12 4,10.21 4,8C4,5.79 5.79,4 8,4C10.21,4 12,5.79 12,8C12,10.21 10.21,12 8,12Z"
-      android:fillColor="#AEAEAE"/>
+      android:fillColor="#FFFFFF"
+      android:pathData="M256,0C148.48,0,61,87.48,61,195c0,42.55,13.44,82.98,38.9,116.9l144.08,194.051c0.36,0.47,0.91,0.65,1.31,1.07 c7.2,7.71,17.59,5.77,22.72-1.07C309.5,450.591,385.55,347.2,414.79,308.2c0,0,0.01-0.03,0.02-0.05l0.18-0.24 C438.55,274.81,451,235.77,451,195C451,87.48,363.52,0,256,0z M256,300.2c-57.89,0-105.2-47.31-105.2-105.2S198.11,89.8,256,89.8 S361.2,137.11,361.2,195S313.89,300.2,256,300.2z" />
 </vector>

@@ -7,12 +7,10 @@ import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
-import com.skydoves.whatif.whatIf
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
-import id.thork.app.base.CookieSession
 import id.thork.app.base.MxResponse
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.LoginClient

@@ -4,12 +4,11 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
-import id.thork.app.base.CookieSession
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.helper.ConnectionState
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
@@ -59,20 +58,24 @@ class SettingsViewModel @ViewModelInject constructor(
 
     fun setUserIsPattern(activate: Int) {
         val userExisting: UserEntity? = loginRepository.findUserByPersonUID(appSession.personUID)
-        userExisting!!.isPattern = activate
-        loginRepository.saveLoginPattern(userExisting, appSession.userEntity.username)
+        userExisting.whatIfNotNull {
+            it.isPattern = activate
+            loginRepository.saveLoginPattern(it, appSession.userEntity.username)
+        }
     }
 
     fun logout() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         viewModelScope.launch(Dispatchers.IO) {
-            loginRepository.logout(cookie, appSession.userHash!!,
-                onSuccess = {
-                    deleteUserSession()
-                    Timber.tag(TAG).i("logoutCookie() sessionTime: %s", it)
-                }, onError = {
-                    Timber.tag(TAG).i("logoutCookie() error: %s", it)
-                })
+            appSession.userHash.whatIfNotNull {
+                loginRepository.logout(cookie, it,
+                    onSuccess = {
+                        deleteUserSession()
+                        Timber.tag(TAG).i("logoutCookie() sessionTime: %s", it)
+                    }, onError = {
+                        Timber.tag(TAG).i("logoutCookie() error: %s", it)
+                    })
+            }
         }
     }
 
