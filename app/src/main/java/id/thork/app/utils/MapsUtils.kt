@@ -38,7 +38,7 @@ object MapsUtils {
             .position(latLng)
 //            .title(title)
             .snippet(title)
-            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_work_order_foreground))
 
         googleMap.addMarker(options)
             .tag = BaseParam.APP_TAG_MARKER_WO
