@@ -2,6 +2,7 @@ package id.thork.app.network.api
 
 import com.skydoves.sandwich.ApiResponse
 import id.thork.app.base.BaseParam
+import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import retrofit2.http.*
@@ -45,4 +46,13 @@ interface WorkOrderApi {
         @Query(value = "lean") lean: Int,
         @Body body: Member?,
     ): ApiResponse<WorkOrderResponse>
+
+
+    @GET("maximo/oslc/os/thisfsmlocations")
+    suspend fun getLocationResource(
+        @Header("Cookie") cookie: String?,
+        @Query(value = "lean") lean: Int,
+        @Query("savedQuery") savedQuery: String?,
+        @Query(value = "oslc.select") select: String?
+    ): ApiResponse<FsmLocation>
 }

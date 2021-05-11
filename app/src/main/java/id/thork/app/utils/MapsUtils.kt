@@ -71,7 +71,7 @@ object MapsUtils {
             val options = MarkerOptions()
                 .position(latLng)
                 .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_group_crew))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_group_1479))
             newCrewMarker = googleMap.addMarker(options)
             crewListMarkers.put(crewId, newCrewMarker)
         }
