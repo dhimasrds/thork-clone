@@ -45,6 +45,17 @@ object MapsUtils {
 
     }
 
+    fun renderLocationMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
+        val options = MarkerOptions()
+            .position(latLng)
+            .title(title)
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_marker_foreground))
+
+        googleMap.addMarker(options)
+            .tag = BaseParam.APP_TAG_MARKER_WO
+    }
+
+
 
     fun renderCrewMarker(
         googleMap: GoogleMap,
@@ -73,7 +84,7 @@ object MapsUtils {
             val options = MarkerOptions()
                 .position(latLng)
                 .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_group_crew))
+                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_marker_foreground))
             newCrewMarker = googleMap.addMarker(options)
             crewListMarkers.put(crewId, newCrewMarker)
         }

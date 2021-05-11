@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.persistence.dao.LocationDaoImp
 import id.thork.app.persistence.dao.MaterialDaoImp
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.repository.MaterialRepository
@@ -26,7 +27,7 @@ object WorkOrderRepositoryModule {
     @ActivityRetainedScoped
     fun provideWorkOrderRepository(
         workOrderClient: WorkOrderClient,
-        appSession: AppSession
+        appSession: AppSession,
     ): WorkOrderRepository {
         return WorkOrderRepository(workOrderClient,WoCacheDaoImp(), appSession)
     }

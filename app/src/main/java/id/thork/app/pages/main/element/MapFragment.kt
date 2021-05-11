@@ -25,7 +25,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
@@ -88,6 +87,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
         viewLifecycleOwner.lifecycleScope.launch {
             mapViewModel.isConnected()
+            mapViewModel.fetchLocationMarker()
         }
 
         mapViewModel.pruneWork()
@@ -127,6 +127,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     }
 
     fun setupObserver() {
+        mapViewModel.location.observe(viewLifecycleOwner){
+            it.forEach{
+                Timber.tag(TAG).d("setupObserver() location ${it.longitudex}")
+                if (it.latitudey != null && it.longitudex != null) {
+                    val woLatLng = LatLng(it.latitudey!!.toDouble(), it.longitudex!!.toDouble())
+                    MapsUtils.renderLocationMarker(map, woLatLng, it.location!!)
+                }
+            }
+        }
         mapViewModel.listWo.observe(viewLifecycleOwner, {
             it.forEach {
                 Timber.tag(TAG).d("setupObserver() ${it.wonum}")
@@ -150,6 +159,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
                 }
             }
         })
+
+        mapViewModel.location.observe(viewLifecycleOwner){
+            it.forEach{
+                Timber.tag(TAG).d("setupObserver() location ${it.longitudex}")
+                if (it.latitudey != null && it.longitudex != null) {
+                    val woLatLng = LatLng(it.latitudey!!.toDouble(), it.longitudex!!.toDouble())
+                    MapsUtils.renderLocationMarker(map, woLatLng, it.location!!)
+                }
+            }
+        }
         mapViewModel.outputWorkInfos.observe(this, workInfosObserver())
     }
 
