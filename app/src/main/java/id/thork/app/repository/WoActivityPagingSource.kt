@@ -368,11 +368,12 @@ class WoActivityPagingSource @Inject constructor(
                     val address: String = serviceaddress.formattedaddress!!
                     val latitudey: Double = serviceaddress.latitudey!!
                     val longitudex: Double = serviceaddress.longitudex!!
+                    Timber.d("raka %s", asset.thisfsmtagtime)
                     val assetEntity = AssetEntity(
                         assetnum = asset.assetnum,
                         description = asset.description,
                         status = asset.status,
-                        location = asset.location,
+                        assetLocation = asset.location,
                         formattedaddress = address,
                         siteid = asset.siteid,
                         orgid = asset.orgid,
@@ -430,7 +431,7 @@ class WoActivityPagingSource @Inject constructor(
                     assetnum = asset.assetnum,
                     description = asset.description,
                     status = asset.status,
-                    location = asset.location,
+                    assetLocation = asset.location,
                     formattedaddress = address,
                     siteid = asset.siteid,
                     orgid = asset.orgid,

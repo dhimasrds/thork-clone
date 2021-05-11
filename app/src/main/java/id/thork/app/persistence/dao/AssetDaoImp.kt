@@ -29,6 +29,10 @@ class AssetDaoImp: AssetDao {
         assetEntity.updatedBy = username
     }
 
+    override fun remove() {
+        assetEntityBox.removeAll()
+    }
+
     override fun findAllAsset(): List<AssetEntity> {
         return assetEntityBox.query().notNull(AssetEntity_.assetnum).build()
             .find()

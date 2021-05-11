@@ -182,19 +182,19 @@ class WoActivityRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-                Timber.tag(TAG).i("repository raka() code:%s", statusCode.code)
+                Timber.tag(TAG).i("repository getAssetList() code:%s", statusCode.code)
             }
         }
             .onError {
                 Timber.tag(TAG).i(
-                    "getWorkOrderList() raka: %s error: %s",
+                    "repository getWorkOrderList() : %s error: %s",
                     statusCode.code,
                     message()
                 )
                 onError(message())
             }
             .onException {
-                Timber.tag(TAG).i("reposs raka() exception: %s", message())
+                Timber.tag(TAG).i("repository getAssetList() exception: %s", message())
                 onException(message())
             }
 
@@ -203,5 +203,4 @@ class WoActivityRepository constructor(
     fun saveAssetList(assetEntity: AssetEntity, username: String?): AssetEntity {
         return assetDao.createAssetCache(assetEntity, username)
     }
-
 }

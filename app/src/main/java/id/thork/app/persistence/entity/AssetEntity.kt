@@ -15,7 +15,7 @@ data class AssetEntity(
     var assetnum: String? = null,
     var description: String? = null,
     var status: String? = null,
-    var location: String? = null,
+    var assetLocation: String? = null,
     var formattedaddress: String? = null,
     var siteid: String? = null,
     var orgid: String? = null,

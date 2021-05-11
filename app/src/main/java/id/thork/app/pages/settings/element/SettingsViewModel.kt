@@ -78,6 +78,7 @@ class SettingsViewModel @ViewModelInject constructor(
         val userEntity: UserEntity = appSession.userEntity
         loginRepository.deleteUserSession(userEntity)
         //TODO delete system properties
+        loginRepository.deleteAssetEntity()
         loginRepository.deleteSystemProperties()
         loginRepository.deleteSystemResource()
         _logout.postValue(BaseParam.APP_TRUE)

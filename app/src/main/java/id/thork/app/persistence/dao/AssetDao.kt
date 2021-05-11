@@ -12,5 +12,5 @@ interface AssetDao {
 
     fun createAssetCache(assetEntity: AssetEntity, username: String?): AssetEntity
 
-
+    fun remove()
 }
