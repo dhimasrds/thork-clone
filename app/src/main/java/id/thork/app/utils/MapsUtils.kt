@@ -36,11 +36,14 @@ object MapsUtils {
     fun renderWoMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
             .position(latLng)
-            .title(title)
+//            .title(title)
+            .snippet(title)
             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
 
         googleMap.addMarker(options)
             .tag = BaseParam.APP_TAG_MARKER_WO
+
+
     }
 
 

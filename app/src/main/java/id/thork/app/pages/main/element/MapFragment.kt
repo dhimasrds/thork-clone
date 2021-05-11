@@ -45,7 +45,7 @@ import timber.log.Timber
 import java.util.*
 
 
-class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     CustomDialogUtils.DialogActionListener {
 
     val TAG = MapFragment::class.java.name
@@ -119,8 +119,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
     private fun onMapReadyState() {
         with(map) {
-            setOnInfoWindowClickListener(this@MapFragment)
-            setInfoWindowAdapter(customInfoWindowForGoogleMap)
+            setOnMarkerClickListener(this@MapFragment)
+//            setInfoWindowAdapter(customInfoWindowForGoogleMap)
             uiSettings.isMyLocationButtonEnabled = false
             uiSettings.isMapToolbarEnabled = true
         }
@@ -348,19 +348,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-
-
-    override fun onInfoWindowClick(marker: Marker) {
-        if (locationPermissionGranted) {
-            if (marker.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
-                navigateToDetailWo(marker)
-            }
-        } else {
-            showDialog()
-
-        }
-    }
-
     private fun navigateToDetailWo(marker: Marker?) {
         val intent = Intent(activity, DetailWoActivity::class.java)
         intent.putExtra(BaseParam.APP_WONUM, marker!!.title.toString())
@@ -385,6 +372,21 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        if (locationPermissionGranted) {
+            if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
+//                navigateToDetailWo(marker)
+                Timber.tag(TAG).d("onMarkerClick() marker WO snippet: %s", marker.snippet)
+
+            }
+        } else {
+            showDialog()
+
+        }
+
+        return false
     }
 
 

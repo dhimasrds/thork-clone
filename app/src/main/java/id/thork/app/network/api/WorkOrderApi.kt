@@ -19,7 +19,7 @@ interface WorkOrderApi {
         @Query("savedQuery") savedQuery: String?,
         @Query(value = "oslc.select") select: String?,
         @Query(value = "pageno") pageno: Int?,
-        @Query(value = "pageSize") pagesize: Int?,
+        @Query(value = "oslc.pageSize") pagesize: Int?,
     ): ApiResponse<WorkOrderResponse>
 
     @GET("maximo/oslc/os/oslcwo")
