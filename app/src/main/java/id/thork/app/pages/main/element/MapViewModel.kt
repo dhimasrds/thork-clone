@@ -25,7 +25,6 @@ import id.thork.app.network.response.firebase.ResponseFirebase
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
-import id.thork.app.network.response.fsm_location.Member
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.LocationDaoImp
 import id.thork.app.persistence.entity.LocationEntity
@@ -39,6 +38,8 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by M.Reza Sulaiman on 09/02/21
@@ -124,7 +125,7 @@ class MapViewModel @ViewModelInject constructor(
 //
     }
 
-    private fun saveLocationToLocal(member: List<Member>) {
+    private fun saveLocationToLocal(member: List<id.thork.app.network.response.fsm_location.Member>) {
         for (location in member) {
             val locationEntity = LocationEntity()
             locationEntity.location = location.location
@@ -201,7 +202,7 @@ class MapViewModel @ViewModelInject constructor(
                 cookie, it, select, pageno = 1, pagesize = 10,
                 onSuccess = {
                     response = it
-                    _listMember.postValue(response.member)
+                    _listMember.postValue(it.member)
                     checkingWoInObjectBox(response.member)
                 },
                 onError = {
@@ -211,7 +212,7 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun checkingWoInObjectBox(list: List<Member>) {
+    private fun checkingWoInObjectBox(list: List<id.thork.app.network.response.work_order.Member>) {
         if (workOrderRepository.fetchWoList().isEmpty()) {
             Timber.tag(TAG).d("checkingWoInObjectBox()")
             addWoToObjectBox(list)
@@ -221,14 +222,14 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun addWoToObjectBox(list: List<Member>) {
+    private fun addWoToObjectBox(list: List<id.thork.app.network.response.work_order.Member>) {
         for (wo in list) {
             Timber.tag(TAG).d("addWoToObjectBox()")
             createNewWo(wo)
         }
     }
 
-    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
+    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: id.thork.app.network.response.work_order.Member) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
             wo.woserviceaddress!![0].latitudey
         } else {
@@ -241,7 +242,7 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun createNewWo(wo: Member) {
+    private fun createNewWo(wo: id.thork.app.network.response.work_order.Member) {
         var assignment: Assignment
         wo.assignment.whatIfNotNullOrEmpty(
             whatIf = {
@@ -280,7 +281,7 @@ class MapViewModel @ViewModelInject constructor(
 
 
     @SuppressLint("NewApi")
-    private fun compareWoLocalWithServer(list: List<Member>) {
+    private fun compareWoLocalWithServer(list: List<id.thork.app.network.response.work_order.Member>) {
         for (wo in list) {
             if (woListObjectBox!![wo.wonum!!] != null) {
                 val woCahce = workOrderRepository.findWobyWonum(wo.wonum.toString())
@@ -298,7 +299,7 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun replaceWolocalChace(woCacheEntity: WoCacheEntity, member: Member) {
+    private fun replaceWolocalChace(woCacheEntity: WoCacheEntity, member: id.thork.app.network.response.work_order.Member) {
         woCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
         woCacheEntity.woId = member.workorderid
         woCacheEntity.wonum = member.wonum
