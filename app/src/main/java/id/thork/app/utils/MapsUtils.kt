@@ -3,6 +3,7 @@ package id.thork.app.utils
 import android.content.Context
 import android.graphics.Color
 import android.location.Location
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
@@ -145,24 +146,8 @@ object MapsUtils {
                                         .width(8f).color(Color.argb(255, 56, 167, 252))
                                 ).isGeodesic = true
 
-                                startLatLng.whatIfNotNull {
-                                    // Add Marker
-                                    mMap.addMarker(
-                                        MarkerOptions()
-                                            .position(it)
-                                            .title("Origin")
-                                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
-                                    )
-                                }
-
-                                endLatLng.whatIfNotNull {
-                                    mMap.addMarker(
-                                        MarkerOptions()
-                                            .position(it)
-                                            .title("Destination")
-                                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
-                                    )
-                                }
+                                drawSourceMarker(mMap, startLatLng)
+                                drawDestinationMarker(mMap, endLatLng)
 
                                 val latLongBuilder = LatLngBounds.Builder()
                                 latLongBuilder.include(startLatLng)
@@ -181,6 +166,7 @@ object MapsUtils {
                                         center.longitude + 0.001f
                                     )
                                 )
+
                                 bounds = latLongBuilder.build()
                                 val width = context.resources.displayMetrics.widthPixels
                                 val height = context.resources.displayMetrics.heightPixels
@@ -191,23 +177,48 @@ object MapsUtils {
                                     height,
                                     paddingMap
                                 )
-                                Timber.d("renderMapDirection() Distance : %s", dataDistance.value)
-                                dataDistance.value.whatIfNotNull { distanceValue ->
-                                    if (distanceValue > MAX_DISTANCE) {
-                                        mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
-                                    } else {
-                                        mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
-                                    }
-                                    mMap.animateCamera(cu)
-                                }
+                                setupZoomPreferences(mMap, cu, dataDistance)
                             }
                         }
                     }
                 }
             }
-
         }
     }
 
+    private fun drawSourceMarker(mMap: GoogleMap, startLatLng: LatLng?) {
+        startLatLng.whatIfNotNull {
+            // Add Marker
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(it)
+                    .title("Origin")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_origin_wo))
+            )
+        }
+    }
+
+    private fun drawDestinationMarker(mMap: GoogleMap, endLatLng: LatLng?) {
+        endLatLng.whatIfNotNull {
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(it)
+                    .title("Destination")
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+            )
+        }
+    }
+
+    private fun setupZoomPreferences(mMap: GoogleMap, cu: CameraUpdate,  dataDistance: Distance) {
+        Timber.d("setupZoomPreferences() Distance : %s", dataDistance.value)
+        dataDistance.value.whatIfNotNull { distanceValue ->
+            if (distanceValue > MAX_DISTANCE) {
+                mMap.setMaxZoomPreference(LONG_DISTANCE_ZOOM)
+            } else {
+                mMap.setMaxZoomPreference(SHORT_DISTANCE_ZOOM)
+            }
+            mMap.animateCamera(cu)
+        }
+    }
 
 }
