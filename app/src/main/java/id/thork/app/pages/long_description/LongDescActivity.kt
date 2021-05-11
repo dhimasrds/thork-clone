@@ -14,6 +14,12 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
@@ -38,7 +44,6 @@ import kotlin.collections.ArrayList
 class LongDescActivity : BaseActivity() {
     private val TAG = LongDescActivity::class.java.name
     private val TAG_CREATE = "TAG_CREATE"
-    private val RecordAudioRequestCode = 1
     private var speechRecognizer: SpeechRecognizer? = null
     private var speechRecognizerIntent: Intent ? = null
 
@@ -66,9 +71,9 @@ class LongDescActivity : BaseActivity() {
             filter = false,
             scannerIcon = false
         )
+        requestPermission()
         retrieveFromIntent()
         initView()
-        requestPermission()
     }
 
     override fun setupListener() {
@@ -128,6 +133,7 @@ class LongDescActivity : BaseActivity() {
                 binding.ivMic.setImageResource(R.drawable.ic_mic_off)
                 val data: List<String> =
                     ArrayList(bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION))
+                Timber.tag(TAG).d("onResults() data: %s", data)
                 binding.longdesc.setText(data.get(0))
             }
 
@@ -146,33 +152,40 @@ class LongDescActivity : BaseActivity() {
         speechRecognizer?.destroy()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == RecordAudioRequestCode && grantResults.size > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                CommonUtils.showToast("Permission Granted")
-            }
-        }
-    }
-
     private fun requestPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.RECORD_AUDIO),
-                    RecordAudioRequestCode
-                )
-            }
-        }
+        Timber.tag(TAG).d("requestPermission()")
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.RECORD_AUDIO)
+            .withListener(object: PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionGranted" )
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionDenied" )
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionRationaleShouldBeShown" )
+                }
+            }).check()
+
+//        if (ContextCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.RECORD_AUDIO
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                ActivityCompat.requestPermissions(
+//                    this,
+//                    arrayOf(Manifest.permission.RECORD_AUDIO),
+//                    RecordAudioRequestCode
+//                )
+//            }
+//        }
     }
 
     private fun saveNote() {
@@ -233,7 +246,7 @@ class LongDescActivity : BaseActivity() {
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentStatus = intent.getStringExtra(BaseParam.STATUS)
-        intentWoId = intent.getStringExtra(BaseParam.WORKORDERID)
+        intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0).toString()
         intentTagCreateWo = intent.getStringExtra(TAG_CREATE)
         textLongdesc = intent.getStringExtra("TEXT_LONGDESC")
         if (intentWonum != null) {
