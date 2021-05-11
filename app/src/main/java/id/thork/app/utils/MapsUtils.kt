@@ -35,7 +35,6 @@ object MapsUtils {
     fun renderWoMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
             .position(latLng)
-//            .title(title)
             .snippet(title)
             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_work_order_foreground))
 
@@ -48,7 +47,7 @@ object MapsUtils {
     fun renderLocationMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
             .position(latLng)
-            .title(title)
+            .snippet(title)
             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_marker_foreground))
 
         googleMap.addMarker(options)

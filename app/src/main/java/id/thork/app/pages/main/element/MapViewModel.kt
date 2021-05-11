@@ -99,7 +99,7 @@ class MapViewModel @ViewModelInject constructor(
 
     fun fetchLocation() {
         val location = workOrderRepository.fetchLocalMarker()
-        _location.value = location
+        _location.postValue(location)
     }
 
     suspend fun fetchLocationMarker() {
