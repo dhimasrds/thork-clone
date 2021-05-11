@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.zebra.rfid.api3.TagData
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseParam.TAG_SETTING
 import id.thork.app.databinding.ActivitySettingsBinding
+import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.about.AboutActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
@@ -20,12 +23,14 @@ import id.thork.app.pages.settings_language.SettingsLanguageActivity
 import id.thork.app.pages.settings_log.LogActivity
 import id.thork.app.pages.settings_pattern.SettingsPatternActivity
 import id.thork.app.utils.LocaleHelper
+import timber.log.Timber
 
 /**
  * Created by Raka Putra on 1/14/21
  * Jakarta, Indonesia.
  */
-class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
+class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
+    RFIDHandler.ResponseHandlerInterface {
     private val TAG = SettingsActivity::class.java.name
     private val viewModel: SettingsViewModel by viewModels()
     private val binding: ActivitySettingsBinding by binding(R.layout.activity_settings)
@@ -38,9 +43,14 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     private val TAG_LOGOUT = "TAG_LOGOUT"
     private var currentTag: String = ""
 
+    /**
+     * RFID Handler
+     */
+    private var rfidHandler: RFIDHandler?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupRfid()
         handlerOnclick()
     }
 
@@ -249,5 +259,60 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         finish()
+    }
+
+    //////////////////////
+    private fun setupRfid() {
+        if (rfidHandler == null) {
+            rfidHandler = RFIDHandler()
+            rfidHandler?.init(this, true, this)
+        }
+    }
+
+    override fun onConnected(message: String?) {
+        Timber.tag(TAG).d("onConnected() message: %s", message)
+    }
+
+    override fun onDisconnected() {
+        Timber.tag(TAG).d("onDisconnected()")
+    }
+
+    override fun handleTagdata(tagData: Array<out TagData>?) {
+        tagData.whatIfNotNullOrEmpty {
+            val sb: StringBuilder = StringBuilder()
+            for (i in 0..it.size) {
+                sb.append(it[i].tagID + "\n")
+            }
+            runOnUiThread {
+                Timber.tag(TAG).d("handleTagdata() tag data: %s", sb.toString())
+            }
+        }
+    }
+
+    override fun handleTriggerPress(pressed: Boolean) {
+        if (pressed) {
+            rfidHandler?.performInventory()
+        } else {
+            rfidHandler?.stopInventory()
+        }
+    }
+
+    override fun handleLocationData(distance: Short?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        rfidHandler?.onPause()
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        rfidHandler?.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        rfidHandler?.onDestroy()
     }
 }
