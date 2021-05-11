@@ -15,6 +15,7 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
@@ -34,8 +35,8 @@ import javax.inject.Inject
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
-//    private val assetDao: AssetDao,
     private val appSession: AppSession,
+    private val assetDao: AssetDao,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -169,7 +170,8 @@ class WorkOrderRepository @Inject constructor(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
         preferenceManager: PreferenceManager,
-        appResourceMx: AppResourceMx
+        appResourceMx: AppResourceMx,
+        assetDao: AssetDao
     ) =
         Pager(
             config = PagingConfig(
@@ -183,7 +185,8 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     null,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    assetDao
                 )
             }
         ).liveData
@@ -193,7 +196,8 @@ class WorkOrderRepository @Inject constructor(
         workOrderRepository: WorkOrderRepository,
         query: String,
         preferenceManager: PreferenceManager,
-        appResourceMx: AppResourceMx
+        appResourceMx: AppResourceMx,
+        assetDao: AssetDao
     ) =
         Pager(
             config = PagingConfig(
@@ -207,13 +211,18 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     query,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    assetDao
                 )
             }
         ).liveData
 
     fun fetchWoList(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
+    }
+
+    fun fetchAssetList(): List<AssetEntity> {
+        return assetDao.findAllAsset()
     }
 
     fun findWobyWonum(wonum: String): WoCacheEntity? {
@@ -266,9 +275,42 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
-//    fun fetchAsset(): List<AssetEntity> {
-//        return assetDao.findAllAsset()
-//    }
+    suspend fun getAssetList(
+        cookie: String,
+        savedQuery: String,
+        select: String,
+        onSuccess: (AssetResponse) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = workOrderClient.getAssetList(
+            cookie, savedQuery, select
+        )
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //TODO
+                //Save user session into local cache
+                onSuccess(response)
+                Timber.tag(TAG).i("repository getAssetList() code:%s", statusCode.code)
+            }
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "repository getAssetList() : %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("repository getAssetList() exception: %s", message())
+                onException(message())
+            }
 
+    }
+
+    fun saveAssetList(assetEntity: AssetEntity, username: String?): AssetEntity {
+        return assetDao.createAssetCache(assetEntity, username)
+    }
 
 }

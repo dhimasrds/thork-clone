@@ -24,6 +24,7 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorkerRepository
@@ -44,7 +45,9 @@ class WorkerCoordinator @Inject constructor(
     val preferenceManager: PreferenceManager,
     val httpLoggingInterceptor: HttpLoggingInterceptor,
     val woCacheDao: WoCacheDao,
-    val appSession: AppSession
+    val appSession: AppSession,
+    val assetDao: AssetDao
+
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
@@ -58,7 +61,7 @@ class WorkerCoordinator @Inject constructor(
 
     init {
         val workerRepository =
-            WorkerRepository(preferenceManager, httpLoggingInterceptor, woCacheDao, appSession)
+            WorkerRepository(preferenceManager, httpLoggingInterceptor, woCacheDao, appSession, assetDao)
         workOrderRepository = workerRepository.buildWorkorderRepository()
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }

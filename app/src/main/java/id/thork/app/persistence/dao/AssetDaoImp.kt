@@ -4,7 +4,6 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.AssetEntity_
-import id.thork.app.persistence.entity.WoCacheEntity
 import io.objectbox.Box
 import java.util.*
 
@@ -12,7 +11,7 @@ import java.util.*
  * Created by Raka Putra on 5/11/21
  * Jakarta, Indonesia.
  */
-class AssetDaoImp : AssetDao {
+class AssetDaoImp: AssetDao {
     var assetEntityBox: Box<AssetEntity>
 
     init {

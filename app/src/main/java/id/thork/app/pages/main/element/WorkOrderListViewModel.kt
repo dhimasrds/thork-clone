@@ -8,6 +8,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.persistence.entity.WoCacheEntity
@@ -23,6 +24,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     private val workOrderRepository: WorkOrderRepository,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
+    private val assetDao: AssetDao,
     @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
 
@@ -45,10 +47,10 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     val woList = currentQuery.switchMap { query ->
         if (!query.isEmpty()) {
             Timber.d("filter on  viewmodel :%s", query)
-            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager, appResourceMx)
+            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager, appResourceMx, assetDao)
         } else {
             Timber.d("filter off viewmodel :%s", query)
-            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
+            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager, appResourceMx, assetDao).cachedIn(viewModelScope)
         }
     }
 

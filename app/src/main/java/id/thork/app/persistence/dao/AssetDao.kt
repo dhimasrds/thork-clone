@@ -1,7 +1,6 @@
 package id.thork.app.persistence.dao
 
 import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.WoCacheEntity
 
 /**
  * Created by Raka Putra on 5/11/21

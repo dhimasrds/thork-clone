@@ -13,10 +13,14 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.asset_response.Serviceaddress
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
@@ -40,7 +44,8 @@ class WoPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
-    private val appResourceMx: AppResourceMx
+    private val appResourceMx: AppResourceMx,
+    private val assetDao: AssetDao
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -48,7 +53,9 @@ class WoPagingSource @Inject constructor(
     var error = false
     var emptyList = false
     var woListObjectBox: HashMap<String, WoCacheEntity>? = null
+    var assetListObjectBox: HashMap<String, AssetEntity>? = null
     var response = WorkOrderResponse()
+    var assetResponse = AssetResponse()
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
@@ -57,6 +64,7 @@ class WoPagingSource @Inject constructor(
         return try {
             if (query == null) {
                 fetchWo(position)
+                fetchAsset()
                 checkWoOnLocal()
                 if (error && checkWoOnLocal().isEmpty()) {
                     return LoadResult.Error(Exception())
@@ -103,6 +111,33 @@ class WoPagingSource @Inject constructor(
                 onSuccess = {
                     response = it
                     checkingWoInObjectBox(response.member)
+                    error = false
+                },
+                onError = {
+                    error = false
+                },
+                onException = {
+                    error = true
+                })
+        }
+        return error
+    }
+
+    private suspend fun fetchAsset(): Boolean {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val select: String = ApiParam.WORKORDER_SELECT
+        val savedQuery = appResourceMx.fsmResAsset
+
+        savedQuery?.let {
+            repository.getAssetList(
+                cookie, it, select,
+                onSuccess = {
+                    assetResponse = it
+                    assetResponse.member?.let { it1 -> checkingAssetInObjectBox(it1) }
+                    Timber.d("fetch asset paging source :%s", it.member)
+                    Timber.d("fetch asset paging source :%s", it.responseInfo)
+                    Timber.d("fetch asset paging source :%s", it.member?.size)
+
                     error = false
                 },
                 onError = {
@@ -312,6 +347,106 @@ class WoPagingSource @Inject constructor(
         val memberList: List<Member>? = adapter.fromJson(findWo(offset))
         Timber.d("memberlist : %s", memberList?.size)
         return memberList
+    }
+
+    private fun checkingAssetInObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
+        var listAsset: List<AssetEntity> = assetDao.findAllAsset()
+        Timber.d("checkingAssetInObjectBox savelocal :%s", listAsset.size)
+        if (listAsset.isEmpty()) {
+            Timber.d("checkingAssetInObjectBox savelocal :%s", list.size)
+            addAssetToObjectBox(list)
+        } else {
+            Timber.d("checkingWoInObjectBox compare :%s", "TEST")
+            addAssetObjectBoxToHashMap()
+            compareAssetLocalWithServer(list)
+        }
+    }
+
+    private fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
+        for (asset in list) {
+            var serviceaddress: Serviceaddress
+            asset.serviceaddress.whatIfNotNullOrEmpty(
+                whatIf = {
+                    serviceaddress = it.get(0)
+                    val address: String = serviceaddress.formattedaddress!!
+                    val latitudey: Double = serviceaddress.latitudey!!
+                    val longitudex: Double = serviceaddress.longitudex!!
+                    val assetEntity = AssetEntity(
+                        assetnum = asset.assetnum,
+                        description = asset.description,
+                        status = asset.status,
+                        location = asset.location,
+                        formattedaddress = address,
+                        siteid = asset.siteid,
+                        orgid = asset.orgid,
+                        latitudey = latitudey,
+                        longitudex = longitudex,
+                        assetRfid = asset.thisfsmrfid,
+                        image = asset.imagelibref,
+                        assetTagTime = asset.thisfsmtagtime
+                    )
+                    assetEntity.createdDate = Date()
+                    assetEntity.createdBy = appSession.userEntity.username
+                    assetEntity.updatedBy = appSession.userEntity.username
+                    repository.saveAssetList(assetEntity, appSession.userEntity.username)
+                })
+        }
+    }
+
+    private fun compareAssetLocalWithServer(list: List<id.thork.app.network.response.asset_response.Member>) {
+        for (asset in list) {
+            Timber.d("compareWoLocalWithServer : %s", asset.assetnum)
+            if (assetListObjectBox!![asset.assetnum!!] != null) {
+
+            } else {
+                createNewAsset(asset)
+            }
+        }
+    }
+
+    private fun addAssetObjectBoxToHashMap() {
+        Timber.d("queryObjectBoxToHashMap()")
+        if (assetDao.findAllAsset().isNotEmpty()) {
+            assetListObjectBox = HashMap<String, AssetEntity>()
+            val cacheEntities: List<AssetEntity> = assetDao.findAllAsset()
+            for (i in cacheEntities.indices) {
+                if (cacheEntities[i].status != null
+                    && cacheEntities[i].status.equals(BaseParam.OPERATING)
+                ) {
+                    assetListObjectBox!![cacheEntities[i].assetnum!!] = cacheEntities[i]
+                    Timber.d("HashMap value: %s", assetListObjectBox!![cacheEntities[i].assetnum])
+                }
+            }
+        }
+    }
+
+    private fun createNewAsset(asset: id.thork.app.network.response.asset_response.Member) {
+        var serviceaddress: Serviceaddress
+        asset.serviceaddress.whatIfNotNullOrEmpty(
+            whatIf = {
+                serviceaddress = it.get(0)
+                val address: String = serviceaddress.formattedaddress!!
+                val latitudey: Double = serviceaddress.latitudey!!
+                val longitudex: Double = serviceaddress.longitudex!!
+                val assetEntity = AssetEntity(
+                    assetnum = asset.assetnum,
+                    description = asset.description,
+                    status = asset.status,
+                    location = asset.location,
+                    formattedaddress = address,
+                    siteid = asset.siteid,
+                    orgid = asset.orgid,
+                    latitudey = latitudey,
+                    longitudex = longitudex,
+                    assetRfid = asset.thisfsmrfid,
+                    image = asset.imagelibref,
+                    assetTagTime = asset.thisfsmtagtime
+                )
+                assetEntity.createdDate = Date()
+                assetEntity.createdBy = appSession.userEntity.username
+                assetEntity.updatedBy = appSession.userEntity.username
+                repository.saveAssetList(assetEntity, appSession.userEntity.username)
+            })
     }
 
 

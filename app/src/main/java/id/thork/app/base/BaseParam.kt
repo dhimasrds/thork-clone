@@ -83,6 +83,7 @@ object BaseParam {
     const val WASGN = "WASGN"
     const val INPROGRESS = "INPRG"
     const val COMPLETED = "COMP"
+    const val OPERATING = "OPERATING"
     const val CLOSED = "CLOSE"
     const val DISPATCH = "DISPATCH"
     const val ACCEPT = "ACCEPT"

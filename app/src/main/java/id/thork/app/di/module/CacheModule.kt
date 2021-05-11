@@ -16,6 +16,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import id.thork.app.persistence.dao.AssetDao
+import id.thork.app.persistence.dao.AssetDaoImp
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import javax.inject.Singleton
@@ -29,5 +31,11 @@ object CacheModule {
     @Provides
     fun provideWoCacheDao(): WoCacheDao {
         return WoCacheDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAssetDao(): AssetDao {
+        return AssetDaoImp()
     }
 }

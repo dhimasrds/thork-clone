@@ -47,7 +47,7 @@ class WorkOrderActvityViewModel  @ViewModelInject constructor(
     val woList = currentQuery.switchMap { query ->
         if (!query.isEmpty()) {
             Timber.d("filter on  viewmodel :%s", query)
-            repository.getSearchWo(appSession, repository, query, preferenceManager, appResourceMx)
+            repository.getSearchWo(appSession, repository, query, preferenceManager, appResourceMx, assetDao)
         } else {
             Timber.d("filter off viewmodel :%s", query)
             repository.getWoList(appSession, repository, preferenceManager, appResourceMx, assetDao).cachedIn(viewModelScope)

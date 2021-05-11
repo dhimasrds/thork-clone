@@ -141,6 +141,9 @@ class WoActivityPagingSource @Inject constructor(
                 onSuccess = {
                     assetResponse = it
                     assetResponse.member?.let { it1 -> checkingAssetInObjectBox(it1) }
+                    Timber.d("fetch asset paging source :%s", it.member)
+                    Timber.d("fetch asset paging source :%s", it.responseInfo)
+                    Timber.d("fetch asset paging source :%s", it.member?.size)
 
                     error = false
                 },
@@ -374,7 +377,10 @@ class WoActivityPagingSource @Inject constructor(
                         siteid = asset.siteid,
                         orgid = asset.orgid,
                         latitudey = latitudey,
-                        longitudex = longitudex
+                        longitudex = longitudex,
+                        assetRfid = asset.thisfsmrfid,
+                        image = asset.imagelibref,
+                        assetTagTime = asset.thisfsmtagtime
                     )
                     assetEntity.createdDate = Date()
                     assetEntity.createdBy = appSession.userEntity.username
@@ -397,15 +403,15 @@ class WoActivityPagingSource @Inject constructor(
 
     private fun addAssetObjectBoxToHashMap() {
         Timber.d("queryObjectBoxToHashMap()")
-        if (woCacheDao.findAllWo().isNotEmpty()) {
-            woListObjectBox = HashMap<String, WoCacheEntity>()
-            val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
+        if (assetDao.findAllAsset().isNotEmpty()) {
+            assetListObjectBox = HashMap<String, AssetEntity>()
+            val cacheEntities: List<AssetEntity> = assetDao.findAllAsset()
             for (i in cacheEntities.indices) {
                 if (cacheEntities[i].status != null
-                    && cacheEntities[i].status.equals(BaseParam.COMPLETED)
+                    && cacheEntities[i].status.equals(BaseParam.OPERATING)
                 ) {
-                    woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
-                    Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
+                    assetListObjectBox!![cacheEntities[i].assetnum!!] = cacheEntities[i]
+                    Timber.d("HashMap value: %s", assetListObjectBox!![cacheEntities[i].assetnum])
                 }
             }
         }
@@ -419,6 +425,7 @@ class WoActivityPagingSource @Inject constructor(
                 val address: String = serviceaddress.formattedaddress!!
                 val latitudey: Double = serviceaddress.latitudey!!
                 val longitudex: Double = serviceaddress.longitudex!!
+                Timber.d("raka %s", asset.thisfsmtagtime)
                 val assetEntity = AssetEntity(
                     assetnum = asset.assetnum,
                     description = asset.description,
@@ -428,7 +435,10 @@ class WoActivityPagingSource @Inject constructor(
                     siteid = asset.siteid,
                     orgid = asset.orgid,
                     latitudey = latitudey,
-                    longitudex = longitudex
+                    longitudex = longitudex,
+                    assetRfid = asset.thisfsmrfid,
+                    image = asset.imagelibref,
+                    assetTagTime = asset.thisfsmtagtime
                 )
                 assetEntity.createdDate = Date()
                 assetEntity.createdBy = appSession.userEntity.username

@@ -48,11 +48,10 @@ interface WorkOrderApi {
         @Body body: Member?,
     ): ApiResponse<WorkOrderResponse>
 
-    @POST("/maximo/oslc/os/thisfsmasset")
+    @GET("/maximo/oslc/os/thisfsmasset?lean=1")
     suspend fun getListAsset(
         @Header("Cookie") cookie: String?,
         @Query("savedQuery") savedQuery: String?,
-        @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?
         ): ApiResponse<AssetResponse>
 }

@@ -133,6 +133,7 @@ class WoActivityRepository constructor(
                     repository = repository,
                     woCacheDao,
                     assetDao,
+                    null,
                     preferenceManager,
                     appResourceMx
                 )
@@ -144,7 +145,8 @@ class WoActivityRepository constructor(
         repository: WoActivityRepository,
         query: String,
         preferenceManager: PreferenceManager,
-        appResourceMx: AppResourceMx
+        appResourceMx: AppResourceMx,
+        assetDao: AssetDao
         ) =
         Pager(
             config = PagingConfig(
@@ -156,6 +158,7 @@ class WoActivityRepository constructor(
                     appSession = appSession,
                     repository = repository,
                     woCacheDao,
+                    assetDao,
                     query,
                     preferenceManager,
                     appResourceMx
@@ -179,19 +182,19 @@ class WoActivityRepository constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-                Timber.tag(TAG).i("repository getWorkOrderList() code:%s", statusCode.code)
+                Timber.tag(TAG).i("repository raka() code:%s", statusCode.code)
             }
         }
             .onError {
                 Timber.tag(TAG).i(
-                    "getWorkOrderList() code: %s error: %s",
+                    "getWorkOrderList() raka: %s error: %s",
                     statusCode.code,
                     message()
                 )
                 onError(message())
             }
             .onException {
-                Timber.tag(TAG).i("reposs getWorkOrderList() exception: %s", message())
+                Timber.tag(TAG).i("reposs raka() exception: %s", message())
                 onException(message())
             }
 

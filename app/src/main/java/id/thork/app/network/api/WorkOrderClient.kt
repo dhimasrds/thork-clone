@@ -21,7 +21,7 @@ class WorkOrderClient @Inject constructor(
         workOrderApi.getListWorkorder(cookie, LEAN, savedQuery, select, pageno, pagesize)
 
     suspend fun getAssetList(cookie: String, savedQuery: String, select: String) =
-        workOrderApi.getListAsset(cookie, savedQuery, LEAN, select)
+        workOrderApi.getListAsset(cookie, savedQuery, select)
 
     suspend fun searchWorkOrder(headerParam: String, select: String, where: String) =
         workOrderApi.searchWorkorder(headerParam, LEAN, select, where)

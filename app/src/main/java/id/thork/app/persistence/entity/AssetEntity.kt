@@ -20,7 +20,10 @@ data class AssetEntity(
     var siteid: String? = null,
     var orgid: String? = null,
     var latitudey: Double? = null,
-    var longitudex: Double? = null
+    var longitudex: Double? = null,
+    var assetRfid: String? = null,
+    var image: String? = null,
+    var assetTagTime: String? = null
 ) :BaseEntity(), Parcelable{
 
 }

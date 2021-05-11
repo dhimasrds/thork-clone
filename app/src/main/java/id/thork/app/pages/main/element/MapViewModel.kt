@@ -15,6 +15,7 @@ import id.thork.app.network.response.firebase.FirebaseAndroid
 import id.thork.app.network.response.firebase.FirebaseBody
 import id.thork.app.network.response.firebase.FirebaseData
 import id.thork.app.network.response.firebase.ResponseFirebase
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -40,7 +41,11 @@ class MapViewModel @ViewModelInject constructor(
 
     private val _listWo = MutableLiveData<List<WoCacheEntity>>()
 
+    private val _listAsset = MutableLiveData<List<AssetEntity>>()
+
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
+
+    val listAsset: LiveData<List<AssetEntity>> get() = _listAsset
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -50,6 +55,12 @@ class MapViewModel @ViewModelInject constructor(
         Timber.d("MapViewModel() fetchListWo")
         val listWoLocal = workOrderRepository.fetchWoList()
         _listWo.value = listWoLocal
+    }
+
+    fun fetchListAsset() {
+        Timber.d("MapViewModel() fetchListAsset")
+        val listWoLocal = workOrderRepository.fetchAssetList()
+        _listAsset.value = listWoLocal
     }
 
     fun pruneWork() {

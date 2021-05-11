@@ -84,6 +84,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             vm = mapViewModel
         }
         mapViewModel.fetchListWo()
+        mapViewModel.fetchListAsset()
         mapViewModel.pruneWork()
         return binding.root
     }
@@ -127,6 +128,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 if (it.latitude != null && it.longitude != null) {
                     val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
                     MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
+                }
+            }
+        })
+        mapViewModel.listAsset.observe(viewLifecycleOwner, {
+            it.forEach {
+                Timber.tag(TAG).d("setupObserver() ${it.assetnum}")
+                if (it.latitudey != null && it.longitudex != null){
+                    val assetLatLong = LatLng(it.latitudey!!.toDouble(), it.longitudex!!.toDouble())
+                    MapsUtils.renderAssetMarker(map, assetLatLong, it.assetnum.toString())
                 }
             }
         })
