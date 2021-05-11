@@ -73,7 +73,7 @@ class MapViewModel @ViewModelInject constructor(
     fun fetchListAsset() {
         Timber.d("MapViewModel() fetchListAsset")
         val listWoLocal = workOrderRepository.fetchAssetList()
-        _listAsset.value = listWoLocal
+        _listAsset.postValue(listWoLocal)
     }
 
     fun pruneWork() {
