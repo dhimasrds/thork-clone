@@ -19,6 +19,7 @@ import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.ErrorResponse.ErrorResponse
 import id.thork.app.network.response.system_properties.SystemProperties
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.SysPropDao
 import id.thork.app.persistence.dao.SysResDao
 import id.thork.app.persistence.dao.UserDao
@@ -33,7 +34,8 @@ class LoginRepository constructor(
     private val userDao: UserDao,
     private val preferenceManager: PreferenceManager,
     private val sysPropDao: SysPropDao,
-    private val sysResDao: SysResDao
+    private val sysResDao: SysResDao,
+    private val assetDao: AssetDao,
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
@@ -77,6 +79,10 @@ class LoginRepository constructor(
 
     fun createListSystemResource(sysResEntityList: List<SysResEntity>) : List<SysResEntity> {
         return sysResDao.saveListSystemResource(sysResEntityList)
+    }
+
+    fun deleteAssetEntity() {
+        return assetDao.remove()
     }
 
 
@@ -199,6 +205,4 @@ class LoginRepository constructor(
                 onException(message())
             }
     }
-
-
 }

@@ -25,6 +25,7 @@ import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.LocationDaoImp
 import id.thork.app.persistence.entity.LocationEntity
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -35,6 +36,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import timber.log.Timber
 import kotlin.collections.HashMap
+import java.util.*
 
 /**
  * Created by M.Reza Sulaiman on 09/02/21
@@ -68,10 +70,18 @@ class MapViewModel @ViewModelInject constructor(
     private val _location = MutableLiveData<List<LocationEntity>>()
 
 
+    private val _listAsset = MutableLiveData<List<AssetEntity>>()
+
+    private val _listAssetFromMember = MutableLiveData<List<Member>>()
+
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
     val listMember: LiveData<List<Member>> get() = _listMember
     val listMemberLocation: LiveData<List<id.thork.app.network.response.fsm_location.Member>> get() = _listMemberLocation
     val location: LiveData<List<LocationEntity>> get() = _location
+
+    val listAsset: LiveData<List<AssetEntity>> get() = _listAsset
+
+    val listAssetFromMember: LiveData<List<Member>> get() = _listAssetFromMember
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -91,9 +101,19 @@ class MapViewModel @ViewModelInject constructor(
         _listWo.value = listWoLocal
     }
 
+    private fun fetchListAsset() {
+        Timber.d("MapViewModel() fetchListAsset")
+        val listLocalAsset = workOrderRepository.fetchAssetList()
+        _listAsset.postValue(listLocalAsset)
+    }
+
     fun pruneWork() {
         Timber.d("MapViewModel() pruneWork")
         workManager.pruneWork()
+    }
+
+    fun deleteAssetEntity() {
+        workOrderRepository.deleteAssetEntity()
     }
 
     fun postCrewPosition(
@@ -220,6 +240,29 @@ class MapViewModel @ViewModelInject constructor(
                     _error.postValue(it)
                 })
 
+        }
+    }
+
+
+    fun fetchAsset() {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val select: String = ApiParam.WORKORDER_SELECT
+        val savedQuery = appResourceMx.fsmResAsset
+
+        deleteAssetEntity()
+        viewModelScope.launch(Dispatchers.IO) {
+            workOrderRepository.getAssetList(cookie, savedQuery!!, select,
+                onSuccess = {
+                    workOrderRepository.addAssetToObjectBox(it.member!!)
+                    fetchListAsset()
+                    Timber.d("fetchAsset() :%s", it.member)
+                },
+                onError = {
+                    Timber.d("fetchAsset() :%s", it)
+                },
+                onException = {
+                    Timber.d("fetchAsset() :%s", it)
+                })
         }
     }
 

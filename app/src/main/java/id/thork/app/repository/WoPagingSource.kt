@@ -13,10 +13,14 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.asset_response.Serviceaddress
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
@@ -40,7 +44,7 @@ class WoPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
-    private val appResourceMx: AppResourceMx
+    private val appResourceMx: AppResourceMx,
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -49,7 +53,6 @@ class WoPagingSource @Inject constructor(
     var emptyList = false
     var woListObjectBox: HashMap<String, WoCacheEntity>? = null
     var response = WorkOrderResponse()
-
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
@@ -295,6 +298,4 @@ class WoPagingSource @Inject constructor(
         Timber.d("memberlist : %s", memberList?.size)
         return memberList
     }
-
-
 }

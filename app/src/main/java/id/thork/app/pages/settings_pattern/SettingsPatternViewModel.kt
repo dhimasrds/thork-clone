@@ -55,6 +55,7 @@ class SettingsPatternViewModel @ViewModelInject constructor(
 
     fun deleteUserSession() {
         val userEntity: UserEntity = appSession.userEntity
+        loginRepository.deleteAssetEntity()
         loginRepository.deleteUserSession(userEntity)
         _switchUser.value = BaseParam.APP_TRUE
     }

@@ -16,12 +16,15 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.fsm_location.FsmLocation
+import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.LocationDaoImp
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.WoUtils
@@ -36,7 +39,8 @@ import javax.inject.Inject
 class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
-    private val appSession: AppSession
+    private val appSession: AppSession,
+    private val assetDao: AssetDao,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
@@ -236,6 +240,10 @@ class WorkOrderRepository @Inject constructor(
         return locationDao.locationList()
     }
 
+    fun fetchAssetList(): List<AssetEntity> {
+        return assetDao.findAllAsset()
+    }
+
     fun findWobyWonum(wonum: String): WoCacheEntity? {
         val woCacheEntity = woCacheDao.findWoByWonum(wonum)
         woCacheEntity.whatIfNotNull { return woCacheEntity }
@@ -368,5 +376,69 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
+    suspend fun getAssetList(
+        cookie: String,
+        savedQuery: String,
+        select: String,
+        onSuccess: (AssetResponse) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = workOrderClient.getAssetList(
+            cookie, savedQuery, select
+        )
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //TODO
+                //Save user session into local cache
+                onSuccess(response)
+                Timber.tag(TAG).i("repository getAssetList() code:%s", statusCode.code)
+            }
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "repository getAssetList() : %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("repository getAssetList() exception: %s", message())
+                onException(message())
+            }
+
+    }
+
+    fun saveAssetList(assetEntity: AssetEntity, username: String?): AssetEntity {
+        return assetDao.createAssetCache(assetEntity, username)
+    }
+
+    fun deleteAssetEntity() {
+        return assetDao.remove()
+    }
+
+    fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
+        for (asset in list) {
+            val assetEntity = AssetEntity(
+                assetnum = asset.assetnum,
+                description = asset.description,
+                status = asset.status,
+                assetLocation = asset.location,
+                formattedaddress = asset.serviceaddress?.get(0)?.formattedaddress,
+                siteid = asset.siteid,
+                orgid = asset.orgid,
+                latitudey = asset.serviceaddress?.get(0)?.latitudey,
+                longitudex = asset.serviceaddress?.get(0)?.longitudex,
+                assetRfid = asset.thisfsmrfid,
+                image = asset.imagelibref,
+                assetTagTime = asset.thisfsmtagtime
+            )
+            assetEntity.createdDate = Date()
+            assetEntity.createdBy = appSession.userEntity.username
+            assetEntity.updatedBy = appSession.userEntity.username
+            saveAssetList(assetEntity, appSession.userEntity.username)
+        }
+    }
 
 }

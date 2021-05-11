@@ -81,10 +81,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
         getLocationPermission()
         getLocationChange()
-        binding.apply {
-            lifecycleOwner = this@MapFragment
-            vm = mapViewModel
-        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             mapViewModel.isConnected()

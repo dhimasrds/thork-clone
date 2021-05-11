@@ -13,8 +13,12 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.work_order.Asset
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import timber.log.Timber
 
@@ -114,7 +118,7 @@ class WoActivityRepository constructor(
         appSession: AppSession,
         repository: WoActivityRepository,
         preferenceManager: PreferenceManager,
-        appResourceMx: AppResourceMx
+        appResourceMx: AppResourceMx,
     ) =
         Pager(
             config = PagingConfig(
@@ -138,7 +142,7 @@ class WoActivityRepository constructor(
         repository: WoActivityRepository,
         query: String,
         preferenceManager: PreferenceManager,
-        appResourceMx: AppResourceMx
+        appResourceMx: AppResourceMx,
         ) =
         Pager(
             config = PagingConfig(
@@ -156,5 +160,4 @@ class WoActivityRepository constructor(
                 )
             }
         ).liveData
-
 }
