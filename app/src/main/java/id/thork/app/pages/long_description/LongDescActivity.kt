@@ -2,8 +2,6 @@ package id.thork.app.pages.long_description
 
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -11,8 +9,6 @@ import android.speech.SpeechRecognizer
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -32,7 +28,6 @@ import id.thork.app.network.response.work_order.Longdescription
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.long_description.element.LongDescViewModel
 import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
