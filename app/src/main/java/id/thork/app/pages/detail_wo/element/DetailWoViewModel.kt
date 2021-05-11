@@ -120,10 +120,10 @@ class DetailWoViewModel @ViewModelInject constructor(
     ) {
         val currentWoCache: WoCacheEntity? =
             wonum?.let {
-                status?.let { it1 ->
+                status?.let { woStatus ->
                     woActivityRepository.findWoByWonumAndStatus(
                         it,
-                        it1
+                        woStatus
                     )
                 }
             }
