@@ -71,19 +71,49 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="10dp"/>
 
-    <EditText
-        android:id="@+id/longdesc"
+    <LinearLayout
+        android:id="@+id/layout_long_desc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:cursorVisible="true"
-        android:layout_below="@id/tvLongdesc"
-        android:layout_marginBottom="90dp"
-        android:fontFamily="@font/poppins"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/menu_wo_text_size"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_button"
+        android:layout_below="@+id/tvLongdesc"
         android:layout_marginTop="5dp"
         android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"/>
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:contentDescription="message icon"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_mic_off"/>
+        <EditText
+            android:id="@+id/longdesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="true"
+            android:layout_below="@id/tvLongdesc"
+            android:layout_marginBottom="90dp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/menu_wo_text_size"/>
+    </LinearLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/longdesc"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:cursorVisible="true"-->
+<!--        android:layout_below="@id/tvLongdesc"-->
+<!--        android:layout_marginBottom="90dp"-->
+<!--        android:fontFamily="@font/poppins"-->
+<!--        android:textColor="@color/colorBlack"-->
+<!--        android:textSize="@dimen/menu_wo_text_size"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_marginRight="16dp"-->
+<!--        android:layout_marginLeft="16dp"/>-->
 
 
 
