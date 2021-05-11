@@ -70,10 +70,10 @@ class MapViewModel @ViewModelInject constructor(
         _listWo.value = listWoLocal
     }
 
-    fun fetchListAsset() {
+    private fun fetchListAsset() {
         Timber.d("MapViewModel() fetchListAsset")
-        val listWoLocal = workOrderRepository.fetchAssetList()
-        _listAsset.postValue(listWoLocal)
+        val listLocalAsset = workOrderRepository.fetchAssetList()
+        _listAsset.postValue(listLocalAsset)
     }
 
     fun pruneWork() {
@@ -130,13 +130,12 @@ class MapViewModel @ViewModelInject constructor(
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResAsset
-
+        deleteAssetEntity()
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.getAssetList(cookie, savedQuery!!, select,
                 onSuccess = {
                     assetResponse = it
                     assetResponse.member?.let { it1 -> addAssetToObjectBox(it1) }
-                    fetchListAsset()
                     Timber.d("fetch asset paging source :%s", it.member)
                     Timber.d("fetch asset paging source :%s", it.responseInfo)
                     Timber.d("fetch asset paging source :%s", it.member?.size)
@@ -179,5 +178,6 @@ class MapViewModel @ViewModelInject constructor(
                     workOrderRepository.saveAssetList(assetEntity, appSession.userEntity.username)
                 })
         }
+        fetchListAsset()
     }
 }
