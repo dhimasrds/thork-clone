@@ -7,8 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.WorkQuery
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseApplication.Constants.context
@@ -57,7 +55,7 @@ class MapViewModel @ViewModelInject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    private val locationDao : LocationDao
+    private val locationDao: LocationDao
 
     init {
         locationDao = LocationDaoImp()
@@ -99,7 +97,7 @@ class MapViewModel @ViewModelInject constructor(
         _listWo.value = listWoLocal
     }
 
-    fun fetchLocation(){
+    fun fetchLocation() {
         val location = workOrderRepository.fetchLocalMarker()
         _location.value = location
     }
@@ -142,6 +140,7 @@ class MapViewModel @ViewModelInject constructor(
             locationEntity.thisfsmtagtime = location.thisfsmtagtime
             workOrderRepository.saveLocationToLocal(locationEntity)
         }
+        fetchLocation()
     }
 
     fun pruneWork() {
@@ -210,6 +209,7 @@ class MapViewModel @ViewModelInject constructor(
                 onException = {
                 })
         }
+        fetchLocationMarker()
     }
 
     private fun checkingWoInObjectBox(list: List<id.thork.app.network.response.work_order.Member>) {
@@ -229,7 +229,10 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: id.thork.app.network.response.work_order.Member) {
+    private fun setupWoLocation(
+        woCacheEntity: WoCacheEntity,
+        wo: id.thork.app.network.response.work_order.Member
+    ) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
             wo.woserviceaddress!![0].latitudey
         } else {
@@ -299,7 +302,10 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun replaceWolocalChace(woCacheEntity: WoCacheEntity, member: id.thork.app.network.response.work_order.Member) {
+    private fun replaceWolocalChace(
+        woCacheEntity: WoCacheEntity,
+        member: id.thork.app.network.response.work_order.Member
+    ) {
         woCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
         woCacheEntity.woId = member.workorderid
         woCacheEntity.wonum = member.wonum

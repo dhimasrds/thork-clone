@@ -88,9 +88,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
         viewLifecycleOwner.lifecycleScope.launch {
             mapViewModel.isConnected()
-            mapViewModel.fetchLocationMarker()
         }
-
         mapViewModel.pruneWork()
         return binding.root
     }
