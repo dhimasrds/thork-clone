@@ -124,7 +124,7 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    fun fetchAsset(): Boolean {
+    fun fetchAsset() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResAsset
@@ -134,20 +134,17 @@ class MapViewModel @ViewModelInject constructor(
                 onSuccess = {
                     assetResponse = it
                     assetResponse.member?.let { it1 -> checkingAssetInObjectBox(it1) }
-                    Timber.d("raka :%s", it.member)
+                    Timber.d("fetch asset paging source :%s", it.member)
                     Timber.d("fetch asset paging source :%s", it.responseInfo)
                     Timber.d("fetch asset paging source :%s", it.member?.size)
-
-                    error = false
                 },
                 onError = {
-                    error = false
+                    Timber.d("fetch asset paging source error:%s", it)
                 },
                 onException = {
-                    error = true
+                    Timber.d("fetch asset paging source onExeption:%s", it)
                 })
         }
-        return error
     }
 
     private fun checkingAssetInObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
