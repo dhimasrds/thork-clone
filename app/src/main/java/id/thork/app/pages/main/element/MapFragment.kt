@@ -83,6 +83,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             lifecycleOwner = this@MapFragment
             vm = mapViewModel
         }
+        mapViewModel.fetchAsset()
         mapViewModel.fetchListWo()
         mapViewModel.fetchListAsset()
         mapViewModel.pruneWork()
