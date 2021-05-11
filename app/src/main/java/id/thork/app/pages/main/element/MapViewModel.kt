@@ -58,9 +58,7 @@ class MapViewModel @ViewModelInject constructor(
 
     val listAsset: LiveData<List<AssetEntity>> get() = _listAsset
 
-    var assetListObjectBox: HashMap<String, AssetEntity>? = null
     var assetResponse = AssetResponse()
-    var error = false
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -81,6 +79,10 @@ class MapViewModel @ViewModelInject constructor(
     fun pruneWork() {
         Timber.d("MapViewModel() pruneWork")
         workManager.pruneWork()
+    }
+
+    fun deleteAssetEntity(){
+        workOrderRepository.deleteAssetEntity()
     }
 
     fun postCrewPosition(
@@ -133,7 +135,8 @@ class MapViewModel @ViewModelInject constructor(
             workOrderRepository.getAssetList(cookie, savedQuery!!, select,
                 onSuccess = {
                     assetResponse = it
-                    assetResponse.member?.let { it1 -> checkingAssetInObjectBox(it1) }
+                    assetResponse.member?.let { it1 -> addAssetToObjectBox(it1) }
+                    fetchListAsset()
                     Timber.d("fetch asset paging source :%s", it.member)
                     Timber.d("fetch asset paging source :%s", it.responseInfo)
                     Timber.d("fetch asset paging source :%s", it.member?.size)
@@ -147,19 +150,6 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun checkingAssetInObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
-        var listAsset: List<AssetEntity> = assetDao.findAllAsset()
-        Timber.d("checkingWoInObjectBox savelocal :%s", listAsset.size)
-        if (listAsset.isEmpty()) {
-            Timber.d("checkingWoInObjectBox savelocal :%s", list.size)
-            addAssetToObjectBox(list)
-        } else {
-            Timber.d("checkingWoInObjectBox compare :%s", "TEST")
-            addAssetObjectBoxToHashMap()
-            compareAssetLocalWithServer(list)
-        }
-    }
-
     private fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
         for (asset in list) {
             var serviceaddress: Serviceaddress
@@ -169,7 +159,6 @@ class MapViewModel @ViewModelInject constructor(
                     val address: String = serviceaddress.formattedaddress!!
                     val latitudey: Double = serviceaddress.latitudey!!
                     val longitudex: Double = serviceaddress.longitudex!!
-                    Timber.d("raka %s", asset.thisfsmtagtime)
                     val assetEntity = AssetEntity(
                         assetnum = asset.assetnum,
                         description = asset.description,
@@ -190,62 +179,5 @@ class MapViewModel @ViewModelInject constructor(
                     workOrderRepository.saveAssetList(assetEntity, appSession.userEntity.username)
                 })
         }
-    }
-
-    private fun compareAssetLocalWithServer(list: List<id.thork.app.network.response.asset_response.Member>) {
-        for (asset in list) {
-            Timber.d("compareWoLocalWithServer : %s", asset.assetnum)
-            if (assetListObjectBox!![asset.assetnum!!] != null) {
-
-            } else {
-                createNewAsset(asset)
-            }
-        }
-    }
-
-    private fun addAssetObjectBoxToHashMap() {
-        Timber.d("queryObjectBoxToHashMap()")
-        if (assetDao.findAllAsset().isNotEmpty()) {
-            assetListObjectBox = HashMap<String, AssetEntity>()
-            val cacheEntities: List<AssetEntity> = assetDao.findAllAsset()
-            for (i in cacheEntities.indices) {
-                if (cacheEntities[i].status != null
-                    && cacheEntities[i].status.equals(BaseParam.OPERATING)
-                ) {
-                    assetListObjectBox!![cacheEntities[i].assetnum!!] = cacheEntities[i]
-                    Timber.d("HashMap value: %s", assetListObjectBox!![cacheEntities[i].assetnum])
-                }
-            }
-        }
-    }
-
-    private fun createNewAsset(asset: id.thork.app.network.response.asset_response.Member) {
-        var serviceaddress: Serviceaddress
-        asset.serviceaddress.whatIfNotNullOrEmpty(
-            whatIf = {
-                serviceaddress = it.get(0)
-                val address: String = serviceaddress.formattedaddress!!
-                val latitudey: Double = serviceaddress.latitudey!!
-                val longitudex: Double = serviceaddress.longitudex!!
-                Timber.d("raka %s", asset.thisfsmtagtime)
-                val assetEntity = AssetEntity(
-                    assetnum = asset.assetnum,
-                    description = asset.description,
-                    status = asset.status,
-                    assetLocation = asset.location,
-                    formattedaddress = address,
-                    siteid = asset.siteid,
-                    orgid = asset.orgid,
-                    latitudey = latitudey,
-                    longitudex = longitudex,
-                    assetRfid = asset.thisfsmrfid,
-                    image = asset.imagelibref,
-                    assetTagTime = asset.thisfsmtagtime
-                )
-                assetEntity.createdDate = Date()
-                assetEntity.createdBy = appSession.userEntity.username
-                assetEntity.updatedBy = appSession.userEntity.username
-                workOrderRepository.saveAssetList(assetEntity, appSession.userEntity.username)
-            })
     }
 }

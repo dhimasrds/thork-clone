@@ -29,7 +29,6 @@ import timber.log.Timber
 class WoActivityRepository constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
-    private val assetDao: AssetDao,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
 
@@ -120,7 +119,6 @@ class WoActivityRepository constructor(
         repository: WoActivityRepository,
         preferenceManager: PreferenceManager,
         appResourceMx: AppResourceMx,
-        assetDao: AssetDao
     ) =
         Pager(
             config = PagingConfig(
@@ -132,7 +130,6 @@ class WoActivityRepository constructor(
                     appSession = appSession,
                     repository = repository,
                     woCacheDao,
-                    assetDao,
                     null,
                     preferenceManager,
                     appResourceMx
@@ -146,7 +143,6 @@ class WoActivityRepository constructor(
         query: String,
         preferenceManager: PreferenceManager,
         appResourceMx: AppResourceMx,
-        assetDao: AssetDao
         ) =
         Pager(
             config = PagingConfig(
@@ -158,49 +154,10 @@ class WoActivityRepository constructor(
                     appSession = appSession,
                     repository = repository,
                     woCacheDao,
-                    assetDao,
                     query,
                     preferenceManager,
                     appResourceMx
                 )
             }
         ).liveData
-
-    suspend fun getAssetList(
-        cookie: String,
-        savedQuery: String,
-        select: String,
-        onSuccess: (AssetResponse) -> Unit,
-        onError: (String) -> Unit,
-        onException: (String) -> Unit
-    ) {
-        val response = workOrderClient.getAssetList(
-            cookie, savedQuery, select
-        )
-        response.suspendOnSuccess {
-            data.whatIfNotNull { response ->
-                //TODO
-                //Save user session into local cache
-                onSuccess(response)
-                Timber.tag(TAG).i("repository getAssetList() code:%s", statusCode.code)
-            }
-        }
-            .onError {
-                Timber.tag(TAG).i(
-                    "repository getWorkOrderList() : %s error: %s",
-                    statusCode.code,
-                    message()
-                )
-                onError(message())
-            }
-            .onException {
-                Timber.tag(TAG).i("repository getAssetList() exception: %s", message())
-                onException(message())
-            }
-
-    }
-
-    fun saveAssetList(assetEntity: AssetEntity, username: String?): AssetEntity {
-        return assetDao.createAssetCache(assetEntity, username)
-    }
 }

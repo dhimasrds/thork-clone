@@ -38,7 +38,7 @@ object WorkOrderRepositoryModule {
     fun provideWorkOrderActRepository(
         workOrderClient: WorkOrderClient,
     ): WoActivityRepository {
-        return WoActivityRepository(workOrderClient, WoCacheDaoImp(), AssetDaoImp())
+        return WoActivityRepository(workOrderClient, WoCacheDaoImp())
     }
 
     @Provides

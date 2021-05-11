@@ -171,7 +171,6 @@ class WorkOrderRepository @Inject constructor(
         workOrderRepository: WorkOrderRepository,
         preferenceManager: PreferenceManager,
         appResourceMx: AppResourceMx,
-        assetDao: AssetDao
     ) =
         Pager(
             config = PagingConfig(
@@ -186,7 +185,6 @@ class WorkOrderRepository @Inject constructor(
                     null,
                     preferenceManager,
                     appResourceMx,
-                    assetDao
                 )
             }
         ).liveData
@@ -197,7 +195,6 @@ class WorkOrderRepository @Inject constructor(
         query: String,
         preferenceManager: PreferenceManager,
         appResourceMx: AppResourceMx,
-        assetDao: AssetDao
     ) =
         Pager(
             config = PagingConfig(
@@ -212,7 +209,6 @@ class WorkOrderRepository @Inject constructor(
                     query,
                     preferenceManager,
                     appResourceMx,
-                    assetDao
                 )
             }
         ).liveData
@@ -311,6 +307,10 @@ class WorkOrderRepository @Inject constructor(
 
     fun saveAssetList(assetEntity: AssetEntity, username: String?): AssetEntity {
         return assetDao.createAssetCache(assetEntity, username)
+    }
+
+    fun deleteAssetEntity() {
+        return assetDao.remove()
     }
 
 }
