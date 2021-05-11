@@ -55,6 +55,9 @@ buildscript {
         //Barcode Scanner
         zxingAndroidVersion = '3.5.0'
 
+        //lifecycle
+        lifecycle = "2.3.1"
+
     }
 
     repositories {

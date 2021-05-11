@@ -169,27 +169,7 @@ class WoPagingSource @Inject constructor(
 
     private fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            var assignment: Assignment
-            wo.assignment.whatIfNotNullOrEmpty(
-                whatIf = {
-                    assignment = it.get(0)
-                    val laborCode: String = assignment.laborcode!!
-                    val woCacheEntity = WoCacheEntity(
-                        syncBody = convertToJson(wo),
-                        woId = wo.workorderid,
-                        wonum = wo.wonum,
-                        status = wo.status,
-                        isChanged = BaseParam.APP_TRUE,
-                        isLatest = BaseParam.APP_TRUE,
-                        syncStatus = BaseParam.APP_TRUE,
-                        laborCode = laborCode
-                    )
-                    setupWoLocation(woCacheEntity, wo)
-                    woCacheEntity.createdDate = Date()
-                    woCacheEntity.createdBy = appSession.userEntity.username
-                    woCacheEntity.updatedBy = appSession.userEntity.username
-                    repository.saveWoList(woCacheEntity, appSession.userEntity.username)
-                })
+            createNewWo(wo)
         }
     }
 
@@ -219,8 +199,10 @@ class WoPagingSource @Inject constructor(
                     status = wo.status,
                     isChanged = BaseParam.APP_TRUE,
                     isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_TRUE,
-                    laborCode = laborCode
+                    syncStatus = BaseParam.APP_FALSE,
+                    laborCode = laborCode,
+                    changeDate = wo.changedate
+
                 )
                 setupWoLocation(woCacheEntity, wo)
                 woCacheEntity.createdDate = Date()

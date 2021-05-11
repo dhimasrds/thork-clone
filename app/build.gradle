@@ -116,7 +116,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okHttpUrlConnectionVersion"
 
-
     implementation "com.squareup.moshi:moshi-adapters:$moshiAdapterVersion"
     implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
@@ -172,6 +171,8 @@ dependencies {
     //circle imageView
     implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
 
+    //lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycle"
 
 }
 apply plugin: 'io.objectbox'

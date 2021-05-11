@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
@@ -39,6 +40,7 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.GoogleMapInfoWindow
 import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
@@ -83,7 +85,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             lifecycleOwner = this@MapFragment
             vm = mapViewModel
         }
-//        mapViewModel.fetchListWoOffline()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            mapViewModel.isConnected()
+        }
+
         mapViewModel.pruneWork()
         return binding.root
     }
@@ -127,6 +133,20 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 if (it.latitude != null && it.longitude != null) {
                     val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
                     MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
+                }
+            }
+        })
+        mapViewModel.listMember.observe(viewLifecycleOwner, {
+            it.forEach {
+                if(!it.woserviceaddress.isNullOrEmpty()) {
+                    val latitudeWo = it.woserviceaddress?.get(0)?.latitudey
+                    val longitudeWo = it.woserviceaddress?.get(0)?.longitudex
+                    if (latitudeWo != null && longitudeWo != null) {
+                        val woLatLngOnline = LatLng(latitudeWo, longitudeWo)
+                        Timber.d("setupObserver() Render Wo : ${it.wonum}")
+                        MapsUtils.renderWoMarker(map, woLatLngOnline, it.wonum.toString())
+                    }
+
                 }
             }
         })

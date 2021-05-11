@@ -1,5 +1,7 @@
 package id.thork.app.utils
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import id.thork.app.base.BaseParam
 import java.sql.Timestamp
 import java.text.DateFormat
@@ -56,6 +58,8 @@ object DateUtils {
         return sdf.format(c.time)
     }
 
+
+
     fun getDateTimeOB(date: Date?): String? {
         try {
             val formatter = SimpleDateFormat(DATE_FORMAT_OBJECTBOX)
@@ -67,9 +71,14 @@ object DateUtils {
         return BaseParam.APP_EMPTY_STRING
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun convertDateFormat(dateString: String?): String? {
         try {
-            val formatter = SimpleDateFormat(BaseParam.REPORT_DATE_FORMAT)
+            val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                SimpleDateFormat(BaseParam.REPORT_DATE_FORMAT)
+            } else {
+                TODO("VERSION.SDK_INT < N")
+            }
             val date = formatter.parse(dateString)
             val dateFormater: DateFormat = SimpleDateFormat(DATE_FORMAT)
             return dateFormater.format(date)
