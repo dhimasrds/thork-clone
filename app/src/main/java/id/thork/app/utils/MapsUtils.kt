@@ -28,12 +28,10 @@ object MapsUtils {
     private var crewMarker: Marker? = null
     private var newCrewMarker: Marker? = null
 
-
     private const val LONG_DISTANCE_ZOOM = 11f
     private const val SHORT_DISTANCE_ZOOM = 17f
     private const val MAX_DISTANCE = 20000
     private val DEFAULT_ZOOM = 17
-
 
     fun renderWoMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
@@ -123,7 +121,6 @@ object MapsUtils {
         return null
     }
 
-
     fun renderMapDirection(
         mMap: GoogleMap?, context: Context, dataDirection: ResponseRoute?,
         startLatLng: LatLng?, endLatLng: LatLng?
@@ -137,53 +134,30 @@ object MapsUtils {
                         val dataDistance: Distance = distance
                         dataDirectionRoutes.overviewPolyline.whatIfNotNull { routePolyline ->
                             routePolyline.points.whatIfNotNullOrEmpty { polylinePoints ->
-                                // get polyline
-                                val polylinePoint: String = polylinePoints
-                                // Decode
-                                val decodePath = PolyUtil.decode(polylinePoint)
-                                mMap.addPolyline(
-                                    PolylineOptions().addAll(decodePath)
-                                        .width(8f).color(Color.argb(255, 56, 167, 252))
-                                ).isGeodesic = true
-
+                                drawPolyline(mMap, polylinePoints)
                                 drawSourceMarker(mMap, startLatLng)
                                 drawDestinationMarker(mMap, endLatLng)
 
                                 val latLongBuilder = LatLngBounds.Builder()
-                                latLongBuilder.include(startLatLng)
-                                latLongBuilder.include(endLatLng)
-                                var bounds = latLongBuilder.build()
-                                val center = bounds.center
-                                latLongBuilder.include(
-                                    LatLng(
-                                        center.latitude - 0.001f,
-                                        center.longitude - 0.001f
-                                    )
-                                )
-                                latLongBuilder.include(
-                                    LatLng(
-                                        center.latitude + 0.001f,
-                                        center.longitude + 0.001f
-                                    )
-                                )
-
-                                bounds = latLongBuilder.build()
-                                val width = context.resources.displayMetrics.widthPixels
-                                val height = context.resources.displayMetrics.heightPixels
-                                val paddingMap = (width * 0.1).toInt()
-                                val cu = CameraUpdateFactory.newLatLngBounds(
-                                    bounds,
-                                    width,
-                                    height,
-                                    paddingMap
-                                )
-                                setupZoomPreferences(mMap, cu, dataDistance)
+                                setupLatLongBuilder(latLongBuilder, startLatLng, endLatLng)
+                                setupZoomPreferences(context, mMap, latLongBuilder, dataDistance)
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun drawPolyline(mMap: GoogleMap, polylinePoints: String) {
+        // get polyline
+        val polylinePoint: String = polylinePoints
+        // Decode
+        val decodePath = PolyUtil.decode(polylinePoint)
+        mMap.addPolyline(
+            PolylineOptions().addAll(decodePath)
+                .width(8f).color(Color.argb(255, 56, 167, 252))
+        ).isGeodesic = true
     }
 
     private fun drawSourceMarker(mMap: GoogleMap, startLatLng: LatLng?) {
@@ -209,7 +183,39 @@ object MapsUtils {
         }
     }
 
-    private fun setupZoomPreferences(mMap: GoogleMap, cu: CameraUpdate,  dataDistance: Distance) {
+    private fun setupLatLongBuilder(latLongBuilder: LatLngBounds.Builder,
+    startLatLng: LatLng?, endLatLng: LatLng?) {
+        latLongBuilder.include(startLatLng)
+        latLongBuilder.include(endLatLng)
+        var bounds = latLongBuilder.build()
+        val center = bounds.center
+        latLongBuilder.include(
+            LatLng(
+                center.latitude - 0.001f,
+                center.longitude - 0.001f
+            )
+        )
+        latLongBuilder.include(
+            LatLng(
+                center.latitude + 0.001f,
+                center.longitude + 0.001f
+            )
+        )
+    }
+
+    private fun setupZoomPreferences(context: Context, mMap: GoogleMap,
+                                     latLongBuilder: LatLngBounds.Builder, dataDistance: Distance) {
+        var bounds = latLongBuilder.build()
+        val width = context.resources.displayMetrics.widthPixels
+        val height = context.resources.displayMetrics.heightPixels
+        val paddingMap = (width * 0.1).toInt()
+        val cu = CameraUpdateFactory.newLatLngBounds(
+            bounds,
+            width,
+            height,
+            paddingMap
+        )
+
         Timber.d("setupZoomPreferences() Distance : %s", dataDistance.value)
         dataDistance.value.whatIfNotNull { distanceValue ->
             if (distanceValue > MAX_DISTANCE) {
