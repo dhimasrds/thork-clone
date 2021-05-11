@@ -15,14 +15,14 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
-import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.LocationDaoImp
-import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
@@ -40,7 +40,7 @@ class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
-    private val assetDao: AssetDao,
+    private val assetDao: AssetDao
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao

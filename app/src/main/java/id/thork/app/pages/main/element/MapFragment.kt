@@ -33,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
@@ -122,15 +123,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     }
 
     fun setupObserver() {
-        mapViewModel.location.observe(viewLifecycleOwner){
-            it.forEach{
-                Timber.tag(TAG).d("setupObserver() location ${it.longitudex}")
-                if (it.latitudey != null && it.longitudex != null) {
-                    val woLatLng = LatLng(it.latitudey!!.toDouble(), it.longitudex!!.toDouble())
-                    MapsUtils.renderLocationMarker(map, woLatLng, it.location!!)
-                }
-            }
-        }
         mapViewModel.listWo.observe(viewLifecycleOwner, {
             it.forEach {
                 Timber.tag(TAG).d("setupObserver() ${it.wonum}")
@@ -142,7 +134,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         })
         mapViewModel.listMember.observe(viewLifecycleOwner, {
             it.forEach {
-                if(!it.woserviceaddress.isNullOrEmpty()) {
+                if (!it.woserviceaddress.isNullOrEmpty()) {
                     val latitudeWo = it.woserviceaddress?.get(0)?.latitudey
                     val longitudeWo = it.woserviceaddress?.get(0)?.longitudex
                     if (latitudeWo != null && longitudeWo != null) {
@@ -150,20 +142,44 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
                         Timber.d("setupObserver() Render Wo : ${it.wonum}")
                         MapsUtils.renderWoMarker(map, woLatLngOnline, it.wonum.toString())
                     }
-
                 }
             }
         })
 
-        mapViewModel.location.observe(viewLifecycleOwner){
-            it.forEach{
-                Timber.tag(TAG).d("setupObserver() location ${it.longitudex}")
-                if (it.latitudey != null && it.longitudex != null) {
-                    val woLatLng = LatLng(it.latitudey!!.toDouble(), it.longitudex!!.toDouble())
-                    MapsUtils.renderLocationMarker(map, woLatLng, it.location!!)
+        mapViewModel.listMemberLocation.observe(viewLifecycleOwner, {
+            it.forEach { member ->
+                member.serviceaddress.whatIfNotNullOrEmpty {
+                    val latitudeLocation = it.get(0).latitudey
+                    val longitudeLocation = it.get(0).longitudex
+                    if (latitudeLocation != null && longitudeLocation != null) {
+                        val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
+                        MapsUtils.renderLocationMarker(
+                            map,
+                            locationLatLng,
+                            member.location.toString()
+                        )
+                    }
                 }
             }
-        }
+        })
+
+        mapViewModel.listMemberAsset.observe(viewLifecycleOwner, {
+            it.forEach { member ->
+                member.serviceaddress.whatIfNotNullOrEmpty {
+                    val latitudeLocation = it.get(0).latitudey
+                    val longitudeLocation = it.get(0).longitudex
+                    if (latitudeLocation != null && longitudeLocation != null) {
+                        val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
+                        MapsUtils.renderAssetMarker(
+                            map,
+                            locationLatLng,
+                            member.assetnum.toString()
+                        )
+                    }
+                }
+            }
+        })
+
         mapViewModel.outputWorkInfos.observe(this, workInfosObserver())
     }
 
