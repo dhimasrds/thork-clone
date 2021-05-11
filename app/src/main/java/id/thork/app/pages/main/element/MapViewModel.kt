@@ -58,8 +58,6 @@ class MapViewModel @ViewModelInject constructor(
 
     val listAsset: LiveData<List<AssetEntity>> get() = _listAsset
 
-    var assetResponse = AssetResponse()
-
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
     }
@@ -130,6 +128,8 @@ class MapViewModel @ViewModelInject constructor(
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResAsset
+        var assetResponse = AssetResponse()
+
         deleteAssetEntity()
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.getAssetList(cookie, savedQuery!!, select,
