@@ -137,7 +137,6 @@ dependencies {
     //ViewPager
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation 'com.beust:klaxon:5.0.1'
 
     //Paging
     def paging_version = "3.0.0-alpha04"

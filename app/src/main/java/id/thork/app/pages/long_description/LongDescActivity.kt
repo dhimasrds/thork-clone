@@ -167,20 +167,6 @@ class LongDescActivity : BaseActivity() {
                     Timber.tag(TAG).d("requestPermission() result: onPermissionRationaleShouldBeShown" )
                 }
             }).check()
-
-//        if (ContextCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.RECORD_AUDIO
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                ActivityCompat.requestPermissions(
-//                    this,
-//                    arrayOf(Manifest.permission.RECORD_AUDIO),
-//                    RecordAudioRequestCode
-//                )
-//            }
-//        }
     }
 
     private fun saveNote() {
