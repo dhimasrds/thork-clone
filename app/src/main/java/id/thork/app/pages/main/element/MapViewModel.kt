@@ -15,13 +15,11 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
 import id.thork.app.network.response.asset_response.AssetResponse
-import id.thork.app.network.response.asset_response.Serviceaddress
 import id.thork.app.network.response.firebase.FirebaseAndroid
 import id.thork.app.network.response.firebase.FirebaseBody
 import id.thork.app.network.response.firebase.FirebaseData
 import id.thork.app.network.response.firebase.ResponseFirebase
 import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.AssetEntity_.latitudey
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
