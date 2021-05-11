@@ -313,4 +313,27 @@ class WorkOrderRepository @Inject constructor(
         return assetDao.remove()
     }
 
+    fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
+        for (asset in list) {
+            val assetEntity = AssetEntity(
+                assetnum = asset.assetnum,
+                description = asset.description,
+                status = asset.status,
+                assetLocation = asset.location,
+                formattedaddress = asset.serviceaddress?.get(0)?.formattedaddress,
+                siteid = asset.siteid,
+                orgid = asset.orgid,
+                latitudey = asset.serviceaddress?.get(0)?.latitudey,
+                longitudex = asset.serviceaddress?.get(0)?.longitudex,
+                assetRfid = asset.thisfsmrfid,
+                image = asset.imagelibref,
+                assetTagTime = asset.thisfsmtagtime
+            )
+            assetEntity.createdDate = Date()
+            assetEntity.createdBy = appSession.userEntity.username
+            assetEntity.updatedBy = appSession.userEntity.username
+            saveAssetList(assetEntity, appSession.userEntity.username)
+        }
+    }
+
 }

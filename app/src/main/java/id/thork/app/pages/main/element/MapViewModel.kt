@@ -15,6 +15,7 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
 import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.asset_response.Member
 import id.thork.app.network.response.firebase.FirebaseAndroid
 import id.thork.app.network.response.firebase.FirebaseBody
 import id.thork.app.network.response.firebase.FirebaseData
@@ -50,9 +51,13 @@ class MapViewModel @ViewModelInject constructor(
 
     private val _listAsset = MutableLiveData<List<AssetEntity>>()
 
+    private val _listAssetFromMember = MutableLiveData<List<Member>>()
+
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
 
     val listAsset: LiveData<List<AssetEntity>> get() = _listAsset
+
+    val listAssetFromMember: LiveData<List<Member>> get() = _listAssetFromMember
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -124,14 +129,13 @@ class MapViewModel @ViewModelInject constructor(
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResAsset
-        var assetResponse = AssetResponse()
 
         deleteAssetEntity()
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.getAssetList(cookie, savedQuery!!, select,
                 onSuccess = {
-                    assetResponse = it
-                    addAssetToObjectBox(it.member!!)
+                    workOrderRepository.addAssetToObjectBox(it.member!!)
+                    fetchListAsset()
                     Timber.d("fetchAsset() :%s", it.member)
                 },
                 onError = {
@@ -143,27 +147,4 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
-        for (asset in list) {
-            val assetEntity = AssetEntity(
-                assetnum = asset.assetnum,
-                description = asset.description,
-                status = asset.status,
-                assetLocation = asset.location,
-                formattedaddress = asset.serviceaddress?.get(0)?.formattedaddress,
-                siteid = asset.siteid,
-                orgid = asset.orgid,
-                latitudey = asset.serviceaddress?.get(0)?.latitudey,
-                longitudex = asset.serviceaddress?.get(0)?.longitudex,
-                assetRfid = asset.thisfsmrfid,
-                image = asset.imagelibref,
-                assetTagTime = asset.thisfsmtagtime
-            )
-            assetEntity.createdDate = Date()
-            assetEntity.createdBy = appSession.userEntity.username
-            assetEntity.updatedBy = appSession.userEntity.username
-            workOrderRepository.saveAssetList(assetEntity, appSession.userEntity.username)
-        }
-        fetchListAsset()
-    }
 }
