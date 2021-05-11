@@ -310,6 +310,4 @@ class WoActivityPagingSource @Inject constructor(
         Timber.d("memberlist offset: %s", offset)
         return memberList
     }
-
-
 }

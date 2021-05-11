@@ -13,10 +13,14 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.asset_response.Serviceaddress
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
@@ -40,7 +44,7 @@ class WoPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
-    private val appResourceMx: AppResourceMx
+    private val appResourceMx: AppResourceMx,
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -49,7 +53,6 @@ class WoPagingSource @Inject constructor(
     var emptyList = false
     var woListObjectBox: HashMap<String, WoCacheEntity>? = null
     var response = WorkOrderResponse()
-
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
@@ -169,27 +172,7 @@ class WoPagingSource @Inject constructor(
 
     private fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            var assignment: Assignment
-            wo.assignment.whatIfNotNullOrEmpty(
-                whatIf = {
-                    assignment = it.get(0)
-                    val laborCode: String = assignment.laborcode!!
-                    val woCacheEntity = WoCacheEntity(
-                        syncBody = convertToJson(wo),
-                        woId = wo.workorderid,
-                        wonum = wo.wonum,
-                        status = wo.status,
-                        isChanged = BaseParam.APP_TRUE,
-                        isLatest = BaseParam.APP_TRUE,
-                        syncStatus = BaseParam.APP_TRUE,
-                        laborCode = laborCode
-                    )
-                    setupWoLocation(woCacheEntity, wo)
-                    woCacheEntity.createdDate = Date()
-                    woCacheEntity.createdBy = appSession.userEntity.username
-                    woCacheEntity.updatedBy = appSession.userEntity.username
-                    repository.saveWoList(woCacheEntity, appSession.userEntity.username)
-                })
+            createNewWo(wo)
         }
     }
 
@@ -219,8 +202,10 @@ class WoPagingSource @Inject constructor(
                     status = wo.status,
                     isChanged = BaseParam.APP_TRUE,
                     isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_TRUE,
-                    laborCode = laborCode
+                    syncStatus = BaseParam.APP_FALSE,
+                    laborCode = laborCode,
+                    changeDate = wo.changedate
+
                 )
                 setupWoLocation(woCacheEntity, wo)
                 woCacheEntity.createdDate = Date()
@@ -313,6 +298,4 @@ class WoPagingSource @Inject constructor(
         Timber.d("memberlist : %s", memberList?.size)
         return memberList
     }
-
-
 }

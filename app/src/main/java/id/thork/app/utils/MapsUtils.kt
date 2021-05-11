@@ -27,20 +27,45 @@ object MapsUtils {
     private var crewMarker: Marker? = null
     private var newCrewMarker: Marker? = null
 
+
     private const val LONG_DISTANCE_ZOOM = 11f
     private const val SHORT_DISTANCE_ZOOM = 17f
     private const val MAX_DISTANCE = 20000
     private val DEFAULT_ZOOM = 17
 
+
     fun renderWoMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
             .position(latLng)
-            .title(title)
-            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+            .snippet(title)
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_work_order_foreground))
+
+        googleMap.addMarker(options)
+            .tag = BaseParam.APP_TAG_MARKER_WO
+
+
+    }
+
+    fun renderLocationMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
+        val options = MarkerOptions()
+            .position(latLng)
+            .snippet(title)
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_marker_foreground))
 
         googleMap.addMarker(options)
             .tag = BaseParam.APP_TAG_MARKER_WO
     }
+
+    fun renderAssetMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
+        val options = MarkerOptions()
+            .position(latLng)
+            .title(title)
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_asset_marker))
+
+        googleMap.addMarker(options)
+            .tag = BaseParam.APP_TAG_MARKER_ASSET
+    }
+
 
 
     fun renderCrewMarker(
