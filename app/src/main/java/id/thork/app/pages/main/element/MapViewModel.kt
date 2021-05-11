@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
@@ -21,8 +20,8 @@ import id.thork.app.network.response.firebase.FirebaseAndroid
 import id.thork.app.network.response.firebase.FirebaseBody
 import id.thork.app.network.response.firebase.FirebaseData
 import id.thork.app.network.response.firebase.ResponseFirebase
-import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.AssetEntity_.latitudey
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -43,7 +42,7 @@ class MapViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
-    ) : LiveCoroutinesViewModel() {
+) : LiveCoroutinesViewModel() {
     val TAG = MapViewModel::class.java.name
 
     private val workManager = WorkManager.getInstance(context)
@@ -78,13 +77,13 @@ class MapViewModel @ViewModelInject constructor(
         workManager.pruneWork()
     }
 
-    fun deleteAssetEntity(){
+    fun deleteAssetEntity() {
         workOrderRepository.deleteAssetEntity()
     }
 
     fun postCrewPosition(
         latitude: String,
-        longitude: String
+        longitude: String,
     ) {
         Timber.d("MapViewModel() postCrewPosition")
         val firebaseAndroid = FirebaseAndroid()
@@ -114,12 +113,12 @@ class MapViewModel @ViewModelInject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             firebaseRepository.updateCrewPosition(BaseParam.APP_APIKEY_FIREBASE, contentType, body,
-            onSuccess = {
-                responsefirebase = it
-            },
-            onError = {
+                onSuccess = {
+                    responsefirebase = it
+                },
+                onError = {
 
-            })
+                })
         }
     }
 
@@ -134,7 +133,7 @@ class MapViewModel @ViewModelInject constructor(
             workOrderRepository.getAssetList(cookie, savedQuery!!, select,
                 onSuccess = {
                     assetResponse = it
-                    assetResponse.member?.let { it1 -> addAssetToObjectBox(it1) }
+                    addAssetToObjectBox(it.member!!)
                     Timber.d("fetchAsset() :%s", it.member)
                 },
                 onError = {
@@ -148,32 +147,24 @@ class MapViewModel @ViewModelInject constructor(
 
     private fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
         for (asset in list) {
-            var serviceaddress: Serviceaddress
-            asset.serviceaddress.whatIfNotNullOrEmpty(
-                whatIf = {
-                    serviceaddress = it.get(0)
-                    val address: String = serviceaddress.formattedaddress!!
-                    val latitudey: Double = serviceaddress.latitudey!!
-                    val longitudex: Double = serviceaddress.longitudex!!
-                    val assetEntity = AssetEntity(
-                        assetnum = asset.assetnum,
-                        description = asset.description,
-                        status = asset.status,
-                        assetLocation = asset.location,
-                        formattedaddress = address,
-                        siteid = asset.siteid,
-                        orgid = asset.orgid,
-                        latitudey = latitudey,
-                        longitudex = longitudex,
-                        assetRfid = asset.thisfsmrfid,
-                        image = asset.imagelibref,
-                        assetTagTime = asset.thisfsmtagtime
-                    )
-                    assetEntity.createdDate = Date()
-                    assetEntity.createdBy = appSession.userEntity.username
-                    assetEntity.updatedBy = appSession.userEntity.username
-                    workOrderRepository.saveAssetList(assetEntity, appSession.userEntity.username)
-                })
+            val assetEntity = AssetEntity(
+                assetnum = asset.assetnum,
+                description = asset.description,
+                status = asset.status,
+                assetLocation = asset.location,
+                formattedaddress = asset.serviceaddress?.get(0)?.formattedaddress,
+                siteid = asset.siteid,
+                orgid = asset.orgid,
+                latitudey = asset.serviceaddress?.get(0)?.latitudey,
+                longitudex = asset.serviceaddress?.get(0)?.longitudex,
+                assetRfid = asset.thisfsmrfid,
+                image = asset.imagelibref,
+                assetTagTime = asset.thisfsmtagtime
+            )
+            assetEntity.createdDate = Date()
+            assetEntity.createdBy = appSession.userEntity.username
+            assetEntity.updatedBy = appSession.userEntity.username
+            workOrderRepository.saveAssetList(assetEntity, appSession.userEntity.username)
         }
         fetchListAsset()
     }
