@@ -131,7 +131,6 @@ class MapViewModel @ViewModelInject constructor(
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResWorkorder
         var response = WorkOrderResponse()
-        var error = false
 
         savedQuery?.let {
             workOrderRepository.getWorkOrderList(
@@ -140,13 +139,10 @@ class MapViewModel @ViewModelInject constructor(
                     response = it
                     _listMember.postValue(response.member)
                     checkingWoInObjectBox(response.member)
-                    error = false
                 },
                 onError = {
-                    error = false
                 },
                 onException = {
-                    error = true
                 })
         }
     }
