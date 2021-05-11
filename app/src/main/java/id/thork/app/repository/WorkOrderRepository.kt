@@ -39,7 +39,7 @@ class WorkOrderRepository @Inject constructor(
     private val appSession: AppSession
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
-    private val locationDao : LocationDao
+    private val locationDao: LocationDao
 
     init {
         locationDao = LocationDaoImp()
@@ -173,11 +173,11 @@ class WorkOrderRepository @Inject constructor(
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
 
-    fun saveLocationToLocal(locationEntity: LocationEntity):LocationEntity{
+    fun saveLocationToObjectBox(locationEntity: LocationEntity): LocationEntity {
         return locationDao.saveLocation(locationEntity)
     }
 
-    fun deleteLocation(){
+    fun deleteLocation() {
         locationDao.deleteLocation()
     }
 
@@ -272,6 +272,46 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
+    fun addWoToObjectBox(member: Member) {
+        var assignment: Assignment
+        member.assignment.whatIfNotNullOrEmpty(
+            whatIf = {
+                assignment = it.get(0)
+                val laborCode: String = assignment.laborcode!!
+                val woCacheEntity = WoCacheEntity(
+                    syncBody = WoUtils.convertMemberToBody(member),
+                    woId = member.workorderid,
+                    wonum = member.wonum,
+                    status = member.status,
+                    isChanged = BaseParam.APP_TRUE,
+                    isLatest = BaseParam.APP_TRUE,
+                    syncStatus = BaseParam.APP_TRUE,
+                    laborCode = laborCode
+                )
+                setupWoLocation(woCacheEntity, member)
+                woCacheEntity.createdDate = Date()
+                woCacheEntity.createdBy = appSession.userEntity.username
+                woCacheEntity.updatedBy = appSession.userEntity.username
+                saveWoList(woCacheEntity, appSession.userEntity.username)
+            })
+    }
+
+    fun replaceWolocalChace(
+        woCacheEntity: WoCacheEntity,
+        member: id.thork.app.network.response.work_order.Member
+    ) {
+        woCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
+        woCacheEntity.woId = member.workorderid
+        woCacheEntity.wonum = member.wonum
+        woCacheEntity.status = member.status
+        woCacheEntity.changeDate = member.changedate
+        woCacheEntity.isChanged = BaseParam.APP_TRUE
+        woCacheEntity.isLatest = BaseParam.APP_TRUE
+        woCacheEntity.syncStatus = BaseParam.APP_FALSE
+        woCacheEntity.updatedBy = appSession.userEntity.username
+        saveWoList(woCacheEntity, appSession.userEntity.username)
+    }
+
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
@@ -286,14 +326,15 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
-    suspend fun locationMarker (
+    suspend fun locationMarker(
         cookie: String,
         savedQuery: String,
         select: String,
         onSuccess: (FsmLocation) -> Unit,
         onError: (String) -> Unit
-    ){   val response = workOrderClient.LocationMarker(cookie, savedQuery,select)
-         response.suspendOnSuccess {
+    ) {
+        val response = workOrderClient.LocationMarker(cookie, savedQuery, select)
+        response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 //TODO
                 //Save user session into local cache
@@ -306,6 +347,25 @@ class WorkOrderRepository @Inject constructor(
             onError(message())
         }
 
+    }
+
+    fun addLocationToObjectBox(member: List<id.thork.app.network.response.fsm_location.Member>) {
+        for (location in member) {
+            val locationEntity = LocationEntity()
+            locationEntity.location = location.location
+            locationEntity.description = location.description
+            locationEntity.status = location.status
+            location.serviceaddress.whatIfNotNullOrEmpty {
+                locationEntity.formatAddress = location.serviceaddress!![0].formattedaddress
+                locationEntity.longitudex = location.serviceaddress!![0].longitudex
+                locationEntity.latitudey = location.serviceaddress!![0].latitudey
+            }
+            locationEntity.thisfsmrfid = location.thisfsmrfid
+            locationEntity.image = location.imagelibref
+            locationEntity.thisfsmtagprogress = location.thisfsmtagprogress.toString()
+            locationEntity.thisfsmtagtime = location.thisfsmtagtime
+            saveLocationToObjectBox(locationEntity)
+        }
     }
 
 
