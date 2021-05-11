@@ -2,20 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <data>
         <variable
             name="vm"
             type="id.thork.app.pages.main.element.MainViewModel" />
     </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ECECEC"
         tools:context=".pages.main.MainActivity">
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
@@ -25,45 +22,54 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:titleTextColor="@android:color/white">
-
             <include
                 android:id="@+id/toolbar"
                 layout="@layout/toolbar" />
         </com.google.android.material.appbar.AppBarLayout>
-
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_main"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBar"></androidx.fragment.app.FragmentContainerView>
-
-
+            app:layout_constraintTop_toBottomOf="@+id/appBar"
+            app:layout_constraintVertical_bias="0.0"></androidx.fragment.app.FragmentContainerView>
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:padding="@dimen/general_padding_8dp"
+            android:background="@drawable/bg_bottom_nav"
             app:elevation="0dp"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/home_navigation_menu" />
-
+            app:menu="@menu/home_navigation_menu">
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
         <ImageView
             android:id="@+id/iv_add"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/bg_center_nav_option"
             android:contentDescription="@string/bottom_sheet_behavior"
             android:onClick="onClick"
-            android:padding="@dimen/general_padding_15dp"
-            android:src="@drawable/ic_notifications"
+            android:padding="@dimen/general_padding_20dp"
+            android:src="@drawable/ic_nav_map"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_create_wo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_create_wo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

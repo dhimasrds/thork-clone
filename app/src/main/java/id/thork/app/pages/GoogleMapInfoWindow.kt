@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 
@@ -38,8 +39,13 @@ class GoogleMapInfoWindow(context: Context) : GoogleMap.InfoWindowAdapter {
         tvPrefix = view.findViewById(R.id.prefixcrew)
         tvTitle = view.findViewById(R.id.name_crew)
 
-        tvPrefix!!.text = BaseParam.APP_CREW
-        tvTitle!!.text = marker.title
+        tvPrefix.whatIfNotNull {
+            it.text = BaseParam.APP_CREW
+        }
+
+        tvTitle.whatIfNotNull {
+            it.text = marker.title
+        }
     }
 
 

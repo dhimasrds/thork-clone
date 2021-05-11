@@ -152,23 +152,26 @@ class WorkerCoordinator @Inject constructor(
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_WOID + workorderid
 
         GlobalScope.launch {
-            workOrderRepository.searchWorkOrder(
-                appSession.userHash!!, select, where,
-                onSuccess = {
-                    response = it
-                    Timber.d("searchWoFromServer :%s", it.member)
+            appSession.userHash.whatIfNotNullOrEmpty {
+                workOrderRepository.searchWorkOrder(
+                    it, select, where,
+                    onSuccess = {
+                        response = it
+                        Timber.d("searchWoFromServer :%s", it.member)
 
-                    response.member.whatIfNotNullOrEmpty(
-                        whatIf = {
-                            workOrderRepository.addWoToObjectBox(response.member)
-                            generatePushNotificationWorker(remoteMessageString)
-                        }
-                    )
-                },
-                onError = {
-                },
-                onException = {
-                })
+                        response.member.whatIfNotNullOrEmpty(
+                            whatIf = {
+                                workOrderRepository.addWoToObjectBox(response.member)
+                                generatePushNotificationWorker(remoteMessageString)
+                            }
+                        )
+                    },
+                    onError = {
+                    },
+                    onException = {
+                    })
+            }
+
         }
     }
 

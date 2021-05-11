@@ -4,6 +4,8 @@ import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import com.google.gson.Gson
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import id.thork.app.R
@@ -43,7 +45,12 @@ class LongDescActivity : BaseActivity() {
             lifecycleOwner = this@LongDescActivity
             vm = viewModel
         }
-        setupToolbarWithHomeNavigation(getString(R.string.note), navigation = false, filter = false, scannerIcon = false)
+        setupToolbarWithHomeNavigation(
+            getString(R.string.note),
+            navigation = false,
+            filter = false,
+            scannerIcon = false
+        )
         retrieveFromIntent()
         initView()
     }
@@ -116,26 +123,33 @@ class LongDescActivity : BaseActivity() {
     }
 
     private fun saveNoteFromWoDetail() {
-        val currentWoCache = viewModel.findWobyWonum(intentWonum!!)
-        intentLongdesc = binding.longdesc.text.toString()
+        intentWonum.whatIfNotNullOrEmpty { intentWonum ->
+            val currentWoCache = viewModel.findWobyWonum(intentWonum)
+            intentLongdesc = binding.longdesc.text.toString()
 
-        val ld = Longdescription()
-        ld.ldtext = intentLongdesc
-        val longdescriptions: MutableList<Longdescription> = ArrayList()
-        longdescriptions.add(ld)
+            val ld = Longdescription()
+            ld.ldtext = intentLongdesc
+            val longdescriptions: MutableList<Longdescription> = ArrayList()
+            longdescriptions.add(ld)
 
-        val moshi = Moshi.Builder().build()
-        val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(
-            Member::class.java
-        )
-        val currentMember = memberJsonAdapter.fromJson(currentWoCache!!.syncBody)
-        currentMember!!.longdescription = longdescriptions
-        currentMember.description_longdescription = intentLongdesc
+            val moshi = Moshi.Builder().build()
+            val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(
+                Member::class.java
+            )
+            currentWoCache.whatIfNotNull { woCache ->
+                woCache.syncBody.whatIfNotNullOrEmpty { woCacheSyncBody ->
+                    val currentMember = memberJsonAdapter.fromJson(woCacheSyncBody)
+                    currentMember.whatIfNotNull { memberCache ->
+                        memberCache.longdescription = longdescriptions
+                        memberCache.description_longdescription = intentLongdesc
 
-        currentWoCache.syncBody = memberJsonAdapter.toJson(currentMember)
-        currentWoCache.wonum = currentMember.wonum
-
-        viewModel.updateWo(currentWoCache, username!!)
+                        woCache.syncBody = memberJsonAdapter.toJson(memberCache)
+                        woCache.wonum = memberCache.wonum
+                        viewModel.updateWo(woCache, username!!)
+                    }
+                }
+            }
+        }
     }
 
     private fun showWoFromDetailNotComplete() {

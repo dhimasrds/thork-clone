@@ -14,13 +14,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph_wo"
-    app:startDestination="@id/nav_wo_fragment"
+    android:id="@+id/nav_graph_history"
+    app:startDestination="@id/nav_history_fragment"
     >
 
     <fragment
-        android:id="@+id/nav_wo_fragment"
-        android:name="id.thork.app.pages.main.work_order_list.WorkOrderListFragment"
+        android:id="@+id/nav_history_fragment"
+        android:name="id.thork.app.pages.main.work_order_list.ActivityFragment"
         android:label="asik"
-        tools:layout="@layout/fragment_work_order_list"/>
+        tools:layout="@layout/fragment_activity"/>
 </navigation>
