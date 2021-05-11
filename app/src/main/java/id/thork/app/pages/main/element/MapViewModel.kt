@@ -43,7 +43,6 @@ class MapViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
-    private val assetDao: AssetDao,
     ) : LiveCoroutinesViewModel() {
     val TAG = MapViewModel::class.java.name
 
@@ -136,15 +135,13 @@ class MapViewModel @ViewModelInject constructor(
                 onSuccess = {
                     assetResponse = it
                     assetResponse.member?.let { it1 -> addAssetToObjectBox(it1) }
-                    Timber.d("fetch asset paging source :%s", it.member)
-                    Timber.d("fetch asset paging source :%s", it.responseInfo)
-                    Timber.d("fetch asset paging source :%s", it.member?.size)
+                    Timber.d("fetchAsset() :%s", it.member)
                 },
                 onError = {
-                    Timber.d("fetch asset paging source error:%s", it)
+                    Timber.d("fetchAsset() :%s", it)
                 },
                 onException = {
-                    Timber.d("fetch asset paging source onExeption:%s", it)
+                    Timber.d("fetchAsset() :%s", it)
                 })
         }
     }
