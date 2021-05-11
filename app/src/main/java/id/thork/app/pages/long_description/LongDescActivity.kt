@@ -1,8 +1,18 @@
 package id.thork.app.pages.long_description
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
@@ -16,8 +26,10 @@ import id.thork.app.network.response.work_order.Longdescription
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.long_description.element.LongDescViewModel
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Raka Putra on 3/8/21
@@ -26,6 +38,9 @@ import java.util.*
 class LongDescActivity : BaseActivity() {
     private val TAG = LongDescActivity::class.java.name
     private val TAG_CREATE = "TAG_CREATE"
+    private val RecordAudioRequestCode = 1
+    private var speechRecognizer: SpeechRecognizer? = null
+    private var speechRecognizerIntent: Intent ? = null
 
     private val viewModel: LongDescViewModel by viewModels()
     private val binding: ActivityLongDescBinding by binding(R.layout.activity_long_desc)
@@ -53,6 +68,7 @@ class LongDescActivity : BaseActivity() {
         )
         retrieveFromIntent()
         initView()
+        requestPermission()
     }
 
     override fun setupListener() {
@@ -68,6 +84,95 @@ class LongDescActivity : BaseActivity() {
         }
 
         binding.cancel.setOnClickListener { finish() }
+
+        binding.ivMic.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
+                if (motionEvent?.action == MotionEvent.ACTION_UP) {
+                    speechRecognizer?.stopListening()
+                }
+                if (motionEvent?.action == MotionEvent.ACTION_DOWN) {
+                    binding.ivMic.setImageResource(R.drawable.ic_mic_on)
+                    speechRecognizer?.startListening(speechRecognizerIntent)
+                }
+                return false
+            }
+        })
+
+        speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+            override fun onReadyForSpeech(p0: Bundle?) {
+
+            }
+
+            override fun onBeginningOfSpeech() {
+                binding.longdesc.setText(BaseParam.APP_EMPTY_STRING)
+                binding.longdesc.setHint("Listening")
+            }
+
+            override fun onRmsChanged(p0: Float) {
+
+            }
+
+            override fun onBufferReceived(p0: ByteArray?) {
+
+            }
+
+            override fun onEndOfSpeech() {
+
+            }
+
+            override fun onError(p0: Int) {
+
+            }
+
+            override fun onResults(bundle: Bundle?) {
+                binding.ivMic.setImageResource(R.drawable.ic_mic_off)
+                val data: List<String> =
+                    ArrayList(bundle?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION))
+                binding.longdesc.setText(data.get(0))
+            }
+
+            override fun onPartialResults(p0: Bundle?) {
+
+            }
+
+            override fun onEvent(p0: Int, p1: Bundle?) {
+
+            }
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        speechRecognizer?.destroy()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == RecordAudioRequestCode && grantResults.size > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                CommonUtils.showToast("Permission Granted")
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    RecordAudioRequestCode
+                )
+            }
+        }
     }
 
     private fun saveNote() {
@@ -93,7 +198,6 @@ class LongDescActivity : BaseActivity() {
         } else if (intentStatus.equals(BaseParam.COMPLETED)) {
             //show note from Wo detail Complete
             showWoFromDetailNotComplete()
-
             binding.longdesc.isEnabled = false
             binding.save.visibility = View.INVISIBLE
             binding.cancel.visibility = View.INVISIBLE
@@ -101,6 +205,8 @@ class LongDescActivity : BaseActivity() {
             //show note from Wo detail not Complete
             showWoFromDetailNotComplete()
         }
+
+        setupSpeechRecognizer()
     }
 
     override fun setupObserver() {
@@ -110,6 +216,19 @@ class LongDescActivity : BaseActivity() {
             username = it
         })
     }
+
+    private fun setupSpeechRecognizer() {
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+        speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        speechRecognizerIntent.whatIfNotNull {
+            it.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+            it.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        }
+    }
+
 
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
