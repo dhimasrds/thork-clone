@@ -26,6 +26,10 @@ class WorkOrderClient @Inject constructor(
     suspend fun createWo(headerParam: String, body: Member) =
         workOrderApi.createWO(headerParam, body)
 
+
+    suspend fun LocationMarker(headerParam: String, savedQuery: String, select: String) =
+        workOrderApi.getLocationResource(headerParam, LEAN, savedQuery,select)
+
     suspend fun updateStatus(
         headerParam: String,
         xMethodeOverride: String,

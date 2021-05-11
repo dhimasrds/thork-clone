@@ -15,10 +15,14 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.LocationDao
+import id.thork.app.persistence.dao.LocationDaoImp
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.WoUtils
 import timber.log.Timber
@@ -35,6 +39,11 @@ class WorkOrderRepository @Inject constructor(
     private val appSession: AppSession,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
+    private val locationDao : LocationDao
+
+    init {
+        locationDao = LocationDaoImp()
+    }
 
     suspend fun getWorkOrderList(
         cookie: String,
@@ -162,6 +171,14 @@ class WorkOrderRepository @Inject constructor(
         return woCacheDao.createWoCache(woCacheEntity, username)
     }
 
+    fun saveLocationToLocal(locationEntity: LocationEntity):LocationEntity{
+        return locationDao.saveLocation(locationEntity)
+    }
+
+    fun deleteLocation(){
+        locationDao.deleteLocation()
+    }
+
     fun getWoList(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
@@ -213,6 +230,10 @@ class WorkOrderRepository @Inject constructor(
         return woCacheDao.findAllWo()
     }
 
+    fun fetchLocalMarker(): List<LocationEntity> {
+        return locationDao.locationList()
+    }
+
     fun findWobyWonum(wonum: String): WoCacheEntity? {
         val woCacheEntity = woCacheDao.findWoByWonum(wonum)
         woCacheEntity.whatIfNotNull { return woCacheEntity }
@@ -261,6 +282,28 @@ class WorkOrderRepository @Inject constructor(
         } else {
             null
         }
+    }
+
+    suspend fun locationMarker (
+        cookie: String,
+        savedQuery: String,
+        select: String,
+        onSuccess: (FsmLocation) -> Unit,
+        onError: (String) -> Unit
+    ){   val response = workOrderClient.LocationMarker(cookie, savedQuery,select)
+         response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                //TODO
+                //Save user session into local cache
+                onSuccess(response)
+                Timber.tag(TAG).i("repository locationMarker() code:%s", response.member)
+                Timber.tag(TAG).i("repository locationMarker() code:%s", statusCode.code)
+            }
+        }.onError {
+            Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
+            onError(message())
+        }
+
     }
 
 
