@@ -476,7 +476,7 @@ class WorkOrderRepository @Inject constructor(
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
         currentMember?.status = nextStatus
-        currentMember?.description_longdescription = longdesc
+        currentMember?.descriptionLongdescription = longdesc
 
         if (currentWoCache?.isLatest == BaseParam.APP_TRUE) {
             currentWoCache.syncStatus = BaseParam.APP_FALSE
@@ -518,7 +518,7 @@ class WorkOrderRepository @Inject constructor(
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
         currentMember?.status = nextStatus
-        currentMember?.description_longdescription = longdesc
+        currentMember?.descriptionLongdescription = longdesc
 
         currentWoCache?.syncBody = memberJsonAdapter.toJson(currentMember)
         currentWoCache?.syncStatus = BaseParam.APP_TRUE

@@ -33,7 +33,8 @@ class LoginRepository constructor(
     private val sysPropDao: SysPropDao,
     private val sysResDao: SysResDao,
     private val assetDao: AssetDao,
-    private val woCacheDao: WoCacheDao
+    private val woCacheDao: WoCacheDao,
+    private val multiAssetDao: MultiAssetDao
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
@@ -85,6 +86,10 @@ class LoginRepository constructor(
 
     fun deleteAssetEntity() {
         return assetDao.remove()
+    }
+
+    fun deleteMultiAssetEntity() {
+        return multiAssetDao.remove()
     }
 
 

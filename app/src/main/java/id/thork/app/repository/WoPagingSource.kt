@@ -101,7 +101,9 @@ class WoPagingSource @Inject constructor(
                 cookie, it, select, pageno = position, pagesize = 10,
                 onSuccess = {
                     response = it
-                    checkingWoInObjectBox(response.member)
+                    it.member.whatIfNotNullOrEmpty { listmember ->
+                        checkingWoInObjectBox(listmember)
+                    }
                     error = false
                 },
                 onError = {
@@ -131,7 +133,9 @@ class WoPagingSource @Inject constructor(
                 onSuccess = {
                     response = it
                     Timber.d("emptylist paging source :%s", it.member)
-                    checkingWoInObjectBox(response.member)
+                    it.member.whatIfNotNullOrEmpty { listmember ->
+                        checkingWoInObjectBox(listmember)
+                    }
                 },
                 onError = {
                 },

@@ -1,6 +1,7 @@
 package id.thork.app.repository
 
 import androidx.paging.PagingSource
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.Module
@@ -129,7 +130,9 @@ class WoActivityPagingSource @Inject constructor(
             onSuccess = {
                 response = it
                 Timber.d("emptylist paging source :%s", it.member)
-                checkingWoInObjectBox(it.member)
+                it.member.whatIfNotNullOrEmpty {
+                    checkingWoInObjectBox(it)
+                }
             },
             onError = {
             },

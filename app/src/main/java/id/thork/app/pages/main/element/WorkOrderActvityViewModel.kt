@@ -3,6 +3,7 @@ package id.thork.app.pages.main.element
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import androidx.paging.cachedIn
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession

@@ -20,6 +20,6 @@ object LoginRepositoryModule {
         loginClient: LoginClient,
         preferenceManager: PreferenceManager
     ): LoginRepository {
-        return LoginRepository(loginClient, UserDaoImp(), preferenceManager, SysPropDaoImp(), SysResDaoImp(), AssetDaoImp(), WoCacheDaoImp())
+        return LoginRepository(loginClient, UserDaoImp(), preferenceManager, SysPropDaoImp(), SysResDaoImp(), AssetDaoImp(), WoCacheDaoImp(), MultiAssetDaoImp())
     }
 }
