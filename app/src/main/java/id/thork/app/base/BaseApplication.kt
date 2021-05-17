@@ -13,12 +13,13 @@ package id.thork.app.base
 
 import android.app.Application
 import android.content.Context
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.TimberInitializer
 
 @HiltAndroidApp
-class BaseApplication : Application() {
+class BaseApplication : Application(), Configuration.Provider{
     companion object Constants {
         const val TAG = "This-FSM"
         lateinit var context: Context
@@ -41,6 +42,10 @@ class BaseApplication : Application() {
         TimberInitializer.init()
         ObjectBox.init(this)
     }
+
+    override fun getWorkManagerConfiguration()= Configuration.Builder()
+        .setMinimumLoggingLevel(android.util.Log.INFO)
+        .build()
 
 
 }

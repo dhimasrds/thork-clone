@@ -76,9 +76,8 @@
 
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="id.thork.app.workmanager-init"
+            android:authorities="${applicationId}.workmanager-init"
             tools:node="remove" />
-
 
     </application>
 

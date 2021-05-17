@@ -13,17 +13,15 @@
 package id.thork.app.workmanager
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import id.thork.app.di.module.AppSession
-import id.thork.app.di.module.PreferenceManager
-import id.thork.app.repository.WorkOrderRepository
-import id.thork.app.repository.WorkerRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import timber.log.Timber
 
-class WorkOrderWorker @WorkerInject constructor(
+@HiltWorker
+class WorkOrderWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters
 
