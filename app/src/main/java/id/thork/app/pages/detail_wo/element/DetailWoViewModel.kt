@@ -126,4 +126,8 @@ class DetailWoViewModel @ViewModelInject constructor(
         return materialRepository.removeMaterialByWoid(woId)
     }
 
+    fun removeAllWo(){
+        return workOrderRepository.deleteWoEntity()
+    }
+
 }
