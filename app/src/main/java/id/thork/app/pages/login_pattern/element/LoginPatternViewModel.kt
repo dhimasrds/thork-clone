@@ -82,6 +82,8 @@ class LoginPatternViewModel @ViewModelInject constructor(
         loginRepository.deleteUserSession(userEntity)
         loginRepository.deleteSystemProperties()
         loginRepository.deleteSystemResource()
+        loginRepository.deleteWoPropertios()
+        loginRepository.deleteAssetEntity()
         _switchUser.postValue(BaseParam.APP_TRUE)
     }
 

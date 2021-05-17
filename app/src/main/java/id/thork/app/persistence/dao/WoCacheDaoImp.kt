@@ -131,5 +131,7 @@ class WoCacheDaoImp : WoCacheDao {
             .find(offset.toLong(), 10)
     }
 
-
+    override fun remove() {
+        woCacheEntityBox.removeAll()
+    }
 }

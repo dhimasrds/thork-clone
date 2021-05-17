@@ -1,6 +1,5 @@
 package id.thork.app.pages.detail_wo
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.view.View.GONE
@@ -49,7 +48,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private var workorderNumber: String? = null
     private var workorderLongdesc: String? = null
     private var valueLongDesc: String? = null
-    private var validateDialogExit: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -76,7 +74,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         retrieveFromIntent()
     }
 
-    @SuppressLint("NewApi")
     override fun setupObserver() {
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
@@ -91,10 +88,12 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                     java.lang.String.valueOf(it.estdur),
                     BaseParam.APP_DASH
                 )
-                reportDate.text = StringUtils.NVL(
-                    DateUtils.convertDateFormat(it.reportdate),
-                    BaseParam.APP_DASH
-                )
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    reportDate.text = StringUtils.NVL(
+                        DateUtils.convertDateFormat(it.reportdate),
+                        BaseParam.APP_DASH
+                    )
+                }
 
                 workorderId = it.workorderid
                 workorderNumber = it.wonum
@@ -134,7 +133,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         intentWonum.whatIfNotNull {
             detailWoViewModel.fetchWobyWonum(intentWonum!!)
         }
-
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -184,14 +182,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     override fun setupListener() {
         super.setupListener()
-        binding.scanQr.setOnClickListener {
-            gotoListMaterial()
-        }
-
-        binding.longdesc.setOnClickListener {
-            gotoLongDescription()
-        }
-
         binding.attachment.setOnClickListener {
             Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
                 .show()
@@ -284,6 +274,17 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 binding.layoutStatus.visibility = GONE
             }
         }
+        binding.scanQr.setOnClickListener {
+            if (workorderStatus == BaseParam.COMPLETED) {
+                Toast.makeText(this, R.string.stat_complete, Toast.LENGTH_SHORT).show()
+            } else {
+                gotoListMaterial()
+            }
+        }
+
+        binding.longdesc.setOnClickListener {
+            gotoLongDescription()
+        }
     }
 
     private fun hideMore() {
@@ -305,47 +306,30 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         customDialogUtils.show()
     }
 
-    private fun dialogExit() {
-        validateDialogExit = true
-        customDialogUtils.setTitle(R.string.service_request_create)
-        customDialogUtils.setDescription(R.string.service_request_cancel)
-        customDialogUtils.setRightButtonText(R.string.dialog_yes)
-        customDialogUtils.setLeftButtonText(R.string.dialog_no)
-        customDialogUtils.setListener(this)
-        customDialogUtils.show()
-    }
-
     override fun onRightButton() {
-        if (validateDialogExit) {
-            workorderId?.let { detailWoViewModel.removeScanner(it) }
-        } else {
-            if (isConnected) {
-                if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
-                    detailWoViewModel.updateWo(
-                        workorderId,
-                        workorderStatus,
-                        workorderNumber,
-                        workorderLongdesc,
-                        BaseParam.INPROGRESS
-                    )
-                } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
-                    detailWoViewModel.updateWo(
-                        workorderId,
-                        workorderStatus,
-                        workorderNumber,
-                        workorderLongdesc,
-                        BaseParam.COMPLETED
-                    )
-                }
+        if (isConnected) {
+            if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
+                detailWoViewModel.updateWo(
+                    workorderId,
+                    workorderStatus,
+                    workorderNumber,
+                    workorderLongdesc,
+                    BaseParam.INPROGRESS
+                )
+            } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
+                detailWoViewModel.updateWo(
+                    workorderId,
+                    workorderStatus,
+                    workorderNumber,
+                    workorderLongdesc,
+                    BaseParam.COMPLETED
+                )
             }
         }
         gotoHome()
     }
 
     override fun onLeftButton() {
-        if (validateDialogExit) {
-            validateDialogExit = false
-        }
         customDialogUtils.dismiss()
     }
 
@@ -364,13 +348,19 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     }
 
     override fun onBackPressed() {
-        dialogExit()
+        detailWoViewModel.removeScanner(workorderId!!)
+        finish()
     }
 
     private fun gotoHome() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
+        finish()
+    }
+
+    override fun goToPreviousActivity() {
+        detailWoViewModel.removeScanner(workorderId!!)
         finish()
     }
 }

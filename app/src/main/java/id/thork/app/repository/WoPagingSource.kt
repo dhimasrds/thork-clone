@@ -1,7 +1,6 @@
 package id.thork.app.repository
 
 import androidx.paging.PagingSource
-import com.google.gson.Gson
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
@@ -163,104 +162,13 @@ class WoPagingSource @Inject constructor(
         return LoadResult.Error(Exception("Result is empty"))
     }
 
-    private fun checkingWoInObjectBox(list: List<Member>?) {
-        list.whatIfNotNullOrEmpty {
-            if (woCacheDao.findAllWo().isEmpty()) {
-                addWoToObjectBox(it)
-            } else {
-                addObjectBoxToHashMap()
-                compareWoLocalWithServer(it)
-            }
+    private fun checkingWoInObjectBox(list: List<Member>) {
+        if (woCacheDao.findAllWo().isEmpty()) {
+            repository.addWoToObjectBox(list)
+        } else {
+            repository.addObjectBoxToHashMap()
+            repository.compareWoLocalWithServer(list)
         }
-
-    }
-
-    private fun addWoToObjectBox(list: List<Member>) {
-        for (wo in list) {
-            createNewWo(wo)
-        }
-    }
-
-    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
-        wo.woserviceaddress.whatIfNotNullOrEmpty { woserviceaddress ->
-            woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-                woserviceaddress[0].latitudey
-            } else {
-                null
-            }
-        }
-
-        wo.woserviceaddress.whatIfNotNullOrEmpty { woserviceaddress ->
-            woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-                woserviceaddress[0].longitudex
-            } else {
-                null
-            }
-        }
-    }
-
-    private fun createNewWo(wo: Member) {
-        var assignment: Assignment
-        wo.assignment.whatIfNotNullOrEmpty(
-            whatIf = {
-                assignment = it.get(0)
-                var laborCode: String? = null
-                assignment.laborcode.whatIfNotNullOrEmpty {
-                    laborCode = it
-                }
-                val woCacheEntity = WoCacheEntity(
-                    syncBody = convertToJson(wo),
-                    woId = wo.workorderid,
-                    wonum = wo.wonum,
-                    status = wo.status,
-                    isChanged = BaseParam.APP_TRUE,
-                    isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_FALSE,
-                    laborCode = laborCode,
-                    changeDate = wo.changedate
-
-                )
-                setupWoLocation(woCacheEntity, wo)
-                woCacheEntity.createdDate = Date()
-                woCacheEntity.createdBy = appSession.userEntity.username
-                woCacheEntity.updatedBy = appSession.userEntity.username
-                repository.saveWoList(woCacheEntity, appSession.userEntity.username)
-            })
-    }
-
-    private fun addObjectBoxToHashMap() {
-        Timber.d("queryObjectBoxToHashMap()")
-        if (woCacheDao.findAllWo().isNotEmpty()) {
-            woListObjectBox = HashMap<String, WoCacheEntity>()
-            val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
-            cacheEntities.whatIfNotNullOrEmpty { caches ->
-                for (i in caches.indices) {
-                    caches[i].wonum.whatIfNotNullOrEmpty { cachesWo ->
-                        woListObjectBox!![cachesWo] = caches[i]
-                        Timber.d("HashMap value: %s", woListObjectBox!![cachesWo])
-                    }
-                }
-            }
-        }
-    }
-
-    private fun compareWoLocalWithServer(list: List<Member>) {
-        for (wo in list) {
-            Timber.d("compareWoLocalWithServer : %s", wo.wonum)
-            woListObjectBox.whatIfNotNullOrEmpty {
-                if (it[wo.wonum] != null) {
-
-                } else {
-                    createNewWo(wo)
-                }
-            }
-
-        }
-    }
-
-    private fun convertToJson(member: Member): String? {
-        val gson = Gson()
-        return gson.toJson(member)
     }
 
     private fun findWo(offset: Int): String {
