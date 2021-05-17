@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
@@ -39,11 +41,12 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.GoogleMapInfoWindow
 import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
 
-class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     CustomDialogUtils.DialogActionListener {
 
     val TAG = MapFragment::class.java.name
@@ -79,11 +82,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
         getLocationPermission()
         getLocationChange()
-        binding.apply {
-            lifecycleOwner = this@MapFragment
-            vm = mapViewModel
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            mapViewModel.isConnected()
         }
-        mapViewModel.fetchListWo()
         mapViewModel.pruneWork()
         return binding.root
     }
@@ -113,8 +115,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
     private fun onMapReadyState() {
         with(map) {
-            setOnInfoWindowClickListener(this@MapFragment)
-            setInfoWindowAdapter(customInfoWindowForGoogleMap)
+            setOnMarkerClickListener(this@MapFragment)
+//            setInfoWindowAdapter(customInfoWindowForGoogleMap)
             uiSettings.isMyLocationButtonEnabled = false
             uiSettings.isMapToolbarEnabled = true
         }
@@ -130,6 +132,54 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 }
             }
         })
+        mapViewModel.listMember.observe(viewLifecycleOwner, {
+            it.forEach {
+                if (!it.woserviceaddress.isNullOrEmpty()) {
+                    val latitudeWo = it.woserviceaddress?.get(0)?.latitudey
+                    val longitudeWo = it.woserviceaddress?.get(0)?.longitudex
+                    if (latitudeWo != null && longitudeWo != null) {
+                        val woLatLngOnline = LatLng(latitudeWo, longitudeWo)
+                        Timber.d("setupObserver() Render Wo : ${it.wonum}")
+                        MapsUtils.renderWoMarker(map, woLatLngOnline, it.wonum.toString())
+                    }
+                }
+            }
+        })
+
+        mapViewModel.listMemberLocation.observe(viewLifecycleOwner, {
+            it.forEach { member ->
+                member.serviceaddress.whatIfNotNullOrEmpty {
+                    val latitudeLocation = it.get(0).latitudey
+                    val longitudeLocation = it.get(0).longitudex
+                    if (latitudeLocation != null && longitudeLocation != null) {
+                        val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
+                        MapsUtils.renderLocationMarker(
+                            map,
+                            locationLatLng,
+                            member.location.toString()
+                        )
+                    }
+                }
+            }
+        })
+
+        mapViewModel.listMemberAsset.observe(viewLifecycleOwner, {
+            it.forEach { member ->
+                member.serviceaddress.whatIfNotNullOrEmpty {
+                    val latitudeLocation = it.get(0).latitudey
+                    val longitudeLocation = it.get(0).longitudex
+                    if (latitudeLocation != null && longitudeLocation != null) {
+                        val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
+                        MapsUtils.renderAssetMarker(
+                            map,
+                            locationLatLng,
+                            member.assetnum.toString()
+                        )
+                    }
+                }
+            }
+        })
+
         mapViewModel.outputWorkInfos.observe(this, workInfosObserver())
     }
 
@@ -328,19 +378,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-
-
-    override fun onInfoWindowClick(marker: Marker) {
-        if (locationPermissionGranted) {
-            if (marker.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
-                navigateToDetailWo(marker)
-            }
-        } else {
-            showDialog()
-
-        }
-    }
-
     private fun navigateToDetailWo(marker: Marker?) {
         val intent = Intent(activity, DetailWoActivity::class.java)
         intent.putExtra(BaseParam.APP_WONUM, marker!!.title.toString())
@@ -366,4 +403,21 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
     }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        if (locationPermissionGranted) {
+            if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
+//                navigateToDetailWo(marker)
+                Timber.tag(TAG).d("onMarkerClick() marker WO snippet: %s", marker.snippet)
+
+            }
+        } else {
+            showDialog()
+
+        }
+
+        return false
+    }
+
+
 }

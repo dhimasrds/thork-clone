@@ -2,6 +2,7 @@ package id.thork.app.repository
 
 import androidx.paging.PagingSource
 import com.google.gson.Gson
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -13,10 +14,14 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.response.asset_response.AssetResponse
+import id.thork.app.network.response.asset_response.Serviceaddress
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
@@ -40,7 +45,7 @@ class WoPagingSource @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val query: String?,
     private val preferenceManager: PreferenceManager,
-    private val appResourceMx: AppResourceMx
+    private val appResourceMx: AppResourceMx,
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -49,7 +54,6 @@ class WoPagingSource @Inject constructor(
     var emptyList = false
     var woListObjectBox: HashMap<String, WoCacheEntity>? = null
     var response = WorkOrderResponse()
-
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
@@ -81,7 +85,7 @@ class WoPagingSource @Inject constructor(
             }
             Timber.d("filter paging source :%s", query)
             Timber.d("filter paging source wo size:%s", wo)
-            loadResultPage(wo!!, position)
+            loadResultPage(wo, position)
 
         } catch (exception: IOException) {
             Timber.d("exception :%s", exception)
@@ -126,36 +130,41 @@ class WoPagingSource @Inject constructor(
         val where: String =
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_SEARCH + wonum + "%\"" + "}"
 
-        repository.searchWorkOrder(
-            appSession.userHash!!, select, where,
-            onSuccess = {
-                response = it
-                Timber.d("emptylist paging source :%s", it.member)
-                checkingWoInObjectBox(response.member)
-            },
-            onError = {
-            },
-            onException = {
-            })
+        appSession.userHash.whatIfNotNullOrEmpty { userHash ->
+            repository.searchWorkOrder(
+                userHash, select, where,
+                onSuccess = {
+                    response = it
+                    Timber.d("emptylist paging source :%s", it.member)
+                    checkingWoInObjectBox(response.member)
+                },
+                onError = {
+                },
+                onException = {
+                })
+        }
         return error
     }
 
-    private fun loadResultPage(list: List<Member>, position: Int): LoadResult<Int, Member> {
-        return try {
-            LoadResult.Page(
-                data = list,
-                prevKey = null,
-                nextKey = if (list.isEmpty()) {
-                    null
-                } else {
-                    offset += 10
-                    Timber.d("offset :%s", offset)
-                    position + 1
-                }
-            )
-        } catch (exception: Exception) {
-            return LoadResult.Error(exception)
+    private fun loadResultPage(list: List<Member>?, position: Int): LoadResult<Int, Member> {
+        list.whatIfNotNullOrEmpty {
+            return try {
+                LoadResult.Page(
+                    data = it,
+                    prevKey = null,
+                    nextKey = if (it.isEmpty()) {
+                        null
+                    } else {
+                        offset += 10
+                        Timber.d("offset :%s", offset)
+                        position + 1
+                    }
+                )
+            } catch (exception: Exception) {
+                return LoadResult.Error(exception)
+            }
         }
+        return LoadResult.Error(Exception("Result is empty"))
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
@@ -169,40 +178,25 @@ class WoPagingSource @Inject constructor(
 
     private fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            var assignment: Assignment
-            wo.assignment.whatIfNotNullOrEmpty(
-                whatIf = {
-                    assignment = it.get(0)
-                    val laborCode: String = assignment.laborcode!!
-                    val woCacheEntity = WoCacheEntity(
-                        syncBody = convertToJson(wo),
-                        woId = wo.workorderid,
-                        wonum = wo.wonum,
-                        status = wo.status,
-                        isChanged = BaseParam.APP_TRUE,
-                        isLatest = BaseParam.APP_TRUE,
-                        syncStatus = BaseParam.APP_TRUE,
-                        laborCode = laborCode
-                    )
-                    setupWoLocation(woCacheEntity, wo)
-                    woCacheEntity.createdDate = Date()
-                    woCacheEntity.createdBy = appSession.userEntity.username
-                    woCacheEntity.updatedBy = appSession.userEntity.username
-                    repository.saveWoList(woCacheEntity, appSession.userEntity.username)
-                })
+            createNewWo(wo)
         }
     }
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
-        woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress!![0].latitudey
-        } else {
-            null
+        wo.woserviceaddress.whatIfNotNullOrEmpty { woserviceaddress ->
+            woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
+                woserviceaddress[0].latitudey
+            } else {
+                null
+            }
         }
-        woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress!![0].longitudex
-        } else {
-            null
+
+        wo.woserviceaddress.whatIfNotNullOrEmpty { woserviceaddress ->
+            woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
+                woserviceaddress[0].longitudex
+            } else {
+                null
+            }
         }
     }
 
@@ -211,7 +205,10 @@ class WoPagingSource @Inject constructor(
         wo.assignment.whatIfNotNullOrEmpty(
             whatIf = {
                 assignment = it.get(0)
-                val laborCode: String = assignment.laborcode!!
+                var laborCode: String? = null
+                assignment.laborcode.whatIfNotNullOrEmpty {
+                    laborCode = it
+                }
                 val woCacheEntity = WoCacheEntity(
                     syncBody = convertToJson(wo),
                     woId = wo.workorderid,
@@ -219,8 +216,10 @@ class WoPagingSource @Inject constructor(
                     status = wo.status,
                     isChanged = BaseParam.APP_TRUE,
                     isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_TRUE,
-                    laborCode = laborCode
+                    syncStatus = BaseParam.APP_FALSE,
+                    laborCode = laborCode,
+                    changeDate = wo.changedate
+
                 )
                 setupWoLocation(woCacheEntity, wo)
                 woCacheEntity.createdDate = Date()
@@ -235,9 +234,13 @@ class WoPagingSource @Inject constructor(
         if (woCacheDao.findAllWo().isNotEmpty()) {
             woListObjectBox = HashMap<String, WoCacheEntity>()
             val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
-            for (i in cacheEntities.indices) {
-                woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
-                Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
+            cacheEntities.whatIfNotNullOrEmpty { caches ->
+                for (i in caches.indices) {
+                    caches[i].wonum.whatIfNotNullOrEmpty { cachesWo ->
+                        woListObjectBox!![cachesWo] = caches[i]
+                        Timber.d("HashMap value: %s", woListObjectBox!![cachesWo])
+                    }
+                }
             }
         }
     }
@@ -245,11 +248,14 @@ class WoPagingSource @Inject constructor(
     private fun compareWoLocalWithServer(list: List<Member>) {
         for (wo in list) {
             Timber.d("compareWoLocalWithServer : %s", wo.wonum)
-            if (woListObjectBox!![wo.wonum!!] != null) {
+            woListObjectBox.whatIfNotNullOrEmpty {
+                if (it[wo.wonum] != null) {
 
-            } else {
-                createNewWo(wo)
+                } else {
+                    createNewWo(wo)
+                }
             }
+
         }
     }
 
@@ -266,7 +272,9 @@ class WoPagingSource @Inject constructor(
                 && !cacheEntities[i].status.equals(BaseParam.WAPPR)
                 && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
             ) {
-                body.add(cacheEntities[i].syncBody!!)
+                cacheEntities[i].syncBody.whatIfNotNullOrEmpty {
+                    body.add(it)
+                }
             }
         }
         Timber.d("json : %s", body.toString())
@@ -279,7 +287,9 @@ class WoPagingSource @Inject constructor(
         val body = ArrayList<String>()
         for (i in list.indices) {
             if (list[i].status != null) {
-                body.add(list[i].syncBody!!)
+                list[i].syncBody.whatIfNotNull {
+                    body.add(it)
+                }
             }
         }
         Timber.d(" searchFindWo json : %s", body.toString())
@@ -313,6 +323,4 @@ class WoPagingSource @Inject constructor(
         Timber.d("memberlist : %s", memberList?.size)
         return memberList
     }
-
-
 }

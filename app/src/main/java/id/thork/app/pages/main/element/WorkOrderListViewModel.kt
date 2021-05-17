@@ -8,6 +8,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.persistence.entity.WoCacheEntity
@@ -23,6 +24,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     private val workOrderRepository: WorkOrderRepository,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
+    private val assetDao: AssetDao,
     @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
 

@@ -25,19 +25,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.detail_wo.DetailWoActivity"></activity>
+        <activity android:name=".pages.example.RfidExActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity android:name=".pages.detail_wo.DetailWoActivity" />
         <activity android:name=".pages.create_wo.CreateWoActivity" />
         <activity android:name=".pages.login_pattern.LoginPatternActivity" />
         <activity android:name=".pages.dummy.DummyActivity" />
-        <activity android:name=".pages.settings_log.LogActivity"/>
-        <activity android:name=".pages.settings_log_detail.LogDetailActivity"/>
-        <activity android:name=".pages.settings_language.SettingsLanguageActivity"/>
-        <activity android:name=".pages.settings_pattern.SettingsPatternActivity"/>
-        <activity android:name=".pages.settings.SettingsActivity"/>
-        <activity android:name=".pages.about.AboutActivity"/>
-        <activity android:name=".pages.list_material.ListMaterialActivity"/>
-        <activity android:name=".pages.ScannerActivity"/>
-        <activity android:name=".pages.long_description.LongDescActivity"/>
+        <activity android:name=".pages.settings_log.LogActivity" />
+        <activity android:name=".pages.settings_log_detail.LogDetailActivity" />
+        <activity android:name=".pages.settings_language.SettingsLanguageActivity" />
+        <activity android:name=".pages.settings_pattern.SettingsPatternActivity" />
+        <activity android:name=".pages.settings.SettingsActivity" />
+        <activity android:name=".pages.about.AboutActivity" />
+        <activity android:name=".pages.list_material.ListMaterialActivity" />
+        <activity android:name=".pages.ScannerActivity" />
+        <activity android:name=".pages.long_description.LongDescActivity" />
         <activity
             android:name=".pages.login.LoginActivity"
             android:screenOrientation="portrait" />
@@ -67,7 +74,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <service android:name=".messaging.ThorFcmService"
+        <service
+            android:name=".messaging.ThorFcmService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
