@@ -11,6 +11,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_wo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -27,10 +28,10 @@
                 android:layout_width="14dp"
                 android:layout_height="0dp"
                 android:background="#436CFF"
-                app:setBgStatus="@{wo.status}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:setBgStatus="@{wo.status}" />
 
             <TextView
                 android:id="@+id/taskTitle"
@@ -38,14 +39,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:fontFamily="@font/opensans_bold"
                 android:gravity="center"
                 android:text="@string/wo"
-                android:fontFamily="@font/opensans_bold"
-                android:textSize="@dimen/base_text_size_16"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorBlack"
+                android:textSize="@dimen/base_text_size_16"
                 app:layout_constraintStart_toEndOf="@+id/bgStatus"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/desc"
                 android:layout_width="0dp"
@@ -69,8 +71,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/opensans_bold"
-                android:textStyle="bold"
                 android:textSize="@dimen/base_text_size_16"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/desc"
@@ -88,9 +90,9 @@
                 android:gravity="center"
                 android:text="@string/approve"
                 android:textColor="@color/blueTextStatus"
-                app:setStatus="@{wo.status  }"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:setStatus="@{wo.status  }" />
 
             <ImageView
                 android:id="@+id/imageView2"

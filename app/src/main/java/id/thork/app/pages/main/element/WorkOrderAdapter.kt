@@ -37,6 +37,11 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
             binding.tvLocation.text = woEntity.location
             binding.tvStatus.text = woEntity.status
             binding.executePendingBindings()
+
+            binding.cardWo.setOnClickListener {
+
+            }
+
         }
 
     }

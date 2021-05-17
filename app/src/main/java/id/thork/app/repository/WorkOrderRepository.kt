@@ -9,6 +9,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppResourceMx
@@ -438,6 +439,80 @@ class WorkOrderRepository @Inject constructor(
             assetEntity.createdBy = appSession.userEntity.username
             assetEntity.updatedBy = appSession.userEntity.username
             saveAssetList(assetEntity, appSession.userEntity.username)
+        }
+    }
+
+    fun updateWoCacheBeforeSync(
+        woId: Int?,
+        wonum: String?,
+        status: String?,
+        longdesc: String?,
+        nextStatus: String
+    ) {
+        val currentWoCache: WoCacheEntity? =
+            wonum?.let {
+                status?.let { woStatus ->
+                    woCacheDao.findWoByWonumAndStatus(
+                        it,
+                        woStatus
+                    )
+                }
+            }
+
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter = moshi.adapter(Member::class.java)
+        val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
+        currentMember?.status = nextStatus
+        currentMember?.description_longdescription = longdesc
+
+        if (currentWoCache?.isLatest == BaseParam.APP_TRUE) {
+            currentWoCache.syncStatus = BaseParam.APP_FALSE
+            currentWoCache.isLatest = BaseParam.APP_FALSE
+            currentWoCache.let { updateWo(it, appSession.userEntity.username) }
+
+            val newWoCache = WoCacheEntity()
+            newWoCache.createdDate = Date()
+            newWoCache.updatedDate = Date()
+            newWoCache.createdBy = appSession.userEntity.username
+            newWoCache.updatedBy = appSession.userEntity.username
+            newWoCache.syncBody = memberJsonAdapter.toJson(currentMember)
+            newWoCache.syncStatus = BaseParam.APP_FALSE
+            newWoCache.isChanged = BaseParam.APP_TRUE
+            newWoCache.isLatest = BaseParam.APP_TRUE
+            newWoCache.laborCode = appSession.laborCode
+            newWoCache.wonum = wonum
+            newWoCache.status = nextStatus
+            newWoCache.woId = woId
+            saveWoList(newWoCache, appSession.userEntity.username)
+        }
+    }
+
+    fun updateWoCacheAfterSync(
+        wonum: String?,
+        longdesc: String?,
+        nextStatus: String
+    ) {
+        val currentWoCache: WoCacheEntity? = wonum?.let {
+            nextStatus.let { it1 ->
+                woCacheDao.findWoByWonumAndStatus(
+                    it,
+                    it1
+                )
+            }
+        }
+
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter = moshi.adapter(Member::class.java)
+        val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
+        currentMember?.status = nextStatus
+        currentMember?.description_longdescription = longdesc
+
+        currentWoCache?.syncBody = memberJsonAdapter.toJson(currentMember)
+        currentWoCache?.syncStatus = BaseParam.APP_TRUE
+        currentWoCache?.isChanged = BaseParam.APP_FALSE
+        currentWoCache?.isLatest = BaseParam.APP_TRUE
+        if (currentWoCache != null) {
+            saveWoList(currentWoCache, appSession.userEntity.username)
         }
     }
 

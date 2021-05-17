@@ -118,44 +118,7 @@ class DetailWoViewModel @ViewModelInject constructor(
         longdesc: String?,
         nextStatus: String
     ) {
-        val currentWoCache: WoCacheEntity? =
-            wonum?.let {
-                status?.let { woStatus ->
-                    woActivityRepository.findWoByWonumAndStatus(
-                        it,
-                        woStatus
-                    )
-                }
-            }
-
-        val moshi = Moshi.Builder().build()
-        val memberJsonAdapter = moshi.adapter(Member::class.java)
-        val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
-        currentMember?.status = nextStatus
-        currentMember?.description_longdescription = longdesc
-
-        if (currentWoCache?.isLatest == BaseParam.APP_TRUE) {
-            currentWoCache.syncStatus = BaseParam.APP_FALSE
-            currentWoCache.isLatest = BaseParam.APP_FALSE
-            currentWoCache.let { workOrderRepository.updateWo(it, appSession.userEntity.username) }
-
-            val newWoCache = WoCacheEntity()
-            newWoCache.createdDate = Date()
-            newWoCache.updatedDate = Date()
-            newWoCache.createdBy = appSession.userEntity.username
-            newWoCache.updatedBy = appSession.userEntity.username
-            newWoCache.syncBody = memberJsonAdapter.toJson(currentMember)
-            newWoCache.syncStatus = BaseParam.APP_FALSE
-            newWoCache.isChanged = BaseParam.APP_TRUE
-            newWoCache.isLatest = BaseParam.APP_TRUE
-            newWoCache.laborCode = appSession.laborCode
-            newWoCache.wonum = wonum
-            newWoCache.status = nextStatus
-            newWoCache.woId = woId
-            workOrderRepository.saveWoList(newWoCache, appSession.userEntity.username)
-        }
-
-
+        workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
     }
 
     private fun updateWoCacheAfterSync(
@@ -163,28 +126,7 @@ class DetailWoViewModel @ViewModelInject constructor(
         longdesc: String?,
         nextStatus: String
     ) {
-        val currentWoCache: WoCacheEntity? = wonum?.let {
-            nextStatus.let { it1 ->
-                woActivityRepository.findWoByWonumAndStatus(
-                    it,
-                    it1
-                )
-            }
-        }
-
-        val moshi = Moshi.Builder().build()
-        val memberJsonAdapter = moshi.adapter(Member::class.java)
-        val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
-        currentMember?.status = nextStatus
-        currentMember?.description_longdescription = longdesc
-
-        currentWoCache?.syncBody = memberJsonAdapter.toJson(currentMember)
-        currentWoCache?.syncStatus = BaseParam.APP_TRUE
-        currentWoCache?.isChanged = BaseParam.APP_FALSE
-        currentWoCache?.isLatest = BaseParam.APP_TRUE
-        if (currentWoCache != null) {
-            workOrderRepository.saveWoList(currentWoCache, appSession.userEntity.username)
-        }
+        workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
     }
 
     private fun saveScannerMaterial(woId: Int?){
