@@ -170,24 +170,6 @@ class WoPagingSource @Inject constructor(
         }
     }
 
-    private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
-        wo.woserviceaddress.whatIfNotNullOrEmpty { woserviceaddress ->
-            woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-                woserviceaddress[0].latitudey
-            } else {
-                null
-            }
-        }
-
-        wo.woserviceaddress.whatIfNotNullOrEmpty { woserviceaddress ->
-            woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-                woserviceaddress[0].longitudex
-            } else {
-                null
-            }
-        }
-    }
-
     private fun findWo(offset: Int): String {
         val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
         val body = ArrayList<String>()
