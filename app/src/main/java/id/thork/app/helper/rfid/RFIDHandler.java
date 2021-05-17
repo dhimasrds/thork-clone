@@ -103,26 +103,6 @@ public class RFIDHandler implements Readers.RFIDReaderEventHandler {
         return "Antenna power Set to 220";
     }
 
-    public String Test2() {
-        // check reader connection
-        if (!isReaderConnected())
-            return "Not connected";
-        // Set the singulation control to S2 which will read each tag once only
-        try {
-            Antennas.SingulationControl s1_singulationControl = reader.Config.Antennas.getSingulationControl(1);
-            s1_singulationControl.setSession(SESSION.SESSION_S2);
-            s1_singulationControl.Action.setInventoryState(INVENTORY_STATE.INVENTORY_STATE_A);
-            s1_singulationControl.Action.setSLFlag(SL_FLAG.SL_ALL);
-            reader.Config.Antennas.setSingulationControl(1, s1_singulationControl);
-        } catch (InvalidUsageException e) {
-            e.printStackTrace();
-        } catch (OperationFailureException e) {
-            e.printStackTrace();
-            return e.getResults().toString() + " " + e.getVendorMessage();
-        }
-        return "Session set to S2";
-    }
-
     public String maxRange() {
         // check reader connection
         if (!isReaderConnected())
