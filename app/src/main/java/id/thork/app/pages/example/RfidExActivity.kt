@@ -12,14 +12,13 @@
 
 package id.thork.app.pages.example
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.zebra.rfid.api3.TagData
 import id.thork.app.R
 import id.thork.app.helper.rfid.RFIDHandler
-import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 
 class RfidExActivity : AppCompatActivity(), RFIDHandler.ResponseHandlerInterface {

@@ -176,7 +176,7 @@ class LongDescActivity : BaseActivity() {
             intentLongdesc = binding.longdesc.text.toString()
 
             val member = Member()
-            member.description_longdescription = intentLongdesc
+            member.descriptionLongdescription = intentLongdesc
 
             val tWoCacheEntity = WoCacheEntity()
             tWoCacheEntity.syncBody = convertToJson(member)
@@ -254,7 +254,7 @@ class LongDescActivity : BaseActivity() {
                     val currentMember = memberJsonAdapter.fromJson(woCacheSyncBody)
                     currentMember.whatIfNotNull { memberCache ->
                         memberCache.longdescription = longdescriptions
-                        memberCache.description_longdescription = intentLongdesc
+                        memberCache.descriptionLongdescription = intentLongdesc
 
                         woCache.syncBody = memberJsonAdapter.toJson(memberCache)
                         woCache.wonum = memberCache.wonum

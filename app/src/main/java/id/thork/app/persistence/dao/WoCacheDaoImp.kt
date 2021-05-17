@@ -130,4 +130,6 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build()
             .find(offset.toLong(), 10)
     }
+
+
 }

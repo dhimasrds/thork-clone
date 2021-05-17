@@ -44,15 +44,15 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     }
 
     private val currentQuery = state.getLiveData(CURRENT_QUERY, EMPTY_QUERY)
-    val woList = currentQuery.switchMap { query ->
-        if (!query.isEmpty()) {
-            Timber.d("filter on  viewmodel :%s", query)
-            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager, appResourceMx)
-        } else {
-            Timber.d("filter off viewmodel :%s", query)
-            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
-        }
-    }
+//    val woList = currentQuery.switchMap { query ->
+//        if (!query.isEmpty()) {
+//            Timber.d("filter on  viewmodel :%s", query)
+//            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager, appResourceMx)
+//        } else {
+//            Timber.d("filter off viewmodel :%s", query)
+//            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
+//        }
+//    }
 
     fun searchWo(query: String) {
         currentQuery.value = query

@@ -14,14 +14,10 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
-import id.thork.app.network.response.asset_response.AssetResponse
-import id.thork.app.network.response.asset_response.Serviceaddress
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
-import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
-import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import retrofit2.HttpException
 import timber.log.Timber
@@ -167,13 +163,16 @@ class WoPagingSource @Inject constructor(
         return LoadResult.Error(Exception("Result is empty"))
     }
 
-    private fun checkingWoInObjectBox(list: List<Member>) {
-        if (woCacheDao.findAllWo().isEmpty()) {
-            addWoToObjectBox(list)
-        } else {
-            addObjectBoxToHashMap()
-            compareWoLocalWithServer(list)
+    private fun checkingWoInObjectBox(list: List<Member>?) {
+        list.whatIfNotNullOrEmpty {
+            if (woCacheDao.findAllWo().isEmpty()) {
+                addWoToObjectBox(it)
+            } else {
+                addObjectBoxToHashMap()
+                compareWoLocalWithServer(it)
+            }
         }
+
     }
 
     private fun addWoToObjectBox(list: List<Member>) {

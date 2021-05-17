@@ -150,7 +150,7 @@ class MapViewModel @ViewModelInject constructor(
                 onSuccess = {
                     response = it
                     _listMember.postValue(it.member)
-                    checkingWoInObjectBox(response.member)
+                    checkingWoInObjectBox(it.member)
                 },
                 onError = {
                     Timber.d("MapViewModel() fetchListWo Online onError: %s", it)
@@ -166,14 +166,17 @@ class MapViewModel @ViewModelInject constructor(
         fetchLocationMarker()
     }
 
-    private fun checkingWoInObjectBox(list: List<id.thork.app.network.response.work_order.Member>) {
-        if (workOrderRepository.fetchWoList().isEmpty()) {
-            Timber.tag(TAG).d("checkingWoInObjectBox()")
-            workOrderRepository.addWoToObjectBox(list)
-        } else {
-            addObjectBoxToHashMap()
-            compareWoLocalWithServer(list)
+    private fun checkingWoInObjectBox(list: List<Member>?) {
+        list.whatIfNotNullOrEmpty {
+            if (workOrderRepository.fetchWoList().isEmpty()) {
+                Timber.tag(TAG).d("checkingWoInObjectBox()")
+                workOrderRepository.addWoToObjectBox(it)
+            } else {
+                addObjectBoxToHashMap()
+                compareWoLocalWithServer(it)
+            }
         }
+
     }
 
     private fun addObjectBoxToHashMap() {

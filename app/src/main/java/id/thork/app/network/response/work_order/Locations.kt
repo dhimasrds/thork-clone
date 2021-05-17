@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Location(
+data class Locations(
     @Json(name = "autowogen")
     val autowogen: Boolean? = null,
     @Json(name = "changeby")
@@ -20,6 +20,8 @@ data class Location(
     val expectedlife: Int? = null,
     @Json(name = "href")
     val href: String? = null,
+    @Json(name = "_imagelibref")
+    val imagelibref: String? = null,
     @Json(name = "isdefault")
     val isdefault: Boolean? = null,
     @Json(name = "isrepairfacility")
@@ -48,6 +50,12 @@ data class Location(
     val statusDescription: String? = null,
     @Json(name = "statusdate")
     val statusdate: String? = null,
+    @Json(name = "thisfsmrfid")
+    val thisfsmrfid: String? = null,
+    @Json(name = "thisfsmtagprogress")
+    val thisfsmtagprogress: Boolean? = null,
+    @Json(name = "thisfsmtagtime")
+    val thisfsmtagtime: String? = null,
     @Json(name = "type")
     val type: String? = null,
     @Json(name = "type_description")

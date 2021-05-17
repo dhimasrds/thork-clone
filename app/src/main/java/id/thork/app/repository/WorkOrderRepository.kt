@@ -20,12 +20,10 @@ import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
-import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.LocationDao
-import id.thork.app.persistence.dao.LocationDaoImp
-import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
+import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.WoUtils
 import timber.log.Timber
@@ -44,9 +42,11 @@ class WorkOrderRepository @Inject constructor(
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
+    private val multiAssetDao: MultiAssetDao
 
     init {
         locationDao = LocationDaoImp()
+        multiAssetDao = MultiAssetDaoImp()
     }
 
     suspend fun getWorkOrderList(
@@ -185,6 +185,14 @@ class WorkOrderRepository @Inject constructor(
         locationDao.deleteLocation()
     }
 
+    fun saveMultiAssetToObjectBox(multiAssetEntity: MultiAssetEntity) {
+        multiAssetDao.save(multiAssetEntity, appSession.userEntity.username.toString())
+    }
+
+    fun deleteMultiAsset() {
+        multiAssetDao.remove()
+    }
+
     fun getWoList(
         appSession: AppSession,
         workOrderRepository: WorkOrderRepository,
@@ -272,6 +280,7 @@ class WorkOrderRepository @Inject constructor(
                         laborCode = laborCode
                     )
                     setupWoLocation(woCacheEntity, wo)
+                    multiAssetToObjectBox(wo)
                     woCacheEntity.createdDate = Date()
                     woCacheEntity.createdBy = appSession.userEntity.username
                     woCacheEntity.updatedBy = appSession.userEntity.username
@@ -297,6 +306,7 @@ class WorkOrderRepository @Inject constructor(
                     laborCode = laborCode
                 )
                 setupWoLocation(woCacheEntity, member)
+                multiAssetToObjectBox(member)
                 woCacheEntity.createdDate = Date()
                 woCacheEntity.createdBy = appSession.userEntity.username
                 woCacheEntity.updatedBy = appSession.userEntity.username
@@ -438,6 +448,38 @@ class WorkOrderRepository @Inject constructor(
             assetEntity.createdBy = appSession.userEntity.username
             assetEntity.updatedBy = appSession.userEntity.username
             saveAssetList(assetEntity, appSession.userEntity.username)
+        }
+    }
+
+    fun multiAssetToObjectBox(member: Member){
+        member.multiassetlocci.whatIfNotNullOrEmpty {
+            for (multiAsset in it) {
+                val multiAssetEntity = MultiAssetEntity()
+                multiAssetEntity.multiassetId = multiAsset.multiid
+                multiAssetEntity.progress = multiAsset.progress == true
+                multiAssetEntity.asssetId = multiAsset.asset?.get(0)?.assetid
+                multiAssetEntity.description = multiAsset.asset?.get(0)?.description
+
+                multiAsset.asset?.get(0)?.imagelibref.whatIfNotNull {
+                    multiAssetEntity.image = it
+                }
+
+                multiAsset.asset?.get(0)?.thisfsmrfid.whatIfNotNull {
+                    multiAssetEntity.thisfsmrfid = it
+                }
+
+                multiAsset.asset?.get(0)?.thisfsmtagtime.whatIfNotNull {
+                    multiAssetEntity.thisfsmtagtime = it
+                }
+
+                multiAssetEntity.assetNum = multiAsset.assetnum
+                multiAssetEntity.location = multiAsset.location
+                multiAssetEntity.wonum = member.wonum
+                multiAssetEntity.workorderId = member.workorderid
+                multiAssetEntity.siteid = member.siteid
+                multiAssetEntity.orgid = member.orgid
+                saveMultiAssetToObjectBox(multiAssetEntity)
+            }
         }
     }
 

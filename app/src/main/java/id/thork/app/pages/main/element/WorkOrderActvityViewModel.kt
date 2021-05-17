@@ -3,7 +3,6 @@ package id.thork.app.pages.main.element
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import androidx.paging.cachedIn
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
@@ -44,15 +43,15 @@ class WorkOrderActvityViewModel  @ViewModelInject constructor(
     }
 
     private val currentQuery = state.getLiveData(CURRENT_QUERY, EMPTY_QUERY)
-    val woList = currentQuery.switchMap { query ->
-        if (!query.isEmpty()) {
-            Timber.d("filter on  viewmodel :%s", query)
-            repository.getSearchWo(appSession, repository, query, preferenceManager, appResourceMx)
-        } else {
-            Timber.d("filter off viewmodel :%s", query)
-            repository.getWoList(appSession, repository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
-        }
-    }
+//    val woList = currentQuery.switchMap { query ->
+//        if (!query.isEmpty()) {
+//            Timber.d("filter on  viewmodel :%s", query)
+//            repository.getSearchWo(appSession, repository, query, preferenceManager, appResourceMx)
+//        } else {
+//            Timber.d("filter off viewmodel :%s", query)
+//            repository.getWoList(appSession, repository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
+//        }
+//    }
 
     fun searchWo(query: String) {
         Timber.d("searchWo viewmodel :%s", query)

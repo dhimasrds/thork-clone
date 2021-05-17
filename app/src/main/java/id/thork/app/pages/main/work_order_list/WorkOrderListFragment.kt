@@ -69,10 +69,10 @@ class WorkOrderListFragment : Fragment() {
 
     private fun setupObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.woList.observe(viewLifecycleOwner) {
-                workOrderAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-                Timber.d("onCreateView :%s", it)
-            }
+//            viewModel.woList.observe(viewLifecycleOwner) {
+//                workOrderAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+//                Timber.d("onCreateView :%s", it)
+//            }
         }
     }
 

@@ -1,5 +1,6 @@
 package id.thork.app.pages.detail_wo
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
 import android.view.View.GONE
@@ -75,6 +76,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         retrieveFromIntent()
     }
 
+    @SuppressLint("NewApi")
     override fun setupObserver() {
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
@@ -97,7 +99,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 workorderId = it.workorderid
                 workorderNumber = it.wonum
                 workorderStatus = it.status
-                workorderLongdesc = it.description_longdescription
+                workorderLongdesc = it.descriptionLongdescription
                 it.status?.let { status -> setButtonStatus(status) }
             }
             if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!![0].longitudex != null) {

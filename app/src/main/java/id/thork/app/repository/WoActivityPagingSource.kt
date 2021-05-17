@@ -105,10 +105,10 @@ class WoActivityPagingSource @Inject constructor(
                 cookie, it, select, pageno = position, pagesize = 10,
                 onSuccess = {
                     response = it
-                    checkingWoInObjectBox(response.member)
+                    response.member?.let { it1 -> checkingWoInObjectBox(it1) }
                     Timber.d("fetchWo paging source :%s", it.member)
                     Timber.d("fetchWo paging source :%s", it.responseInfo)
-                    Timber.d("fetchWo paging source :%s", it.member.size)
+                    Timber.d("fetchWo paging source :%s", it.member?.size)
 
                     error = false
                 },
@@ -134,7 +134,7 @@ class WoActivityPagingSource @Inject constructor(
             onSuccess = {
                 response = it
                 Timber.d("emptylist paging source :%s", it.member)
-                checkingWoInObjectBox(response.member)
+                checkingWoInObjectBox(it.member)
             },
             onError = {
             },
@@ -161,17 +161,20 @@ class WoActivityPagingSource @Inject constructor(
         }
     }
 
-    private fun checkingWoInObjectBox(list: List<Member>) {
-        var listwo: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
-        Timber.d("checkingWoInObjectBox savelocal :%s", listwo.size)
-        if (listwo.isEmpty()) {
-            Timber.d("checkingWoInObjectBox savelocal :%s", list.size)
-            addWoToObjectBox(list)
-        } else {
-            Timber.d("checkingWoInObjectBox compare :%s", "TEST")
-            addObjectBoxToHashMap()
-            compareWoLocalWithServer(list)
+    private fun checkingWoInObjectBox(list: List<Member>?) {
+        list.whatIfNotNullOrEmpty {
+            var listwo: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
+            Timber.d("checkingWoInObjectBox savelocal :%s", listwo.size)
+            if (listwo.isEmpty()) {
+                Timber.d("checkingWoInObjectBox savelocal :%s", it.size)
+                addWoToObjectBox(it)
+            } else {
+                Timber.d("checkingWoInObjectBox compare :%s", "TEST")
+                addObjectBoxToHashMap()
+                compareWoLocalWithServer(it)
+            }
         }
+
     }
 
     private fun addWoToObjectBox(list: List<Member>) {

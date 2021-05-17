@@ -64,10 +64,10 @@ class ActivityFragment : Fragment() {
 
     private fun setupObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.woList.observe(viewLifecycleOwner) {
-                woActivityAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-                Timber.d("onCreateView :%s", it)
-            }
+//            viewModel.woList.observe(viewLifecycleOwner) {
+//                woActivityAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+//                Timber.d("onCreateView :%s", it)
+//            }
         }
     }
 

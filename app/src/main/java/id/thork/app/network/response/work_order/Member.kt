@@ -6,339 +6,240 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Member(
-    @Json(name = "apptrequired")
-    var apptrequired: Boolean? = null,
-
-    @Json(name = "historyflag")
-    var historyflag: Boolean? = null,
-
-    @Json(name = "aos")
-    var aos: Boolean? = null,
-
-    @Json(name = "estservcost")
-    var estservcost: Double? = null,
-
-    @Json(name = "pluscismobile")
-    var pluscismobile: Boolean? = null,
-
-    @Json(name = "parentchgsstatus")
-    var parentchgsstatus: Boolean? = null,
-
-    @Json(name = "lms")
-    var lms: Boolean? = null,
-
-    @Json(name = "istask")
-    var istask: Boolean? = null,
-
-    @Json(name = "href")
-    var href: String? = null,
-
-    @Json(name = "estatapprmatcost")
-    var estatapprmatcost: Double? = null,
-
-    @Json(name = "worklog_collectionref")
-    var worklogCollectionref: String? = null,
-
-    @Json(name = "wopriority")
-    var wopriority: Int? = null,
-
-    @Json(name = "pluscloop")
-    var pluscloop: Boolean? = null,
-
-    @Json(name = "matusetrans_collectionref")
-    var matusetransCollectionref: String? = null,
-
-    @Json(name = "actmatcost")
-    var actmatcost: Double? = null,
-
-    @Json(name = "actlabhrs")
-    var actlabhrs: Double? = null,
-
-    @Json(name = "nestedjpinprocess")
-    var nestedjpinprocess: Boolean? = null,
-
-    @Json(name = "estatapprtoolcost")
-    var estatapprtoolcost: Double? = null,
-
-    @Json(name = "hasfollowupwork")
-    var hasfollowupwork: Boolean? = null,
-
-    @Json(name = "labtrans")
-    var labtrans: List<Labtran>? = null,
-
-    @Json(name = "actservcost")
-    var actservcost: Double? = null,
-
-    @Json(name = "flowactionassist")
-    var flowactionassist: Boolean? = null,
-
-    @Json(name = "ignorediavail")
-    var ignorediavail: Boolean? = null,
-
-    @Json(name = "locancestor_collectionref")
-    var locancestorCollectionref: String? = null,
-
-    @Json(name = "reqasstdwntime")
-    var reqasstdwntime: Boolean? = null,
-
-    @Json(name = "estmatcost")
-    var estmatcost: Double? = null,
-
-    @Json(name = "status")
-    var status: String? = null,
-
-    @Json(name = "labtrans_collectionref")
-    var labtransCollectionref: String? = null,
-
-    @Json(name = "estlabhrs")
-    var estlabhrs: Double? = null,
-
-    @Json(name = "esttoolcost")
-    var esttoolcost: Double? = null,
-
-    @Json(name = "reportedby")
-    var reportedby: String? = null,
-
-    @Json(name = "los")
-    var los: Boolean? = null,
-
-    @Json(name = "estoutlabcost")
-    var estoutlabcost: Double? = null,
-
-    @Json(name = "disabled")
-    var disabled: Boolean? = null,
-
-    @Json(name = "outmatcost")
-    var outmatcost: Double? = null,
-
-    @Json(name = "doclinks")
-    var doclinks: Doclinks? = null,
-
-    @Json(name = "estdur")
-    var estdur: Double? = null,
-
-    @Json(name = "changeby")
-    var changeby: String? = null,
-
-    @Json(name = "tooltrans_collectionref")
-    var tooltransCollectionref: String? = null,
-
-    @Json(name = "interruptible")
-    var interruptible: Boolean? = null,
-
-    @Json(name = "estlabcost")
-    var estlabcost: Double? = null,
-
-    @Json(name = "estatapprintlabhrs")
-    var estatapprintlabhrs: Double? = null,
-
-    @Json(name = "statusdate")
-    var statusdate: String? = null,
-
-    @Json(name = "wonum")
-    var wonum: String? = null,
-
-    @Json(name = "downtime")
-    var downtime: Boolean? = null,
-
-    @Json(name = "workorderid")
-    var workorderid: Int? = null,
-
-    @Json(name = "workorderspec_collectionref")
-    var workorderspecCollectionref: String? = null,
-
-    @Json(name = "acttoolcost")
-    var acttoolcost: Double? = null,
-
-    @Json(name = "actlabcost")
-    var actlabcost: Double? = null,
-
-    @Json(name = "actoutlabcost")
-    var actoutlabcost: Double? = null,
-
-    @Json(name = "wpmaterial_collectionref")
-    var wpmaterialCollectionref: String? = null,
-
-    @Json(name = "estatapprlabhrs")
-    var estatapprlabhrs: Double? = null,
-
-    @Json(name = "estatapprservcost")
-    var estatapprservcost: Double? = null,
-
-    @Json(name = "wostatus")
-    var wostatus: List<Wostatu>? = null,
-
-    @Json(name = "woactivity_collectionref")
-    var woactivityCollectionref: String? = null,
-
-    @Json(name = "estatapprlabcost")
-    var estatapprlabcost: Double? = null,
-
-    @Json(name = "lastcopylinkdate")
-    var lastcopylinkdate: String? = null,
-
-    @Json(name = "wplabor_collectionref")
-    var wplaborCollectionref: String? = null,
-
-    @Json(name = "ignoresrmavail")
-    var ignoresrmavail: Boolean? = null,
-
-    @Json(name = "outtoolcost")
-    var outtoolcost: Double? = null,
-
-    @Json(name = "estatapproutlabhrs")
-    var estatapproutlabhrs: Double? = null,
-
-    @Json(name = "_rowstamp")
-    var rowstamp: String? = null,
-
-    @Json(name = "estatapprintlabcost")
-    var estatapprintlabcost: Double? = null,
-
-    @Json(name = "firstapprstatus")
-    var firstapprstatus: String? = null,
-
-    @Json(name = "siteid")
-    var siteid: String? = null,
-
-    @Json(name = "multiassetlocci_collectionref")
-    var multiassetlocciCollectionref: String? = null,
-
-    @Json(name = "suspendflow")
-    var suspendflow: Boolean? = null,
-
-    @Json(name = "status_description")
-    var statusDescription: String? = null,
-
-    @Json(name = "woisswap")
-    var woisswap: Boolean? = null,
-
+    @Json(name = "actfinish")
+    val actfinish: String? = null,
+    @Json(name = "actintlabcost")
+    val actintlabcost: Double? = null,
     @Json(name = "actintlabhrs")
-    var actintlabhrs: Double? = null,
-
-    @Json(name = "woacceptscharges")
-    var woacceptscharges: Boolean? = null,
-
-    @Json(name = "repairlocflag")
-    var repairlocflag: Boolean? = null,
-
-    @Json(name = "changedate")
-    var changedate: String? = null,
-
-    @Json(name = "chargestore")
-    var chargestore: Boolean? = null,
-
-    @Json(name = "woclass_description")
-    var woclassDescription: String? = null,
-
-    @Json(name = "outlabcost")
-    var outlabcost: Double? = null,
-
-    @Json(name = "multiassetlocci")
-    var multiassetlocci: List<Multiassetloccus>? = null,
-
-    @Json(name = "orgid")
-    var orgid: String? = null,
-
-    @Json(name = "schedfinish")
-    var schedfinish: String? = null,
-
-    @Json(name = "woclass")
-    var woclass: String? = null,
-
+    val actintlabhrs: Double? = null,
+    @Json(name = "actlabcost")
+    val actlabcost: Double? = null,
+    @Json(name = "actlabhrs")
+    val actlabhrs: Double? = null,
+    @Json(name = "actmatcost")
+    val actmatcost: Double? = null,
+    @Json(name = "actoutlabcost")
+    val actoutlabcost: Double? = null,
     @Json(name = "actoutlabhrs")
-    var actoutlabhrs: Double? = null,
-
-    @Json(name = "woserviceaddress")
-    var woserviceaddress: List<Woserviceaddres>? = null,
-
-    @Json(name = "locations_collectionref")
-    var locationsCollectionref: String? = null,
-
-    @Json(name = "wostatus_collectionref")
-    var wostatusCollectionref: String? = null,
-
-    @Json(name = "inctasksinsched")
-    var inctasksinsched: Boolean? = null,
-
-    @Json(name = "flowcontrolled")
-    var flowcontrolled: Boolean? = null,
-
+    val actoutlabhrs: Double? = null,
+    @Json(name = "actservcost")
+    val actservcost: Double? = null,
+    @Json(name = "actstart")
+    val actstart: String? = null,
+    @Json(name = "acttoolcost")
+    val acttoolcost: Double? = null,
     @Json(name = "ams")
-    var ams: Boolean? = null,
-
-    @Json(name = "reportdate")
-    var reportdate: String? = null,
-
+    val ams: Boolean? = null,
+    @Json(name = "aos")
+    val aos: Boolean? = null,
+    @Json(name = "apptrequired")
+    val apptrequired: Boolean? = null,
+    @Json(name = "assetnum")
+    val assetnum: String? = null,
+    @Json(name = "assignment")
+    val assignment: List<Assignment>? = null,
+    @Json(name = "assignment_collectionref")
+    val assignmentCollectionref: String? = null,
+    @Json(name = "calcpriority")
+    val calcpriority: Int? = null,
+    @Json(name = "changeby")
+    val changeby: String? = null,
+    @Json(name = "changedate")
+    val changedate: String? = null,
+    @Json(name = "chargestore")
+    val chargestore: Boolean? = null,
     @Json(name = "description")
     var description: String? = null,
-
-    @Json(name = "wpservice_collectionref")
-    var wpserviceCollectionref: String? = null,
-
-    @Json(name = "estatapproutlabcost")
-    var estatapproutlabcost: Double? = null,
-
-    @Json(name = "newchildclass")
-    var newchildclass: String? = null,
-
+    @Json(name = "description_longdescription")
+    var descriptionLongdescription: String? = null,
+    @Json(name = "disabled")
+    val disabled: Boolean? = null,
     @Json(name = "djpapplied")
-    var djpapplied: String? = null,
-
-    @Json(name = "wptool_collectionref")
-    var wptoolCollectionref: String? = null,
-
-    @Json(name = "estoutlabhrs")
-    var estoutlabhrs: Double? = null,
-
-    @Json(name = "failurereport_collectionref")
-    var failurereportCollectionref: String? = null,
-
-    @Json(name = "assignment_collectionref")
-    var assignmentCollectionref: String? = null,
-
-    @Json(name = "actintlabcost")
-    var actintlabcost: Double? = null,
-
-    @Json(name = "assignment")
-    var assignment: List<Assignment>? = null,
-
-    @Json(name = "worktype")
-    var worktype: String? = null,
-
+    val djpapplied: String? = null,
+    @Json(name = "doclinks")
+    val doclinks: Doclinks? = null,
+    @Json(name = "downtime")
+    val downtime: Boolean? = null,
+    @Json(name = "estatapprintlabcost")
+    val estatapprintlabcost: Double? = null,
+    @Json(name = "estatapprintlabhrs")
+    val estatapprintlabhrs: Double? = null,
+    @Json(name = "estatapprlabcost")
+    val estatapprlabcost: Double? = null,
+    @Json(name = "estatapprlabhrs")
+    val estatapprlabhrs: Double? = null,
+    @Json(name = "estatapprmatcost")
+    val estatapprmatcost: Double? = null,
+    @Json(name = "estatapproutlabcost")
+    val estatapproutlabcost: Double? = null,
+    @Json(name = "estatapproutlabhrs")
+    val estatapproutlabhrs: Double? = null,
+    @Json(name = "estatapprservcost")
+    val estatapprservcost: Double? = null,
+    @Json(name = "estatapprtoolcost")
+    val estatapprtoolcost: Double? = null,
+    @Json(name = "estdur")
+    var estdur: Double? = null,
+    @Json(name = "estintlabcost")
+    val estintlabcost: Double? = null,
     @Json(name = "estintlabhrs")
-    var estintlabhrs: Double? = null,
-
-    @Json(name = "milestone")
-    var milestone: Boolean? = null,
-
-    @Json(name = "wogroup")
-    var wogroup: String? = null,
-
-    @Json(name = "schedstart")
-    var schedstart: String? = null,
-
+    val estintlabhrs: Double? = null,
+    @Json(name = "estlabcost")
+    val estlabcost: Double? = null,
+    @Json(name = "estlabhrs")
+    val estlabhrs: Double? = null,
+    @Json(name = "estmatcost")
+    val estmatcost: Double? = null,
+    @Json(name = "estoutlabcost")
+    val estoutlabcost: Double? = null,
+    @Json(name = "estoutlabhrs")
+    val estoutlabhrs: Double? = null,
+    @Json(name = "estservcost")
+    val estservcost: Double? = null,
+    @Json(name = "esttoolcost")
+    val esttoolcost: Double? = null,
+    @Json(name = "failurereport_collectionref")
+    val failurereportCollectionref: String? = null,
+    @Json(name = "firstapprstatus")
+    val firstapprstatus: String? = null,
+    @Json(name = "flowactionassist")
+    val flowactionassist: Boolean? = null,
+    @Json(name = "flowcontrolled")
+    val flowcontrolled: Boolean? = null,
+    @Json(name = "haschildren")
+    val haschildren: Boolean? = null,
+    @Json(name = "hasfollowupwork")
+    val hasfollowupwork: Boolean? = null,
+    @Json(name = "historyflag")
+    val historyflag: Boolean? = null,
+    @Json(name = "href")
+    val href: String? = null,
+    @Json(name = "ignorediavail")
+    val ignorediavail: Boolean? = null,
+    @Json(name = "ignoresrmavail")
+    val ignoresrmavail: Boolean? = null,
+    @Json(name = "inctasksinsched")
+    val inctasksinsched: Boolean? = null,
+    @Json(name = "interruptible")
+    val interruptible: Boolean? = null,
+    @Json(name = "istask")
+    val istask: Boolean? = null,
+    @Json(name = "labtrans")
+    val labtrans: List<Labtran>? = null,
+    @Json(name = "labtrans_collectionref")
+    val labtransCollectionref: String? = null,
+    @Json(name = "lastcopylinkdate")
+    val lastcopylinkdate: String? = null,
+    @Json(name = "lms")
+    val lms: Boolean? = null,
+    @Json(name = "locancestor_collectionref")
+    val locancestorCollectionref: String? = null,
     @Json(name = "location")
     var location: String? = null,
-
     @Json(name = "locations")
-    var locations: Location? = null,
-
-    @Json(name = "estintlabcost")
-    var estintlabcost: Double? = null,
-
-    @Json(name = "woserviceaddress_collectionref")
-    var woserviceaddressCollectionref: String? = null,
-
-    @Json(name = "haschildren")
-    var haschildren: Boolean? = null,
-
-    @Json(name = "longdescription_collectionref")
-    var longdescriptionCollectionref: String? = null,
-
-    @Json(name = "description_longdescription")
-    var description_longdescription: String? = null,
-
+    val locations: Locations? = null,
+    @Json(name = "locations_collectionref")
+    val locationsCollectionref: String? = null,
     @Json(name = "longdescription")
     var longdescription: List<Longdescription>? = null,
+    @Json(name = "longdescription_collectionref")
+    val longdescriptionCollectionref: String? = null,
+    @Json(name = "los")
+    val los: Boolean? = null,
+    @Json(name = "matusetrans_collectionref")
+    val matusetransCollectionref: String? = null,
+    @Json(name = "milestone")
+    val milestone: Boolean? = null,
+    @Json(name = "multiassetlocci")
+    val multiassetlocci: List<Multiassetlocci>? = null,
+    @Json(name = "multiassetlocci_collectionref")
+    val multiassetlocciCollectionref: String? = null,
+    @Json(name = "nestedjpinprocess")
+    val nestedjpinprocess: Boolean? = null,
+    @Json(name = "newchildclass")
+    val newchildclass: String? = null,
+    @Json(name = "orgid")
+    val orgid: String? = null,
+    @Json(name = "outlabcost")
+    val outlabcost: Double? = null,
+    @Json(name = "outmatcost")
+    val outmatcost: Double? = null,
+    @Json(name = "outtoolcost")
+    val outtoolcost: Double? = null,
+    @Json(name = "parentchgsstatus")
+    val parentchgsstatus: Boolean? = null,
+    @Json(name = "pluscismobile")
+    val pluscismobile: Boolean? = null,
+    @Json(name = "pluscloop")
+    val pluscloop: Boolean? = null,
+    @Json(name = "repairlocflag")
+    val repairlocflag: Boolean? = null,
+    @Json(name = "reportdate")
+    var reportdate: String? = null,
+    @Json(name = "reportedby")
+    val reportedby: String? = null,
+    @Json(name = "reqasstdwntime")
+    val reqasstdwntime: Boolean? = null,
+    @Json(name = "respondby")
+    val respondby: String? = null,
+    @Json(name = "_rowstamp")
+    val rowstamp: String? = null,
+    @Json(name = "schedfinish")
+    val schedfinish: String? = null,
+    @Json(name = "schedstart")
+    val schedstart: String? = null,
+    @Json(name = "siteid")
+    var siteid: String? = null,
+    @Json(name = "status")
+    var status: String? = null,
+    @Json(name = "status_description")
+    val statusDescription: String? = null,
+    @Json(name = "statusdate")
+    val statusdate: String? = null,
+    @Json(name = "suspendflow")
+    val suspendflow: Boolean? = null,
+    @Json(name = "tooltrans_collectionref")
+    val tooltransCollectionref: String? = null,
+    @Json(name = "woacceptscharges")
+    val woacceptscharges: Boolean? = null,
+    @Json(name = "woactivity_collectionref")
+    val woactivityCollectionref: String? = null,
+    @Json(name = "woclass")
+    val woclass: String? = null,
+    @Json(name = "woclass_description")
+    val woclassDescription: String? = null,
+    @Json(name = "wogroup")
+    val wogroup: String? = null,
+    @Json(name = "woisswap")
+    val woisswap: Boolean? = null,
+    @Json(name = "wonum")
+    val wonum: String? = null,
+    @Json(name = "wopriority")
+    var wopriority: Int? = null,
+    @Json(name = "worklog")
+    val worklog: List<Worklog>? = null,
+    @Json(name = "worklog_collectionref")
+    val worklogCollectionref: String? = null,
+    @Json(name = "workorderid")
+    val workorderid: Int? = null,
+    @Json(name = "workorderspec_collectionref")
+    val workorderspecCollectionref: String? = null,
+    @Json(name = "worktype")
+    val worktype: String? = null,
+    @Json(name = "woserviceaddress")
+    var woserviceaddress: List<Woserviceaddres>? = null,
+    @Json(name = "woserviceaddress_collectionref")
+    val woserviceaddressCollectionref: String? = null,
+    @Json(name = "wostatus")
+    val wostatus: List<Wostatu>? = null,
+    @Json(name = "wostatus_collectionref")
+    val wostatusCollectionref: String? = null,
+    @Json(name = "wplabor_collectionref")
+    val wplaborCollectionref: String? = null,
+    @Json(name = "wpmaterial_collectionref")
+    val wpmaterialCollectionref: String? = null,
+    @Json(name = "wpservice_collectionref")
+    val wpserviceCollectionref: String? = null,
+    @Json(name = "wptool_collectionref")
+    val wptoolCollectionref: String? = null
 )
