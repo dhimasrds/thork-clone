@@ -328,6 +328,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 )
             }
         }
+        detailWoViewModel.removeAllWo()
         gotoHome()
     }
 
@@ -356,9 +357,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     private fun gotoHome() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
-        finish()
     }
 
     override fun goToPreviousActivity() {

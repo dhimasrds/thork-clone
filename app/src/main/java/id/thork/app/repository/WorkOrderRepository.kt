@@ -422,6 +422,10 @@ class WorkOrderRepository @Inject constructor(
         return assetDao.remove()
     }
 
+    fun deleteWoEntity() {
+        return woCacheDao.remove()
+    }
+
     fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
         for (asset in list) {
             val assetEntity = AssetEntity(
@@ -471,7 +475,8 @@ class WorkOrderRepository @Inject constructor(
         if (currentWoCache?.isLatest == BaseParam.APP_TRUE) {
             currentWoCache.syncStatus = BaseParam.APP_FALSE
             currentWoCache.isLatest = BaseParam.APP_FALSE
-            currentWoCache.let { updateWo(it, appSession.userEntity.username) }
+//            currentWoCache.let { updateWo(it, appSession.userEntity.username) }
+            updateWo(currentWoCache, appSession.userEntity.username)
 
             val newWoCache = WoCacheEntity()
             newWoCache.createdDate = Date()
@@ -514,9 +519,10 @@ class WorkOrderRepository @Inject constructor(
         currentWoCache?.syncStatus = BaseParam.APP_TRUE
         currentWoCache?.isChanged = BaseParam.APP_FALSE
         currentWoCache?.isLatest = BaseParam.APP_TRUE
-        if (currentWoCache != null) {
-            saveWoList(currentWoCache, appSession.userEntity.username)
-        }
+        updateWo(currentWoCache!!, appSession.userEntity.username)
+//        if (currentWoCache != null) {
+//            updateWo(currentWoCache, appSession.userEntity.username)
+//        }
     }
 
     fun addObjectBoxToHashMapActivity() {
