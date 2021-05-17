@@ -9,6 +9,9 @@ data class Member(
     @Json(name = "apptrequired")
     var apptrequired: Boolean? = null,
 
+    @Json(name = "assetnum")
+    var assetnum: String? = null,
+
     @Json(name = "historyflag")
     var historyflag: Boolean? = null,
 

@@ -20,17 +20,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/row_background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <View
                 android:id="@+id/bgStatus"
                 android:layout_width="14dp"
                 android:layout_height="0dp"
                 android:background="#436CFF"
-                app:setBgStatus="@{wo.status}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:setBgStatus="@{wo.status}" />
 
             <TextView
                 android:id="@+id/taskTitle"
@@ -38,42 +38,43 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:fontFamily="@font/roboto_bold"
                 android:gravity="center"
                 android:text="@string/wo"
-                android:fontFamily="@font/opensans_bold"
-                android:textSize="@dimen/base_text_size_16"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorBlack"
+                android:textSize="@dimen/base_text_size_16"
                 app:layout_constraintStart_toEndOf="@+id/bgStatus"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/opensans_bold"
+                android:fontFamily="@font/roboto_bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textSize="@dimen/base_text_size_16"
-                app:layout_constraintBottom_toTopOf="@+id/tvLocation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/bgStatus"
                 app:layout_constraintTop_toBottomOf="@+id/taskTitle"
                 tools:text="Desc" />
 
             <TextView
-                android:id="@+id/tvLocation"
+                android:id="@+id/tv_wo_asset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:fontFamily="@font/opensans_bold"
-                android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold"
                 android:textSize="@dimen/base_text_size_16"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/desc"
+                app:layout_constraintVertical_bias="0.0"
                 tools:text="Indomaret" />
 
             <TextView
@@ -84,27 +85,25 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_status"
                 android:backgroundTintMode="multiply"
-                android:fontFamily="@font/opensans_bold"
+                android:fontFamily="@font/roboto_bold"
                 android:gravity="center"
                 android:text="@string/approve"
                 android:textColor="@color/blueTextStatus"
-                app:setStatus="@{wo.status  }"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:setStatus="@{wo.status  }" />
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tvLocation"
+                app:layout_constraintEnd_toStartOf="@+id/tv_wo_asset"
                 app:layout_constraintStart_toEndOf="@+id/bgStatus"
                 app:layout_constraintTop_toBottomOf="@+id/desc"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/ic_location_wo" />
+                app:srcCompat="@drawable/ic_asset_grey" />
 
             <TextView
                 android:id="@+id/tvWonum"
@@ -112,11 +111,76 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/opensans_bold"
+                android:fontFamily="@font/roboto_bold"
                 android:text="21334"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/taskTitle"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_wo_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text=" Floor LB"
+                android:textSize="@dimen/base_text_size_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/tv_wo_asset" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toEndOf="@+id/bgStatus"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:srcCompat="@drawable/ic_location_marker_grey" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_wo_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="INDOOR"
+                android:textSize="@dimen/base_text_size_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/desc" />
+
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_wo_service_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="GRAND SLIPI"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:textSize="@dimen/base_text_size_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_wo_type"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_wo_service_address"
+                app:layout_constraintTop_toTopOf="@+id/tv_wo_service_address"
+                app:srcCompat="@drawable/ic_service_address" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
