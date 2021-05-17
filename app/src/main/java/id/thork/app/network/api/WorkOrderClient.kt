@@ -31,16 +31,16 @@ class WorkOrderClient @Inject constructor(
 
 
     suspend fun LocationMarker(headerParam: String, savedQuery: String, select: String) =
-        workOrderApi.getLocationResource(headerParam, LEAN, savedQuery,select)
+        workOrderApi.getLocationResource(headerParam, LEAN, savedQuery, select)
 
     suspend fun updateStatus(
-        headerParam: String,
+        cookie: String,
         xMethodeOverride: String,
         contentType: String,
         workOrderId: Int,
         body: Member,
     ) =
-        workOrderApi.updateStatus(headerParam,
+        workOrderApi.updateStatus(cookie,
             xMethodeOverride,
             contentType,
             workOrderId,

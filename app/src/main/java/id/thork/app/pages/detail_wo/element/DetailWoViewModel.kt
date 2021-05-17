@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
-import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.helper.MapsLocation
 import id.thork.app.network.response.google_maps.ResponseRoute
 import id.thork.app.network.response.work_order.Member
@@ -23,7 +23,6 @@ import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 /**
  * Created by M.Reza Sulaiman on 11/02/21
@@ -34,7 +33,8 @@ class DetailWoViewModel @ViewModelInject constructor(
     private val googleMapsRepository: GoogleMapsRepository,
     private val woActivityRepository: WoActivityRepository,
     private val materialRepository: MaterialRepository,
-    private val appSession: AppSession
+    private val appSession: AppSession,
+    private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     val TAG = DetailWoViewModel::class.java.name
 
@@ -79,28 +79,28 @@ class DetailWoViewModel @ViewModelInject constructor(
         status: String?,
         wonum: String?,
         longdesc: String?,
-        nextStatus: String
+        nextStatus: String,
     ) {
 
-        updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
+        workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
 
         val member = Member()
         member.status = nextStatus
         member.description_longdescription = longdesc
 
 
-        val maxauth: String? = appSession.userHash
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val xMethodeOverride: String = BaseParam.APP_PATCH
-        val contentType:String = ("application/json ")
+        val contentType: String = ("application/json")
         viewModelScope.launch(Dispatchers.IO) {
             if (woId != null) {
-                workOrderRepository.updateStatus(maxauth!!,
+                workOrderRepository.updateStatus(cookie,
                     xMethodeOverride,
                     contentType,
                     woId,
                     member,
                     onSuccess = {
-                        updateWoCacheAfterSync(wonum, longdesc, nextStatus)
+                        workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
                         saveScannerMaterial(woId)
                         Timber.tag(TAG).i("onSuccess() success: %s", it)
                     },
@@ -111,32 +111,14 @@ class DetailWoViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun updateWoCacheBeforeSync(
-        woId: Int?,
-        wonum: String?,
-        status: String?,
-        longdesc: String?,
-        nextStatus: String
-    ) {
-        workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
-    }
-
-    private fun updateWoCacheAfterSync(
-        wonum: String?,
-        longdesc: String?,
-        nextStatus: String
-    ) {
-        workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
-    }
-
-    private fun saveScannerMaterial(woId: Int?){
+    private fun saveScannerMaterial(woId: Int?) {
         val materialList: List<MaterialEntity?>? = woId?.let {
             materialRepository.listMaterialsByWoid(
                 it
             )
         }
         for (i in materialList!!.indices)
-                materialList[i]!!.workorderId = woId
+            materialList[i]!!.workorderId = woId
         materialRepository.saveMaterialList(materialList)
     }
 

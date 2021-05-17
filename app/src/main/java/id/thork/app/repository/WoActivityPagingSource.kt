@@ -1,8 +1,6 @@
 package id.thork.app.repository
 
 import androidx.paging.PagingSource
-import com.google.gson.Gson
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.Module
@@ -13,7 +11,6 @@ import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
-import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.WoCacheDao
@@ -22,9 +19,7 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.lang.reflect.Type
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 /**
  * Created by Dhimas Saputra on 16/02/21
@@ -41,13 +36,13 @@ class WoActivityPagingSource @Inject constructor(
     private val query: String?,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
+    private val workOrderRepository: WorkOrderRepository,
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoActivityPagingSource::class.java.name
     var offset = 0
     var error = false
     var emptyList = false
-    var woListObjectBox: HashMap<String, WoCacheEntity>? = null
     var response = WorkOrderResponse()
 
 
@@ -162,97 +157,16 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
-        var listwo: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
+        val listwo: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
         Timber.d("checkingWoInObjectBox savelocal :%s", listwo.size)
         if (listwo.isEmpty()) {
             Timber.d("checkingWoInObjectBox savelocal :%s", list.size)
-            addWoToObjectBox(list)
+            workOrderRepository.addWoToObjectBox(list)
         } else {
             Timber.d("checkingWoInObjectBox compare :%s", "TEST")
-            addObjectBoxToHashMap()
-            compareWoLocalWithServer(list)
+            workOrderRepository.addObjectBoxToHashMapActivity()
+            workOrderRepository.compareWoLocalActivityWithServer(list)
         }
-    }
-
-    private fun addWoToObjectBox(list: List<Member>) {
-        for (wo in list) {
-            var assignment: Assignment
-            wo.assignment.whatIfNotNullOrEmpty(
-                whatIf = {
-                    assignment = it.get(0)
-                    val laborCode: String = assignment.laborcode!!
-                    val woCacheEntity = WoCacheEntity(
-                        syncBody = convertToJson(wo),
-                        woId = wo.workorderid,
-                        wonum = wo.wonum,
-                        status = wo.status,
-                        isChanged = BaseParam.APP_TRUE,
-                        isLatest = BaseParam.APP_TRUE,
-                        syncStatus = BaseParam.APP_TRUE,
-                        laborCode = laborCode
-                    )
-                    woCacheEntity.createdDate = Date()
-                    woCacheEntity.createdBy = appSession.userEntity.username
-                    woCacheEntity.updatedBy = appSession.userEntity.username
-                    repository.saveWoList(woCacheEntity, appSession.userEntity.username)
-                })
-        }
-    }
-
-
-    private fun createNewWo(wo: Member) {
-        var assignment: Assignment
-        wo.assignment.whatIfNotNullOrEmpty(
-            whatIf = {
-                assignment = it.get(0)
-                val laborCode: String = assignment.laborcode!!
-                val woCacheEntity = WoCacheEntity(
-                    syncBody = convertToJson(wo),
-                    woId = wo.workorderid,
-                    wonum = wo.wonum,
-                    status = wo.status,
-                    isChanged = BaseParam.APP_TRUE,
-                    isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_TRUE,
-                    laborCode = laborCode
-                )
-                woCacheEntity.createdDate = Date()
-                woCacheEntity.createdBy = appSession.userEntity.username
-                woCacheEntity.updatedBy = appSession.userEntity.username
-                repository.saveWoList(woCacheEntity, appSession.userEntity.username)
-            })
-    }
-
-    private fun addObjectBoxToHashMap() {
-        Timber.d("queryObjectBoxToHashMap()")
-        if (woCacheDao.findAllWo().isNotEmpty()) {
-            woListObjectBox = HashMap<String, WoCacheEntity>()
-            val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
-            for (i in cacheEntities.indices) {
-                if (cacheEntities[i].status != null
-                    && cacheEntities[i].status.equals(BaseParam.COMPLETED)
-                ) {
-                    woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
-                    Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
-                }
-            }
-        }
-    }
-
-    private fun compareWoLocalWithServer(list: List<Member>) {
-        for (wo in list) {
-            Timber.d("compareWoLocalWithServer : %s", wo.wonum)
-            if (woListObjectBox!![wo.wonum!!] != null) {
-
-            } else {
-                createNewWo(wo)
-            }
-        }
-    }
-
-    private fun convertToJson(member: Member): String? {
-        val gson = Gson()
-        return gson.toJson(member)
     }
 
     private fun findWo(offset: Int): String {

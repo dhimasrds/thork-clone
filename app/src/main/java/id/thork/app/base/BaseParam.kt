@@ -54,6 +54,7 @@ object BaseParam {
      * Authentication parameter
      */
     const val APP_MAX_AUTH = "MAXAUTH"
+    const val APP_COOKIE = "Cookie"
     const val APP_AUTHORIZATION = "AUTHORIZATION"
     const val APP_X_METHOD_OVERRIDE = "x-method-override"
     const val APP_PATCH = "PATCH"
