@@ -13,25 +13,25 @@
 package id.thork.app.workmanager
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
+import androidx.hilt.Assisted
+import androidx.hilt.work.WorkerInject
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import id.thork.app.di.module.AppSession
 import timber.log.Timber
 
-@HiltWorker
-class WorkOrderWorker @AssistedInject constructor(
+class WorkOrderWorker @WorkerInject constructor(
     @Assisted context: Context,
-    @Assisted workerParameters: WorkerParameters
-
-) :
+    @Assisted workerParameters: WorkerParameters,
+    val appSession: AppSession,
+    ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
 
     private val MAX_RUN_ATTEMPT = 6
     override fun doWork(): Result {
         try {
+            Timber.tag(TAG).d("username: %s", appSession.personUID)
             //Query Local WO Record is needed to sync with the server
             if (runAttemptCount > MAX_RUN_ATTEMPT) {
                 Result.failure()

@@ -16,10 +16,12 @@ import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.workmanager.WorkerCoordinator
 
 class MainViewModel @ViewModelInject constructor(
     private val context: Context,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val workerCoordinator: WorkerCoordinator
     ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
@@ -28,4 +30,8 @@ class MainViewModel @ViewModelInject constructor(
 //        Timber.tag(TAG).i("checkRepo() loginapi: %s", loginApi)
 //
 //    }
+
+    fun checkWorkManager() {
+        workerCoordinator.addSyncWoQueue()
+    }
 }
