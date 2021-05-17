@@ -13,11 +13,21 @@
 package id.thork.app.workmanager
 
 import android.content.Context
+import androidx.hilt.Assisted
+import androidx.hilt.work.WorkerInject
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
+import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.WorkerRepository
 import timber.log.Timber
 
-class WorkOrderWorker(context: Context, workerParameters: WorkerParameters) :
+class WorkOrderWorker @WorkerInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParameters: WorkerParameters
+
+) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
 
@@ -31,16 +41,21 @@ class WorkOrderWorker(context: Context, workerParameters: WorkerParameters) :
 
             //If Post to server success then return result.success
             //Else return result.retry until MAX RUN ATTEMPT
-            val workerId  = inputData.getString("workerid")
+            val workerId = inputData.getString("workerid")
             val wonum = inputData.getString("wonum")
             val woid = inputData.getInt("woid", 0)
-            Timber.tag(TAG).i("doWork() sync workerId: %s wonum: %s woid: %s",
-                workerId, wonum, woid)
+            Timber.tag(TAG).i(
+                "WorkOrderWorker() doWork() sync workerId: %s wonum: %s woid: %s",
+                workerId, wonum, woid
+            )
             return Result.success()
         } catch (e: Exception) {
             Timber.tag(TAG).e("doWork() error: %s", e.message)
             return Result.retry()
         }
     }
+
+
+    //TODO http request
 
 }

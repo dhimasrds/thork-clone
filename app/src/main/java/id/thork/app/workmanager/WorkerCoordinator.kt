@@ -70,15 +70,15 @@ class WorkerCoordinator @Inject constructor(
         Timber.tag(TAG).i("ping()")
     }
 
-    fun addSyncWoQueue(wonum: String, woid: Int) {
-        val SYNC_WO = "SYNC_WO-"
-        val workerId = UUID.randomUUID().toString()
-        val inputData =
-            workDataOf("wonum" to "$wonum", "woid" to "$woid", "workerid" to "$workerId")
+    fun addSyncWoQueue() {
+        val SYNC_WO = "SYNC_WO"
+//        val workerId = UUID.randomUUID().toString()
+//        val inputData =
+//            workDataOf("wonum" to "$wonum", "woid" to "$woid", "workerid" to "$workerId")
         //backoff criteria for Retry work manager if work is need to retry
         val workRequest: WorkRequest = OneTimeWorkRequestBuilder<WorkOrderWorker>()
-            .addTag(SYNC_WO + workerId)
-            .setInputData(inputData)
+            .addTag(SYNC_WO)
+//            .setInputData(inputData)
             .setConstraints(constraints)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
@@ -88,8 +88,8 @@ class WorkerCoordinator @Inject constructor(
         val workManager = WorkManager.getInstance(context)
         workManager.enqueue(workRequest)
 
-        val outputWorkInfos: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData("")
-        val workInfo = outputWorkInfos.value?.get(0)
+//        val outputWorkInfos: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData("")
+//        val workInfo = outputWorkInfos.value?.get(0)
     }
 
     fun addCrewPositionQueue(remoteMessageMap: MutableMap<String, String>) {
@@ -191,4 +191,5 @@ class WorkerCoordinator @Inject constructor(
             ).build()
         WorkManager.getInstance(context).enqueue(workRequest)
     }
+
 }

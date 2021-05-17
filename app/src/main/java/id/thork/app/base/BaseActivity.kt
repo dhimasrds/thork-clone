@@ -175,11 +175,15 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun onGoodConnection() {
         Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
+        //TODO sync update status Workorder when online
+//        workerCoordinator.addSyncWoQueue()
     }
 
     open fun onSlowConnection() {
         CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow),)
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
+        //TODO sync update status Workorder when online
+//        workerCoordinator.addSyncWoQueue()
     }
 
     open fun onLostConnection() {
