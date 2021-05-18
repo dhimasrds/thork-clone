@@ -33,6 +33,7 @@ class HttpRequestInterceptor: Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
+        Timber.tag(TAG).d("intercept() url: %s url port: %s", url, urlPort);
         val newUrl = originalRequest.url.newBuilder().host(url).port(urlPort).build()
         val request = originalRequest.newBuilder().url(newUrl).build()
 

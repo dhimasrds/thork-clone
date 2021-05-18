@@ -17,7 +17,6 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
-import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import okhttp3.logging.HttpLoggingInterceptor
