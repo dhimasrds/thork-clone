@@ -374,6 +374,9 @@
     <string name="wo_number">WO.Number</string>
     <string name="see_detail">See Detail</string>
     <string name="create_work_order">Create WO</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="scan_rfid">Scan RFID</string>
+    <string name="list_of_assets">List of Assets</string>
     <string-array name="work_type_wo">
         <item>ORR</item>
     </string-array>

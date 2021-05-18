@@ -49,4 +49,9 @@ class MultiAssetDaoImp : MultiAssetDao {
         return multiAssetEntityBox.query().equal(MultiAssetEntity_.wonum, wonum).build().find()
     }
 
+    override fun findAllMultiAsset(): List<MultiAssetEntity> {
+        return multiAssetEntityBox.query().notNull(MultiAssetEntity_.assetNum).build()
+            .find()
+    }
+
 }
