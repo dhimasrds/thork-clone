@@ -56,6 +56,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private lateinit var locationCallback: LocationCallback
     private var locationPermissionGranted = false
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
+    private val bottomSheetToolTipFragment = BottomSheetToolTipFragment()
     private var lastKnownLocation: Location? = null
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
     private lateinit var customDialogUtils: CustomDialogUtils
@@ -406,6 +407,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         if (locationPermissionGranted) {
+            bottomSheetToolTipFragment.show(parentFragmentManager, "bottomsheetdialog")
             if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
 //                navigateToDetailWo(marker)
                 Timber.tag(TAG).d("onMarkerClick() marker WO snippet: %s", marker.snippet)

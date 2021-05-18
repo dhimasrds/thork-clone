@@ -8,11 +8,12 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import id.thork.app.base.BaseApplication.Constants.context
+import androidx.room.util.StringUtil
+import com.google.zxing.common.StringUtils
 import id.thork.app.base.BaseParam
+import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.pages.detail_wo.DetailWoActivity
 import timber.log.Timber
 
 /**
@@ -21,7 +22,7 @@ import timber.log.Timber
  */
 class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(DiffCallback) {
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Member>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
 
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
             return oldItem.wonum === newItem.wonum
@@ -36,12 +37,15 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
     class ViewHolder(val binding: CardViewWorkOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(woEntity: Member) {
-            Timber.d("adapter wonum :%s", woEntity.wonum)
+        fun bind(woEntity: Member){
+            Timber.d("adapter wonum :%s",woEntity.wonum)
+            Timber.d("adapter assetnum   :%s",woEntity.assetnum)
             binding.wo = woEntity
             binding.tvWonum.text = woEntity.wonum
             binding.desc.text = woEntity.description
-            binding.tvLocation.text = woEntity.location
+            binding.tvWoAsset.text =id.thork.app.utils.StringUtils.NVL(woEntity.assetnum, BaseParam.APP_DASH)
+            binding.tvWoLocation.text = woEntity.location
+            binding.tvWoServiceAddress.text =id.thork.app.utils.StringUtils.truncate(woEntity.woserviceaddress!![0].formattedaddress, 13)
             binding.tvStatus.text = woEntity.status
             binding.executePendingBindings()
 

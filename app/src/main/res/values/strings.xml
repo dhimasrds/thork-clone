@@ -383,5 +383,8 @@
     <string name="search_work_order">Search work order</string>
     <string name="search_here">Search here</string>
     <string name="wo_history">WO History</string>
+    <string name="wo_number">WO.Number</string>
+    <string name="see_detail">See Detail</string>
+    <string name="create_work_order">Create WO</string>
 
 </resources>
