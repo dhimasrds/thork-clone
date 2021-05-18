@@ -25,8 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.example.ImageActivity"></activity>
-        <activity android:name=".pages.example.RfidExActivity"></activity>
+        <activity android:name=".pages.attachment.AttachmentActivity"></activity>
+        <activity android:name=".pages.example.ImageActivity" />
+        <activity android:name=".pages.example.RfidExActivity" />
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
         <activity android:name=".pages.create_wo.CreateWoActivity" />
         <activity android:name=".pages.login_pattern.LoginPatternActivity" />
