@@ -33,6 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
@@ -408,7 +409,27 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     override fun onMarkerClick(marker: Marker?): Boolean {
         if (locationPermissionGranted) {
             bottomSheetToolTipFragment.show(parentFragmentManager, "bottomsheetdialog")
+
+            marker.whatIfNotNull {
+                when (it.tag) {
+                    BaseParam.APP_TAG_MARKER_LOCATION -> {
+
+                    }
+                    BaseParam.APP_TAG_MARKER_WO -> {
+                        //query
+                        mapViewModel.setDataWo(it.snippet)
+                    }
+
+                    BaseParam.APP_TAG_MARKER_ASSET -> {
+
+                    }
+                }
+            }
+
+
+
             if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
+                marker.snippet
 //                navigateToDetailWo(marker)
                 Timber.tag(TAG).d("onMarkerClick() marker WO snippet: %s", marker.snippet)
 
@@ -420,6 +441,4 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
         return false
     }
-
-
 }

@@ -26,6 +26,9 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
 
 
         return binding.root
+
+
+
     }
 
 }

@@ -51,6 +51,14 @@ class MapViewModel @ViewModelInject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    private val _getWoCache = MutableLiveData<WoCacheEntity>()
+    val getWoCache: LiveData<WoCacheEntity> get() = _getWoCache
+
+    fun setDataWo(wonum : String){
+        val wocache = workOrderRepository.findWobyWonum(wonum)
+        _getWoCache.value = wocache
+    }
+
     private val locationDao: LocationDao
 
     init {

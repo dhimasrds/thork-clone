@@ -96,6 +96,7 @@ object BaseParam {
     const val APP_CREW = "Crew "
     const val APP_MOVE = "move"
     const val APP_TAG_MARKER_WO = "WO"
+    const val APP_TAG_MARKER_LOCATION = "LOCATION"
     const val APP_TAG_MARKER_ASSET = "ASSET"
     const val APP_TAG_MARKER_CREW = "CREW"
     const val APP_TAG_MARKER_CREW_MOVE = "move"

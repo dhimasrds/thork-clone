@@ -15,6 +15,7 @@
         tools:context=".pages.main.element.BottomSheetToolTipFragment">
 
         <include
+            android:visibility="gone"
             android:id="@+id/wo_tooltip_content"
             layout="@layout/wo_tooltip_layout" />
 
