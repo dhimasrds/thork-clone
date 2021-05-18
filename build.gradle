@@ -59,6 +59,9 @@ buildscript {
         //lifecycle
         lifecycle = "2.3.1"
 
+        //Percentage View
+        percentageViewVersion = '0.3.1'
+
     }
 
     repositories {

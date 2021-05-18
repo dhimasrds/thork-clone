@@ -162,4 +162,13 @@ object BaseParam {
     const val STATUS_OK = "200"
     const val STATUS_NOTFOUND = "404"
 
+    /**
+     * Rfid
+     */
+    const val RFID_REQUEST_CODE = 1119
+    const val BARCODE_REQUEST_CODE = 1118
+
+    const val RFID_ASSETNUM = "assetnum"
+
+
 }

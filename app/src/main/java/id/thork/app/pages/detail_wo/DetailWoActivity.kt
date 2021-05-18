@@ -1,7 +1,9 @@
 package id.thork.app.pages.detail_wo
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
+import android.view.View
 import android.view.View.GONE
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -23,6 +25,7 @@ import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
@@ -74,6 +77,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         retrieveFromIntent()
     }
 
+    @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun setupObserver() {
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
@@ -83,7 +87,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 description.text = it.description
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
+                asset.text = it.assetnum
                 location.text = it.location
+                it.woserviceaddress.whatIfNotNull { address ->
+                    serviceaddress.text = address.get(0).formattedaddress
+                }
                 estimatedDuration.text = StringUtils.NVL(
                     java.lang.String.valueOf(it.estdur),
                     BaseParam.APP_DASH
@@ -126,6 +134,38 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             }
         })
 
+        detailWoViewModel.Result.observe(this, {
+            if (it.equals(BaseParam.APP_TRUE)) {
+//            assetIsMatch = result
+                binding.icCheckAsset.visibility = View.VISIBLE
+                binding.icCrossAsset.visibility = GONE
+                binding.tvScanResultAsset.text =
+                    getString(R.string.asset_scan_result) + ": " +
+                            getString(R.string.asset_rfid_is_match_begin) + " " + getString(R.string.asset_rfid_is_match)
+                binding.tvScanResultAsset.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorGreen
+                    )
+                )
+            } else {
+                binding.icCheckAsset.visibility = GONE
+                binding.icCrossAsset.visibility = View.VISIBLE
+                binding.tvScanResultAsset.text = (getString(R.string.asset_scan_result) + ": " +
+                        getString(R.string.asset_rfid_is_not_match))
+                binding.tvScanResultAsset.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorRed
+                    )
+                )
+            }
+        })
+
+        //TODO Result Query Asset for Rfid
+        detailWoViewModel.AssetRfid.observe(this, {
+            gotoRfidAsset(it)
+        })
+
+        //TODO Result Query Location for Rfid
     }
 
     private fun retrieveFromIntent() {
@@ -186,6 +226,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
                 .show()
         }
+
+        binding.btnRfid.setOnClickListener {
+            //TODO Need validation after Query to local
+            detailWoViewModel.validateAsset(binding.asset.text.toString())
+        }
     }
 
     private fun gotoListMaterial() {
@@ -204,10 +249,22 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         startActivityForResult(intent, REQUEST_CODE_DETAIL)
     }
 
+    //TODO navigate to Rfid Asset
+    private fun gotoRfidAsset(assetnum: String) {
+        val intent = Intent(this, RfidAssetAcitivty::class.java)
+        intent.putExtra(BaseParam.RFID_ASSETNUM, assetnum)
+        startActivityForResult(intent, BaseParam.RFID_REQUEST_CODE)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK) {
             valueLongDesc = data!!.getStringExtra("longdesc")
             workorderLongdesc = valueLongDesc
+        } else if (requestCode == BaseParam.RFID_REQUEST_CODE && resultCode == RESULT_OK) {
+            data.whatIfNotNull {
+                val assetIsMatch = it.getBooleanExtra("ASSET_IS_MATCH", false)
+                detailWoViewModel.checkingResultAsset(assetIsMatch)
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -363,4 +420,5 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         detailWoViewModel.removeScanner(workorderId!!)
         finish()
     }
+
 }

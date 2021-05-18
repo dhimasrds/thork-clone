@@ -14,10 +14,7 @@ import id.thork.app.network.response.google_maps.ResponseRoute
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.repository.GoogleMapsRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WoActivityRepository
-import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.*
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
@@ -35,16 +32,21 @@ class DetailWoViewModel @ViewModelInject constructor(
     private val materialRepository: MaterialRepository,
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
+    private val assetRepository: AssetRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = DetailWoViewModel::class.java.name
 
     private val _CurrentMember = MutableLiveData<Member>()
     private val _RequestRoute = MutableLiveData<ResponseRoute>()
     private val _MapsInfo = MutableLiveData<MapsLocation>()
+    private val _AssetRfid = MutableLiveData<String>()
+    private val _Result = MutableLiveData<Int>()
 
     val CurrentMember: LiveData<Member> get() = _CurrentMember
     val RequestRoute: LiveData<ResponseRoute> get() = _RequestRoute
     val MapsInfo: LiveData<MapsLocation> get() = _MapsInfo
+    val AssetRfid: LiveData<String> get() = _AssetRfid
+    val Result: LiveData<Int> get() = _Result
 
     fun fetchWobyWonum(wonum: String) {
         val woCacheEntity: WoCacheEntity? = workOrderRepository.findWobyWonum(wonum)
@@ -126,8 +128,31 @@ class DetailWoViewModel @ViewModelInject constructor(
         return materialRepository.removeMaterialByWoid(woId)
     }
 
-    fun removeAllWo(){
+    fun removeAllWo() {
         return workOrderRepository.deleteWoEntity()
     }
+
+    fun validateAsset(assetnum: String) {
+        val assetEntity = assetRepository.findbyAssetnum(assetnum)
+        assetEntity.whatIfNotNull {
+            it.assetRfid.whatIfNotNull (
+                whatIf = { rfidvalue ->
+                    _AssetRfid.value = it.assetnum
+                },
+                whatIfNot = {
+                    _Result.value = BaseParam.APP_FALSE
+                }
+                    )
+        }
+    }
+
+    fun checkingResultAsset(result: Boolean) {
+        if(result) {
+            _Result.value = BaseParam.APP_TRUE
+        } else {
+            _Result.value = BaseParam.APP_FALSE
+        }
+    }
+
 
 }

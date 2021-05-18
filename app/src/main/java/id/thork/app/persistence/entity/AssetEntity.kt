@@ -9,7 +9,6 @@ import kotlinx.parcelize.Parcelize
  * Created by Raka Putra on 5/11/21
  * Jakarta, Indonesia.
  */
-@Parcelize
 @Entity
 data class AssetEntity(
     var assetnum: String? = null,
@@ -24,6 +23,6 @@ data class AssetEntity(
     var assetRfid: String? = null,
     var image: String? = null,
     var assetTagTime: String? = null
-) :BaseEntity(), Parcelable{
+) :BaseEntity(){
 
 }

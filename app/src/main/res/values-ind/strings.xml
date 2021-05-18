@@ -141,6 +141,7 @@
     <string name="tools">Alat</string>
     <string name="rooms">Ruangan</string>
     <string name="location">Lokasi</string>
+    <string name="Asset">Asset</string>
     <string name="QR">Kode QR</string>
     <string name="lines">--------------------</string>
     <string name="stat">Status</string>
@@ -377,4 +378,42 @@
     <string-array name="work_type_wo">
         <item>ORR</item>
     </string-array>
+    <!-- Rfid Asset -->
+    <string name="scan_asset">Scanning Asset</string>
+    <!-- Asset-->
+    <string name="asset_rfid_is_match_begin">Item Aset</string>
+    <string name="asset_rfid_is_not_match">Item Aset tidak sesuai</string>
+    <string name="asset_rfid_is_match">sesuai</string>
+    <string name="asset_rfid_is_match_end">lanjutkan dengan aset ini?</string>
+    <string name="asset_rfid_is_match_yes">Ya</string>
+    <string name="asset_rfid_is_match_no">Tidak</string>
+    <string name="asset_not_have_rfid">Asset tidak memiliki RFID Tag</string>
+    <string name="asset_not_found">Aset tidak ditemukan</string>
+    <string name="asset_scan_barcode_title">Scan pada Barcode / QR Aset</string>
+    <string name="asset_scan_rfid_title">Scan pada RFID Aset</string>
+    <string name="location_scan_rfid_title">Scan RFID Location</string>
+    <string name="location_not_have_rfid">Location tidak memiliki RFID Tag</string>
+
+    <string name="asset_barcode_not_ready">Barcode Reader tidak ditemukan</string>
+    <string name="asset_barcode_connected">Barcode Reader terhubung</string>
+    <string name="asset_barcode_disconnected">Barcode Reader terputus</string>
+
+    <string name="asset_rfid_not_ready">RFID Reader tidak ditemukan</string>
+    <string name="asset_rfid_connected">RFID Reader terhubung</string>
+    <string name="asset_rfid_disconnected">RFID Reader terputus</string>
+
+    <string name="asset_scan_result">Hasil Scan</string>
+    <string name="failed_dialog_asset">Asset tidak cocok, tolong cek dan coba kembali.</string>
+
+    <string name="item_available_tags_title">RFID Tags yang tersedia</string>
+    <string name="item_available_tags_confirm">Konfirmasi</string>
+    <string name="item_available_tags_question">Melanjutkan dengan tag ini?</string>
+
+    <!--  Location -->
+    <string name="location_rfid_is_match_begin">Lokasi ini</string>
+    <string name="location_rfid_is_not_match">Lokasi tidak sesuai</string>
+    <string name="location_rfid_is_match_end">lanjutkan dengan lokasi ini?</string>
+
+
+
 </resources>

@@ -169,6 +169,7 @@
     <string name="tools">Tools</string>
     <string name="rooms">Rooms</string>
     <string name="location">Location</string>
+    <string name="Asset">Asset</string>
     <string name="QR">QR Code</string>
     <string name="lines">--------------------</string>
     <string name="stat">Status</string>
@@ -386,5 +387,43 @@
     <string name="wo_number">WO.Number</string>
     <string name="see_detail">See Detail</string>
     <string name="create_work_order">Create WO</string>
+
+    <!-- Rfid Asset -->
+    <string name="scan_asset">Scanning Asset</string>
+
+    <!-- Asset-->
+    <string name="asset_rfid_is_match_begin">This Asset Item is</string>
+    <string name="asset_rfid_is_not_match">This Asset Item is not match</string>
+    <string name="asset_rfid_is_match">match</string>
+    <string name="asset_rfid_is_match_end">Continue with this asset?</string>
+    <string name="asset_rfid_is_match_yes">Yes</string>
+    <string name="asset_rfid_is_match_no">No</string>
+    <string name="asset_not_have_rfid">Asset does not have RFID Tag</string>
+    <string name="asset_not_found">Asset not found</string>
+    <string name="asset_scan_barcode_title">Scan on Asset Barcode</string>
+    <string name="asset_scan_rfid_title">Scan on Asset RFID Tag</string>
+    <string name="location_scan_rfid_title">Scan on Location RFID Tag</string>
+    <string name="location_not_have_rfid">Location does not have RFID Tag</string>
+
+    <string name="asset_barcode_not_ready">Barcode Reader not Found</string>
+    <string name="asset_barcode_connected">Barcode Reader Connected</string>
+    <string name="asset_barcode_disconnected">Barcode Reader Disconnected</string>
+
+    <string name="asset_rfid_not_ready">RFID Reader not Found</string>
+    <string name="asset_rfid_connected">RFID Reader Connected</string>
+    <string name="asset_rfid_disconnected">RFID Reader Disconnected</string>
+
+    <string name="failed_dialog_asset">Asset is not valid, please check and try again.</string>
+    <string name="asset_scan_result">Scan Result</string>
+
+    <!-- Item Tags-->
+    <string name="item_available_tags_title">Available RFID Tags</string>
+    <string name="item_available_tags_confirm">Confirmation</string>
+    <string name="item_available_tags_question">Do you want to use this tag?</string>
+
+    <!--  Location -->
+    <string name="location_rfid_is_match_begin">This Location is</string>
+    <string name="location_rfid_is_not_match">This Location is not match</string>
+    <string name="location_rfid_is_match_end">Continue with this location?</string>
 
 </resources>
