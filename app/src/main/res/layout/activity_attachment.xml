@@ -13,15 +13,50 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
         <variable
             name="vm"
             type="id.thork.app.pages.attachment.element.AttachmentViewModel" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".pages.attachment.AttachmentActivity">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:theme="@style/MyActionBarTheme"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:titleTextColor="@android:color/white">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar" />
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <GridView
+                android:id="@+id/gv_images"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:horizontalSpacing="@dimen/padding_attachment"
+                android:numColumns="3"
+                android:paddingLeft="@dimen/padding_attachment"
+                android:paddingTop="@dimen/padding_attachment"
+                android:paddingRight="@dimen/padding_attachment"
+                android:verticalSpacing="@dimen/padding_attachment" />
+        </LinearLayout>
+    </LinearLayout>
 </layout>

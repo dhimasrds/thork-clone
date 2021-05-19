@@ -33,7 +33,7 @@ class LogDetailActivity : BaseActivity() {
     }
 
     private fun initView() {
-        val toolbar: Toolbar = findViewById(R.id.wms_toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
         val mTitle = toolbar.findViewById<TextView>(R.id.toolbar_title)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
