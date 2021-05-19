@@ -25,6 +25,8 @@ import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.LocationDaoImp
+import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -44,7 +46,7 @@ class MapViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository,
     private val appSession: AppSession,
     private val appResourceMx: AppResourceMx,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     val TAG = MapViewModel::class.java.name
 
@@ -67,11 +69,17 @@ class MapViewModel @ViewModelInject constructor(
         MutableLiveData<List<id.thork.app.network.response.fsm_location.Member>>()
     private val _listMemberAsset =
         MutableLiveData<List<id.thork.app.network.response.asset_response.Member>>()
+    private val _woCache = MutableLiveData<WoCacheEntity>()
+    private val _assetCache = MutableLiveData<AssetEntity>()
+    private val _locationCache = MutableLiveData<LocationEntity>()
 
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
     val listMember: LiveData<List<Member>> get() = _listMember
     val listMemberLocation: LiveData<List<id.thork.app.network.response.fsm_location.Member>> get() = _listMemberLocation
     val listMemberAsset: LiveData<List<id.thork.app.network.response.asset_response.Member>> get() = _listMemberAsset
+    val woCache: LiveData<WoCacheEntity> get() = _woCache
+    val assetCache: LiveData<AssetEntity> get() = _assetCache
+    val locationCache: LiveData<LocationEntity> get() = _locationCache
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -91,6 +99,21 @@ class MapViewModel @ViewModelInject constructor(
         _listWo.value = listWoLocal
     }
 
+    fun findAssetCache(assetnum: String) {
+        val assetCache = workOrderRepository.findByAssetnum(assetnum)
+        _assetCache.value = assetCache
+    }
+
+    fun findLocationCache(location: String) {
+        val locationCache = workOrderRepository.findByLocation(location)
+        _locationCache.value = locationCache
+    }
+
+    fun findWoCache(wo: String) {
+        val woCache = workOrderRepository.findWobyWonum(wo)
+        _woCache.value = woCache
+    }
+
     fun pruneWork() {
         Timber.d("MapViewModel() pruneWork")
         workManager.pruneWork()
@@ -98,7 +121,7 @@ class MapViewModel @ViewModelInject constructor(
 
     fun postCrewPosition(
         latitude: String,
-        longitude: String
+        longitude: String,
     ) {
         Timber.d("MapViewModel() postCrewPosition")
         val firebaseAndroid = FirebaseAndroid()

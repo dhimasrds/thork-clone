@@ -43,4 +43,12 @@ class AssetDaoImp: AssetDao {
         assetEntityBox.put(assetEntity)
         return assetEntity
     }
+
+    override fun findByAssetnum(assetnum: String): AssetEntity? {
+        val assetEntity = assetEntityBox.query().equal(AssetEntity_.assetnum, assetnum).build().find()
+        assetEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
 }

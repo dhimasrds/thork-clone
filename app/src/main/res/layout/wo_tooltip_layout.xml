@@ -137,15 +137,16 @@
             android:gravity="right"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <TextView
                 android:id="@+id/wo_tooltip_priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:layout_gravity="center"
-                android:background="@drawable/rectangle_white_with_stroke"
                 android:fontFamily="@font/roboto_regular"
                 android:text="Normal"
+                android:layout_marginRight="@dimen/general_margin_10dp"
+                android:textSize="16sp"
                 android:textColor="@color/blue_nav"
                 android:textAllCaps="false"/>
         </LinearLayout>

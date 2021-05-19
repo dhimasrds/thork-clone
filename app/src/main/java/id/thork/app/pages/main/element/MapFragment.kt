@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
+import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
 import id.thork.app.pages.CustomDialogUtils
@@ -65,7 +67,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentMapBinding.inflate(inflater, container, false)
 
@@ -75,7 +77,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireContext());
+            LocationServices.getFusedLocationProviderClient(requireContext())
         customInfoWindowForGoogleMap = GoogleMapInfoWindow(requireContext())
 
         //init Dialog
@@ -262,7 +264,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -379,12 +381,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-    private fun navigateToDetailWo(marker: Marker?) {
-        val intent = Intent(activity, DetailWoActivity::class.java)
-        intent.putExtra(BaseParam.APP_WONUM, marker!!.title.toString())
-        startActivity(intent)
-    }
-
     private fun showDialog() {
         customDialogUtils.setMiddleButtonText(R.string.dialog_yes)
             .setTittle(R.string.information)
@@ -407,11 +403,40 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         if (locationPermissionGranted) {
-            bottomSheetToolTipFragment.show(parentFragmentManager, "bottomsheetdialog")
             if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
-//                navigateToDetailWo(marker)
-                Timber.tag(TAG).d("onMarkerClick() marker WO snippet: %s", marker.snippet)
+                val bottomSheetFragment = BottomSheetToolTipFragment()
+                val bundle = Bundle()
+                bundle.putString("key", marker.snippet)
+                bottomSheetFragment.arguments = bundle
 
+                bottomSheetFragment.show(
+                    (context as AppCompatActivity).supportFragmentManager,
+                    "wo"
+                )
+                Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
+            } else if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_ASSET) == true) {
+                val bottomSheetFragment = BottomSheetToolTipFragment()
+                val bundle = Bundle()
+                bundle.putString("key", marker.snippet)
+                bottomSheetFragment.arguments = bundle
+
+                bottomSheetFragment.show(
+                    (context as AppCompatActivity).supportFragmentManager,
+                    "asset"
+                )
+                Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
+            } else if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_LOCATION) == true) {
+                val bottomSheetFragment = BottomSheetToolTipFragment()
+                val bundle = Bundle()
+                bundle.putString("key", marker.snippet)
+                bottomSheetFragment.arguments = bundle
+
+                bottomSheetFragment.show(
+                    (context as AppCompatActivity).supportFragmentManager,
+                    "location"
+                )
+
+                Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
             }
         } else {
             showDialog()
