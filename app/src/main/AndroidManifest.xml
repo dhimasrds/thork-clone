@@ -43,8 +43,17 @@
             <!-- </intent-filter> -->
         </activity>
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.example.ImageActivity"></activity>
-        <activity android:name=".pages.example.RfidExActivity"></activity>
+        <activity android:name=".pages.multi_asset.DetailsAssetActivity"></activity>
+        <activity android:name=".pages.multi_asset.ListAssetActivity" />
+        <activity android:name=".pages.example.RfidExActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
         <activity android:name=".pages.create_wo.CreateWoActivity" />
         <activity android:name=".pages.login_pattern.LoginPatternActivity" />

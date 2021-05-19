@@ -171,4 +171,10 @@ object BaseParam {
     const val RFID_ASSETNUM = "assetnum"
 
 
+    /**
+     * MultiAsset Param
+     *
+     */
+    const val ASSETNUM = "ASSETNUM"
+
 }
