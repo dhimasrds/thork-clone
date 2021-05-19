@@ -61,7 +61,6 @@ class RfidAssetAcitivty : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
             //TODO Query to local
             rfidAssetViewModel.initAsset(it)
         }
-//        rfidAssetViewModel.initAsset("FSMASSET")
     }
 
     @SuppressLint("SetTextI18n")
@@ -98,7 +97,7 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
         super.setupListener()
         binding.btnContinue.setOnClickListener {
             val intent = Intent()
-            intent.putExtra("ASSET_IS_MATCH", assetIsMatch)
+            intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, assetIsMatch)
             setResult(RESULT_OK, intent)
             finish()
         }

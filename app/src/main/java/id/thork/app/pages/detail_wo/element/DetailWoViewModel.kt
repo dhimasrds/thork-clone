@@ -32,7 +32,8 @@ class DetailWoViewModel @ViewModelInject constructor(
     private val materialRepository: MaterialRepository,
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
-    private val assetRepository: AssetRepository
+    private val assetRepository: AssetRepository,
+    private val locationRepository: LocationRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = DetailWoViewModel::class.java.name
 
@@ -41,12 +42,16 @@ class DetailWoViewModel @ViewModelInject constructor(
     private val _MapsInfo = MutableLiveData<MapsLocation>()
     private val _AssetRfid = MutableLiveData<String>()
     private val _Result = MutableLiveData<Int>()
+    private val _LocationRfid = MutableLiveData<String>()
+    private val _ResultLocation = MutableLiveData<Int>()
 
     val CurrentMember: LiveData<Member> get() = _CurrentMember
     val RequestRoute: LiveData<ResponseRoute> get() = _RequestRoute
     val MapsInfo: LiveData<MapsLocation> get() = _MapsInfo
     val AssetRfid: LiveData<String> get() = _AssetRfid
     val Result: LiveData<Int> get() = _Result
+    val LocationRfid: LiveData<String> get() = _LocationRfid
+    val ResultLocation: LiveData<Int> get() = _ResultLocation
 
     fun fetchWobyWonum(wonum: String) {
         val woCacheEntity: WoCacheEntity? = workOrderRepository.findWobyWonum(wonum)
@@ -135,22 +140,44 @@ class DetailWoViewModel @ViewModelInject constructor(
     fun validateAsset(assetnum: String) {
         val assetEntity = assetRepository.findbyAssetnum(assetnum)
         assetEntity.whatIfNotNull {
-            it.assetRfid.whatIfNotNull (
+            it.assetRfid.whatIfNotNull(
                 whatIf = { rfidvalue ->
                     _AssetRfid.value = it.assetnum
                 },
                 whatIfNot = {
                     _Result.value = BaseParam.APP_FALSE
                 }
-                    )
+            )
         }
     }
 
     fun checkingResultAsset(result: Boolean) {
-        if(result) {
+        if (result) {
             _Result.value = BaseParam.APP_TRUE
         } else {
             _Result.value = BaseParam.APP_FALSE
+        }
+    }
+
+    fun validateLocation(location: String) {
+        val locationEntity = locationRepository.findByLocation(location)
+        locationEntity.whatIfNotNull {
+            it.thisfsmrfid.whatIfNotNull(
+                whatIf = { rfidvalue ->
+                    _LocationRfid.value = it.location
+                },
+                whatIfNot = {
+                    _ResultLocation.value = BaseParam.APP_FALSE
+                }
+            )
+        }
+    }
+
+    fun checkingResultLocation(result: Boolean) {
+        if (result) {
+            _ResultLocation.value = BaseParam.APP_TRUE
+        } else {
+            _ResultLocation.value = BaseParam.APP_FALSE
         }
     }
 

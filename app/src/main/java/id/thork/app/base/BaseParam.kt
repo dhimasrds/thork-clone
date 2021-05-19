@@ -168,7 +168,14 @@ object BaseParam {
     const val RFID_REQUEST_CODE = 1119
     const val BARCODE_REQUEST_CODE = 1118
 
+    const val RFID_REQUEST_CODE_LOCATION = 1129
+
+
     const val RFID_ASSETNUM = "assetnum"
+    const val RFID_LOCATION = "location"
+
+    const val RFID_ASSET_IS_MATCH = "ASSET_IS_MATCH"
+    const val RFID_LOCATION_IS_MATCH = "LOCATION_IS_MATCH"
 
 
     /**

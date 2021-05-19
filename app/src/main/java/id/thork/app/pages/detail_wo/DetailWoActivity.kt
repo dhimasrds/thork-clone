@@ -26,6 +26,7 @@ import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
+import id.thork.app.pages.rfid_location.RfidLocationActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
@@ -165,7 +166,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             gotoRfidAsset(it)
         })
 
+        detailWoViewModel.ResultLocation.observe(this, {
+
+        })
+
         //TODO Result Query Location for Rfid
+        detailWoViewModel.LocationRfid.observe(this, {
+            gotoRfidLocation(it)
+        })
     }
 
     private fun retrieveFromIntent() {
@@ -254,6 +262,13 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         val intent = Intent(this, RfidAssetAcitivty::class.java)
         intent.putExtra(BaseParam.RFID_ASSETNUM, assetnum)
         startActivityForResult(intent, BaseParam.RFID_REQUEST_CODE)
+    }
+
+    //TODO navigate to Rfid Location
+    private fun gotoRfidLocation(location: String) {
+        val intentLocation = Intent(this, RfidLocationActivity::class.java)
+        intent.putExtra(BaseParam.RFID_ASSETNUM, location)
+        startActivityForResult(intentLocation, BaseParam.RFID_REQUEST_CODE_LOCATION)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
