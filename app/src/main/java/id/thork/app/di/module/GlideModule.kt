@@ -12,33 +12,29 @@
 
 package id.thork.app.di.module
 
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import id.thork.app.persistence.dao.*
+import id.thork.app.R
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
-object CacheModule {
-    private val TAG = CacheModule::class.java.name
-
+object GlideModule {
     @Singleton
     @Provides
-    fun provideWoCacheDao(): WoCacheDao {
-        return WoCacheDaoImp()
-    }
-
-    @Singleton
-    @Provides
-    fun providelocationDao(): LocationDao {
-        return LocationDaoImp()
-    }
-
-    @Singleton
-    @Provides
-    fun provideAssetDao(): AssetDao {
-        return AssetDaoImp()
-    }
+    fun provideRequestOption() :RequestOptions =
+        RequestOptions()
+            .centerCrop()
+            .placeholder(R.drawable.progress_animation)
+            .error(R.drawable.image_broken)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .priority(Priority.HIGH)
+            .dontAnimate()
+            .dontTransform();
 }

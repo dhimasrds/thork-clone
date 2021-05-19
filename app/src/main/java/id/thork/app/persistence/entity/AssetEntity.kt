@@ -1,6 +1,5 @@
 package id.thork.app.persistence.entity
 
-import android.os.Parcel
 import android.os.Parcelable
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
