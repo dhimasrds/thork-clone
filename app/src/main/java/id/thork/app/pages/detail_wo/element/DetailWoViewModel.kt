@@ -182,5 +182,8 @@ class DetailWoViewModel @ViewModelInject constructor(
         }
     }
 
+    fun compareResultScanner(originText: String, comapareText: String): Boolean {
+        return originText.equals(comapareText)
+    }
 
 }

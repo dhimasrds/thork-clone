@@ -55,7 +55,7 @@ buildscript {
         pullRefreshLayoutVersion = '1.2.0'
 
         //Barcode Scanner
-        zxingAndroidVersion = '3.5.0'
+        zxingAndroidVersion = '3.6.0'
 
         //lifecycle
         lifecycle = "2.3.1"

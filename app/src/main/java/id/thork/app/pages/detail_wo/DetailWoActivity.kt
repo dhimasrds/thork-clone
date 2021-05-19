@@ -15,12 +15,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailWoBinding
 import id.thork.app.pages.CustomDialogUtils
+import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
@@ -88,7 +90,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 description.text = it.description
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
-                asset.text =  StringUtils.truncate(it.assetnum, 20)
+                asset.text = StringUtils.truncate(it.assetnum, 20)
                 location.text = StringUtils.truncate(it.location, 20)
                 it.woserviceaddress.whatIfNotNull { address ->
                     serviceaddress.text = address.get(0).formattedaddress
@@ -263,8 +265,16 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             detailWoViewModel.validateAsset(binding.asset.text.toString())
         }
 
+        binding.btnQrcode.setOnClickListener {
+            startQRScanner(BaseParam.BARCODE_REQUEST_CODE)
+        }
+
         binding.btnRfidLocation.setOnClickListener {
             detailWoViewModel.validateLocation(binding.location.text.toString())
+        }
+
+        binding.btnQrcodeLocation.setOnClickListener {
+            startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
         }
     }
 
@@ -300,20 +310,55 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //TODO Nested when
-        if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK) {
-            valueLongDesc = data!!.getStringExtra("longdesc")
-            workorderLongdesc = valueLongDesc
-        } else if (requestCode == BaseParam.RFID_REQUEST_CODE && resultCode == RESULT_OK) {
-            data.whatIfNotNull {
-                val assetIsMatch = it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
-                detailWoViewModel.checkingResultAsset(assetIsMatch)
-            }
-        } else if(requestCode == BaseParam.RFID_REQUEST_CODE_LOCATION && resultCode == RESULT_OK) {
-            data.whatIfNotNull {
-                val locationIsMatch = it.getBooleanExtra(BaseParam.RFID_LOCATION_IS_MATCH, false)
-                detailWoViewModel.checkingResultLocation(locationIsMatch)
+        val result = IntentIntegrator.parseActivityResult(resultCode, data)
+
+        when (resultCode) {
+            RESULT_OK -> {
+                when (requestCode) {
+                    REQUEST_CODE_DETAIL -> {
+                        valueLongDesc = data!!.getStringExtra("longdesc")
+                        workorderLongdesc = valueLongDesc
+                    }
+
+                    BaseParam.RFID_REQUEST_CODE -> {
+                        data.whatIfNotNull {
+                            val assetIsMatch =
+                                it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
+                            detailWoViewModel.checkingResultAsset(assetIsMatch)
+                        }
+                    }
+
+                    BaseParam.RFID_REQUEST_CODE_LOCATION -> {
+                        data.whatIfNotNull {
+                            val locationIsMatch =
+                                it.getBooleanExtra(BaseParam.RFID_LOCATION_IS_MATCH, false)
+                            detailWoViewModel.checkingResultLocation(locationIsMatch)
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE -> {
+                        result.whatIfNotNull {
+                            val resultCompareAsset = detailWoViewModel.compareResultScanner(
+                                binding.asset.text.toString(),
+                                it.contents
+                            )
+                            detailWoViewModel.checkingResultAsset(resultCompareAsset)
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE_LOCATION -> {
+                        result.whatIfNotNull {
+                            val resultCompareLocation = detailWoViewModel.compareResultScanner(
+                                binding.location.text.toString(),
+                                it.contents
+                            )
+                            detailWoViewModel.checkingResultLocation(resultCompareLocation)
+                        }
+                    }
+                }
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -468,5 +513,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         detailWoViewModel.removeScanner(workorderId!!)
         finish()
     }
+
+    private fun startQRScanner(requestCode: Int) {
+        IntentIntegrator(this@DetailWoActivity).apply {
+            setCaptureActivity(ScannerActivity::class.java)
+            setRequestCode(requestCode)
+            initiateScan()
+        }
+    }
+
 
 }
