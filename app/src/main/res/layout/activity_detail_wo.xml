@@ -227,7 +227,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:text="RFID"
-                                    android:background="@drawable/ic_rfid"/>
+                                    android:background="@drawable/ic_qrcode"/>
 
                                 <Button
                                     android:id="@+id/btn_qrcode"
@@ -235,7 +235,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:text="QR"
-                                    android:background="@drawable/ic_rfid"/>
+                                    android:background="@drawable/ic_qrcode"/>
                             </LinearLayout>
                         </LinearLayout>
 
@@ -334,7 +334,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:text="RFID"
-                                    android:background="@drawable/ic_rfid"/>
+                                    android:background="@drawable/ic_qrcode"/>
 
                                 <Button
                                     android:id="@+id/btn_qrcode_location"

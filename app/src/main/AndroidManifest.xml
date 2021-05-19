@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="id.thork.app" >
+    package="id.thork.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -24,16 +24,9 @@
         android:roundIcon="@mipmap/ic_this_new_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
-        android:usesCleartextTraffic="true" >
-        <activity android:name=".pages.rfid_asset.RfidAssetAcitivty" >
-<!--             <intent-filter>-->
-<!--             <action android:name="android.intent.action.MAIN" />-->
-
-
-<!--             <category android:name="android.intent.category.LAUNCHER" />-->
-<!--             </intent-filter>-->
-        </activity>
-        <activity android:name=".pages.example.RfidExActivity" >
+        android:usesCleartextTraffic="true">
+        <activity android:name=".pages.rfid_location.RfidLocationActivity"></activity>
+        <activity android:name=".pages.rfid_asset.RfidAssetAcitivty">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -42,8 +35,16 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        android:usesCleartextTraffic="true">
-        <activity android:name=".pages.multi_asset.DetailsAssetActivity"></activity>
+        <activity android:name=".pages.example.RfidExActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".pages.multi_asset.DetailsAssetActivity" />
         <activity android:name=".pages.multi_asset.ListAssetActivity" />
         <activity android:name=".pages.example.RfidExActivity">
 
@@ -80,7 +81,7 @@
         <activity
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ColdStart" >
+            android:theme="@style/ColdStart">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -98,7 +99,7 @@
 
         <service
             android:name=".messaging.ThorFcmService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

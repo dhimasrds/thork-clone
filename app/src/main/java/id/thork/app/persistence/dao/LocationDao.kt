@@ -6,4 +6,5 @@ interface LocationDao {
     fun saveLocation(locationEntity: LocationEntity) : LocationEntity
     fun deleteLocation()
     fun locationList():List<LocationEntity>
+    fun findByLocation(location: String): LocationEntity?
 }
