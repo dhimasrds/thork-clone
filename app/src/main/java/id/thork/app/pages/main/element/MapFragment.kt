@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
@@ -33,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
@@ -401,28 +401,22 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         if (locationPermissionGranted) {
-            when {
-                marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true -> {
-                    sharedViewModel =
-                        ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-                    sharedViewModel.findWoCache(marker.snippet)
-                    bottomSheetToolTipFragment.show(parentFragmentManager, "wo")
-                    Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
-                }
-                marker?.tag?.equals(BaseParam.APP_TAG_MARKER_ASSET) == true -> {
-                    sharedViewModel =
-                        ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-                    sharedViewModel.findAssetCache(marker.snippet)
-                    bottomSheetToolTipFragment.show(parentFragmentManager, "asset")
+            bottomSheetToolTipFragment.show(parentFragmentManager, "bottomsheetdialog")
+            marker.whatIfNotNull {
+                when (it.tag) {
+                    BaseParam.APP_TAG_MARKER_WO -> {
+                        Timber.d("raka %s", it.snippet)
+                        Timber.d("raka %s", it.tag)
+                        mapViewModel.setDataWo(it.snippet, it.tag.toString())
+                    }
 
-                }
-                marker?.tag?.equals(BaseParam.APP_TAG_MARKER_LOCATION) == true -> {
-                    sharedViewModel =
-                        ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-                    sharedViewModel.findLocationCache(marker.snippet)
-                    bottomSheetToolTipFragment.show(parentFragmentManager, "location")
+                    BaseParam.APP_TAG_MARKER_ASSET -> {
+                        mapViewModel.setDataAsset(it.snippet, it.tag.toString())
+                    }
 
-                    Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
+                    BaseParam.APP_TAG_MARKER_LOCATION -> {
+                        mapViewModel.setDataLocation(it.snippet, it.tag.toString())
+                    }
                 }
             }
         } else {

@@ -72,6 +72,7 @@ class MapViewModel @ViewModelInject constructor(
     private val _woCache = MutableLiveData<WoCacheEntity>()
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
+    private val _resultTagMarker = MutableLiveData<String>()
 
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
     val listMember: LiveData<List<Member>> get() = _listMember
@@ -80,6 +81,7 @@ class MapViewModel @ViewModelInject constructor(
     val woCache: LiveData<WoCacheEntity> get() = _woCache
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
+    val resultTagMarker: MutableLiveData<String>get() = _resultTagMarker
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -93,25 +95,28 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
+    fun setDataWo(wonum : String, tag: String){
+        val wocache = workOrderRepository.findWobyWonum(wonum)
+        _woCache.value = wocache
+        _resultTagMarker.value = tag
+    }
+
+    fun setDataAsset(asset : String, tag: String){
+        val assetCache = workOrderRepository.findByAssetnum(asset)
+        _assetCache.value = assetCache
+        _resultTagMarker.value = tag
+    }
+
+    fun setDataLocation(loc : String, tag: String){
+        val locationCache = workOrderRepository.findByLocation(loc)
+        _locationCache.value = locationCache
+        _resultTagMarker.value = tag
+    }
+
     fun fetchListWoOffline() {
         Timber.d("MapViewModel() fetchListWo")
         val listWoLocal = workOrderRepository.fetchWoList()
         _listWo.value = listWoLocal
-    }
-
-    fun findAssetCache(assetnum: String) {
-        val assetCache = workOrderRepository.findByAssetnum(assetnum)
-        _assetCache.value = assetCache
-    }
-
-    fun findLocationCache(location: String) {
-        val locationCache = workOrderRepository.findByLocation(location)
-        _locationCache.value = locationCache
-    }
-
-    fun findWoCache(wo: String) {
-        val woCache = workOrderRepository.findWobyWonum(wo)
-        _woCache.value = woCache
     }
 
     fun pruneWork() {

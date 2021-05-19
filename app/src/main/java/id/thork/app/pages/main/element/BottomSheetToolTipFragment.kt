@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.deishelon.roundedbottomsheet.RoundedBottomSheetDialogFragment
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -36,27 +36,53 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
 
         // Inflate the layout for this fragment
         binding = FragmentBottomSheetToolTipBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProviders.of(requireActivity())[MapViewModel::class.java]
         binding.lifecycleOwner = this
-        validateViewBottomSheet()
-        setupObserver()
+
+
         return binding.root
     }
 
-    private fun validateViewBottomSheet() {
-        if (tag != null && tag.equals("asset")) {
-            binding.assetTooltipContent.root.visibility = VISIBLE
-        } else if (tag != null && tag.equals("wo")) {
-            binding.woTooltipContent.root.visibility = VISIBLE
-        } else if (tag != null && tag.equals("location")) {
-            binding.locationTooltipContent.root.visibility = VISIBLE
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupObserver()
     }
 
     private fun setupObserver() {
-        viewModel.assetCache.observe(this, Observer {
-            if (it != null) {
-                binding.assetTooltipContent.assetTooltipAssetName.text =
+        val sharedViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+        sharedViewModel.resultTagMarker.observe(viewLifecycleOwner, Observer {
+            Timber.d("BottomSheetToolTipFragment() observer Tag Marker %s", it)
+            validateViewBottomSheet(it)
+        })
+
+        sharedViewModel.woCache.observe(viewLifecycleOwner, Observer {
+            Timber.d("BottomSheetToolTipFragment() observer etWoCache %s", it.wonum)
+            val wonum: String = it.wonum!!
+            binding.woTooltipContent.woTooltipWonum.text = it.wonum
+
+            val moshi = Moshi.Builder().build()
+            val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(
+                Member::class.java
+            )
+            val currentMember = memberJsonAdapter.fromJson(it.syncBody)
+            if (currentMember!!.location != null) {
+                binding.woTooltipContent.woTooltipServiceAddress.text =
+                    StringUtils.NVL(currentMember.location, BaseParam.APP_DASH)
+            }
+
+            if (currentMember.wopriority != null) {
+                val priority = StringUtils.createPriority(currentMember.wopriority!!)
+                binding.woTooltipContent.woTooltipPriority.text =
+                    StringUtils.NVL(priority, BaseParam.APP_DASH)
+            }
+
+            binding.woTooltipContent.woTooltipButton.setOnClickListener {
+                goToDetails(wonum)
+            }
+        })
+
+        sharedViewModel.assetCache.observe(viewLifecycleOwner, Observer {
+            Timber.d("BottomSheetToolTipFragment() observer etWoCache %s", it.assetnum)
+            binding.assetTooltipContent.assetTooltipAssetName.text =
                     StringUtils.NVL(it.assetnum, BaseParam.APP_DASH)
                 binding.assetTooltipContent.assetTooltipAssetDesc.text =
                     StringUtils.NVL(it.description, BaseParam.APP_DASH)
@@ -67,45 +93,29 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
                 binding.assetTooltipContent.assetTooltipButton.setOnClickListener {
                     goToCreateWo()
                 }
-            }
         })
 
-        viewModel.woCache.observe(this, Observer {
-            if (it != null) {
-                val wonum: String = it.wonum!!
-                binding.woTooltipContent.woTooltipWonum.text = it.wonum
-
-                val moshi = Moshi.Builder().build()
-                val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(
-                    Member::class.java
-                )
-                val currentMember = memberJsonAdapter.fromJson(it.syncBody)
-                if (currentMember!!.location != null) {
-                    binding.woTooltipContent.woTooltipServiceAddress.text =
-                        StringUtils.NVL(currentMember.location, BaseParam.APP_DASH)
-                }
-
-                if (currentMember.wopriority != null) {
-                    val priority = StringUtils.createPriority(currentMember.wopriority!!)
-                    binding.woTooltipContent.woTooltipPriority.text =
-                        StringUtils.NVL(priority, BaseParam.APP_DASH)
-                }
-
-                binding.woTooltipContent.woTooltipButton.setOnClickListener {
-                    goToDetails(wonum)
-                }
-            }
+        sharedViewModel.locationCache.observe(viewLifecycleOwner, Observer {
+            Timber.d("BottomSheetToolTipFragment() observer etWoCache %s", it.location)
+            binding.locationTooltipContent.locationTooltipServiceAddress.text =
+                StringUtils.NVL(it.formatAddress, BaseParam.APP_DASH)
+            binding.locationTooltipContent.locationTooltipDesc.text =
+                StringUtils.NVL(it.description, BaseParam.APP_DASH)
         })
+    }
 
-        viewModel.locationCache.observe(this, Observer {
-            if (it != null) {
-                binding.locationTooltipContent.locationTooltipServiceAddress.text =
-                    StringUtils.NVL(it.formatAddress, BaseParam.APP_DASH)
-                binding.locationTooltipContent.locationTooltipDesc.text =
-                    StringUtils.NVL(it.description, BaseParam.APP_DASH)
-
+    private fun validateViewBottomSheet(tag: String) {
+        when {
+            tag.equals(BaseParam.APP_TAG_MARKER_ASSET) -> {
+                binding.assetTooltipContent.root.visibility = VISIBLE
             }
-        })
+            tag.equals(BaseParam.APP_TAG_MARKER_WO) -> {
+                binding.woTooltipContent.root.visibility = VISIBLE
+            }
+            tag.equals(BaseParam.APP_TAG_MARKER_LOCATION) -> {
+                binding.locationTooltipContent.root.visibility = VISIBLE
+            }
+        }
     }
 
     private fun goToDetails(wonum: String) {
@@ -113,12 +123,11 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
         val bundle = Bundle()
         intent.putExtra(BaseParam.APP_WONUM, wonum)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ContextCompat.startActivity(BaseApplication.context, intent, bundle)
+        startActivity(BaseApplication.context, intent, bundle)
     }
 
     private fun goToCreateWo() {
         val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
         startActivity(intent)
     }
-
 }
