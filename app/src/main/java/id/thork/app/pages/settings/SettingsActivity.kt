@@ -5,14 +5,11 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.skydoves.whatif.whatIfNotNullOrEmpty
-import com.zebra.rfid.api3.TagData
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseParam.TAG_SETTING
 import id.thork.app.databinding.ActivitySettingsBinding
-import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.about.AboutActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
@@ -23,7 +20,6 @@ import id.thork.app.pages.settings_language.SettingsLanguageActivity
 import id.thork.app.pages.settings_log.LogActivity
 import id.thork.app.pages.settings_pattern.SettingsPatternActivity
 import id.thork.app.utils.LocaleHelper
-import timber.log.Timber
 
 /**
  * Created by Raka Putra on 1/14/21
