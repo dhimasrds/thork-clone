@@ -59,7 +59,7 @@ object MapsUtils {
     fun renderAssetMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
             .position(latLng)
-            .title(title)
+            .snippet(title)
             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_asset_marker))
 
         googleMap.addMarker(options)

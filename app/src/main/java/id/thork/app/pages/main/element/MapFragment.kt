@@ -13,7 +13,6 @@
 package id.thork.app.pages.main.element
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -40,7 +39,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.GoogleMapInfoWindow
-import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -62,6 +60,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
     private lateinit var customDialogUtils: CustomDialogUtils
     private val mapViewModel: MapViewModel by activityViewModels()
+    lateinit var sharedViewModel: MapViewModel
     private lateinit var binding: FragmentMapBinding
 
     override fun onCreateView(
@@ -380,12 +379,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
-    private fun navigateToDetailWo(marker: Marker?) {
-        val intent = Intent(activity, DetailWoActivity::class.java)
-        intent.putExtra(BaseParam.APP_WONUM, marker!!.title.toString())
-        startActivity(intent)
-    }
-
     private fun showDialog() {
         customDialogUtils.setMiddleButtonText(R.string.dialog_yes)
             .setTittle(R.string.information)
@@ -409,36 +402,26 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     override fun onMarkerClick(marker: Marker?): Boolean {
         if (locationPermissionGranted) {
             bottomSheetToolTipFragment.show(parentFragmentManager, "bottomsheetdialog")
-
             marker.whatIfNotNull {
                 when (it.tag) {
-                    BaseParam.APP_TAG_MARKER_LOCATION -> {
-
-                    }
                     BaseParam.APP_TAG_MARKER_WO -> {
-                        //query
-                        mapViewModel.setDataWo(it.snippet)
+                        Timber.d("raka %s", it.snippet)
+                        Timber.d("raka %s", it.tag)
+                        mapViewModel.setDataWo(it.snippet, it.tag.toString())
                     }
 
                     BaseParam.APP_TAG_MARKER_ASSET -> {
+                        mapViewModel.setDataAsset(it.snippet, it.tag.toString())
+                    }
 
+                    BaseParam.APP_TAG_MARKER_LOCATION -> {
+                        mapViewModel.setDataLocation(it.snippet, it.tag.toString())
                     }
                 }
             }
-
-
-
-            if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
-                marker.snippet
-//                navigateToDetailWo(marker)
-                Timber.tag(TAG).d("onMarkerClick() marker WO snippet: %s", marker.snippet)
-
-            }
         } else {
             showDialog()
-
         }
-
         return false
     }
 }

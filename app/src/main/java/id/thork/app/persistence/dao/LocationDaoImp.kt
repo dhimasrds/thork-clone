@@ -2,8 +2,6 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.AssetEntity_
 import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.LocationEntity_
 

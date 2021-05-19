@@ -637,4 +637,12 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
+    fun findByAssetnum(assetnum: String): AssetEntity? {
+        return assetDao.findByAssetnum(assetnum)
+    }
+
+    fun findByLocation(location: String): LocationEntity? {
+        return locationDao.findByLocation(location)
+    }
+
 }
