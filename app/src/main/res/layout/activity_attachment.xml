@@ -46,17 +46,17 @@
                     layout="@layout/toolbar" />
             </com.google.android.material.appbar.AppBarLayout>
 
-            <GridView
-                android:id="@+id/gv_images"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_attachments"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:horizontalSpacing="@dimen/padding_attachment"
-                android:numColumns="3"
-                android:paddingLeft="@dimen/padding_attachment"
-                android:paddingTop="@dimen/padding_attachment"
-                android:paddingRight="@dimen/padding_attachment"
-                android:verticalSpacing="@dimen/padding_attachment" />
+                android:layout_height="wrap_content"
+                android:padding="@dimen/general_padding_10dp"
+                android:scrollbars="vertical"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hai"/>
+
         </LinearLayout>
     </LinearLayout>
 </layout>

@@ -25,7 +25,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.attachment.AttachmentActivity"></activity>
+        <activity android:name=".pages.attachment.AttachmentActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".pages.example.ImageActivity" />
         <activity android:name=".pages.example.RfidExActivity" />
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
@@ -55,11 +61,11 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".pages.main.MainActivity" />
 

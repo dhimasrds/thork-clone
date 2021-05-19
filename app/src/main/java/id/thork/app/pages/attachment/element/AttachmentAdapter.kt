@@ -17,6 +17,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.R
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.persistence.entity.AttachmentEntity
@@ -25,23 +27,34 @@ class AttachmentAdapter constructor(
     private val context: Context,
     private val attachmentActivity: AttachmentActivity,
     private val attachmentEntities: List<AttachmentEntity>
-) : BaseAdapter() {
+) : RecyclerView.Adapter<AttachmentAdapter.AttachmentHolder>() {
 
-    override fun getCount(): Int {
-        return attachmentEntities.size
-    }
+    lateinit var attachmentEntity: AttachmentEntity
 
-    override fun getItem(position: Int): Any {
-        return attachmentEntities[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
-        val layoutInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttachmentHolder {
+        val layoutInflater: LayoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val adapterView = layoutInflater.inflate(R.layout.attachment_item, parent, false)
-        return adapterView
+        return AttachmentHolder(adapterView)
+    }
+
+    override fun onBindViewHolder(holder: AttachmentHolder, position: Int) {
+        val attachmentEntity: AttachmentEntity = attachmentEntities[position]
+        holder.bind(attachmentEntity)
+    }
+
+    override fun getItemCount(): Int = attachmentEntities.size
+
+
+    class AttachmentHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private var tvFilename: TextView? = null
+
+        init {
+            tvFilename = view.findViewById(R.id.tv_attachment_filename)
+        }
+
+        fun bind(attachmentEntity: AttachmentEntity) {
+            tvFilename?.text = attachmentEntity.name
+        }
     }
 }
