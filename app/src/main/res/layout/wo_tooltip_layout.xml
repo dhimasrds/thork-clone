@@ -57,7 +57,7 @@
                 android:layout_marginRight="@dimen/general_margin_10dp"
                 android:fontFamily="@font/roboto_regular"
                 android:textSize="@dimen/base_text_size_16"
-                android:text="Hvac 2000"
+                android:text="-"
                 android:textColor="@color/black"
                 />
 
@@ -82,7 +82,7 @@
             android:layout_marginRight="@dimen/general_margin_10dp"
             android:fontFamily="@font/roboto_bold"
             android:textSize="@dimen/base_text_size_16"
-            android:text="Hvac Service First"
+            android:text="-"
             android:textColor="@color/black" />
 
 
@@ -144,7 +144,7 @@
                 android:clickable="false"
                 android:layout_gravity="center"
                 android:fontFamily="@font/roboto_regular"
-                android:text="Normal"
+                android:text="-"
                 android:layout_marginRight="@dimen/general_margin_10dp"
                 android:textSize="16sp"
                 android:textColor="@color/blue_nav"

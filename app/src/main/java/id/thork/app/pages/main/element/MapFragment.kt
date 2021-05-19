@@ -13,19 +13,18 @@
 package id.thork.app.pages.main.element
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import com.google.android.gms.location.*
@@ -36,12 +35,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
-import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.GoogleMapInfoWindow
-import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.MapsUtils
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -63,6 +60,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private lateinit var customInfoWindowForGoogleMap: GoogleMapInfoWindow
     private lateinit var customDialogUtils: CustomDialogUtils
     private val mapViewModel: MapViewModel by activityViewModels()
+    lateinit var sharedViewModel: MapViewModel
     private lateinit var binding: FragmentMapBinding
 
     override fun onCreateView(
@@ -403,48 +401,33 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         if (locationPermissionGranted) {
-            if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true) {
-                val bottomSheetFragment = BottomSheetToolTipFragment()
-                val bundle = Bundle()
-                bundle.putString("key", marker.snippet)
-                bottomSheetFragment.arguments = bundle
+            when {
+                marker?.tag?.equals(BaseParam.APP_TAG_MARKER_WO) == true -> {
+                    sharedViewModel =
+                        ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+                    sharedViewModel.findWoCache(marker.snippet)
+                    bottomSheetToolTipFragment.show(parentFragmentManager, "wo")
+                    Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
+                }
+                marker?.tag?.equals(BaseParam.APP_TAG_MARKER_ASSET) == true -> {
+                    sharedViewModel =
+                        ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+                    sharedViewModel.findAssetCache(marker.snippet)
+                    bottomSheetToolTipFragment.show(parentFragmentManager, "asset")
 
-                bottomSheetFragment.show(
-                    (context as AppCompatActivity).supportFragmentManager,
-                    "wo"
-                )
-                Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
-            } else if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_ASSET) == true) {
-                val bottomSheetFragment = BottomSheetToolTipFragment()
-                val bundle = Bundle()
-                bundle.putString("key", marker.snippet)
-                bottomSheetFragment.arguments = bundle
+                }
+                marker?.tag?.equals(BaseParam.APP_TAG_MARKER_LOCATION) == true -> {
+                    sharedViewModel =
+                        ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+                    sharedViewModel.findLocationCache(marker.snippet)
+                    bottomSheetToolTipFragment.show(parentFragmentManager, "location")
 
-                bottomSheetFragment.show(
-                    (context as AppCompatActivity).supportFragmentManager,
-                    "asset"
-                )
-                Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
-            } else if (marker?.tag?.equals(BaseParam.APP_TAG_MARKER_LOCATION) == true) {
-                val bottomSheetFragment = BottomSheetToolTipFragment()
-                val bundle = Bundle()
-                bundle.putString("key", marker.snippet)
-                bottomSheetFragment.arguments = bundle
-
-                bottomSheetFragment.show(
-                    (context as AppCompatActivity).supportFragmentManager,
-                    "location"
-                )
-
-                Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
+                    Timber.tag(TAG).d("onMarkerClick() marker Location snippet: %s", marker.snippet)
+                }
             }
         } else {
             showDialog()
-
         }
-
         return false
     }
-
-
 }

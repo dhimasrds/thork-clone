@@ -7,8 +7,8 @@ import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.deishelon.roundedbottomsheet.RoundedBottomSheetDialogFragment
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -22,10 +22,11 @@ import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
+
 @AndroidEntryPoint
 class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetToolTipBinding
-    private val viewModel: MapViewModel by viewModels()
+    lateinit var viewModel: MapViewModel
     val TAG = BottomSheetToolTipFragment::class.java.name
 
     override fun onCreateView(
@@ -35,25 +36,20 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
 
         // Inflate the layout for this fragment
         binding = FragmentBottomSheetToolTipBinding.inflate(inflater, container, false)
-        binding.viewModel = viewModel
+        viewModel = ViewModelProviders.of(requireActivity())[MapViewModel::class.java]
         binding.lifecycleOwner = this
-        retrieveFromIntent()
+        validateViewBottomSheet()
         setupObserver()
         return binding.root
     }
 
-    private fun retrieveFromIntent() {
-        val key = arguments?.getString("key")
-
-        if (tag != null && tag.equals("asset") && key != null) {
+    private fun validateViewBottomSheet() {
+        if (tag != null && tag.equals("asset")) {
             binding.assetTooltipContent.root.visibility = VISIBLE
-            updateUiAssetBottomSheet(key)
-        } else if (tag != null && tag.equals("wo") && key != null) {
+        } else if (tag != null && tag.equals("wo")) {
             binding.woTooltipContent.root.visibility = VISIBLE
-            updateUiWoBottomSheet(key)
-        } else if (tag != null && tag.equals("location") && key != null) {
+        } else if (tag != null && tag.equals("location")) {
             binding.locationTooltipContent.root.visibility = VISIBLE
-            updateUiLocationBottomSheet(key)
         }
     }
 
@@ -110,18 +106,6 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
 
             }
         })
-    }
-
-    fun updateUiAssetBottomSheet(valueAsset: String) {
-        viewModel.findAssetCache(valueAsset)
-    }
-
-    fun updateUiWoBottomSheet(wo: String) {
-        viewModel.findWoCache(wo)
-    }
-
-    fun updateUiLocationBottomSheet(location: String) {
-        viewModel.findLocationCache(location)
     }
 
     private fun goToDetails(wonum: String) {
