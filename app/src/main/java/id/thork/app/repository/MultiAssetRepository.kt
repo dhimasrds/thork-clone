@@ -17,4 +17,8 @@ class MultiAssetRepository @Inject constructor(
     fun getAllMultiAsset() : List<MultiAssetEntity>{
        return multiAssetDao.findAllMultiAsset()
     }
+
+    fun getMultiAssetByAssetNum(assetnum : String): MultiAssetEntity? {
+        return multiAssetDao.findMultiAssetByAssetnum(assetnum)
+    }
 }

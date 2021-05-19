@@ -162,4 +162,10 @@ object BaseParam {
     const val STATUS_OK = "200"
     const val STATUS_NOTFOUND = "404"
 
+    /**
+     * MultiAsset Param
+     *
+     */
+    const val ASSETNUM = "ASSETNUM"
+
 }
