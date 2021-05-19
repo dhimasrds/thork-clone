@@ -164,6 +164,7 @@ class DetailWoViewModel @ViewModelInject constructor(
         locationEntity.whatIfNotNull {
             it.thisfsmrfid.whatIfNotNull(
                 whatIf = { rfidvalue ->
+                    Timber.d("validateLocation() %s", it.location)
                     _LocationRfid.value = it.location
                 },
                 whatIfNot = {

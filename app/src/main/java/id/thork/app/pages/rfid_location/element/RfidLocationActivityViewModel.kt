@@ -27,8 +27,9 @@ class RfidLocationActivityViewModel @ViewModelInject constructor(
     val percentageResult : MutableLiveData<String> get() = _percentageResult
 
     fun initLocation(location: String) {
-        val location = locationRepository.findByLocation(location)
-        _locationEntity.value = location
+
+        val locationEntity = locationRepository.findByLocation(location)
+        _locationEntity.value = locationEntity
     }
 
     fun showAssetRfidResult(distance: Int) {

@@ -193,7 +193,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:weightSum="2"
+                            android:weightSum="3"
                             android:orientation="horizontal">
 
                             <!-- AssetNum -->
@@ -217,37 +217,36 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:weightSum="2"
+                                android:layout_weight="2"
+                                android:weightSum="8"
                                 android:orientation="horizontal">
 
-                                <Button
+                                <androidx.appcompat.widget.AppCompatButton
                                     android:id="@+id/btn_rfid"
-                                    android:layout_weight="1"
+                                    android:layout_weight="4"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="RFID"
-                                    android:background="@drawable/ic_qrcode"/>
+                                    android:background="@drawable/ic_rfid_detail_wo"
+                                    tools:ignore="NestedWeights" />
 
-                                <Button
+                                <androidx.appcompat.widget.AppCompatButton
                                     android:id="@+id/btn_qrcode"
-                                    android:layout_weight="1"
+                                    android:layout_weight="4"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="QR"
-                                    android:background="@drawable/ic_qrcode"/>
+                                    android:background="@drawable/ic_qrcode_detail_wo"/>
                             </LinearLayout>
                         </LinearLayout>
 
                         <!-- Text View Asset 3 -->
                         <LinearLayout
+                            android:layout_marginTop="@dimen/general_margin_5dp"
                             android:id="@+id/layout_scan_result_asset"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_marginTop="5dp"
                                 android:layout_marginLeft="@dimen/margin_left_wo_detail"
                                 android:id="@+id/tv_scan_result_asset"
                                 android:layout_width="wrap_content"
@@ -300,7 +299,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:weightSum="2"
+                            android:weightSum="3"
                             android:orientation="horizontal">
 
                             <!-- Location -->
@@ -311,7 +310,7 @@
                                 android:orientation="horizontal">
                                 <TextView
                                     android:id="@+id/location"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/margin_left_wo_detail"
                                     android:fontFamily="@font/poppins"
@@ -324,36 +323,37 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="2"
                                 android:weightSum="2"
                                 android:orientation="horizontal">
 
-                                <Button
+                                <androidx.appcompat.widget.AppCompatButton
                                     android:id="@+id/btn_rfid_location"
                                     android:layout_weight="1"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="RFID"
-                                    android:background="@drawable/ic_qrcode"/>
+                                    android:background="@drawable/ic_rfid_detail_wo"
+                                    tools:ignore="NestedWeights" />
 
-                                <Button
+                                <androidx.appcompat.widget.AppCompatButton
                                     android:id="@+id/btn_qrcode_location"
                                     android:layout_weight="1"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="QR"
-                                    android:background="@drawable/ic_qrcode"/>
+                                    android:background="@drawable/ic_qrcode_detail_wo"/>
                             </LinearLayout>
                         </LinearLayout>
 
                         <!-- Text View Asset 3 -->
                         <LinearLayout
+                            android:layout_marginTop="@dimen/general_margin_5dp"
                             android:id="@+id/layout_scan_result_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:layout_marginLeft="@dimen/margin_left_wo_detail"
                                 android:id="@+id/tv_scan_result_location"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

@@ -405,8 +405,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             marker.whatIfNotNull {
                 when (it.tag) {
                     BaseParam.APP_TAG_MARKER_WO -> {
-                        Timber.d("raka %s", it.snippet)
-                        Timber.d("raka %s", it.tag)
                         mapViewModel.setDataWo(it.snippet, it.tag.toString())
                     }
 

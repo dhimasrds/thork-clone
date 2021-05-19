@@ -88,8 +88,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 description.text = it.description
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
-                asset.text = it.assetnum
-                location.text = it.location
+                asset.text =  StringUtils.truncate(it.assetnum, 20)
+                location.text = StringUtils.truncate(it.location, 20)
                 it.woserviceaddress.whatIfNotNull { address ->
                     serviceaddress.text = address.get(0).formattedaddress
                 }
@@ -167,11 +167,34 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         })
 
         detailWoViewModel.ResultLocation.observe(this, {
-
+            if (it.equals(BaseParam.APP_TRUE)) {
+//            locationIsMatch = result
+                binding.icCheckLocation.visibility = View.VISIBLE
+                binding.icCrossLocation.visibility = GONE
+                binding.tvScanResultLocation.text =
+                    getString(R.string.asset_scan_result) + ": " +
+                            getString(R.string.location_rfid_is_match_begin) + " " + getString(R.string.asset_rfid_is_match)
+                binding.tvScanResultLocation.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorGreen
+                    )
+                )
+            } else {
+                binding.icCheckLocation.visibility = GONE
+                binding.icCrossLocation.visibility = View.VISIBLE
+                binding.tvScanResultLocation.text = (getString(R.string.asset_scan_result) + ": " +
+                        getString(R.string.location_rfid_is_not_match))
+                binding.tvScanResultLocation.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorRed
+                    )
+                )
+            }
         })
 
         //TODO Result Query Location for Rfid
         detailWoViewModel.LocationRfid.observe(this, {
+            Timber.d("Observer Location Rfid() %s", it)
             gotoRfidLocation(it)
         })
     }
@@ -239,6 +262,10 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             //TODO Need validation after Query to local
             detailWoViewModel.validateAsset(binding.asset.text.toString())
         }
+
+        binding.btnRfidLocation.setOnClickListener {
+            detailWoViewModel.validateLocation(binding.location.text.toString())
+        }
     }
 
     private fun gotoListMaterial() {
@@ -267,18 +294,24 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     //TODO navigate to Rfid Location
     private fun gotoRfidLocation(location: String) {
         val intentLocation = Intent(this, RfidLocationActivity::class.java)
-        intent.putExtra(BaseParam.RFID_ASSETNUM, location)
+        intentLocation.putExtra(BaseParam.RFID_LOCATION, location)
         startActivityForResult(intentLocation, BaseParam.RFID_REQUEST_CODE_LOCATION)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //TODO Nested when
         if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK) {
             valueLongDesc = data!!.getStringExtra("longdesc")
             workorderLongdesc = valueLongDesc
         } else if (requestCode == BaseParam.RFID_REQUEST_CODE && resultCode == RESULT_OK) {
             data.whatIfNotNull {
-                val assetIsMatch = it.getBooleanExtra("ASSET_IS_MATCH", false)
+                val assetIsMatch = it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
                 detailWoViewModel.checkingResultAsset(assetIsMatch)
+            }
+        } else if(requestCode == BaseParam.RFID_REQUEST_CODE_LOCATION && resultCode == RESULT_OK) {
+            data.whatIfNotNull {
+                val locationIsMatch = it.getBooleanExtra(BaseParam.RFID_LOCATION_IS_MATCH, false)
+                detailWoViewModel.checkingResultLocation(locationIsMatch)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

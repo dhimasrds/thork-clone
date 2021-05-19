@@ -70,6 +70,7 @@ class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterfac
     override fun setupObserver() {
         super.setupObserver()
         rfidLocationViewModel.locationEntity.observe(this, Observer {
+            Timber.d("setupObserver() location %s", it.location)
             rfidHandler?.setTagId(it.thisfsmrfid)
             binding.tvLocation.text = it.location
             binding.tvLocationDescription.text = it.description
