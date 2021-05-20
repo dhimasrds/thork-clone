@@ -39,7 +39,9 @@ class RfidAssetAcitivty : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
             getString(R.string.scan_asset),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
 
         setupRfid()

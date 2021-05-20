@@ -82,7 +82,9 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             getString(R.string.create_wo),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
     }
 

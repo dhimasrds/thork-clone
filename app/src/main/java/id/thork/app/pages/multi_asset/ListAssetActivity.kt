@@ -36,7 +36,9 @@ class ListAssetActivity : BaseActivity() {
             getString(R.string.list_of_assets),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
 
     }

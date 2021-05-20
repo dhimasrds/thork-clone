@@ -64,7 +64,9 @@ class LongDescActivity : BaseActivity() {
             getString(R.string.note),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
         requestPermission()
         retrieveFromIntent()

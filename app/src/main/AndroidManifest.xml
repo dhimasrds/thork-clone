@@ -25,36 +25,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.rfid_location.RfidLocationActivity"></activity>
-        <activity android:name=".pages.rfid_asset.RfidAssetAcitivty">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity android:name=".pages.example.RfidExActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+        <activity android:name=".pages.rfid_location.RfidLocationActivity"/>
+        <activity android:name=".pages.rfid_asset.RfidAssetAcitivty" />
+        <activity android:name=".pages.example.RfidExActivity" />
         <activity android:name=".pages.multi_asset.DetailsAssetActivity" />
         <activity android:name=".pages.multi_asset.ListAssetActivity" />
-        <activity android:name=".pages.example.RfidExActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+        <activity android:name=".pages.attachment.AttachmentActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
+        <activity android:name=".pages.example.ImageActivity" />
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
         <activity android:name=".pages.create_wo.CreateWoActivity" />
         <activity android:name=".pages.login_pattern.LoginPatternActivity" />
@@ -104,6 +87,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
 
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"

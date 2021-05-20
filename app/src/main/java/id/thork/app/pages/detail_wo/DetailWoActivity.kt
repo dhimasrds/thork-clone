@@ -75,7 +75,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             getString(R.string.wo_detail),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
         retrieveFromIntent()
     }

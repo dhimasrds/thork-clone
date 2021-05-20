@@ -42,7 +42,9 @@ class ListMaterialActivity : BaseActivity() {
             getString(R.string.list_material),
             navigation = false,
             filter = false,
-            scannerIcon = true
+            scannerIcon = true,
+            notification = false,
+            option = false
         )
         retrieveFromIntent()
         if (intentWonum != null) {

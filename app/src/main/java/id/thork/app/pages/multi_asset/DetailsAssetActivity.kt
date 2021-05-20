@@ -42,7 +42,9 @@ class DetailsAssetActivity : BaseActivity() {
             getString(R.string.detail_Asset),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
         retriveFromIntent()
     }
