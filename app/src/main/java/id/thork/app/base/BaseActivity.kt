@@ -119,6 +119,7 @@ abstract class BaseActivity : AppCompatActivity() {
         if (!scannerIcon){
             optionMenu?.findItem(R.id.scan_menu)?.isVisible = false
         }
+        //TODO add validation to hide action notif
         return true
     }
 
@@ -176,14 +177,14 @@ abstract class BaseActivity : AppCompatActivity() {
         Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
         //TODO sync update status Workorder when online
-//        workerCoordinator.addSyncWoQueue()
+        workerCoordinator.addSyncWoQueue()
     }
 
     open fun onSlowConnection() {
         CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow),)
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
         //TODO sync update status Workorder when online
-//        workerCoordinator.addSyncWoQueue()
+        workerCoordinator.addSyncWoQueue()
     }
 
     open fun onLostConnection() {
