@@ -476,7 +476,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 )
             }
         }
-        detailWoViewModel.removeAllWo()
+//        detailWoViewModel.removeAllWo()
         gotoHome()
     }
 

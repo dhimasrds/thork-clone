@@ -104,6 +104,10 @@ class WoCacheDaoImp : WoCacheDao {
         TODO("Not yet implemented")
     }
 
+    override fun findWoByisLatest(isLatest: Int): List<WoCacheEntity> {
+        TODO("Not yet implemented")
+    }
+
     override fun removeAllWo() {
         woCacheEntityBox.removeAll()
     }

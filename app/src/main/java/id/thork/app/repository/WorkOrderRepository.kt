@@ -278,11 +278,12 @@ class WorkOrderRepository @Inject constructor(
                         woId = wo.workorderid,
                         wonum = wo.wonum,
                         status = wo.status,
-                        isChanged = BaseParam.APP_TRUE,
+                        isChanged = BaseParam.APP_FALSE,
                         isLatest = BaseParam.APP_TRUE,
                         syncStatus = BaseParam.APP_TRUE,
                         laborCode = laborCode
                     )
+                    woCacheEntity.changeDate = wo.changedate
                     setupWoLocation(woCacheEntity, wo)
                     multiAssetToObjectBox(wo)
                     woCacheEntity.createdDate = Date()
@@ -304,12 +305,13 @@ class WorkOrderRepository @Inject constructor(
                     woId = member.workorderid,
                     wonum = member.wonum,
                     status = member.status,
-                    isChanged = BaseParam.APP_TRUE,
+                    isChanged = BaseParam.APP_FALSE,
                     isLatest = BaseParam.APP_TRUE,
                     syncStatus = BaseParam.APP_TRUE,
                     laborCode = laborCode
                 )
                 setupWoLocation(woCacheEntity, member)
+                woCacheEntity.changeDate = member.changedate
                 multiAssetToObjectBox(member)
                 woCacheEntity.createdDate = Date()
                 woCacheEntity.createdBy = appSession.userEntity.username
@@ -501,6 +503,8 @@ class WorkOrderRepository @Inject constructor(
             newWoCache.wonum = wonum
             newWoCache.status = nextStatus
             newWoCache.woId = woId
+            newWoCache.longitude = currentWoCache.longitude
+            newWoCache.latitude = currentWoCache.latitude
             saveWoList(newWoCache, appSession.userEntity.username)
         }
     }
