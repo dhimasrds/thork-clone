@@ -1,9 +1,12 @@
 package id.thork.app.persistence.dao
 
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.AssetEntity_
+import id.thork.app.persistence.entity.MultiAssetEntity
+import id.thork.app.persistence.entity.MultiAssetEntity_
 import io.objectbox.Box
 import java.util.*
 
@@ -42,5 +45,13 @@ class AssetDaoImp: AssetDao {
         addUpdateInfo(assetEntity, username)
         assetEntityBox.put(assetEntity)
         return assetEntity
+    }
+
+    override fun findByAssetnum(assetnum: String): AssetEntity? {
+        val assetEntity = assetEntityBox.query().equal(AssetEntity_.assetnum, assetnum).build().find()
+        assetEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
     }
 }

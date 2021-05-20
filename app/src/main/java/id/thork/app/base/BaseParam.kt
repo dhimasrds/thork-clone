@@ -39,21 +39,17 @@ object BaseParam {
     const val SELECTED_LANG_DETAIL = "LANG"
     const val SELECTED_LANG_CODE = "LANG-CODE"
 
-
     const val APP_LOGIN_PREFERENCE = "loginPreference"
     const val APP_SERVER_ADDRESS = "serverAddress"
     const val APP_FIRST_LAUNCH = "firstLaunch"
     const val REPORT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
     const val APP_MX_COOKIE = "cookie"
 
-
-
-
-
     /**
      * Authentication parameter
      */
     const val APP_MAX_AUTH = "MAXAUTH"
+    const val APP_COOKIE = "Cookie"
     const val APP_AUTHORIZATION = "AUTHORIZATION"
     const val APP_X_METHOD_OVERRIDE = "x-method-override"
     const val APP_PATCH = "PATCH"
@@ -100,6 +96,7 @@ object BaseParam {
     const val APP_CREW = "Crew "
     const val APP_MOVE = "move"
     const val APP_TAG_MARKER_WO = "WO"
+    const val APP_TAG_MARKER_LOCATION = "LOCATION"
     const val APP_TAG_MARKER_ASSET = "ASSET"
     const val APP_TAG_MARKER_CREW = "CREW"
     const val APP_TAG_MARKER_CREW_MOVE = "move"
@@ -164,5 +161,29 @@ object BaseParam {
     const val STATUS_UNAUTHORIZED = "401"
     const val STATUS_OK = "200"
     const val STATUS_NOTFOUND = "404"
+
+    /**
+     * Rfid
+     */
+    const val RFID_REQUEST_CODE = 1119
+    const val BARCODE_REQUEST_CODE = 1118
+
+    const val RFID_REQUEST_CODE_LOCATION = 1129
+    const val BARCODE_REQUEST_CODE_LOCATION = 1128
+
+
+
+    const val RFID_ASSETNUM = "assetnum"
+    const val RFID_LOCATION = "location"
+
+    const val RFID_ASSET_IS_MATCH = "ASSET_IS_MATCH"
+    const val RFID_LOCATION_IS_MATCH = "LOCATION_IS_MATCH"
+
+
+    /**
+     * MultiAsset Param
+     *
+     */
+    const val ASSETNUM = "ASSETNUM"
 
 }

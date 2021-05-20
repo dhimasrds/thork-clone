@@ -12,6 +12,7 @@ import id.thork.app.databinding.ActivityListMaterialBinding
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.list_material.element.ListMaterialAdapter
 import id.thork.app.pages.list_material.element.ListMaterialViewModel
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,12 +81,11 @@ class ListMaterialActivity : BaseActivity() {
     }
 
     private fun startQRScanner() {
-        IntentIntegrator(this@ListMaterialActivity).setCaptureActivity(ScannerActivity::class.java)
-            .initiateScan()
+        IntentIntegrator(this@ListMaterialActivity).setCaptureActivity(ScannerActivity::class.java).initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        val result = IntentIntegrator.parseActivityResult(requestCode ,data)
         if (result != null) {
             if (result.contents != null && intentWonum != null) {
                 saveMaterialFromCreateWo(result.contents, intentWonum!!)

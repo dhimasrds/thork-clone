@@ -47,7 +47,6 @@ class WorkerCoordinator @Inject constructor(
     val woCacheDao: WoCacheDao,
     val appSession: AppSession,
     val assetDao: AssetDao
-
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
@@ -164,7 +163,7 @@ class WorkerCoordinator @Inject constructor(
 
                         response.member.whatIfNotNullOrEmpty(
                             whatIf = {
-                                workOrderRepository.addWoToObjectBox(response.member)
+                                workOrderRepository.addWoToObjectBox(response.member!!)
                                 generatePushNotificationWorker(remoteMessageString)
                             }
                         )

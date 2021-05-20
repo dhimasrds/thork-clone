@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="id.thork.app.pages.main.element.MapViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".pages.main.element.BottomSheetToolTipFragment">
+
+        <include
+            android:visibility="gone"
+            android:id="@+id/wo_tooltip_content"
+            layout="@layout/wo_tooltip_layout" />
+
+        <include
+            android:visibility="gone"
+            android:id="@+id/location_tooltip_content"
+            layout="@layout/location_tooltip_layout" />
+
+        <include
+            android:visibility="gone"
+            android:id="@+id/asset_tooltip_content"
+            layout="@layout/asset_tooltip_layout" />
+
+        <include
+            android:visibility="gone"
+            android:id="@+id/crew_tooltip_content"
+            layout="@layout/crew_tooltip_layout" />
+    </LinearLayout>
+</layout>

@@ -38,7 +38,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     private val TAG_LOGOUT = "TAG_LOGOUT"
     private var currentTag: String = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handlerOnclick()

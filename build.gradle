@@ -17,7 +17,8 @@ buildscript {
         gsonVersion = "2.8.6"
         moshiAdapterVersion = "1.11.0"
         moshiVersion = "1.11.0"
-        glideVersion = "4.11.0"
+        glideVersion = "4.12.0"
+        glideOkHttpVersion = "4.12.0"
         toastyVersion = "1.5.0"
         lifecycle = "2.3.1"
 
@@ -55,10 +56,13 @@ buildscript {
         pullRefreshLayoutVersion = '1.2.0'
 
         //Barcode Scanner
-        zxingAndroidVersion = '3.5.0'
+        zxingAndroidVersion = '3.6.0'
 
         //lifecycle
         lifecycle = "2.3.1"
+
+        //Percentage View
+        percentageViewVersion = '0.3.1'
 
     }
 

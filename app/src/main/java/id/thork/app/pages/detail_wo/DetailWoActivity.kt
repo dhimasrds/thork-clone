@@ -1,7 +1,9 @@
 package id.thork.app.pages.detail_wo
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
+import android.view.View
 import android.view.View.GONE
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -13,16 +15,20 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailWoBinding
 import id.thork.app.pages.CustomDialogUtils
+import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
+import id.thork.app.pages.rfid_location.RfidLocationActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
@@ -48,7 +54,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private var workorderNumber: String? = null
     private var workorderLongdesc: String? = null
     private var valueLongDesc: String? = null
-    private var validateDialogExit: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -75,6 +80,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         retrieveFromIntent()
     }
 
+    @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun setupObserver() {
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
@@ -84,20 +90,26 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 description.text = it.description
                 status.text = it.status
                 priority.text = StringUtils.createPriority(woPriority)
-                location.text = it.location
+                asset.text = StringUtils.truncate(it.assetnum, 20)
+                location.text = StringUtils.truncate(it.location, 20)
+                it.woserviceaddress.whatIfNotNull { address ->
+                    serviceaddress.text = address.get(0).formattedaddress
+                }
                 estimatedDuration.text = StringUtils.NVL(
                     java.lang.String.valueOf(it.estdur),
                     BaseParam.APP_DASH
                 )
-                reportDate.text = StringUtils.NVL(
-                    DateUtils.convertDateFormat(it.reportdate),
-                    BaseParam.APP_DASH
-                )
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    reportDate.text = StringUtils.NVL(
+                        DateUtils.convertDateFormat(it.reportdate),
+                        BaseParam.APP_DASH
+                    )
+                }
 
                 workorderId = it.workorderid
                 workorderNumber = it.wonum
                 workorderStatus = it.status
-                workorderLongdesc = it.description_longdescription
+                workorderLongdesc = it.descriptionLongdescription
                 it.status?.let { status -> setButtonStatus(status) }
             }
             if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!![0].longitudex != null) {
@@ -125,6 +137,68 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             }
         })
 
+        detailWoViewModel.Result.observe(this, {
+            if (it.equals(BaseParam.APP_TRUE)) {
+//            assetIsMatch = result
+                binding.icCheckAsset.visibility = View.VISIBLE
+                binding.icCrossAsset.visibility = GONE
+                binding.tvScanResultAsset.text =
+                    getString(R.string.asset_scan_result) + ": " +
+                            getString(R.string.asset_rfid_is_match_begin) + " " + getString(R.string.asset_rfid_is_match)
+                binding.tvScanResultAsset.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorGreen
+                    )
+                )
+            } else {
+                binding.icCheckAsset.visibility = GONE
+                binding.icCrossAsset.visibility = View.VISIBLE
+                binding.tvScanResultAsset.text = (getString(R.string.asset_scan_result) + ": " +
+                        getString(R.string.asset_rfid_is_not_match))
+                binding.tvScanResultAsset.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorRed
+                    )
+                )
+            }
+        })
+
+        //TODO Result Query Asset for Rfid
+        detailWoViewModel.AssetRfid.observe(this, {
+            gotoRfidAsset(it)
+        })
+
+        detailWoViewModel.ResultLocation.observe(this, {
+            if (it.equals(BaseParam.APP_TRUE)) {
+//            locationIsMatch = result
+                binding.icCheckLocation.visibility = View.VISIBLE
+                binding.icCrossLocation.visibility = GONE
+                binding.tvScanResultLocation.text =
+                    getString(R.string.asset_scan_result) + ": " +
+                            getString(R.string.location_rfid_is_match_begin) + " " + getString(R.string.asset_rfid_is_match)
+                binding.tvScanResultLocation.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorGreen
+                    )
+                )
+            } else {
+                binding.icCheckLocation.visibility = GONE
+                binding.icCrossLocation.visibility = View.VISIBLE
+                binding.tvScanResultLocation.text = (getString(R.string.asset_scan_result) + ": " +
+                        getString(R.string.location_rfid_is_not_match))
+                binding.tvScanResultLocation.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorRed
+                    )
+                )
+            }
+        })
+
+        //TODO Result Query Location for Rfid
+        detailWoViewModel.LocationRfid.observe(this, {
+            Timber.d("Observer Location Rfid() %s", it)
+            gotoRfidLocation(it)
+        })
     }
 
     private fun retrieveFromIntent() {
@@ -132,7 +206,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         intentWonum.whatIfNotNull {
             detailWoViewModel.fetchWobyWonum(intentWonum!!)
         }
-
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -182,17 +255,26 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     override fun setupListener() {
         super.setupListener()
-        binding.scanQr.setOnClickListener {
-            gotoListMaterial()
-        }
-
-        binding.longdesc.setOnClickListener {
-            gotoLongDescription()
-        }
-
         binding.attachment.setOnClickListener {
             Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
                 .show()
+        }
+
+        binding.btnRfid.setOnClickListener {
+            //TODO Need validation after Query to local
+            detailWoViewModel.validateAsset(binding.asset.text.toString())
+        }
+
+        binding.btnQrcode.setOnClickListener {
+            startQRScanner(BaseParam.BARCODE_REQUEST_CODE)
+        }
+
+        binding.btnRfidLocation.setOnClickListener {
+            detailWoViewModel.validateLocation(binding.location.text.toString())
+        }
+
+        binding.btnQrcodeLocation.setOnClickListener {
+            startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
         }
     }
 
@@ -212,11 +294,71 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         startActivityForResult(intent, REQUEST_CODE_DETAIL)
     }
 
+    //TODO navigate to Rfid Asset
+    private fun gotoRfidAsset(assetnum: String) {
+        val intent = Intent(this, RfidAssetAcitivty::class.java)
+        intent.putExtra(BaseParam.RFID_ASSETNUM, assetnum)
+        startActivityForResult(intent, BaseParam.RFID_REQUEST_CODE)
+    }
+
+    //TODO navigate to Rfid Location
+    private fun gotoRfidLocation(location: String) {
+        val intentLocation = Intent(this, RfidLocationActivity::class.java)
+        intentLocation.putExtra(BaseParam.RFID_LOCATION, location)
+        startActivityForResult(intentLocation, BaseParam.RFID_REQUEST_CODE_LOCATION)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_DETAIL && resultCode == RESULT_OK) {
-            valueLongDesc = data!!.getStringExtra("longdesc")
-            workorderLongdesc = valueLongDesc
+        //TODO Nested when
+        val result = IntentIntegrator.parseActivityResult(resultCode, data)
+
+        when (resultCode) {
+            RESULT_OK -> {
+                when (requestCode) {
+                    REQUEST_CODE_DETAIL -> {
+                        valueLongDesc = data!!.getStringExtra("longdesc")
+                        workorderLongdesc = valueLongDesc
+                    }
+
+                    BaseParam.RFID_REQUEST_CODE -> {
+                        data.whatIfNotNull {
+                            val assetIsMatch =
+                                it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
+                            detailWoViewModel.checkingResultAsset(assetIsMatch)
+                        }
+                    }
+
+                    BaseParam.RFID_REQUEST_CODE_LOCATION -> {
+                        data.whatIfNotNull {
+                            val locationIsMatch =
+                                it.getBooleanExtra(BaseParam.RFID_LOCATION_IS_MATCH, false)
+                            detailWoViewModel.checkingResultLocation(locationIsMatch)
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE -> {
+                        result.whatIfNotNull {
+                            val resultCompareAsset = detailWoViewModel.compareResultScanner(
+                                binding.asset.text.toString(),
+                                it.contents
+                            )
+                            detailWoViewModel.checkingResultAsset(resultCompareAsset)
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE_LOCATION -> {
+                        result.whatIfNotNull {
+                            val resultCompareLocation = detailWoViewModel.compareResultScanner(
+                                binding.location.text.toString(),
+                                it.contents
+                            )
+                            detailWoViewModel.checkingResultLocation(resultCompareLocation)
+                        }
+                    }
+                }
+            }
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -282,6 +424,17 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 binding.layoutStatus.visibility = GONE
             }
         }
+        binding.scanQr.setOnClickListener {
+            if (workorderStatus == BaseParam.COMPLETED) {
+                Toast.makeText(this, R.string.stat_complete, Toast.LENGTH_SHORT).show()
+            } else {
+                gotoListMaterial()
+            }
+        }
+
+        binding.longdesc.setOnClickListener {
+            gotoLongDescription()
+        }
     }
 
     private fun hideMore() {
@@ -303,47 +456,31 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         customDialogUtils.show()
     }
 
-    private fun dialogExit() {
-        validateDialogExit = true
-        customDialogUtils.setTitle(R.string.service_request_create)
-        customDialogUtils.setDescription(R.string.service_request_cancel)
-        customDialogUtils.setRightButtonText(R.string.dialog_yes)
-        customDialogUtils.setLeftButtonText(R.string.dialog_no)
-        customDialogUtils.setListener(this)
-        customDialogUtils.show()
-    }
-
     override fun onRightButton() {
-        if (validateDialogExit) {
-            workorderId?.let { detailWoViewModel.removeScanner(it) }
-        } else {
-            if (isConnected) {
-                if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
-                    detailWoViewModel.updateWo(
-                        workorderId,
-                        workorderStatus,
-                        workorderNumber,
-                        workorderLongdesc,
-                        BaseParam.INPROGRESS
-                    )
-                } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
-                    detailWoViewModel.updateWo(
-                        workorderId,
-                        workorderStatus,
-                        workorderNumber,
-                        workorderLongdesc,
-                        BaseParam.COMPLETED
-                    )
-                }
+        if (isConnected) {
+            if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
+                detailWoViewModel.updateWo(
+                    workorderId,
+                    workorderStatus,
+                    workorderNumber,
+                    workorderLongdesc,
+                    BaseParam.INPROGRESS
+                )
+            } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
+                detailWoViewModel.updateWo(
+                    workorderId,
+                    workorderStatus,
+                    workorderNumber,
+                    workorderLongdesc,
+                    BaseParam.COMPLETED
+                )
             }
         }
+        detailWoViewModel.removeAllWo()
         gotoHome()
     }
 
     override fun onLeftButton() {
-        if (validateDialogExit) {
-            validateDialogExit = false
-        }
         customDialogUtils.dismiss()
     }
 
@@ -362,13 +499,28 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     }
 
     override fun onBackPressed() {
-        dialogExit()
+        detailWoViewModel.removeScanner(workorderId!!)
+        finish()
     }
 
     private fun gotoHome() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+    }
+
+    override fun goToPreviousActivity() {
+        detailWoViewModel.removeScanner(workorderId!!)
         finish()
     }
+
+    private fun startQRScanner(requestCode: Int) {
+        IntentIntegrator(this@DetailWoActivity).apply {
+            setCaptureActivity(ScannerActivity::class.java)
+            setRequestCode(requestCode)
+            initiateScan()
+        }
+    }
+
+
 }

@@ -74,7 +74,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.woserviceaddress = woserviceaddress
         member.estdur = estDur
         member.wopriority = workPriority
-        member.description_longdescription = longdesc
+        member.descriptionLongdescription = longdesc
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(Member::class.java)
@@ -128,7 +128,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.woserviceaddress = woserviceaddress
         member.estdur = estDur
         member.wopriority = workPriority
-        member.description_longdescription = longdesc
+        member.descriptionLongdescription = longdesc
 
         val tWoCacheEntity = WoCacheEntity()
         tWoCacheEntity.syncBody = convertToJson(member)

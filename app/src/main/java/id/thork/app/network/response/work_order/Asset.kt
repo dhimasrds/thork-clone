@@ -1,140 +1,97 @@
 package id.thork.app.network.response.work_order
 
+
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-/**
- * Created by Raka Putra on 5/5/21
- * Jakarta, Indonesia.
- */
 @JsonClass(generateAdapter = true)
-data class Asset (
-    @Json(name = "islinear")
-    var islinear: Boolean? = null,
-
-    @Json(name = "iscalibration")
-    var iscalibration: Boolean? = null,
-
-    @Json(name = "ytdcost")
-    var ytdcost: Double? = null,
-
-    @Json(name = "localref")
-    var localref: String? = null,
-
-    @Json(name = "assettype_description")
-    var assettypeDescription: String? = null,
-
-    @Json(name = "moved")
-    var moved: Boolean? = null,
-
-    @Json(name = "pluscismte")
-    var pluscismte: Boolean? = null,
-
-    @Json(name = "description")
-    var description: String? = null,
-
-    @Json(name = "pluscisinhousecal")
-    var pluscisinhousecal: Boolean? = null,
-
-    @Json(name = "totalcost")
-    var totalcost: Double? = null,
-
-    @Json(name = "totdowntime")
-    var totdowntime: Double? = null,
-
-    @Json(name = "_rowstamp")
-    var rowstamp: String? = null,
-
-    @Json(name = "totunchargedcost")
-    var totunchargedcost: Double? = null,
-
-    @Json(name = "children")
-    var children: Boolean? = null,
-
-    @Json(name = "tloampartition")
-    var tloampartition: Boolean? = null,
-
-    @Json(name = "_imagelibref")
-    var imagelibref: String? = null,
-
-    @Json(name = "pluscpmextdate")
-    var pluscpmextdate: Boolean? = null,
-
-    @Json(name = "assetnum")
-    var assetnum: String? = null,
-
-    @Json(name = "plusciscontam")
-    var plusciscontam: Boolean? = null,
-
-    @Json(name = "unchargedcost")
-    var unchargedcost: Double? = null,
-
-    @Json(name = "disabled")
-    var disabled: Boolean? = null,
-
-    @Json(name = "href")
-    var href: String? = null,
-
-    @Json(name = "assettype")
-    var assettype: String? = null,
-
-    @Json(name = "mainthierchy")
-    var mainthierchy: Boolean? = null,
-
-    @Json(name = "assetuid")
-    var assetuid: Int? = null,
-
-    @Json(name = "status_description")
-    var statusDescription: String? = null,
-
-    @Json(name = "returnedtovendor")
-    var returnedtovendor: Boolean? = null,
-
-    @Json(name = "changeby")
-    var changeby: String? = null,
-
-    @Json(name = "changedate")
-    var changedate: String? = null,
-
-    @Json(name = "expectedlife")
-    var expectedlife: Int? = null,
-
-    @Json(name = "replacecost")
-    var replacecost: Double? = null,
-
-    @Json(name = "thisfsmtagtime")
-    var thisfsmtagtime: String? = null,
-
-    @Json(name = "invcost")
-    var invcost: Double? = null,
-
-    @Json(name = "orgid")
-    var orgid: String? = null,
-
-    @Json(name = "pluscsolution")
-    var pluscsolution: Boolean? = null,
-
-    @Json(name = "purchaseprice")
-    var purchaseprice: Double? = null,
-
-    @Json(name = "statusdate")
-    var statusdate: String? = null,
-
-    @Json(name = "isrunning")
-    var isrunning: Boolean? = null,
-
-    @Json(name = "budgetcost")
-    var budgetcost: Double? = null,
-
+data class Asset(
     @Json(name = "assetid")
-    var assetid: Int? = null,
-
-    @Json(name = "location")
-    var location: String? = null,
-
+    val assetid: Int? = null,
+    @Json(name = "assetnum")
+    val assetnum: String? = null,
+    @Json(name = "assettype")
+    val assettype: String? = null,
+    @Json(name = "assettype_description")
+    val assettypeDescription: String? = null,
+    @Json(name = "assetuid")
+    val assetuid: Int? = null,
     @Json(name = "autowogen")
-    var autowogen: Boolean? = null,
-
+    val autowogen: Boolean? = null,
+    @Json(name = "budgetcost")
+    val budgetcost: Double? = null,
+    @Json(name = "changeby")
+    val changeby: String? = null,
+    @Json(name = "changedate")
+    val changedate: String? = null,
+    @Json(name = "children")
+    val children: Boolean? = null,
+    @Json(name = "description")
+    val description: String? = null,
+    @Json(name = "disabled")
+    val disabled: Boolean? = null,
+    @Json(name = "expectedlife")
+    val expectedlife: Int? = null,
+    @Json(name = "href")
+    val href: String? = null,
+    @Json(name = "_imagelibref")
+    val imagelibref: String? = null,
+    @Json(name = "invcost")
+    val invcost: Double? = null,
+    @Json(name = "iscalibration")
+    val iscalibration: Boolean? = null,
+    @Json(name = "islinear")
+    val islinear: Boolean? = null,
+    @Json(name = "isrunning")
+    val isrunning: Boolean? = null,
+    @Json(name = "localref")
+    val localref: String? = null,
+    @Json(name = "location")
+    val location: String? = null,
+    @Json(name = "mainthierchy")
+    val mainthierchy: Boolean? = null,
+    @Json(name = "moved")
+    val moved: Boolean? = null,
+    @Json(name = "orgid")
+    val orgid: String? = null,
+    @Json(name = "plusciscontam")
+    val plusciscontam: Boolean? = null,
+    @Json(name = "pluscisinhousecal")
+    val pluscisinhousecal: Boolean? = null,
+    @Json(name = "pluscismte")
+    val pluscismte: Boolean? = null,
+    @Json(name = "pluscpmextdate")
+    val pluscpmextdate: Boolean? = null,
+    @Json(name = "pluscsolution")
+    val pluscsolution: Boolean? = null,
+    @Json(name = "purchaseprice")
+    val purchaseprice: Double? = null,
+    @Json(name = "replacecost")
+    val replacecost: Double? = null,
+    @Json(name = "returnedtovendor")
+    val returnedtovendor: Boolean? = null,
+    @Json(name = "_rowstamp")
+    val rowstamp: String? = null,
     @Json(name = "status")
-    var status: String? = null,
+    val status: String? = null,
+    @Json(name = "status_description")
+    val statusDescription: String? = null,
+    @Json(name = "statusdate")
+    val statusdate: String? = null,
+    @Json(name = "thisfsmrfid")
+    val thisfsmrfid: String? = null,
+    @Json(name = "thisfsmtagtime")
+    val thisfsmtagtime: String? = null,
+    @Json(name = "tloampartition")
+    val tloampartition: Boolean? = null,
+    @Json(name = "totalcost")
+    val totalcost: Double? = null,
+    @Json(name = "totdowntime")
+    val totdowntime: Double? = null,
+    @Json(name = "totunchargedcost")
+    val totunchargedcost: Double? = null,
+    @Json(name = "unchargedcost")
+    val unchargedcost: Double? = null,
+    @Json(name = "ytdcost")
+    val ytdcost: Double? = null
 )

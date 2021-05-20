@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="id.thork.app.pages.detail_wo.element.DetailWoViewModel" />
@@ -167,6 +168,217 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_16" />
 
+                    <!-- Asset Content RFID -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="vertical">
+
+                        <!-- Text View Asset 1-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <!--Asset-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                android:fontFamily="@font/poppins"
+                                android:text="@string/Asset" />
+                        </LinearLayout>
+
+                        <!-- Text View Asset 2 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="3"
+                            android:orientation="horizontal">
+
+                            <!-- AssetNum -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:id="@+id/asset"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="@string/line"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/text_size_wo_detail_20" />
+                            </LinearLayout>
+
+                            <!-- QR Code And Rfid Content -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:weightSum="8"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/btn_rfid"
+                                    android:layout_weight="4"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_rfid_detail_wo"
+                                    tools:ignore="NestedWeights" />
+
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/btn_qrcode"
+                                    android:layout_weight="4"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_qrcode_detail_wo"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Text View Asset 3 -->
+                        <LinearLayout
+                            android:layout_marginTop="@dimen/general_margin_5dp"
+                            android:id="@+id/layout_scan_result_asset"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                android:id="@+id/tv_scan_result_asset"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/white"
+                                android:text="Item is match" />
+
+                            <ImageView
+                                android:id="@+id/ic_check_asset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/ic_check"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/ic_cross_asset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/ic_cross"
+                                android:visibility="gone" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                    <!-- Location Content RFID -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="vertical">
+
+                        <!-- Text View Location 1-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <!--Location-->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                android:fontFamily="@font/poppins"
+                                android:text="@string/location" />
+                        </LinearLayout>
+
+                        <!-- Text View Location 2 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="3"
+                            android:orientation="horizontal">
+
+                            <!-- Location -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:id="@+id/location"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                    android:fontFamily="@font/poppins"
+                                    android:text="@string/line"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/text_size_wo_detail_20" />
+                            </LinearLayout>
+
+                            <!-- QR Code And Rfid Content -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:weightSum="2"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/btn_rfid_location"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_rfid_detail_wo"
+                                    tools:ignore="NestedWeights" />
+
+                                <androidx.appcompat.widget.AppCompatButton
+                                    android:id="@+id/btn_qrcode_location"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ic_qrcode_detail_wo"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Text View Asset 3 -->
+                        <LinearLayout
+                            android:layout_marginTop="@dimen/general_margin_5dp"
+                            android:id="@+id/layout_scan_result_location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                android:id="@+id/tv_scan_result_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/white"
+                                android:text="Item is match" />
+
+                            <ImageView
+                                android:id="@+id/ic_check_location"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/ic_check"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/ic_cross_location"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/ic_cross"
+                                android:visibility="gone" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                     <!--Service Address-->
                     <TextView
                         android:layout_width="wrap_content"
@@ -186,24 +398,6 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_20" />
 
-                    <!--Location-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/location" />
-
-                    <TextView
-                        android:id="@+id/location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/line"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_20" />
 
                     <!--Estimated work duration-->
                     <TextView
@@ -310,8 +504,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="7"
                                 android:layout_marginLeft="5dp"
+                                android:layout_weight="7"
                                 android:text="@string/image" />
 
                             <TextView
