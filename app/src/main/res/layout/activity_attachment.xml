@@ -21,12 +21,14 @@
     </data>
 
     <LinearLayout
+        android:background="@color/colorRed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".pages.attachment.AttachmentActivity">
 
         <LinearLayout
+            android:background="@color/colorYellow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -50,13 +52,7 @@
                 android:id="@+id/rv_attachments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/general_padding_10dp"
-                android:scrollbars="vertical"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Hai"/>
-
+                android:padding="@dimen/general_padding_5dp"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

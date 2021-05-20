@@ -20,6 +20,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.R
+import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -34,6 +35,19 @@ object GlideModule {
             .placeholder(R.drawable.progress_animation)
             .error(R.drawable.image_broken)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .priority(Priority.HIGH)
+            .dontAnimate()
+            .dontTransform();
+
+    @Named("svgRequestOption")
+    @Singleton
+    @Provides
+    fun provideSvgRequestOption() :RequestOptions =
+        RequestOptions()
+            .centerCrop()
+            .placeholder(R.drawable.progress_animation)
+            .error(R.drawable.image_broken)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .priority(Priority.HIGH)
             .dontAnimate()
             .dontTransform();

@@ -17,6 +17,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.request.RequestOptions
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityAttachmentBinding
@@ -24,7 +26,10 @@ import id.thork.app.pages.attachment.element.AttachmentAdapter
 import id.thork.app.pages.attachment.element.AttachmentViewModel
 import id.thork.app.persistence.entity.AttachmentEntity
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Named
 
+@AndroidEntryPoint
 class AttachmentActivity : BaseActivity() {
     val TAG = AttachmentActivity::class.java.name
 
@@ -34,10 +39,14 @@ class AttachmentActivity : BaseActivity() {
     private lateinit var attachmentAdapter: AttachmentAdapter
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
+    @Inject
+    @Named("svgRequestOption")
+    lateinit var svgRequestOptions: RequestOptions
+
     override fun setupView() {
         super.setupView()
         attachmentEntities = mutableListOf()
-        attachmentAdapter = AttachmentAdapter(this, this, attachmentEntities)
+        attachmentAdapter = AttachmentAdapter(this, svgRequestOptions,this, attachmentEntities)
 
         binding.apply {
             lifecycleOwner = this@AttachmentActivity

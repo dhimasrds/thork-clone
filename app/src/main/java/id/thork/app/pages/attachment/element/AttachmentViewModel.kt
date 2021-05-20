@@ -23,7 +23,7 @@ import timber.log.Timber
 
 class AttachmentViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
-    ): LiveCoroutinesViewModel() {
+) : LiveCoroutinesViewModel() {
     val TAG = AttachmentViewModel::class.java.name
 
     private val _attachments = MutableLiveData<List<AttachmentEntity>>()
@@ -32,8 +32,12 @@ class AttachmentViewModel @ViewModelInject constructor(
     fun fetchAttachments(woId: Int) {
         Timber.tag(TAG).d("fetchAttachments() woId: %s", woId)
         var attachmentEntities: List<AttachmentEntity> = listOf(
-            AttachmentEntity(name = "ikankoi.jpg"), AttachmentEntity(name = "ikanmas.jpg"),
-            AttachmentEntity(name = "ikanlele.jpg"), AttachmentEntity(name = "ikanpaus.jpg")
+            AttachmentEntity(name = "ikankoi.docccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", type = "WORD"),
+            AttachmentEntity(name = "ikanmas.pdf", type = "PDF"),
+            AttachmentEntity(name = "ikanlele.docx", type = "WORD"),
+            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
+            AttachmentEntity(name = "ikanlele.xlsx", type = "EXCEL"),
+            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE")
         )
         _attachments.value = attachmentEntities
     }
