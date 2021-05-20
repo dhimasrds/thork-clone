@@ -12,16 +12,23 @@
 
 package id.thork.app.pages.attachment
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.hbisoft.pickit.PickiT
+import com.hbisoft.pickit.PickiTCallbacks
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -33,8 +40,9 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
+
 @AndroidEntryPoint
-class AttachmentActivity : BaseActivity() {
+class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     val TAG = AttachmentActivity::class.java.name
 
     val viewModel: AttachmentViewModel by viewModels()
@@ -42,6 +50,8 @@ class AttachmentActivity : BaseActivity() {
 
     private lateinit var attachmentAdapter: AttachmentAdapter
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
+
+    private lateinit var pickiT: PickiT
 
     @Inject
     @Named("svgRequestOption")
@@ -69,7 +79,7 @@ class AttachmentActivity : BaseActivity() {
         }
 
         setupToolbarWithHomeNavigation(
-            getString(R.string.create_wo),
+            getString(R.string.attachments),
             navigation = false,
             filter = false,
             scannerIcon = false,
@@ -78,6 +88,9 @@ class AttachmentActivity : BaseActivity() {
         )
 
         viewModel.fetchAttachments(1)
+
+        pickiT = PickiT(this, this, this)
+        requestPermission()
     }
 
     override fun setupObserver() {
@@ -92,18 +105,72 @@ class AttachmentActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            val uri: Uri = data?.data!!
-            binding.ivThumbnail.setImageURI(uri)
-            Timber.tag(TAG).d("onActivityResult() camera uri: %s", uri)
-        } else if (resultCode == ImagePicker.REQUEST_CODE) {
-            val uri: Uri = data?.data!!
-            binding.ivThumbnail.setImageURI(uri)
-            Timber.tag(TAG).d("onActivityResult() gallery uri: %s", uri)
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Timber.tag(TAG).d("onActivityResult() error: %s", ImagePicker.getError(data))
-        } else {
-            Timber.tag(TAG).d("onActivityResult() cancel")
+        when (requestCode) {
+            SELECT_DOCUMENT_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val uri: Uri = data?.data!!
+                    Timber.tag(TAG).d("onActivityResult() file picker data: %s", uri.toString())
+                }
+            }
+            else -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val uri: Uri = data?.data!!
+                    binding.ivThumbnail.setImageURI(uri)
+                    Timber.tag(TAG).d("onActivityResult() camera uri: %s", uri.toString())
+                } else if (resultCode == ImagePicker.REQUEST_CODE) {
+                    val uri: Uri = data?.data!!
+                    binding.ivThumbnail.setImageURI(uri)
+                    Timber.tag(TAG).d("onActivityResult() gallery uri: %s", uri.toString())
+                } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                    Timber.tag(TAG).d("onActivityResult() error: %s", ImagePicker.getError(data))
+                } else {
+                    Timber.tag(TAG).d("onActivityResult() cancel")
+                }
+            }
         }
+    }
+
+    private fun requestPermission() {
+        Timber.tag(TAG).d("requestPermission()")
+        Dexter.withActivity(this)
+            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withListener(object: PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionGranted" )
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionDenied" )
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest?,
+                    token: PermissionToken?
+                ) {
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionRationaleShouldBeShown" )
+                }
+            }).check()
+    }
+
+    override fun PickiTonUriReturned() {
+        TODO("Not yet implemented")
+    }
+
+    override fun PickiTonStartListener() {
+        TODO("Not yet implemented")
+    }
+
+    override fun PickiTonProgressUpdate(progress: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun PickiTonCompleteListener(
+        path: String?,
+        wasDriveFile: Boolean,
+        wasUnknownProvider: Boolean,
+        wasSuccessful: Boolean,
+        Reason: String?
+    ) {
+        TODO("Not yet implemented")
     }
 }

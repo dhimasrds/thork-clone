@@ -65,7 +65,7 @@ buildscript {
 
         //Image Picker
         imagePickerVersion = "2.0"
-        unicornFilePickerVersion = "1.0.2"
+        pickItVersion = "0.1.14"
     }
 
     repositories {

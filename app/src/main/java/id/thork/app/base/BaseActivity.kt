@@ -12,12 +12,16 @@
 
 package id.thork.app.base
 
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -47,6 +51,8 @@ abstract class BaseActivity : AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> binding(
         @LayoutRes resId: Int
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
+
+    protected val SELECT_DOCUMENT_REQUEST = 555
 
     @Inject
     lateinit var connectionLiveData: ConnectionLiveData
@@ -94,7 +100,7 @@ abstract class BaseActivity : AppCompatActivity() {
         toolBarTitle.visibility = View.GONE
 
         if (navigation) {
-            val profile : ImageView = findViewById(R.id.profile_image)
+            val profile: ImageView = findViewById(R.id.profile_image)
             profile.visibility = View.VISIBLE
             profile.setOnClickListener {
                 goToSettingsActivity()
@@ -103,7 +109,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             toolBar.inflateMenu(R.menu.filter_menu)
         } else {
-            editTextToolbar.visibility =View.GONE
+            editTextToolbar.visibility = View.GONE
             toolBarTitle.visibility = View.VISIBLE
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolBar.setNavigationOnClickListener {
@@ -115,7 +121,7 @@ abstract class BaseActivity : AppCompatActivity() {
             filterIcon = filter
         }
 
-        if (scannerIcon){
+        if (scannerIcon) {
             this.scannerIcon = scannerIcon
         }
 
@@ -132,7 +138,8 @@ abstract class BaseActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     private fun setupToolbarOverflowIcon() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            toolBar.overflowIcon?.colorFilter = BlendModeColorFilter(Color.parseColor("#AEAEAE"), BlendMode.SRC_ATOP)
+            toolBar.overflowIcon?.colorFilter =
+                BlendModeColorFilter(Color.parseColor("#AEAEAE"), BlendMode.SRC_ATOP)
         } else {
             toolBar.overflowIcon?.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         }
@@ -155,7 +162,7 @@ abstract class BaseActivity : AppCompatActivity() {
             return true
         }
 
-        if (id == R.id.scan_menu){
+        if (id == R.id.scan_menu) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action scan menu")
             gotoScannerActivity()
             return true
@@ -176,18 +183,39 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (id == R.id.action_attach_image) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action attach image")
-            ImagePicker.with(this)
-                .galleryOnly()
-                .start()
+            openGallery()
             return true
         }
 
         if (id == R.id.action_attach_document) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action attach document")
+            openDocuments()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+
+
+    private fun openGallery() {
+        ImagePicker.with(this)
+            .galleryOnly()
+            .start()
+    }
+
+    private fun openDocuments() {
+        val intent: Intent
+        intent = if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+            Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+        } else {
+            Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI)
+        }
+        intent.setType("application/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("return-data", true);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(intent, SELECT_DOCUMENT_REQUEST);
+    }
+
 
     open fun setupMainView(mainView: ViewGroup) {
         this.mainView = mainView
