@@ -49,6 +49,9 @@
     <string name="action_detail">Detail</string>
     <string name="action_scan">Scan Barcode</string>
     <string name="action_report">Report</string>
+    <string name="action_capture_image">Capture Image</string>
+    <string name="action_attach_image">Attach Image</string>
+    <string name="action_attach_document">Attach Document</string>
 
     <!-- Menu base bottom navigation bar-->
     <!--Title Bottom Navigation-->

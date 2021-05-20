@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.github.dhaval2404.imagepicker.ImagePicker
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
@@ -162,6 +163,27 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (id == R.id.action_filter) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter")
+            return true
+        }
+
+        if (id == R.id.action_capture_image) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action capture image")
+            ImagePicker.with(this)
+                .cameraOnly()
+                .start()
+            return true
+        }
+
+        if (id == R.id.action_attach_image) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action attach image")
+            ImagePicker.with(this)
+                .galleryOnly()
+                .start()
+            return true
+        }
+
+        if (id == R.id.action_attach_document) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action attach document")
             return true
         }
         return super.onOptionsItemSelected(item)

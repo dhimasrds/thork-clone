@@ -12,12 +12,16 @@
 
 package id.thork.app.pages.attachment
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
+import com.github.dhaval2404.imagepicker.ImagePicker
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -46,7 +50,7 @@ class AttachmentActivity : BaseActivity() {
     override fun setupView() {
         super.setupView()
         attachmentEntities = mutableListOf()
-        attachmentAdapter = AttachmentAdapter(this, svgRequestOptions,this, attachmentEntities)
+        attachmentAdapter = AttachmentAdapter(this, svgRequestOptions, this, attachmentEntities)
 
         binding.apply {
             lifecycleOwner = this@AttachmentActivity
@@ -54,7 +58,12 @@ class AttachmentActivity : BaseActivity() {
 
             rvAttachments.apply {
                 layoutManager = LinearLayoutManager(this@AttachmentActivity)
-                addItemDecoration(DividerItemDecoration(this@AttachmentActivity, LinearLayoutManager.VERTICAL))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        this@AttachmentActivity,
+                        LinearLayoutManager.VERTICAL
+                    )
+                )
                 adapter = attachmentAdapter
             }
         }
@@ -81,4 +90,20 @@ class AttachmentActivity : BaseActivity() {
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            val uri: Uri = data?.data!!
+            binding.ivThumbnail.setImageURI(uri)
+            Timber.tag(TAG).d("onActivityResult() camera uri: %s", uri)
+        } else if (resultCode == ImagePicker.REQUEST_CODE) {
+            val uri: Uri = data?.data!!
+            binding.ivThumbnail.setImageURI(uri)
+            Timber.tag(TAG).d("onActivityResult() gallery uri: %s", uri)
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Timber.tag(TAG).d("onActivityResult() error: %s", ImagePicker.getError(data))
+        } else {
+            Timber.tag(TAG).d("onActivityResult() cancel")
+        }
+    }
 }

@@ -190,5 +190,10 @@ dependencies {
 
     //Progress bar
     implementation "com.ramijemli.percentagechartview:percentagechartview:$rootProject.percentageViewVersion"
+
+    //Camera and File Picker
+    implementation "com.github.dhaval2404:imagepicker:$rootProject.imagePickerVersion"
+    implementation "com.github.abhishekti7:UnicornFilePicker:$rootProject.unicornFilePickerVersion"
+
 }
 apply plugin: 'io.objectbox'
