@@ -18,6 +18,7 @@ import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.AssetDao
+import id.thork.app.persistence.dao.MultiAssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -26,8 +27,7 @@ class WorkerRepository constructor(
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
-    private val assetDao: AssetDao,
-) {
+    private val assetDao: AssetDao) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())

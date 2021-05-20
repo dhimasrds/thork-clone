@@ -14,8 +14,6 @@ data class Wostatu(
     val href: String? = null,
     @Json(name = "localref")
     val localref: String? = null,
-    @Json(name = "memo")
-    val memo: String? = null,
     @Json(name = "orgid")
     val orgid: String? = null,
     @Json(name = "parent")

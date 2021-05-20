@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/general_padding_10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/general_margin_10dp"
+        android:gravity="center">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="60dp"
+            android:layout_height="8dp"
+            android:background="@drawable/rectangle_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_margin_10dp"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/general_margin_10dp"
+            android:src="@drawable/ic_crew_tooltip_red" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/crew_tooltip_crew_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/general_margin_10dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="@dimen/base_text_size_16"                android:maxEms="15"
+                android:maxLines="1"
+                android:minLines="1"
+                android:text="Hendra"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/crew_tooltip_crew_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/general_margin_10dp"
+                android:maxEms="15"
+                android:maxLines="1"
+                android:minLines="1"
+                android:fontFamily="@font/roboto_regular"
+                android:textSize="@dimen/base_text_size_16"                android:text="Working"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

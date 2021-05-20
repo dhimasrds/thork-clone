@@ -33,7 +33,7 @@ import javax.inject.Named
 class AttachmentActivity : BaseActivity() {
     val TAG = AttachmentActivity::class.java.name
 
-    val attachmentViewModel: AttachmentViewModel by viewModels()
+    val viewModel: AttachmentViewModel by viewModels()
     private val binding: ActivityAttachmentBinding by binding(R.layout.activity_attachment)
 
     private lateinit var attachmentAdapter: AttachmentAdapter
@@ -50,7 +50,7 @@ class AttachmentActivity : BaseActivity() {
 
         binding.apply {
             lifecycleOwner = this@AttachmentActivity
-            vm = attachmentViewModel
+            vm = viewModel
 
             rvAttachments.apply {
                 layoutManager = LinearLayoutManager(this@AttachmentActivity)
@@ -58,12 +58,22 @@ class AttachmentActivity : BaseActivity() {
                 adapter = attachmentAdapter
             }
         }
-        attachmentViewModel.fetchAttachments(1)
+
+        setupToolbarWithHomeNavigation(
+            getString(R.string.create_wo),
+            navigation = false,
+            filter = false,
+            scannerIcon = false,
+            notification = false,
+            option = true
+        )
+
+        viewModel.fetchAttachments(1)
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        attachmentViewModel.attachments.observe(this, {
+        viewModel.attachments.observe(this, {
             attachmentEntities.clear()
             attachmentEntities.addAll(it)
             attachmentAdapter.notifyDataSetChanged()

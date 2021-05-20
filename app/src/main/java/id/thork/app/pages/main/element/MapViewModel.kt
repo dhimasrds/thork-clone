@@ -25,6 +25,8 @@ import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.dao.LocationDaoImp
+import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.FirebaseRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -44,12 +46,20 @@ class MapViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository,
     private val appSession: AppSession,
     private val appResourceMx: AppResourceMx,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     val TAG = MapViewModel::class.java.name
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
+
+    private val _getWoCache = MutableLiveData<WoCacheEntity>()
+    val getWoCache: LiveData<WoCacheEntity> get() = _getWoCache
+
+    fun setDataWo(wonum : String){
+        val wocache = workOrderRepository.findWobyWonum(wonum)
+        _getWoCache.value = wocache
+    }
 
     private val locationDao: LocationDao
 
@@ -67,11 +77,19 @@ class MapViewModel @ViewModelInject constructor(
         MutableLiveData<List<id.thork.app.network.response.fsm_location.Member>>()
     private val _listMemberAsset =
         MutableLiveData<List<id.thork.app.network.response.asset_response.Member>>()
+    private val _woCache = MutableLiveData<WoCacheEntity>()
+    private val _assetCache = MutableLiveData<AssetEntity>()
+    private val _locationCache = MutableLiveData<LocationEntity>()
+    private val _resultTagMarker = MutableLiveData<String>()
 
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
     val listMember: LiveData<List<Member>> get() = _listMember
     val listMemberLocation: LiveData<List<id.thork.app.network.response.fsm_location.Member>> get() = _listMemberLocation
     val listMemberAsset: LiveData<List<id.thork.app.network.response.asset_response.Member>> get() = _listMemberAsset
+    val woCache: LiveData<WoCacheEntity> get() = _woCache
+    val assetCache: LiveData<AssetEntity> get() = _assetCache
+    val locationCache: LiveData<LocationEntity> get() = _locationCache
+    val resultTagMarker: MutableLiveData<String>get() = _resultTagMarker
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -83,6 +101,24 @@ class MapViewModel @ViewModelInject constructor(
         } else {
             fetchListWoOffline()
         }
+    }
+
+    fun setDataWo(wonum : String, tag: String){
+        val wocache = workOrderRepository.findWobyWonum(wonum)
+        _woCache.value = wocache
+        _resultTagMarker.value = tag
+    }
+
+    fun setDataAsset(asset : String, tag: String){
+        val assetCache = workOrderRepository.findByAssetnum(asset)
+        _assetCache.value = assetCache
+        _resultTagMarker.value = tag
+    }
+
+    fun setDataLocation(loc : String, tag: String){
+        val locationCache = workOrderRepository.findByLocation(loc)
+        _locationCache.value = locationCache
+        _resultTagMarker.value = tag
     }
 
     fun fetchListWoOffline() {
@@ -98,7 +134,7 @@ class MapViewModel @ViewModelInject constructor(
 
     fun postCrewPosition(
         latitude: String,
-        longitude: String
+        longitude: String,
     ) {
         Timber.d("MapViewModel() postCrewPosition")
         val firebaseAndroid = FirebaseAndroid()
@@ -150,7 +186,7 @@ class MapViewModel @ViewModelInject constructor(
                 onSuccess = {
                     response = it
                     _listMember.postValue(it.member)
-                    checkingWoInObjectBox(response.member)
+                    checkingWoInObjectBox(it.member)
                 },
                 onError = {
                     Timber.d("MapViewModel() fetchListWo Online onError: %s", it)
@@ -166,14 +202,17 @@ class MapViewModel @ViewModelInject constructor(
         fetchLocationMarker()
     }
 
-    private fun checkingWoInObjectBox(list: List<id.thork.app.network.response.work_order.Member>) {
-        if (workOrderRepository.fetchWoList().isEmpty()) {
-            Timber.tag(TAG).d("checkingWoInObjectBox()")
-            workOrderRepository.addWoToObjectBox(list)
-        } else {
-            addObjectBoxToHashMap()
-            compareWoLocalWithServer(list)
+    private fun checkingWoInObjectBox(list: List<Member>?) {
+        list.whatIfNotNullOrEmpty {
+            if (workOrderRepository.fetchWoList().isEmpty()) {
+                Timber.tag(TAG).d("checkingWoInObjectBox()")
+                workOrderRepository.addWoToObjectBox(it)
+            } else {
+                addObjectBoxToHashMap()
+                compareWoLocalWithServer(it)
+            }
         }
+
     }
 
     private fun addObjectBoxToHashMap() {

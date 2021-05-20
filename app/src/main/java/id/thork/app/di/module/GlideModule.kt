@@ -33,7 +33,7 @@ object GlideModule {
         RequestOptions()
             .centerCrop()
             .placeholder(R.drawable.progress_animation)
-            .error(R.drawable.image_broken)
+            .error(R.drawable.default_image)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .priority(Priority.HIGH)
             .dontAnimate()

@@ -36,7 +36,7 @@ class WoActivityRepository constructor(
         pagesize: Int,
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
-        onException: (String) -> Unit
+        onException: (String) -> Unit,
     ) {
         val response = workOrderClient.getWorkOrderList(
             cookie, savedQuery, select, pageno, pagesize
@@ -71,7 +71,7 @@ class WoActivityRepository constructor(
         where: String,
         onSuccess: (WorkOrderResponse) -> Unit,
         onError: (String) -> Unit,
-        onException: (String) -> Unit
+        onException: (String) -> Unit,
     ) {
         val response = workOrderClient.searchWorkOrder(
             headerParam,
@@ -115,6 +115,7 @@ class WoActivityRepository constructor(
         repository: WoActivityRepository,
         preferenceManager: PreferenceManager,
         appResourceMx: AppResourceMx,
+        workOrderRepository: WorkOrderRepository,
     ) =
         Pager(
             config = PagingConfig(
@@ -128,7 +129,8 @@ class WoActivityRepository constructor(
                     woCacheDao,
                     null,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    workOrderRepository
                 )
             }
         ).liveData
@@ -139,7 +141,8 @@ class WoActivityRepository constructor(
         query: String,
         preferenceManager: PreferenceManager,
         appResourceMx: AppResourceMx,
-        ) =
+        workOrderRepository: WorkOrderRepository,
+    ) =
         Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -152,7 +155,8 @@ class WoActivityRepository constructor(
                     woCacheDao,
                     query,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    workOrderRepository
                 )
             }
         ).liveData

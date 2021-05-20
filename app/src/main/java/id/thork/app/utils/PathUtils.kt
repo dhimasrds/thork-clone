@@ -24,4 +24,12 @@ object PathUtils {
                     + "/"
                     + drawable)
     }
+
+    fun getResourceUri(context: Context, resources: String): Uri {
+        return Uri.parse(
+            ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                    + context.getPackageName()
+                    + "/"
+                    + resources)
+    }
 }

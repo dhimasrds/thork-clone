@@ -32,6 +32,12 @@ object CacheModule {
 
     @Singleton
     @Provides
+    fun provideMultiAssetDao(): MultiAssetDao {
+        return MultiAssetDaoImp()
+    }
+
+    @Singleton
+    @Provides
     fun providelocationDao(): LocationDao {
         return LocationDaoImp()
     }

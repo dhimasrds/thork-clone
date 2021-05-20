@@ -9,6 +9,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppResourceMx
@@ -20,13 +21,12 @@ import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
-import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.LocationDao
-import id.thork.app.persistence.dao.LocationDaoImp
-import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
+import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.utils.StringUtils
 import id.thork.app.utils.WoUtils
 import timber.log.Timber
 import java.util.*
@@ -40,14 +40,18 @@ class WorkOrderRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
-    private val assetDao: AssetDao
+    private val assetDao: AssetDao,
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
+    private val multiAssetDao: MultiAssetDao
 
     init {
         locationDao = LocationDaoImp()
+        multiAssetDao = MultiAssetDaoImp()
     }
+
+    var woListObjectBox: HashMap<String, WoCacheEntity>? = null
 
     suspend fun getWorkOrderList(
         cookie: String,
@@ -146,13 +150,13 @@ class WorkOrderRepository @Inject constructor(
     }
 
     suspend fun updateStatus(
-        headerParam: String, xMethodeOverride: String, contentType: String,
+        cookie: String, xMethodeOverride: String, contentType: String,
         workOrderId: Int, body: Member,
         onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit,
     ) {
         val response =
             workOrderClient.updateStatus(
-                headerParam,
+                cookie,
                 xMethodeOverride,
                 contentType,
                 workOrderId,
@@ -183,6 +187,14 @@ class WorkOrderRepository @Inject constructor(
 
     fun deleteLocation() {
         locationDao.deleteLocation()
+    }
+
+    fun saveMultiAssetToObjectBox(multiAssetEntity: MultiAssetEntity) {
+        multiAssetDao.save(multiAssetEntity, appSession.userEntity.username.toString())
+    }
+
+    fun deleteMultiAsset() {
+        multiAssetDao.remove()
     }
 
     fun getWoList(
@@ -272,6 +284,7 @@ class WorkOrderRepository @Inject constructor(
                         laborCode = laborCode
                     )
                     setupWoLocation(woCacheEntity, wo)
+                    multiAssetToObjectBox(wo)
                     woCacheEntity.createdDate = Date()
                     woCacheEntity.createdBy = appSession.userEntity.username
                     woCacheEntity.updatedBy = appSession.userEntity.username
@@ -297,6 +310,7 @@ class WorkOrderRepository @Inject constructor(
                     laborCode = laborCode
                 )
                 setupWoLocation(woCacheEntity, member)
+                multiAssetToObjectBox(member)
                 woCacheEntity.createdDate = Date()
                 woCacheEntity.createdBy = appSession.userEntity.username
                 woCacheEntity.updatedBy = appSession.userEntity.username
@@ -306,7 +320,7 @@ class WorkOrderRepository @Inject constructor(
 
     fun replaceWolocalChace(
         woCacheEntity: WoCacheEntity,
-        member: id.thork.app.network.response.work_order.Member
+        member: id.thork.app.network.response.work_order.Member,
     ) {
         woCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
         woCacheEntity.woId = member.workorderid
@@ -418,6 +432,10 @@ class WorkOrderRepository @Inject constructor(
         return assetDao.remove()
     }
 
+    fun deleteWoEntity() {
+        return woCacheDao.remove()
+    }
+
     fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
         for (asset in list) {
             val assetEntity = AssetEntity(
@@ -439,6 +457,192 @@ class WorkOrderRepository @Inject constructor(
             assetEntity.updatedBy = appSession.userEntity.username
             saveAssetList(assetEntity, appSession.userEntity.username)
         }
+    }
+
+    fun updateWoCacheBeforeSync(
+        woId: Int?,
+        wonum: String?,
+        status: String?,
+        longdesc: String?,
+        nextStatus: String,
+    ) {
+        val currentWoCache: WoCacheEntity? =
+            wonum?.let {
+                status?.let { woStatus ->
+                    woCacheDao.findWoByWonumAndStatus(
+                        it,
+                        woStatus
+                    )
+                }
+            }
+
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter = moshi.adapter(Member::class.java)
+        val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
+        currentMember?.status = nextStatus
+        currentMember?.descriptionLongdescription = longdesc
+
+        if (currentWoCache?.isLatest == BaseParam.APP_TRUE) {
+            currentWoCache.syncStatus = BaseParam.APP_FALSE
+            currentWoCache.isLatest = BaseParam.APP_FALSE
+//            currentWoCache.let { updateWo(it, appSession.userEntity.username) }
+            updateWo(currentWoCache, appSession.userEntity.username)
+
+            val newWoCache = WoCacheEntity()
+            newWoCache.createdDate = Date()
+            newWoCache.updatedDate = Date()
+            newWoCache.createdBy = appSession.userEntity.username
+            newWoCache.updatedBy = appSession.userEntity.username
+            newWoCache.syncBody = memberJsonAdapter.toJson(currentMember)
+            newWoCache.syncStatus = BaseParam.APP_FALSE
+            newWoCache.isChanged = BaseParam.APP_TRUE
+            newWoCache.isLatest = BaseParam.APP_TRUE
+            newWoCache.laborCode = appSession.laborCode
+            newWoCache.wonum = wonum
+            newWoCache.status = nextStatus
+            newWoCache.woId = woId
+            saveWoList(newWoCache, appSession.userEntity.username)
+        }
+    }
+
+    fun updateWoCacheAfterSync(
+        wonum: String?,
+        longdesc: String?,
+        nextStatus: String,
+    ) {
+        val currentWoCache: WoCacheEntity? = wonum?.let {
+            nextStatus.let { it1 ->
+                woCacheDao.findWoByWonumAndStatus(
+                    it,
+                    it1
+                )
+            }
+        }
+
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter = moshi.adapter(Member::class.java)
+        val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
+        currentMember?.status = nextStatus
+        currentMember?.descriptionLongdescription = longdesc
+
+        currentWoCache?.syncBody = memberJsonAdapter.toJson(currentMember)
+        currentWoCache?.syncStatus = BaseParam.APP_TRUE
+        currentWoCache?.isChanged = BaseParam.APP_FALSE
+        currentWoCache?.isLatest = BaseParam.APP_TRUE
+        updateWo(currentWoCache!!, appSession.userEntity.username)
+//        if (currentWoCache != null) {
+//            updateWo(currentWoCache, appSession.userEntity.username)
+//        }
+    }
+
+    fun addObjectBoxToHashMapActivity() {
+        Timber.d("queryObjectBoxToHashMap()")
+        if (woCacheDao.findAllWo().isNotEmpty()) {
+            woListObjectBox = HashMap<String, WoCacheEntity>()
+            val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
+            for (i in cacheEntities.indices) {
+                if (cacheEntities[i].status != null
+                    && cacheEntities[i].status.equals(BaseParam.COMPLETED)
+                ) {
+                    woListObjectBox!![cacheEntities[i].wonum!!] = cacheEntities[i]
+                    Timber.d("HashMap value: %s", woListObjectBox!![cacheEntities[i].wonum])
+                }
+            }
+        }
+    }
+
+    fun compareWoLocalActivityWithServer(list: List<Member>) {
+        for (wo in list) {
+            if (woListObjectBox!![wo.wonum!!] != null) {
+                val woCahce = findWobyWonum(wo.wonum.toString())
+                val dateMaximo = StringUtils.convertTimeString(wo.changedate.toString())
+                val dateWoCache = StringUtils.convertTimeString(woCahce?.changeDate.toString())
+                Timber.tag(TAG).d("compareWoLocalWithServer() date Maximo convert: ${dateMaximo}")
+                if (woCahce?.syncStatus?.equals(BaseParam.APP_TRUE) == true && dateMaximo > dateWoCache) {
+                    Timber.tag(TAG).d("compareWoLocalWithServer() replace wo local cache")
+                    replaceWolocalChace(woCahce, wo)
+                }
+            } else if (woListObjectBox!![wo.status] != null && woListObjectBox!![wo.status]!!.equals(
+                    BaseParam.COMPLETED)
+            ) {
+                Timber.tag(TAG).d("compareWoLocalWithServer() add new Wo")
+                addWoToObjectBox(wo)
+            }
+        }
+    }
+
+    fun addObjectBoxToHashMap() {
+        Timber.d("queryObjectBoxToHashMap()")
+        if (woCacheDao.findAllWo().isNotEmpty()) {
+            woListObjectBox = HashMap<String, WoCacheEntity>()
+            val cacheEntities: List<WoCacheEntity> = woCacheDao.findAllWo()
+            cacheEntities.whatIfNotNullOrEmpty { caches ->
+                for (i in caches.indices) {
+                    caches[i].wonum.whatIfNotNullOrEmpty { cachesWo ->
+                        woListObjectBox!![cachesWo] = caches[i]
+                        Timber.d("HashMap value: %s", woListObjectBox!![cachesWo])
+                    }
+                }
+            }
+        }
+    }
+
+    fun compareWoLocalWithServer(list: List<Member>) {
+        for (wo in list) {
+            if (woListObjectBox!![wo.wonum!!] != null) {
+                val woCahce = findWobyWonum(wo.wonum.toString())
+                val dateMaximo = StringUtils.convertTimeString(wo.changedate.toString())
+                val dateWoCache = StringUtils.convertTimeString(woCahce?.changeDate.toString())
+                Timber.tag(TAG).d("compareWoLocalWithServer() date Maximo convert: ${dateMaximo}")
+                if (woCahce?.syncStatus?.equals(BaseParam.APP_TRUE) == true && dateMaximo > dateWoCache) {
+                    Timber.tag(TAG).d("compareWoLocalWithServer() replace wo local cache")
+                    replaceWolocalChace(woCahce, wo)
+                }
+            } else {
+                Timber.tag(TAG).d("compareWoLocalWithServer() add new Wo")
+                addWoToObjectBox(wo)
+            }
+        }
+    }
+
+    fun multiAssetToObjectBox(member: Member){
+        member.multiassetlocci.whatIfNotNullOrEmpty {
+            for (multiAsset in it) {
+                val multiAssetEntity = MultiAssetEntity()
+                multiAssetEntity.multiassetId = multiAsset.multiid
+                multiAssetEntity.progress = multiAsset.progress == true
+                multiAssetEntity.asssetId = multiAsset.asset?.get(0)?.assetid
+                multiAssetEntity.description = multiAsset.asset?.get(0)?.description
+
+                multiAsset.asset?.get(0)?.imagelibref.whatIfNotNull {
+                    multiAssetEntity.image = it
+                }
+
+                multiAsset.asset?.get(0)?.thisfsmrfid.whatIfNotNull {
+                    multiAssetEntity.thisfsmrfid = it
+                }
+
+                multiAsset.asset?.get(0)?.thisfsmtagtime.whatIfNotNull {
+                    multiAssetEntity.thisfsmtagtime = it
+                }
+
+                multiAssetEntity.assetNum = multiAsset.assetnum
+                multiAssetEntity.location = multiAsset.location
+                multiAssetEntity.wonum = member.wonum
+                multiAssetEntity.workorderId = member.workorderid
+                multiAssetEntity.siteid = member.siteid
+                multiAssetEntity.orgid = member.orgid
+                saveMultiAssetToObjectBox(multiAssetEntity)
+            }
+        }
+    }
+
+    fun findByAssetnum(assetnum: String): AssetEntity? {
+        return assetDao.findByAssetnum(assetnum)
+    }
+
+    fun findByLocation(location: String): LocationEntity? {
+        return locationDao.findByLocation(location)
     }
 
 }

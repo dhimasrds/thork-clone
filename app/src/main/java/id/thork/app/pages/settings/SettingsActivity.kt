@@ -55,7 +55,9 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             getString(R.string.action_settings),
             navigation = false,
             filter = false,
-            scannerIcon = false
+            scannerIcon = false,
+            notification = false,
+            option = false
         )
     }
 

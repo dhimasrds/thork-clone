@@ -53,13 +53,13 @@ object MapsUtils {
             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_location_marker_foreground))
 
         googleMap.addMarker(options)
-            .tag = BaseParam.APP_TAG_MARKER_WO
+            .tag = BaseParam.APP_TAG_MARKER_LOCATION
     }
 
     fun renderAssetMarker(googleMap: GoogleMap, latLng: LatLng, title: String) {
         val options = MarkerOptions()
             .position(latLng)
-            .title(title)
+            .snippet(title)
             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_asset_marker))
 
         googleMap.addMarker(options)

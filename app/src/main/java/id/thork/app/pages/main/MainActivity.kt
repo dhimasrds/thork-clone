@@ -34,8 +34,8 @@ import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
-import id.thork.app.pages.example.ImageActivity
 import id.thork.app.pages.main.element.MainViewModel
+import id.thork.app.pages.multi_asset.ListAssetActivity
 import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 
@@ -56,7 +56,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         super.setupView()
         setupMainView(binding.mainLayout)
 
-        setupToolbarWithHomeNavigation(getString(R.string.this_fsm), navigation = true, filter = true, scannerIcon = false)
+        setupToolbarWithHomeNavigation(
+            getString(R.string.this_fsm), navigation = true,
+            filter = true, scannerIcon = false,
+            notification = true, option = false
+        )
         setupBottomNavigationBar()
 
         binding.apply {
@@ -69,7 +73,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain
-        val navGraphIds = listOf(R.navigation.nav_graph_wo,R.navigation.nav_graph_history,R.navigation.nav_graph_map)
+        val navGraphIds = listOf(
+            R.navigation.nav_graph_wo,
+            R.navigation.nav_graph_history,
+            R.navigation.nav_graph_map
+        )
         Timber.tag(TAG).i("setupBottomNavigationBar() navGraphIds: %s", navGraphIds.toString())
 
         val navController = bottomNavigationView.setupWithNavController(
@@ -104,8 +112,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     override fun goToSettingsActivity() {
         finish()
-        startActivity(Intent(this, SettingsActivity::class.java))
-//        startActivity(Intent(this, ImageActivity::class.java))
+        startActivity(Intent(this, ListAssetActivity::class.java))
     }
 
     /**
@@ -179,5 +186,4 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         }
         this.exitApplication = true
     }
-
 }

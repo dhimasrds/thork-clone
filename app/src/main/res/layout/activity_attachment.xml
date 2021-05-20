@@ -21,14 +21,12 @@
     </data>
 
     <LinearLayout
-        android:background="@color/colorRed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".pages.attachment.AttachmentActivity">
 
         <LinearLayout
-            android:background="@color/colorYellow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">

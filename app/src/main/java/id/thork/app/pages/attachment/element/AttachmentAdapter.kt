@@ -13,12 +13,17 @@
 package id.thork.app.pages.attachment.element
 
 import android.content.Context
+import android.content.Intent
+import android.content.res.AssetManager
 import android.net.Uri
-import android.view.LayoutInflater
+import android.view.LayoutInflater.from
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.FileProvider
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
+import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.AttachmentItemBinding
@@ -26,6 +31,10 @@ import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.utils.PathUtils
+import id.thork.app.utils.StringUtils
+import timber.log.Timber
+import java.io.File
+
 
 class AttachmentAdapter constructor(
     private val context: Context,
@@ -33,18 +42,15 @@ class AttachmentAdapter constructor(
     private val attachmentActivity: AttachmentActivity,
     private val attachmentEntities: List<AttachmentEntity>
 ) : RecyclerView.Adapter<AttachmentAdapter.AttachmentHolder>() {
+    val TAG = AttachmentAdapter::class.java.name
 
     lateinit var attachmentEntity: AttachmentEntity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttachmentHolder {
-        val layoutInflater: LayoutInflater =
-            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val adapterView = layoutInflater.inflate(R.layout.attachment_item, parent, false)
-//        layoutInflater.inflate(R.layout.attachment_item, parent, false)
-//        LayoutInflater.from(context).inflate(R.layout.attachment_item, parent, false)
-
-        val inflater = LayoutInflater.from(parent.context, )
-        val binding = AttachmentItemBinding.inflate(inflater)
+        val binding = DataBindingUtil.inflate<AttachmentItemBinding>(
+            from(parent.getContext()),
+            R.layout.attachment_item, parent, false
+        )
         return AttachmentHolder(binding)
     }
 
@@ -59,8 +65,21 @@ class AttachmentAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(attachmentEntity: AttachmentEntity) {
             with(binding) {
-                tvAttachmentFilename.text = attachmentEntity.name
+                tvAttachmentFilename.text = StringUtils.truncate(attachmentEntity.name, 30)
                 classifyImageThumbnail(attachmentEntity, ivThumbnail)
+
+                root.setOnClickListener {
+                    val fileName: String = "filepdf.pdf"
+                    val newFile = File(context.getExternalFilesDir(null)?.absolutePath + "/" + fileName)
+                    val fileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID
+                    + ".provider", newFile)
+                    context.grantUriPermission(context.packageName, fileUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.setDataAndType(fileUri, "application/pdf")
+                    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    context.startActivity(intent)
+                }
             }
         }
 

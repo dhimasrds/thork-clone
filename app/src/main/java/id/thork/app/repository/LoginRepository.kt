@@ -19,10 +19,7 @@ import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.ErrorResponse.ErrorResponse
 import id.thork.app.network.response.system_properties.SystemProperties
-import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.SysPropDao
-import id.thork.app.persistence.dao.SysResDao
-import id.thork.app.persistence.dao.UserDao
+import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
@@ -36,6 +33,8 @@ class LoginRepository constructor(
     private val sysPropDao: SysPropDao,
     private val sysResDao: SysResDao,
     private val assetDao: AssetDao,
+    private val woCacheDao: WoCacheDao,
+    private val multiAssetDao: MultiAssetDao
 ) : BaseRepository {
     val TAG = LoginRepository::class.java.name
 
@@ -69,6 +68,10 @@ class LoginRepository constructor(
         return sysPropDao.remove()
     }
 
+    fun deleteWoPropertios() {
+        return woCacheDao.remove()
+    }
+
     fun createListSystemProperties(sysPropEntityList: List<SysPropEntity>): List<SysPropEntity> {
         return sysPropDao.saveListSystemProperties(sysPropEntityList)
     }
@@ -83,6 +86,10 @@ class LoginRepository constructor(
 
     fun deleteAssetEntity() {
         return assetDao.remove()
+    }
+
+    fun deleteMultiAssetEntity() {
+        return multiAssetDao.remove()
     }
 
 

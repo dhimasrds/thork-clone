@@ -13,19 +13,21 @@ import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.repository.WoActivityRepository
+import id.thork.app.repository.WorkOrderRepository
 import timber.log.Timber
 
 /**
  * Created by Dhimas Saputra on 16/02/21
  * Jakarta, Indonesia.
  */
-class WorkOrderActvityViewModel  @ViewModelInject constructor(
+class WorkOrderActvityViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val repository: WoActivityRepository,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
     private val assetDao: AssetDao,
-    @Assisted state: SavedStateHandle
+    private val workOrderRepository: WorkOrderRepository,
+    @Assisted state: SavedStateHandle,
 ) : LiveCoroutinesViewModel() {
 
     companion object {
@@ -47,10 +49,19 @@ class WorkOrderActvityViewModel  @ViewModelInject constructor(
     val woList = currentQuery.switchMap { query ->
         if (!query.isEmpty()) {
             Timber.d("filter on  viewmodel :%s", query)
-            repository.getSearchWo(appSession, repository, query, preferenceManager, appResourceMx)
+            repository.getSearchWo(appSession,
+                repository,
+                query,
+                preferenceManager,
+                appResourceMx,
+                workOrderRepository)
         } else {
             Timber.d("filter off viewmodel :%s", query)
-            repository.getWoList(appSession, repository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
+            repository.getWoList(appSession,
+                repository,
+                preferenceManager,
+                appResourceMx,
+                workOrderRepository).cachedIn(viewModelScope)
         }
     }
 

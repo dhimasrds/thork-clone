@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="id.thork.app.pages.multi_asset.element.MultiAssetViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/general_padding_15dp"
+        tools:context=".pages.multi_asset.DetailsAssetActivity"
+        android:orientation="vertical"
+        >
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="@dimen/general_margin_10dp"
+            android:layout_alignParentTop="true"
+            android:gravity="center">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/iv_asset"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:src="@drawable/default_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/assetnum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base_text_size_16"
+                android:fontFamily="@font/roboto_bold"
+                android:layout_marginBottom="@dimen/general_margin_10dp"
+                android:textColor="@color/black"
+                android:text="Bravo - 188"/>
+
+            <TextView
+                android:id="@+id/asset_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base_text_size_16"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/black"
+                android:text="The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymph"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base_text_size_16"
+                android:fontFamily="@font/roboto_bold"
+                android:layout_marginBottom="@dimen/general_margin_10dp"
+                android:textColor="@color/black"
+                android:text="@string/location"/>
+
+            <TextView
+                android:id="@+id/asset_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/base_text_size_16"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/black"
+                android:text="Alfamidi - Gudang 1"
+                /></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:weightSum="2">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_rfid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                android:text="@string/scan_rfid"
+                android:layout_marginRight="@dimen/general_margin_2dp"
+                android:textAllCaps="false"
+                android:background="@drawable/rectangle_rfid"
+                android:drawablePadding="@dimen/general_margin_10dp"
+                android:drawableRight="@drawable/ic_rfid"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@id/button_qr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                android:layout_marginLeft="@dimen/general_margin_2dp"
+                android:text="@string/scan_qr"
+                android:textAllCaps="false"
+                android:background="@drawable/rectangle_scanqr"
+                android:drawablePadding="@dimen/general_margin_10dp"
+                android:drawableRight="@drawable/ic_scanqr"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

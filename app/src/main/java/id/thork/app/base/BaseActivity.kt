@@ -12,6 +12,11 @@
 
 package id.thork.app.base
 
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -58,6 +63,8 @@ abstract class BaseActivity : AppCompatActivity() {
     private var optionMenu: Menu? = null
     private var filterIcon: Boolean = false
     private var scannerIcon: Boolean = false
+    private var notificationIcon: Boolean = false
+    private var optionIcon: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +80,9 @@ abstract class BaseActivity : AppCompatActivity() {
         title: String,
         navigation: Boolean,
         filter: Boolean,
-        scannerIcon: Boolean
+        scannerIcon: Boolean,
+        notification: Boolean,
+        option: Boolean
     ) {
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
@@ -108,17 +117,33 @@ abstract class BaseActivity : AppCompatActivity() {
         if (scannerIcon){
             this.scannerIcon = scannerIcon
         }
+
+        if (notification) {
+            this.notificationIcon = notification
+        }
+        if (option) {
+            this.optionIcon = option
+        }
+
+        setupToolbarOverflowIcon()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setupToolbarOverflowIcon() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            toolBar.overflowIcon?.colorFilter = BlendModeColorFilter(Color.parseColor("#AEAEAE"), BlendMode.SRC_ATOP)
+        } else {
+            toolBar.overflowIcon?.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         optionMenu = menu
         menuInflater.inflate(R.menu.actionbar_menu, optionMenu)
-        if (!filterIcon){
-            optionMenu?.findItem(R.id.action_filter)?.isVisible = false
-        }
-        if (!scannerIcon){
-            optionMenu?.findItem(R.id.scan_menu)?.isVisible = false
-        }
+        optionMenu?.findItem(R.id.action_filter)?.setVisible(filterIcon)
+        optionMenu?.findItem(R.id.scan_menu)?.setVisible(scannerIcon)
+        optionMenu?.findItem(R.id.action_notif)?.setVisible(notificationIcon)
+        optionMenu?.findItem(R.id.action_option)?.setVisible(optionIcon)
         return true
     }
 
@@ -178,7 +203,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun onSlowConnection() {
-        CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow),)
+        CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow))
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
     }
 

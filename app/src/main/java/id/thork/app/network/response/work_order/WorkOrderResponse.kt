@@ -7,13 +7,9 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class WorkOrderResponse(
     @Json(name = "href")
-    val href: String,
+    val href: String? = null,
     @Json(name = "member")
-    val member: List<Member>,
+    val member: List<Member>? = null,
     @Json(name = "responseInfo")
-    val responseInfo: ResponseInfo
+    val responseInfo: ResponseInfo? = null
 )
-{
-    constructor() : this(href = "", member = emptyList(), responseInfo = ResponseInfo(
-        ""))
-}
