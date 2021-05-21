@@ -16,12 +16,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:cardCornerRadius="8dp"
+        android:focusable="true"
+        android:clickable="true"
         android:elevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/row_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_effect">
 
             <View
                 android:id="@+id/bgStatus"

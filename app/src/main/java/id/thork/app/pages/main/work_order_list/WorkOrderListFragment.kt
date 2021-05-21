@@ -54,7 +54,7 @@ class WorkOrderListFragment : Fragment() {
         setupObserver()
         setUpFilterListener()
         swipeRefresh()
-        progressBarOnFirstLoad()
+//        progressBarOnFirstLoad()
 
     }
 

@@ -77,4 +77,9 @@ class DetailsAssetActivity : BaseActivity() {
             .apply(requestOptions)
             .into(binding.ivAsset)
     }
+
+    override fun goToPreviousActivity() {
+        super.goToPreviousActivity()
+        finish()
+    }
 }

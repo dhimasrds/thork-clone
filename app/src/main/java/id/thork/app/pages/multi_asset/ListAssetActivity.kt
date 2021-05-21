@@ -47,4 +47,9 @@ class ListAssetActivity : BaseActivity() {
             multiAssetAdapter.setMultiAssetList(it)
         })
     }
+
+    override fun goToPreviousActivity() {
+        super.goToPreviousActivity()
+        finish()
+    }
 }

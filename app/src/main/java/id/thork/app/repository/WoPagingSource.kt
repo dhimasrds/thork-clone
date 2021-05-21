@@ -54,36 +54,21 @@ class WoPagingSource @Inject constructor(
         val position = params.key ?: 1
         Timber.d("position :%s", position)
         return try {
-            if (query == null) {
                 fetchWo(position)
                 checkWoOnLocal()
-                if (error && checkWoOnLocal().isEmpty()) {
-                    return LoadResult.Error(Exception())
-                } else if (error && checkWoOnLocal().isNotEmpty() && position > 1) {
-                    return LoadResult.Error(Exception())
-                }
-            }
 
-            val wo = if (query != null) {
-                searchLoadWoCache(offset, query)
+            if(error){
+                Timber.d("paging source error:%s", error)
+                return LoadResult.Error(Exception())
 
-                when {
-                    emptyList -> {
-                        Timber.d("emptylist paging source :%s", emptyList)
-                        searchWoFromServer()
-                        searchLoadWoCache(offset, query.toString())
-                    }
-                    else -> searchLoadWoCache(offset, query)
-                }
-            } else {
-                loadWoCache(offset)
             }
+                val wo = loadWoCache(offset)
             Timber.d("filter paging source :%s", query)
             Timber.d("filter paging source wo size:%s", wo)
-            loadResultPage(wo, position)
+            loadResultPage(wo!!, position)
 
         } catch (exception: IOException) {
-            Timber.d("exception :%s", exception)
+            Timber.d("exception source :%s", exception)
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)
@@ -145,13 +130,13 @@ class WoPagingSource @Inject constructor(
         return error
     }
 
-    private fun loadResultPage(list: List<Member>?, position: Int): LoadResult<Int, Member> {
-        list.whatIfNotNullOrEmpty {
+    private fun loadResultPage(list: List<Member>, position: Int): LoadResult<Int, Member> {
+
             return try {
                 LoadResult.Page(
-                    data = it,
+                    data = list,
                     prevKey = null,
-                    nextKey = if (it.isEmpty()) {
+                    nextKey = if (list.isEmpty()) {
                         null
                     } else {
                         offset += 10
@@ -162,8 +147,6 @@ class WoPagingSource @Inject constructor(
             } catch (exception: Exception) {
                 return LoadResult.Error(exception)
             }
-        }
-        return LoadResult.Error(Exception("Result is empty"))
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
