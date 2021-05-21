@@ -129,7 +129,6 @@ class WorkOrderWorker @WorkerInject constructor(
                     member,
                     onSuccess = {
                         workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
-                        Timber.tag(TAG).i("onSuccess() success: %s", it)
                     },
                     onError = {
                         Timber.tag(TAG).i("onError() onError: %s", it)

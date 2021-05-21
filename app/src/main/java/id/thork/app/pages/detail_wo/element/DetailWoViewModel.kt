@@ -90,11 +90,11 @@ class DetailWoViewModel @ViewModelInject constructor(
     ) {
 
         workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
+        Timber.tag(TAG).d("updateWo() updateWoCacheBeforeSync()")
 
         val member = Member()
         member.status = nextStatus
         member.descriptionLongdescription = longdesc
-
 
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val xMethodeOverride: String = BaseParam.APP_PATCH
@@ -109,10 +109,9 @@ class DetailWoViewModel @ViewModelInject constructor(
                     onSuccess = {
                         workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
                         saveScannerMaterial(woId)
-                        Timber.tag(TAG).i("onSuccess() success: %s", it)
                     },
                     onError = {
-                        Timber.tag(TAG).i("onError() onError: %s", it)
+                        Timber.tag(TAG).i("updateWo() onError() onError: %s", it)
                     })
             }
         }

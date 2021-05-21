@@ -153,7 +153,7 @@ class WorkOrderRepository @Inject constructor(
     suspend fun updateStatus(
         cookie: String, xMethodeOverride: String, contentType: String,
         workOrderId: Int, body: Member,
-        onSuccess: (WorkOrderResponse) -> Unit, onError: (String) -> Unit,
+        onSuccess: () -> Unit, onError: (String) -> Unit,
     ) {
         val response =
             workOrderClient.updateStatus(
@@ -164,9 +164,9 @@ class WorkOrderRepository @Inject constructor(
                 body
             )
         response.suspendOnSuccess {
-            data.whatIfNotNull { response ->
-                onSuccess(response)
-            }
+                onSuccess()
+                Timber.tag(TAG).i("updateStatus() code: %s ", statusCode.code)
+
         }
             .onError {
                 Timber.tag(TAG).i("updateStatus() code: %s error: %s", statusCode.code, message())
@@ -479,6 +479,8 @@ class WorkOrderRepository @Inject constructor(
                 }
             }
 
+        Timber.tag(TAG).d("updateWo() updateWoCacheBeforeSync() %s", currentWoCache?.status)
+
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
@@ -525,7 +527,7 @@ class WorkOrderRepository @Inject constructor(
             }
         }
 
-        Timber.tag(TAG).d("updateWoCacheAfterSync() %s", currentWoCache?.status)
+        Timber.tag(TAG).d("updateWo() updateWoCacheAfterSync() %s", currentWoCache?.status)
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
@@ -538,9 +540,6 @@ class WorkOrderRepository @Inject constructor(
         currentWoCache?.isChanged = BaseParam.APP_FALSE
         currentWoCache?.isLatest = BaseParam.APP_TRUE
         updateWo(currentWoCache!!, appSession.userEntity.username)
-//        if (currentWoCache != null) {
-//            updateWo(currentWoCache, appSession.userEntity.username)
-//        }
     }
 
     fun addObjectBoxToHashMapActivity() {
