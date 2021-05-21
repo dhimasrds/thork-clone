@@ -63,12 +63,12 @@ class WoPagingSource @Inject constructor(
 
             }
                 val wo = loadWoCache(offset)
-            Timber.d("filter paging source :%s", query)
-            Timber.d("filter paging source wo size:%s", wo)
+            Timber.d("filter paging source wo size:%s", wo?.size)
             loadResultPage(wo!!, position)
 
         } catch (exception: IOException) {
             Timber.d("exception source :%s", exception)
+
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)

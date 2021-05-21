@@ -258,10 +258,11 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun findWobyWonum(wonum: String): WoCacheEntity? {
-        val woCacheEntity = woCacheDao.findWoByWonum(wonum)
+        val woCacheEntity = woCacheDao.findWoByWonumAndIslatest(wonum, BaseParam.APP_TRUE)
         woCacheEntity.whatIfNotNull { return woCacheEntity }
         return null
     }
+
 
     fun updateWo(woCacheEntity: WoCacheEntity, username: String?) {
         return woCacheDao.updateWo(woCacheEntity, username!!)

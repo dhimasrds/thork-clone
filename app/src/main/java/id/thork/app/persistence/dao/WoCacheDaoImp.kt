@@ -71,6 +71,13 @@ class WoCacheDaoImp : WoCacheDao {
         return null
     }
 
+    override fun findWoByWonumAndIslatest(wonum: String, isLatest: Int): WoCacheEntity? {
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum).equal(WoCacheEntity_.isLatest, isLatest).build().find()
+        woCacheEntity.whatIfNotNullOrEmpty { return woCacheEntity[0] }
+        return null
+    }
+
     override fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity? {
         status.whatIfNotNullOrEmpty {
             val woCacheEntities: List<WoCacheEntity> =
@@ -81,10 +88,6 @@ class WoCacheDaoImp : WoCacheDao {
             }
         }
         return null
-    }
-
-    override fun findWoByWonumAndIsLatest(wonum: String, isLatest: Int): WoCacheEntity {
-        TODO("Not yet implemented")
     }
 
     override fun findWoisLatestByWonumAndStatus(wonum: String, status: String?): WoCacheEntity {

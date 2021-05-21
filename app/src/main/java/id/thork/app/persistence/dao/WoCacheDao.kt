@@ -14,8 +14,6 @@ interface WoCacheDao {
 
     fun findWoByWonumAndStatus(wonum: String, status: String?): WoCacheEntity?
 
-    fun findWoByWonumAndIsLatest(wonum: String, isLatest: Int): WoCacheEntity
-
     fun findWoisLatestByWonumAndStatus(wonum: String, status: String?): WoCacheEntity
 
     fun findAllWo(): List<WoCacheEntity>
@@ -39,4 +37,5 @@ interface WoCacheDao {
     fun remove()
 
     fun findWoByisLatest(isLatest: Int, offset: Int): List<WoCacheEntity>
+    fun findWoByWonumAndIslatest(wonum: String, isLatest: Int): WoCacheEntity?
 }
