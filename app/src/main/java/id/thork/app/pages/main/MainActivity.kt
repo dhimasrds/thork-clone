@@ -112,7 +112,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     }
 
     override fun goToSettingsActivity() {
-        finish()
+//        finish()
         startActivity(Intent(this, ListAssetActivity::class.java))
     }
 

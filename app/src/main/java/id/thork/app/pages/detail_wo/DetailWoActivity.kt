@@ -27,6 +27,7 @@ import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.multi_asset.ListAssetActivity
 import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.pages.rfid_location.RfidLocationActivity
 import id.thork.app.utils.DateUtils
@@ -296,6 +297,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         startActivityForResult(intent, REQUEST_CODE_DETAIL)
     }
 
+    private fun gotoListAsset() {
+        val intent = Intent(this, ListAssetActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_DETAIL)
+    }
+
     //TODO navigate to Rfid Asset
     private fun gotoRfidAsset(assetnum: String) {
         val intent = Intent(this, RfidAssetAcitivty::class.java)
@@ -436,6 +442,10 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
         binding.longdesc.setOnClickListener {
             gotoLongDescription()
+        }
+
+        binding.cardAsset.setOnClickListener {
+            gotoListAsset()
         }
     }
 
