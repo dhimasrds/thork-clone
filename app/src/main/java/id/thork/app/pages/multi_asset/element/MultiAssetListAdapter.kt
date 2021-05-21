@@ -5,16 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.zxing.integration.android.IntentIntegrator
 import id.thork.app.R
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
-import id.thork.app.pages.detail_wo.DetailWoActivity
+import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.multi_asset.DetailsAssetActivity
-
+import id.thork.app.pages.multi_asset.ListAssetActivity
+import id.thork.app.pages.rfid_mutli_asset.RfidMultiAssetActivity
 import id.thork.app.persistence.entity.MultiAssetEntity
 import timber.log.Timber
 
@@ -22,10 +26,13 @@ class MultiAssetListAdapter() :
     RecyclerView.Adapter<MultiAssetListAdapter.ViewHolder>() {
 
     var multiAssetEntity = mutableListOf<MultiAssetEntity>()
+    private lateinit var activity: ListAssetActivity
 
-    fun setMultiAssetList(mutliAssetList: List<MultiAssetEntity>) {
+
+    fun setMultiAssetList(mutliAssetList: List<MultiAssetEntity>, activity: ListAssetActivity) {
         Timber.d("setMultiAssetList :%s", mutliAssetList.size)
         this.multiAssetEntity = mutliAssetList.toMutableList()
+        this.activity = activity
         notifyDataSetChanged()
     }
 
@@ -49,6 +56,24 @@ class MultiAssetListAdapter() :
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ContextCompat.startActivity(BaseApplication.context, intent, bundle)
         }
+
+        holder.btnRfid.setOnClickListener {
+            val intent = Intent(BaseApplication.context, RfidMultiAssetActivity::class.java)
+            val bundle = Bundle()
+            intent.putExtra(BaseParam.RFID_ASSETNUM, multiAssetEntity.assetNum)
+            intent.putExtra(BaseParam.WONUM, multiAssetEntity.wonum)
+            startActivityForResult(activity, intent, BaseParam.RFID_REQUEST_CODE_MULTIASSET, bundle)
+        }
+
+        holder.btnQr.setOnClickListener {
+            IntentIntegrator(activity).apply {
+                setCaptureActivity(ScannerActivity::class.java)
+                setRequestCode(BaseParam.BARCODE_REQUEST_CODE_MULTIASSET)
+                initiateScan()
+            }
+        }
+
+
     }
 
     override fun getItemCount(): Int {
@@ -59,5 +84,7 @@ class MultiAssetListAdapter() :
         var assetnum: TextView = view.findViewById(R.id.assetnum)
         var location: TextView = view.findViewById(R.id.asset_location)
         var cardAsset: CardView = view.findViewById(R.id.card_asset)
+        var btnRfid: Button = view.findViewById(R.id.button_rfid)
+        var btnQr: Button = view.findViewById(R.id.button_qr)
     }
 }

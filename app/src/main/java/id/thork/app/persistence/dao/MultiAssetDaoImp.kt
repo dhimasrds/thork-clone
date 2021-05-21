@@ -2,7 +2,8 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.*
+import id.thork.app.persistence.entity.MultiAssetEntity
+import id.thork.app.persistence.entity.MultiAssetEntity_
 import io.objectbox.Box
 import java.util.*
 
@@ -50,17 +51,27 @@ class MultiAssetDaoImp : MultiAssetDao {
     }
 
     override fun findMultiAssetByAssetnum(assetnum: String): MultiAssetEntity? {
-        val multiAssetEntity : List<MultiAssetEntity> =
+        val multiAssetEntity: List<MultiAssetEntity> =
             multiAssetEntityBox.query().equal(MultiAssetEntity_.assetNum, assetnum).build().find()
         multiAssetEntity.whatIfNotNullOrEmpty { return multiAssetEntity[0] }
-        return  null
+        return null
+    }
+
+    override fun findMultiAssetByAssetnumAndParent(
+        assetnum: String,
+        parent: String
+    ): MultiAssetEntity? {
+        val multiAssetEntity: List<MultiAssetEntity> =
+            multiAssetEntityBox.query().equal(MultiAssetEntity_.assetNum, assetnum)
+                .equal(MultiAssetEntity_.wonum, parent).build().find()
+        multiAssetEntity.whatIfNotNullOrEmpty { return multiAssetEntity[0] }
+        return null
     }
 
     override fun findAllMultiAsset(): List<MultiAssetEntity> {
         return multiAssetEntityBox.query().notNull(MultiAssetEntity_.assetNum).build()
             .find()
     }
-
 
 
 }

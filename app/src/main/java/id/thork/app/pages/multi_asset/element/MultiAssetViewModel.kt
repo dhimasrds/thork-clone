@@ -20,16 +20,17 @@ class MultiAssetViewModel @ViewModelInject constructor(
     val getMultiAsset: LiveData<MultiAssetEntity> get() = _getMultiAsset
 
 
-    fun getAllMultiAsset(){
-        val multiAssetList = multiAssetRepository.getAllMultiAsset()
-        Timber.d("setMultiAssetList :%s", multiAssetList.size)
-        _getMultiAssetList.value = multiAssetList
-    }
-
     fun getMultiAssetByAssetNum(assetnum : String){
         Timber.d("getMultiAssetByAssetNum assetnum:%s", assetnum)
         val multiasset = multiAssetRepository.getMultiAssetByAssetNum(assetnum)
         Timber.d("getMultiAssetByAssetNum :%s", multiasset?.assetNum)
         _getMultiAsset.value = multiasset
     }
+
+    fun getMultiAssetByParent(wonum : String) {
+        val multiAssetList = multiAssetRepository.getListMultiAssetByParent(wonum)
+        _getMultiAssetList.value = multiAssetList
+    }
+
+
 }

@@ -14,4 +14,5 @@ interface MultiAssetDao {
     fun findListMultiAssetByParent(parent: String): List<MultiAssetEntity>
     fun findAllMultiAsset(): List<MultiAssetEntity>
     fun findMultiAssetByAssetnum(assetnum: String): MultiAssetEntity?
+    fun findMultiAssetByAssetnumAndParent(assetnum: String, parent: String): MultiAssetEntity?
 }

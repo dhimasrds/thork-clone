@@ -279,6 +279,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         binding.btnQrcodeLocation.setOnClickListener {
             startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
         }
+
     }
 
     private fun gotoListMaterial() {
@@ -299,7 +300,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     private fun gotoListAsset() {
         val intent = Intent(this, ListAssetActivity::class.java)
-        startActivityForResult(intent, REQUEST_CODE_DETAIL)
+        intent.putExtra(BaseParam.WONUM, workorderNumber)
+        startActivity(intent)
     }
 
     //TODO navigate to Rfid Asset

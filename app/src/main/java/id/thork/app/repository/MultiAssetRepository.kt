@@ -21,4 +21,12 @@ class MultiAssetRepository @Inject constructor(
     fun getMultiAssetByAssetNum(assetnum : String): MultiAssetEntity? {
         return multiAssetDao.findMultiAssetByAssetnum(assetnum)
     }
+
+    fun getMultiAssetByAssetNumAndParent(assetnum: String, parent: String): MultiAssetEntity? {
+        return multiAssetDao.findMultiAssetByAssetnumAndParent(assetnum, parent)
+    }
+
+    fun getListMultiAssetByParent(wonum : String) : List<MultiAssetEntity> {
+        return multiAssetDao.findListMultiAssetByParent(wonum)
+    }
 }
