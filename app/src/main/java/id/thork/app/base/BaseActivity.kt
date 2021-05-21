@@ -164,6 +164,11 @@ abstract class BaseActivity : AppCompatActivity() {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter")
             return true
         }
+
+        if (id == R.id.action_notif) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action filter")
+            return true
+        }
         return super.onOptionsItemSelected(item)
     }
 
