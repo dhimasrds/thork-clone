@@ -15,9 +15,11 @@ package id.thork.app.pages.attachment.element.preview
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityAttachmentBinding
+import id.thork.app.databinding.ActivityAttachmentPreviewBinding
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.attachment.element.AttachmentViewModel
 
@@ -25,7 +27,7 @@ class AttachmentPreviewActivity : BaseActivity() {
     val TAG = AttachmentPreviewActivity::class.java.name
 
     val viewModel: AttachmentPreviewViewModel by viewModels()
-    private val binding: ActivityAttachmentBinding by binding(R.layout.activity_attachment_preview)
+    private val binding: ActivityAttachmentPreviewBinding by binding(R.layout.activity_attachment_preview)
 
     override fun setupView() {
         super.setupView()
@@ -33,5 +35,13 @@ class AttachmentPreviewActivity : BaseActivity() {
             lifecycleOwner = this@AttachmentPreviewActivity
             vm = viewModel
         }
+
+        retrieveFromIntent()
     }
+
+    private fun retrieveFromIntent() {
+        val intentUri = intent.data
+        binding.ivPreview.setImageURI(intentUri)
+    }
+
 }

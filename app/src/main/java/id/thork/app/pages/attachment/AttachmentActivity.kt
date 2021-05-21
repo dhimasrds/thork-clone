@@ -16,6 +16,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.view.LayoutInflater
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,13 +35,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityAttachmentBinding
+import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.attachment.element.AttachmentAdapter
 import id.thork.app.pages.attachment.element.AttachmentViewModel
 import id.thork.app.persistence.entity.AttachmentEntity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-
 
 @AndroidEntryPoint
 class AttachmentActivity : BaseActivity(), PickiTCallbacks {
@@ -52,6 +54,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
     private lateinit var pickiT: PickiT
+    private lateinit var dialogUtils: DialogUtils
 
     @Inject
     @Named("svgRequestOption")
@@ -91,6 +94,8 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
         pickiT = PickiT(this, this, this)
         requestPermission()
+
+        setupDialog()
     }
 
     override fun setupObserver() {
@@ -110,6 +115,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val uri: Uri = data?.data!!
                     Timber.tag(TAG).d("onActivityResult() file picker data: %s", uri.toString())
+                    navigateToPreview(uri)
                 }
             }
             else -> {
@@ -117,10 +123,12 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     val uri: Uri = data?.data!!
                     binding.ivThumbnail.setImageURI(uri)
                     Timber.tag(TAG).d("onActivityResult() camera uri: %s", uri.toString())
+                    navigateToPreview(uri)
                 } else if (resultCode == ImagePicker.REQUEST_CODE) {
                     val uri: Uri = data?.data!!
                     binding.ivThumbnail.setImageURI(uri)
                     Timber.tag(TAG).d("onActivityResult() gallery uri: %s", uri.toString())
+                    navigateToPreview(uri)
                 } else if (resultCode == ImagePicker.RESULT_ERROR) {
                     Timber.tag(TAG).d("onActivityResult() error: %s", ImagePicker.getError(data))
                 } else {
@@ -130,26 +138,45 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
     private fun requestPermission() {
         Timber.tag(TAG).d("requestPermission()")
         Dexter.withActivity(this)
             .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-            .withListener(object: PermissionListener {
+            .withListener(object : PermissionListener {
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-                    Timber.tag(TAG).d("requestPermission() result: onPermissionGranted" )
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionGranted")
                 }
 
                 override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                    Timber.tag(TAG).d("requestPermission() result: onPermissionDenied" )
+                    Timber.tag(TAG).d("requestPermission() result: onPermissionDenied")
                 }
 
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest?,
                     token: PermissionToken?
                 ) {
-                    Timber.tag(TAG).d("requestPermission() result: onPermissionRationaleShouldBeShown" )
+                    Timber.tag(TAG)
+                        .d("requestPermission() result: onPermissionRationaleShouldBeShown")
                 }
             }).check()
+    }
+
+    private fun setupDialog() {
+        val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        dialogUtils =
+            DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
+        dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li)
+    }
+
+    private fun navigateToPreview(uri: Uri) {
+        dialogUtils.create().setRounded(true)
+        dialogUtils.show()
+        val imageView = dialogUtils.setViewId(R.id.iv_preview) as ImageView
+        imageView.setImageURI(uri)
     }
 
     override fun PickiTonUriReturned() {
