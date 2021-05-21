@@ -17,7 +17,7 @@
     <data>
         <variable
             name="vm"
-            type="id.thork.app.pages.attachment.element.AttachmentViewModel" />
+            type="id.thork.app.pages.attachment.element.preview.AttachmentPreviewViewModel" />
     </data>
 
     <LinearLayout

@@ -141,7 +141,7 @@ abstract class BaseActivity : AppCompatActivity() {
             toolBar.overflowIcon?.colorFilter =
                 BlendModeColorFilter(Color.parseColor("#AEAEAE"), BlendMode.SRC_ATOP)
         } else {
-            toolBar.overflowIcon?.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+            toolBar.overflowIcon?.setColorFilter(Color.parseColor("#AEAEAE"), PorterDuff.Mode.SRC_ATOP);
         }
     }
 

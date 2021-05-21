@@ -309,8 +309,8 @@
     <string name="button_layout_next">Next</string>
     <string name="button_layout_skip">Skip</string>
 
-    <!-- Dialog View Image -->
-    <string name="dialog_view_image">Description :</string>
+    <!-- Attachment preview Image -->
+    <string name="attachment_preview_caption">Add a caption...</string>
 
     <!-- Dialog Estdur -->
     <string name="dialog_estdur">Estimated Work Duration</string>

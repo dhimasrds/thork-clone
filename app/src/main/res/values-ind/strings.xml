@@ -281,8 +281,8 @@
     <string name="button_layout_next">Next</string>
     <string name="button_layout_skip">Skip</string>
 
-    <!-- Dialog View Image -->
-    <string name="dialog_view_image">Deskripsi :</string>
+    <!-- Attachment preview Image -->
+    <string name="attachment_preview_caption">Tambah keterangan...</string>
 
     <!-- Dialog Estdur -->
     <string name="dialog_estdur">Perkiraan Waktu Kerja</string>
