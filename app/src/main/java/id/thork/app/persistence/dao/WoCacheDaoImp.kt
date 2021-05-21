@@ -6,6 +6,7 @@ import id.thork.app.initializer.ObjectBox.boxStore
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import java.util.*
 
 /**
@@ -104,8 +105,9 @@ class WoCacheDaoImp : WoCacheDao {
         TODO("Not yet implemented")
     }
 
-    override fun findWoByisLatest(isLatest: Int): List<WoCacheEntity> {
-        TODO("Not yet implemented")
+    override fun findWoByisLatest(isLatest: Int, offset: Int): List<WoCacheEntity> {
+        return woCacheEntityBox.query().equal(WoCacheEntity_.isLatest, isLatest).build().find(offset.toLong(), 10)
+
     }
 
     override fun removeAllWo() {

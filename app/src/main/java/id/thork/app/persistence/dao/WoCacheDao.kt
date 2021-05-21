@@ -38,5 +38,5 @@ interface WoCacheDao {
     fun findWoByWonumComp(offset: Int, wonum: String, status: String): List<WoCacheEntity>
     fun remove()
 
-    fun findWoByisLatest(isLatest: Int): List<WoCacheEntity>
+    fun findWoByisLatest(isLatest: Int, offset: Int): List<WoCacheEntity>
 }

@@ -26,6 +26,7 @@ import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import id.thork.app.utils.WoUtils
 import timber.log.Timber
@@ -329,7 +330,7 @@ class WorkOrderRepository @Inject constructor(
         woCacheEntity.wonum = member.wonum
         woCacheEntity.status = member.status
         woCacheEntity.changeDate = member.changedate
-        woCacheEntity.isChanged = BaseParam.APP_TRUE
+        woCacheEntity.isChanged = BaseParam.APP_FALSE
         woCacheEntity.isLatest = BaseParam.APP_TRUE
         woCacheEntity.syncStatus = BaseParam.APP_FALSE
         woCacheEntity.updatedBy = appSession.userEntity.username
@@ -505,6 +506,7 @@ class WorkOrderRepository @Inject constructor(
             newWoCache.woId = woId
             newWoCache.longitude = currentWoCache.longitude
             newWoCache.latitude = currentWoCache.latitude
+            newWoCache.changeDate = DateUtils.getDateTimeMaximo()
             saveWoList(newWoCache, appSession.userEntity.username)
         }
     }
@@ -522,6 +524,8 @@ class WorkOrderRepository @Inject constructor(
                 )
             }
         }
+
+        Timber.tag(TAG).d("updateWoCacheAfterSync() %s", currentWoCache?.status)
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)

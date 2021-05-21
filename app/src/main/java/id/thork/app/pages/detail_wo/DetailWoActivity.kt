@@ -459,26 +459,23 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     }
 
     override fun onRightButton() {
-        if (isConnected) {
-            if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
-                detailWoViewModel.updateWo(
-                    workorderId,
-                    workorderStatus,
-                    workorderNumber,
-                    workorderLongdesc,
-                    BaseParam.INPROGRESS
-                )
-            } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
-                detailWoViewModel.updateWo(
-                    workorderId,
-                    workorderStatus,
-                    workorderNumber,
-                    workorderLongdesc,
-                    BaseParam.COMPLETED
-                )
-            }
+        if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
+            detailWoViewModel.updateWo(
+                workorderId,
+                workorderStatus,
+                workorderNumber,
+                workorderLongdesc,
+                BaseParam.INPROGRESS
+            )
+        } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
+            detailWoViewModel.updateWo(
+                workorderId,
+                workorderStatus,
+                workorderNumber,
+                workorderLongdesc,
+                BaseParam.COMPLETED
+            )
         }
-//        detailWoViewModel.removeAllWo()
         gotoHome()
     }
 
