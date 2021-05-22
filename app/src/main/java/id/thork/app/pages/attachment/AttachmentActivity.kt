@@ -17,12 +17,15 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
+import android.webkit.MimeTypeMap
+import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hbisoft.pickit.PickiT
 import com.hbisoft.pickit.PickiTCallbacks
 import com.karumi.dexter.Dexter
@@ -39,6 +42,7 @@ import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.attachment.element.AttachmentAdapter
 import id.thork.app.pages.attachment.element.AttachmentViewModel
 import id.thork.app.persistence.entity.AttachmentEntity
+import id.thork.app.utils.FileUtils
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -173,10 +177,19 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     }
 
     private fun navigateToPreview(uri: Uri) {
+        val mimeType = FileUtils.getMimeType(this, uri)
+        Timber.tag(TAG).d("navigateToPreview() uri: %s type: %s", uri, mimeType)
+
         dialogUtils.create().setRounded(true)
         dialogUtils.show()
         val imageView = dialogUtils.setViewId(R.id.iv_preview) as ImageView
         imageView.setImageURI(uri)
+
+        val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
+        fabSave.setOnClickListener {
+            Timber.tag(TAG).d("navigateToPreview() save: close")
+            dialogUtils.dismiss()
+        }
     }
 
     override fun PickiTonUriReturned() {
