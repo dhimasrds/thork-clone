@@ -49,22 +49,19 @@
                 android:padding="@dimen/general_padding_5dp">
 
                 <TextView
-                    android:id="@+id/tv_attachment_filename"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Image_CAM001222.jpg" />
-
-                <TextView
                     android:id="@+id/tv_attachment_desc"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Image_Description001" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tv_attachment_info"
+                    android:id="@+id/tv_attachment_filename"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Image_CAM001222" />
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_attachment_taken_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

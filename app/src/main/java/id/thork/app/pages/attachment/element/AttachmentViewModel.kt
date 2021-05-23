@@ -32,18 +32,25 @@ class AttachmentViewModel @ViewModelInject constructor(
     private val _attachments = MutableLiveData<List<AttachmentEntity>>()
     val attachments: LiveData<List<AttachmentEntity>> get() = _attachments
 
+    private lateinit var attachmentEntities: MutableList<AttachmentEntity>
+
     fun fetchAttachments(woId: Int) {
         Timber.tag(TAG).d("fetchAttachments() woId: %s", woId)
-        var attachmentEntities: List<AttachmentEntity> = listOf(
-            AttachmentEntity(name = "ikankoi.docccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", type = "WORD"),
-            AttachmentEntity(name = "ikanmas.pdf", type = "PDF"),
-            AttachmentEntity(name = "ikanlele.docx", type = "WORD"),
-            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
-            AttachmentEntity(name = "ikanlele.xlsx", type = "EXCEL"),
-            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
-            AttachmentEntity(name = "filepdf.pdf", type = "PDF",
+        attachmentEntities = mutableListOf(
+            AttachmentEntity(name = "ikankoi.docccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", mimeType = "WORD"),
+            AttachmentEntity(name = "ikanmas.pdf", mimeType = "PDF"),
+//            AttachmentEntity(name = "ikanlele.docx", type = "WORD"),
+//            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
+//            AttachmentEntity(name = "ikanlele.xlsx", type = "EXCEL"),
+//            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
+            AttachmentEntity(name = "filepdf.pdf", mimeType = "PDF",
                 uriString = PathUtils.getResourceUri(context, "assets/filepdf.pdf").toString())
         )
+        _attachments.value = attachmentEntities
+    }
+
+    fun addItem(attachmentEntity: AttachmentEntity) {
+        attachmentEntities.add(attachmentEntity)
         _attachments.value = attachmentEntities
     }
 

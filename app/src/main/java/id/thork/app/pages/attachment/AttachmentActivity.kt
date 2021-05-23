@@ -15,11 +15,16 @@ package id.thork.app.pages.attachment
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.net.Uri
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.webkit.MimeTypeMap
-import android.widget.Button
-import android.widget.ImageView
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +39,8 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.skydoves.whatif.whatIf
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -42,8 +49,11 @@ import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.attachment.element.AttachmentAdapter
 import id.thork.app.pages.attachment.element.AttachmentViewModel
 import id.thork.app.persistence.entity.AttachmentEntity
+import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.FileUtils
 import timber.log.Timber
+import java.io.File
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -59,6 +69,8 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
     private lateinit var pickiT: PickiT
     private lateinit var dialogUtils: DialogUtils
+
+    private var intentWoId = 0
 
     @Inject
     @Named("svgRequestOption")
@@ -114,6 +126,8 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Timber.tag(TAG).d("onActivityResult() request code: %s result code: %s data: %s",
+        requestCode, resultCode, data)
         when (requestCode) {
             SELECT_DOCUMENT_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -173,22 +187,55 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         dialogUtils =
             DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
-        dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li)
+        dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li).create()
     }
 
     private fun navigateToPreview(uri: Uri) {
         val mimeType = FileUtils.getMimeType(this, uri)
+        val fileName = FileUtils.getFilename(this, uri)
         Timber.tag(TAG).d("navigateToPreview() uri: %s type: %s", uri, mimeType)
-
-        dialogUtils.create().setRounded(true)
+        setupDialog()
         dialogUtils.show()
-        val imageView = dialogUtils.setViewId(R.id.iv_preview) as ImageView
-        imageView.setImageURI(uri)
+
+        val layoutDocPreview = dialogUtils.setViewId(R.id.layout_doc_preview) as LinearLayout
+        val ivPreview = dialogUtils.setViewId(R.id.iv_preview) as ImageView
+        val etAttachmentCaption = dialogUtils.setViewId(R.id.et_attachment_caption) as EditText
+        mimeType.whatIfNotNullOrEmpty {
+            whatIf(FileUtils.isImageType(it),
+            whatIf = {
+                Timber.tag(TAG).d("navigateToPreview() is Image: true")
+                layoutDocPreview.visibility = View.INVISIBLE
+                ivPreview.visibility = View.VISIBLE
+                ivPreview.setImageURI(uri)
+            },
+            whatIfNot = {
+                Timber.tag(TAG).d("navigateToPreview() is Document: true")
+                layoutDocPreview.visibility = View.VISIBLE
+                ivPreview.visibility = View.INVISIBLE
+                val tvdocName = dialogUtils.setViewId(R.id.tv_doc_preview) as TextView
+                tvdocName.text = fileName
+            })
+        }
 
         val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
+        setupFabButton(fabSave)
         fabSave.setOnClickListener {
-            Timber.tag(TAG).d("navigateToPreview() save: close")
+            Timber.tag(TAG).d("navigateToPreview() fileName: %s mimeType: %s", fileName, mimeType)
+            if (fileName != null && !fileName.isEmpty() &&
+                mimeType != null && !mimeType.isEmpty()) {
+                addAttachment(WoCacheEntity(), uri.toString(), etAttachmentCaption.text.toString(), fileName, mimeType)
+            }
             dialogUtils.dismiss()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setupFabButton(fab: FloatingActionButton) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            fab.colorFilter =
+                BlendModeColorFilter(Color.parseColor("#FFFFFFFF"), BlendMode.SRC_ATOP)
+        } else {
+            fab.setColorFilter(Color.parseColor("#FFFFFFFF"), PorterDuff.Mode.SRC_ATOP);
         }
     }
 
@@ -212,5 +259,18 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         Reason: String?
     ) {
         TODO("Not yet implemented")
+    }
+
+    private fun addAttachment(
+        woCacheEntity: WoCacheEntity, uriString: String, description: String, name: String, mimeType: String) {
+        val attachmentEntity = AttachmentEntity(
+            mimeType = mimeType,syncStatus = false,
+            uriString = uriString, description = description,
+            name =  name, workOrderId = woCacheEntity.woId,
+            wonum = woCacheEntity.wonum, idRoot = 0,
+            takenDate = Date()
+        )
+
+        viewModel.addItem(attachmentEntity)
     }
 }

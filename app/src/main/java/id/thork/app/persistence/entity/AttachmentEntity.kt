@@ -15,16 +15,18 @@ package id.thork.app.persistence.entity
 import android.os.Parcelable
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 @Parcelize
 @Entity
 data class AttachmentEntity(
-    var type: String? = null,
+    var mimeType: String? = null,
     var syncStatus: Boolean? = null,
     var uriString: String? = null,
     var description: String? = null,
     var name: String? = null,
     var workOrderId: Int? = null,
     var wonum: String? = null,
-    var idRoot: Int? = null
+    var idRoot: Int? = null,
+    var takenDate: Date? = null
 ) :BaseEntity(), Parcelable

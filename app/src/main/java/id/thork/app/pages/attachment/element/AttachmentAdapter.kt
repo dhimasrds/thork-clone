@@ -14,26 +14,26 @@ package id.thork.app.pages.attachment.element
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.AssetManager
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater.from
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.BuildConfig
 import id.thork.app.R
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.AttachmentItemBinding
 import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.persistence.entity.AttachmentEntity
-import id.thork.app.utils.PathUtils
-import id.thork.app.utils.StringUtils
+import id.thork.app.utils.*
 import timber.log.Timber
-import java.io.File
+import java.io.*
 
 
 class AttachmentAdapter constructor(
@@ -66,19 +66,12 @@ class AttachmentAdapter constructor(
         fun bind(attachmentEntity: AttachmentEntity) {
             with(binding) {
                 tvAttachmentFilename.text = StringUtils.truncate(attachmentEntity.name, 30)
+                tvAttachmentDesc.text = StringUtils.truncate(attachmentEntity.description, 30)
                 classifyImageThumbnail(attachmentEntity, ivThumbnail)
+                tvAttachmentTakenDate.text = DateUtils.getDateTimeOB(attachmentEntity.takenDate)
 
                 root.setOnClickListener {
-                    val fileName: String = "filepdf.pdf"
-                    val newFile = File(context.getExternalFilesDir(null)?.absolutePath + "/" + fileName)
-                    val fileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID
-                    + ".provider", newFile)
-                    context.grantUriPermission(context.packageName, fileUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.setDataAndType(fileUri, "application/pdf")
-                    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    context.startActivity(intent)
+                    IntentUtils.displayData(context, attachmentEntity.uriString.toString())
                 }
             }
         }
@@ -88,21 +81,18 @@ class AttachmentAdapter constructor(
             imageView: ImageView
         ) {
             var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.image_broken)
-
-            when (attachmentEntity.type) {
-                BaseParam.ATTACHMENT_TYPE_IMAGE -> {
+            attachmentEntity.mimeType.whatIfNotNullOrEmpty {
+                if (FileUtils.isImageType(it)) {
                     uri = PathUtils.getDrawableUri(context, R.drawable.ic_image_file)
-                }
-                BaseParam.ATTACHMENT_TYPE_EXCEL -> {
+                } else if (FileUtils.isExcelType(it)) {
                     uri = PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
-                }
-                BaseParam.ATTACHMENT_TYPE_WORD -> {
+                } else if (FileUtils.isWordType(it)) {
                     uri = PathUtils.getDrawableUri(context, R.drawable.ic_word_file)
-                }
-                BaseParam.ATTACHMENT_TYPE_PDF -> {
+                } else if (FileUtils.isPdfType(it)) {
                     uri = PathUtils.getDrawableUri(context, R.drawable.ic_pdf_file)
                 }
             }
+
             GlideApp.with(context).load(uri)
                 .apply(requestOptions)
                 .into(imageView)
