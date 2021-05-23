@@ -76,7 +76,7 @@ class AttachmentAdapter constructor(
             var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.image_broken)
             attachmentEntity.mimeType.whatIfNotNullOrEmpty {
                 if (FileUtils.isImageType(it)) {
-                    uri = PathUtils.getDrawableUri(context, R.drawable.ic_image_file)
+                    uri = Uri.parse(attachmentEntity.uriString.toString())
                 } else if (FileUtils.isExcelType(it)) {
                     uri = PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
                 } else if (FileUtils.isWordType(it)) {

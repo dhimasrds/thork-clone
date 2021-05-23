@@ -46,10 +46,6 @@
                     layout="@layout/toolbar" />
             </com.google.android.material.appbar.AppBarLayout>
 
-            <ImageView
-                android:id="@+id/iv_thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_attachments"
                 android:layout_width="match_parent"

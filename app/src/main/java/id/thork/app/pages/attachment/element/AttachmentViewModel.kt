@@ -35,16 +35,7 @@ class AttachmentViewModel @ViewModelInject constructor(
 
     fun fetchAttachments(woId: Int) {
         Timber.tag(TAG).d("fetchAttachments() woId: %s", woId)
-        attachmentEntities = mutableListOf(
-            AttachmentEntity(name = "ikankoi.docccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", mimeType = "WORD"),
-            AttachmentEntity(name = "ikanmas.pdf", mimeType = "PDF"),
-//            AttachmentEntity(name = "ikanlele.docx", type = "WORD"),
-//            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
-//            AttachmentEntity(name = "ikanlele.xlsx", type = "EXCEL"),
-//            AttachmentEntity(name = "ikanpaus.jpg", type = "IMAGE"),
-            AttachmentEntity(name = "filepdf.pdf", mimeType = "PDF",
-                uriString = PathUtils.getResourceUri(context, "assets/filepdf.pdf").toString())
-        )
+        attachmentEntities = mutableListOf()
         _attachments.value = attachmentEntities
     }
 

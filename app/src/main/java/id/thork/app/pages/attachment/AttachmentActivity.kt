@@ -137,12 +137,10 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
             else -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val uri: Uri = data?.data!!
-                    binding.ivThumbnail.setImageURI(uri)
                     Timber.tag(TAG).d("onActivityResult() camera uri: %s", uri.toString())
                     navigateToPreview(uri)
                 } else if (resultCode == ImagePicker.REQUEST_CODE) {
                     val uri: Uri = data?.data!!
-                    binding.ivThumbnail.setImageURI(uri)
                     Timber.tag(TAG).d("onActivityResult() gallery uri: %s", uri.toString())
                     navigateToPreview(uri)
                 } else if (resultCode == ImagePicker.RESULT_ERROR) {
