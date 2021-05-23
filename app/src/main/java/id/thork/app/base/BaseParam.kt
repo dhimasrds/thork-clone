@@ -174,7 +174,10 @@ object BaseParam {
     const val RFID_REQUEST_CODE_MULTIASSET = 1139
     const val BARCODE_REQUEST_CODE_MULTIASSET = 1138
 
+    const val RFID_REQUEST_CODE_DETAIL_MULTI_ASSET = 1149
+    const val BARCODE_REQUEST_CODE_DETAIL_MULTI_ASSET = 1148
 
+    const val REQUEST_CODE_MULTI_ASSET = 1159
 
     const val RFID_ASSETNUM = "assetnum"
     const val RFID_LOCATION = "location"
@@ -185,6 +188,10 @@ object BaseParam {
     const val RFID_MULTIASSET_IS_MATCH = "MULTIASSET_IS_MATCH"
 
     const val RFID_MULTIASSET_TAG = "multi asset tag"
+
+    const val SCAN_TYPE_RFID = "RFID"
+    const val SCAN_TYPE_BARCODE = "BARCODE"
+    const val IS_SCAN = "IS_SCAN"
 
 
 

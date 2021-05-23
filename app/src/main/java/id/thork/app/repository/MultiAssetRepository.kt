@@ -1,6 +1,8 @@
 package id.thork.app.repository
 
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.dao.MultiAssetDao
 import id.thork.app.persistence.entity.MultiAssetEntity
@@ -11,7 +13,8 @@ import javax.inject.Inject
  */
 class MultiAssetRepository @Inject constructor(
     private val multiAssetDao: MultiAssetDao,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val appSession: AppSession
 ) :BaseRepository {
 
     fun getAllMultiAsset() : List<MultiAssetEntity>{
@@ -28,5 +31,14 @@ class MultiAssetRepository @Inject constructor(
 
     fun getListMultiAssetByParent(wonum : String) : List<MultiAssetEntity> {
         return multiAssetDao.findListMultiAssetByParent(wonum)
+    }
+
+    fun updateMultiAsset(assetnum: String, parent: String, isScan: Int, scantype: String) {
+        val multiAssetEntity = getMultiAssetByAssetNumAndParent(assetnum, parent)
+        multiAssetEntity.whatIfNotNull {
+            it.isScan = isScan
+            it.scantype = scantype
+            multiAssetDao.save(it, appSession.userEntity.username.toString())
+        }
     }
 }

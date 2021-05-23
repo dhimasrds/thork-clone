@@ -640,6 +640,7 @@ class WorkOrderRepository @Inject constructor(
                 multiAssetEntity.workorderId = member.workorderid
                 multiAssetEntity.siteid = member.siteid
                 multiAssetEntity.orgid = member.orgid
+                multiAssetEntity.isScan = BaseParam.APP_FALSE
                 saveMultiAssetToObjectBox(multiAssetEntity)
             }
         }

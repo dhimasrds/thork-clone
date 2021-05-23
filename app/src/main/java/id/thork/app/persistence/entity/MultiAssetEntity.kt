@@ -21,4 +21,6 @@ class MultiAssetEntity :  BaseEntity()  {
     var workorderId : Int? = null
     var siteid: String? = null
     var orgid: String? = null
+    var isScan: Int? = null
+    var scantype: String? = null
 }

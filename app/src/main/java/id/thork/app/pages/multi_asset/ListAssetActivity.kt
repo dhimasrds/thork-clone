@@ -3,6 +3,7 @@ package id.thork.app.pages.multi_asset
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
@@ -45,6 +46,12 @@ class ListAssetActivity : BaseActivity() {
         viewModels.getMultiAssetList.observe(this, Observer {
             multiAssetAdapter.setMultiAssetList(it, this)
         })
+
+        viewModels.result.observe(this, Observer {
+            if (it.equals(BaseParam.APP_TRUE)) {
+                viewModels.getMultiAssetByParent(intentWonum.toString())
+            }
+        })
     }
 
     override fun goToPreviousActivity() {
@@ -54,6 +61,7 @@ class ListAssetActivity : BaseActivity() {
 
     private fun retriveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
+        Timber.d("retrieveFromIntent() %s", intentWonum)
         intentWonum.whatIfNotNullOrEmpty {
             viewModels.getMultiAssetByParent(it)
         }
@@ -61,6 +69,7 @@ class ListAssetActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Timber.d("onActivityResult() data %s resultCode %s requestcode %s ",data, resultCode, requestCode)
         val result = IntentIntegrator.parseActivityResult(resultCode, data)
         when (resultCode) {
             RESULT_OK -> {
@@ -71,26 +80,67 @@ class ListAssetActivity : BaseActivity() {
                             val intentAssetnum = it.getStringExtra(BaseParam.RFID_ASSETNUM)
                             val multiAssetIsMatch =
                                 it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
-                            Timber.d("retrieveFromIntent() assetnum %s", intentAssetnum)
-                            Timber.d("retrieveFromIntent() wonum %s", intentWonum)
-                            Timber.d("retrieveFromIntent() multiAssetIsMatch %s", multiAssetIsMatch)
+                            if (multiAssetIsMatch) {
+                                viewModels.updateMultiAsset(
+                                    intentAssetnum.toString(),
+                                    intentWonum.toString(),
+                                    BaseParam.APP_TRUE,
+                                    BaseParam.SCAN_TYPE_RFID
+                                )
+                            }
                         }
-                        multiAssetAdapter.notifyDataSetChanged()
                     }
 
                     BaseParam.BARCODE_REQUEST_CODE_MULTIASSET -> {
                         //TODO update local cache after scan barcode
                         result.whatIfNotNull {
                             Timber.d("retrieveFromIntent() result barcode %s", it.contents)
+                            viewModels.checkingMultiAsset(
+                                it.contents,
+                                intentWonum.toString(),
+                                BaseParam.APP_TRUE,
+                                BaseParam.SCAN_TYPE_BARCODE
+                            )
                         }
-                        multiAssetAdapter.notifyDataSetChanged()
+                    }
 
+                    BaseParam.RFID_REQUEST_CODE_DETAIL_MULTI_ASSET -> {
+                        data.whatIfNotNull {
+                            val intentAssetnum = it.getStringExtra(BaseParam.RFID_ASSETNUM)
+                            val multiAssetIsMatch =
+                                it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
+                            Timber.d("retrieveFromIntent() assetnum %s", intentAssetnum)
+                            Timber.d("retrieveFromIntent() wonum %s", intentWonum)
+                            Timber.d("retrieveFromIntent() multiAssetIsMatch %s", multiAssetIsMatch)
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE_DETAIL_MULTI_ASSET -> {
+                        //TODO update local cache after scan barcode
+                        result.whatIfNotNull {
+                            Timber.d("retrieveFromIntent() result barcode %s", it.contents)
+                        }
+                    }
+
+                    BaseParam.REQUEST_CODE_MULTI_ASSET -> {
+                        Timber.d("retrieveFromIntent() result detail %s", data)
+                        data.whatIfNotNull {
+                            val intentAssetnum = it.getStringExtra(BaseParam.RFID_ASSETNUM)
+                            val multiAssetIsMatch =
+                                it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
+                            val intentScantype = it.getStringExtra(BaseParam.IS_SCAN)
+                            if (multiAssetIsMatch) {
+                                viewModels.updateMultiAsset(
+                                    intentAssetnum.toString(),
+                                    intentWonum.toString(),
+                                    BaseParam.APP_TRUE,
+                                    intentScantype.toString()
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
-
     }
-
-
 }

@@ -15,8 +15,9 @@ object MultiAssetRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideMultiAssetRepository(
-        preferenceManager: PreferenceManager
+        preferenceManager: PreferenceManager,
+        appSession: AppSession
     ): MultiAssetRepository {
-        return MultiAssetRepository(MultiAssetDaoImp(),preferenceManager)
+        return MultiAssetRepository(MultiAssetDaoImp(),preferenceManager, appSession)
     }
 }

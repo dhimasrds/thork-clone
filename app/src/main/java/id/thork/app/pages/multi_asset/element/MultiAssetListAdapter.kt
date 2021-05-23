@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat.finishAfterTransition
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +29,6 @@ class MultiAssetListAdapter() :
 
     var multiAssetEntity = mutableListOf<MultiAssetEntity>()
     private lateinit var activity: ListAssetActivity
-
 
     fun setMultiAssetList(mutliAssetList: List<MultiAssetEntity>, activity: ListAssetActivity) {
         Timber.d("setMultiAssetList :%s", mutliAssetList.size)
@@ -53,8 +54,16 @@ class MultiAssetListAdapter() :
             val intent = Intent(BaseApplication.context, DetailsAssetActivity::class.java)
             val bundle = Bundle()
             intent.putExtra(BaseParam.ASSETNUM, multiAssetEntity.assetNum)
+            intent.putExtra(BaseParam.WONUM, multiAssetEntity.wonum)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ContextCompat.startActivity(BaseApplication.context, intent, bundle)
+            finishAfterTransition(activity)
+//            startActivityForResult(activity, intent, BaseParam.REQUEST_CODE_MULTI_ASSET, bundle)
+        }
+
+        if (multiAssetEntity.isScan?.equals(BaseParam.APP_TRUE) == true) {
+            holder.ivChecklist.visibility = View.GONE
+            holder.ivChecklistDone.visibility = View.VISIBLE
         }
 
         holder.btnRfid.setOnClickListener {
@@ -72,8 +81,6 @@ class MultiAssetListAdapter() :
                 initiateScan()
             }
         }
-
-
     }
 
     override fun getItemCount(): Int {
@@ -86,5 +93,8 @@ class MultiAssetListAdapter() :
         var cardAsset: CardView = view.findViewById(R.id.card_asset)
         var btnRfid: Button = view.findViewById(R.id.button_rfid)
         var btnQr: Button = view.findViewById(R.id.button_qr)
+        var ivChecklist: ImageView = view.findViewById(R.id.iv_checklist)
+        var ivChecklistDone: ImageView = view.findViewById(R.id.iv_checklist_done)
     }
+
 }
