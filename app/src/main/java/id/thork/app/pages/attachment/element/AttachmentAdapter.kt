@@ -13,27 +13,20 @@
 package id.thork.app.pages.attachment.element
 
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater.from
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.ImageView
-import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.skydoves.whatif.whatIfNotNullOrEmpty
-import id.thork.app.BuildConfig
 import id.thork.app.R
 import id.thork.app.databinding.AttachmentItemBinding
 import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.utils.*
-import timber.log.Timber
-import java.io.*
 
 
 class AttachmentAdapter constructor(

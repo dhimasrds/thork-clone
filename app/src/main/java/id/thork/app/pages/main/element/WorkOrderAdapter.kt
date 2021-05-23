@@ -8,10 +8,8 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.util.StringUtil
-import com.google.zxing.common.StringUtils
-import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseApplication.Constants.context
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.detail_wo.DetailWoActivity

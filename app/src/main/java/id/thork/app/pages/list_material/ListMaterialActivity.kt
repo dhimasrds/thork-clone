@@ -12,7 +12,6 @@ import id.thork.app.databinding.ActivityListMaterialBinding
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.list_material.element.ListMaterialAdapter
 import id.thork.app.pages.list_material.element.ListMaterialViewModel
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 

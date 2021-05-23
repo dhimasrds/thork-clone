@@ -1,8 +1,5 @@
 package id.thork.app.pages.multi_asset
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.bumptech.glide.load.model.GlideUrl
@@ -14,10 +11,8 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailsAssetBinding
-import id.thork.app.databinding.ActivityListAssetBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.GlideApp
-import id.thork.app.pages.multi_asset.element.MultiAssetListAdapter
 import id.thork.app.pages.multi_asset.element.MultiAssetViewModel
 import javax.inject.Inject
 

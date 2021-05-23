@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.R
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
-import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.pages.multi_asset.DetailsAssetActivity
-
 import id.thork.app.persistence.entity.MultiAssetEntity
 import timber.log.Timber
 

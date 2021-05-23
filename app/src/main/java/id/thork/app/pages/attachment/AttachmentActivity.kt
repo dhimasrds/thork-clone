@@ -23,7 +23,6 @@ import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
-import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -52,7 +51,6 @@ import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.FileUtils
 import timber.log.Timber
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
