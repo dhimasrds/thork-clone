@@ -15,9 +15,12 @@ package id.thork.app.repository
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
+import id.thork.app.network.api.DoclinksApi
+import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.AssetDao
+import id.thork.app.persistence.dao.AttachmentDao
 import id.thork.app.persistence.dao.MultiAssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,15 +30,35 @@ class WorkerRepository constructor(
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
-    private val assetDao: AssetDao) {
+    private val assetDao: AssetDao,
+    private val attachmentDao: AttachmentDao,
+    private val doclinksClient: DoclinksClient
+) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())
-        return WorkOrderRepository(workOrderClient, woCacheDao, appSession, assetDao)
+        val attachmentRepository = AttachmentRepository(preferenceManager, attachmentDao, doclinksClient)
+        return WorkOrderRepository(
+            workOrderClient,
+            woCacheDao,
+            appSession,
+            assetDao,
+            attachmentRepository
+        )
     }
 
     private fun provideWorkOrderApi(): WorkOrderApi {
         val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
         return retrofit.create(WorkOrderApi::class.java)
+    }
+
+    fun buildAttachmentRepository(): AttachmentRepository {
+        val doclinksClient = DoclinksClient(provideDoclinksApi())
+        return AttachmentRepository(preferenceManager, attachmentDao, doclinksClient)
+    }
+
+    private fun provideDoclinksApi(): DoclinksApi {
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        return retrofit.create(DoclinksApi::class.java)
     }
 }

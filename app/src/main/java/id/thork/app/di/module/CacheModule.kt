@@ -47,4 +47,10 @@ object CacheModule {
     fun provideAssetDao(): AssetDao {
         return AssetDaoImp()
     }
+
+    @Singleton
+    @Provides
+    fun provideAttachmentDao(): AttachmentDao {
+        return AttachmentDaoImp()
+    }
 }

@@ -19,9 +19,9 @@ interface AttachmentDao {
     fun save(attachmentEntities: List<AttachmentEntity>, username: String)
     fun delete(id: Long)
     fun delete()
-    fun fetchAttachmentByWoId(woId: Int)
-    fun fetchAttachmentByWoIdAndType(woId: Int, type: String)
-    fun findAttachment(id: Long)
-    fun findAttachmentBySyncStatus(syncStatus: Boolean)
+    fun fetchAttachmentByWoId(woId: Int): List<AttachmentEntity>
+    fun fetchAttachmentByWoIdAndType(woId: Int, type: String): List<AttachmentEntity>
+    fun findAttachment(id: Long): AttachmentEntity
+    fun findAttachmentBySyncStatus(syncStatus: Boolean): List<AttachmentEntity>
 
 }

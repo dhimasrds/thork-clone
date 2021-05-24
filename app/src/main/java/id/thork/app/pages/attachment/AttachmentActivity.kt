@@ -262,9 +262,8 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val attachmentEntity = AttachmentEntity(
             mimeType = mimeType,syncStatus = false,
             uriString = uriString, description = description,
-            name =  name, workOrderId = woCacheEntity.woId,
-            wonum = woCacheEntity.wonum, idRoot = 0,
-            takenDate = Date()
+            title =  name, workOrderId = woCacheEntity.woId,
+            wonum = woCacheEntity.wonum, modifiedDate  = Date()
         )
 
         viewModel.addItem(attachmentEntity)

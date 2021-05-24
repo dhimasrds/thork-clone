@@ -58,8 +58,6 @@ object DateUtils {
         return sdf.format(c.time)
     }
 
-
-
     fun getDateTimeOB(date: Date?): String? {
         try {
             val formatter = SimpleDateFormat(DATE_FORMAT_OBJECTBOX)
@@ -86,5 +84,10 @@ object DateUtils {
             e.printStackTrace()
         }
         return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun convertStringToMaximoDate(dateString: String?): Date {
+        val date = SimpleDateFormat(DATE_FORMAT_MAXIMO).parse(dateString)
+        return date
     }
 }

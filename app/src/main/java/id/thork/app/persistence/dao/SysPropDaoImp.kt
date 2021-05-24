@@ -5,6 +5,7 @@ import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysPropEntity_
 import io.objectbox.Box
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -12,6 +13,8 @@ import java.util.*
  * Jakarta, Indonesia.
  */
 class SysPropDaoImp : SysPropDao {
+    val TAG = SysPropDaoImp::class.java.name
+
     var sysPropEntityBox: Box<SysPropEntity>
 
     init {
@@ -21,6 +24,9 @@ class SysPropDaoImp : SysPropDao {
     private fun addUpdateInfo(sysPropEntity: SysPropEntity, username: String) {
         sysPropEntity.createdBy.whatIfNotNullOrEmpty(
             whatIf = {
+                Timber.tag(TAG).d("addUpdateInfo() update entity")
+            },
+            whatIfNot = {
                 sysPropEntity.createdDate = Date()
                 sysPropEntity.createdBy = username
             }

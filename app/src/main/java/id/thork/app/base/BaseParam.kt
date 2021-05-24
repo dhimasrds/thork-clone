@@ -189,6 +189,8 @@ object BaseParam {
     /**
      * Attachment type
      */
+    const val DOCLINK_TYPE_ATTACHMENTS = "Attachments"
+    const val DOCLINK_TYPE_IMAGES = "Images"
     const val ATTACHMENT_TYPE_IMAGE = "IMAGE"
     const val ATTACHMENT_TYPE_PDF = "PDF"
     const val ATTACHMENT_TYPE_WORD = "WORD"

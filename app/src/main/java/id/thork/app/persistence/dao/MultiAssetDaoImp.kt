@@ -4,6 +4,7 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.*
 import io.objectbox.Box
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -11,6 +12,8 @@ import java.util.*
  * Jakarta, Indonesia.
  */
 class MultiAssetDaoImp : MultiAssetDao {
+    val TAG = MultiAssetDaoImp::class.java.name
+
     var multiAssetEntityBox: Box<MultiAssetEntity>
 
     init {
@@ -20,6 +23,9 @@ class MultiAssetDaoImp : MultiAssetDao {
     private fun addUpdateInfo(multiAssetEntity: MultiAssetEntity, username: String) {
         multiAssetEntity.createdBy.whatIfNotNullOrEmpty(
             whatIf = {
+                Timber.tag(TAG).d("addUpdateInfo() update entity")
+            },
+            whatIfNot = {
                 multiAssetEntity.createdDate = Date()
                 multiAssetEntity.createdBy = username
             }
@@ -50,17 +56,15 @@ class MultiAssetDaoImp : MultiAssetDao {
     }
 
     override fun findMultiAssetByAssetnum(assetnum: String): MultiAssetEntity? {
-        val multiAssetEntity : List<MultiAssetEntity> =
+        val multiAssetEntity: List<MultiAssetEntity> =
             multiAssetEntityBox.query().equal(MultiAssetEntity_.assetNum, assetnum).build().find()
         multiAssetEntity.whatIfNotNullOrEmpty { return multiAssetEntity[0] }
-        return  null
+        return null
     }
 
     override fun findAllMultiAsset(): List<MultiAssetEntity> {
         return multiAssetEntityBox.query().notNull(MultiAssetEntity_.assetNum).build()
             .find()
     }
-
-
 
 }

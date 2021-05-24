@@ -58,10 +58,10 @@ class AttachmentAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(attachmentEntity: AttachmentEntity) {
             with(binding) {
-                tvAttachmentFilename.text = StringUtils.truncate(attachmentEntity.name, 30)
+                tvAttachmentFilename.text = StringUtils.truncate(attachmentEntity.title, 30)
                 tvAttachmentDesc.text = StringUtils.truncate(attachmentEntity.description, 30)
                 classifyImageThumbnail(attachmentEntity, ivThumbnail)
-                tvAttachmentTakenDate.text = DateUtils.getDateTimeOB(attachmentEntity.takenDate)
+                tvAttachmentTakenDate.text = DateUtils.getDateTimeOB(attachmentEntity.modifiedDate)
 
                 root.setOnClickListener {
                     IntentUtils.displayData(context, attachmentEntity.uriString.toString())

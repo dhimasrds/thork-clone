@@ -13,20 +13,24 @@
 package id.thork.app.persistence.entity
 
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
 @Entity
+@JsonClass(generateAdapter = true)
 data class AttachmentEntity(
+    var docInfoId: Int? = null,
+    var docType: String? = null,
+    var fileName: String? =null,
     var mimeType: String? = null,
+    var description: String? = null,
+    var title: String? = null,
+    var modifiedDate: Date? = null,
     var syncStatus: Boolean? = null,
     var uriString: String? = null,
-    var description: String? = null,
-    var name: String? = null,
     var workOrderId: Int? = null,
-    var wonum: String? = null,
-    var idRoot: Int? = null,
-    var takenDate: Date? = null
+    var wonum: String? = null
 ) :BaseEntity(), Parcelable

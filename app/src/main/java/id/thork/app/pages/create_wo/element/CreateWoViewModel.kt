@@ -27,13 +27,13 @@ import kotlin.collections.ArrayList
  * Jakarta, Indonesia.
  */
 class CreateWoViewModel @ViewModelInject constructor(
-    private val workOrderRepository: WorkOrderRepository,
     private val materialRepository: MaterialRepository,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
     private var tempWonum: String? = null
+    private val workOrderRepository: WorkOrderRepository? = null
 
     fun getTempWonum(): String? {
         if (tempWonum == null) {
@@ -48,8 +48,6 @@ class CreateWoViewModel @ViewModelInject constructor(
         val hasilDetik: Int = jam * 3600 + menit * 60
         val hasilDetikDouble = hasilDetik.toDouble()
         hasil = hasilDetikDouble / 3600
-        Timber.d("hasil detail : %s", hasilDetikDouble)
-        Timber.d("hasil : %s", hasil)
         return hasil
     }
 
@@ -77,14 +75,12 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.descriptionLongdescription = longdesc
 
         val moshi = Moshi.Builder().build()
-        val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter<Member>(Member::class.java)
+        val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
         val maxauth: String? = appSession.userHash
-//        val properties: String = ("workorderid,wonum")
-//        val contentType: String = ("application/json")
         viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository.createWo(
+            workOrderRepository?.createWo(
                 maxauth!!, member,
                 onSuccess = {
                     saveScannerMaterial(tempWonum, it.workorderid!!)
@@ -140,7 +136,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         tWoCacheEntity.updatedDate = Date()
         tWoCacheEntity.wonum = tempWonum
         tWoCacheEntity.status = BaseParam.WAPPR
-        workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
+        workOrderRepository?.saveWoList(tWoCacheEntity, appSession.userEntity.username)
         Timber.d("createwointeractor: %s", longdesc)
     }
 
