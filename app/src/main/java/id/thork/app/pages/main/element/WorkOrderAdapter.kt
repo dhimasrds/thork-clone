@@ -3,18 +3,20 @@ package id.thork.app.pages.main.element
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.util.StringUtil
-import com.google.zxing.common.StringUtils
-import id.thork.app.base.BaseParam
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseApplication.Constants.context
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardViewWorkOrderBinding
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.detail_wo.DetailWoActivity
+import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.WoCacheDaoImp
 import timber.log.Timber
 
 /**
@@ -39,6 +41,16 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(woEntity: Member){
+            val woCacheDao: WoCacheDao = WoCacheDaoImp()
+            val woCache = woCacheDao.findWoByWonumAndIslatest(woEntity.wonum.toString(), BaseParam.APP_TRUE)
+            woCache.whatIfNotNull {
+                if(it.syncStatus == BaseParam.APP_FALSE && it.isChanged == BaseParam.APP_TRUE) {
+                    binding.ivOffline.visibility = View.VISIBLE
+                } else {
+                    binding.ivOffline.visibility = View.GONE
+                }
+            }
+
             Timber.d("adapter wonum :%s",woEntity.wonum)
             Timber.d("adapter assetnum   :%s",woEntity.assetnum)
             binding.wo = woEntity

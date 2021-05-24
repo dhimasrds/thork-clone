@@ -16,7 +16,7 @@ interface WorkOrderApi {
 
     @GET("maximo/oslc/os/THISFSMWODETAIL")
     suspend fun getListWorkorder(
-        @Header(BaseParam.APP_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Query(value = "lean") lean: Int,
         @Query("savedQuery") savedQuery: String?,
         @Query(value = "oslc.select") select: String?,
@@ -40,7 +40,7 @@ interface WorkOrderApi {
 
     @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
     suspend fun updateStatus(
-        @Header(BaseParam.APP_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Path("workorderid") workorderid: Int,
@@ -51,7 +51,7 @@ interface WorkOrderApi {
 
     @GET("maximo/oslc/os/thisfsmlocations")
     suspend fun getLocationResource(
-        @Header(BaseParam.APP_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Query(value = "lean") lean: Int,
         @Query("savedQuery") savedQuery: String?,
         @Query(value = "oslc.select") select: String?,
@@ -59,7 +59,7 @@ interface WorkOrderApi {
 
     @GET("/maximo/oslc/os/thisfsmasset?lean=1")
     suspend fun getListAsset(
-        @Header(BaseParam.APP_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Query("savedQuery") savedQuery: String?,
         @Query(value = "oslc.select") select: String?,
     ): ApiResponse<AssetResponse>

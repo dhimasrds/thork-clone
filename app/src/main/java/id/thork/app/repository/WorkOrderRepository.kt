@@ -263,6 +263,10 @@ class WorkOrderRepository @Inject constructor(
         return null
     }
 
+    fun fetchWoListOffline(syncStatus: Int, isChange: Int): List<WoCacheEntity> {
+        return woCacheDao.findWoListBySyncStatusAndisChange(syncStatus, isChange)
+    }
+
 
     fun updateWo(woCacheEntity: WoCacheEntity, username: String?) {
         return woCacheDao.updateWo(woCacheEntity, username!!)

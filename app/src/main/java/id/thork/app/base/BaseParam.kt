@@ -43,13 +43,12 @@ object BaseParam {
     const val APP_SERVER_ADDRESS = "serverAddress"
     const val APP_FIRST_LAUNCH = "firstLaunch"
     const val REPORT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
-    const val APP_MX_COOKIE = "cookie"
 
     /**
      * Authentication parameter
      */
     const val APP_MAX_AUTH = "MAXAUTH"
-    const val APP_COOKIE = "Cookie"
+    const val APP_MX_COOKIE = "cookie"
     const val APP_AUTHORIZATION = "AUTHORIZATION"
     const val APP_X_METHOD_OVERRIDE = "x-method-override"
     const val APP_PATCH = "PATCH"

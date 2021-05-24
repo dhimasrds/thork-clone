@@ -113,6 +113,11 @@ class WoCacheDaoImp : WoCacheDao {
 
     }
 
+    override fun findWoListBySyncStatusAndisChange(syncStatus: Int, isChange: Int): List<WoCacheEntity> {
+        return woCacheEntityBox.query().equal(WoCacheEntity_.syncStatus, syncStatus).equal(WoCacheEntity_.isChanged, isChange).build().find()
+
+    }
+
     override fun removeAllWo() {
         woCacheEntityBox.removeAll()
     }

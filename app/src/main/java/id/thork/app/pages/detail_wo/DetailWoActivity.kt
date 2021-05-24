@@ -488,7 +488,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 BaseParam.COMPLETED
             )
         }
-        gotoHome()
+//        gotoHome()
+        finish()
     }
 
     override fun onLeftButton() {

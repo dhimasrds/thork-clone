@@ -17,6 +17,8 @@ import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
@@ -25,8 +27,10 @@ import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorkerRepository
+import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -66,19 +70,13 @@ class WorkOrderWorker @WorkerInject constructor(
     private val MAX_RUN_ATTEMPT = 6
     override fun doWork(): Result {
         try {
-            Timber.tag(TAG).d("WorkOrderWorker() username: %s", appSession.personUID)
-            Timber.tag(TAG).d(
-                "WorkOrderWorker() sharedPreferences: %s",
-                preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-            )
-            Timber.tag(TAG).d("WorkOrderWorker() sharedPreferences: %s", mx.fsmResWorkorder)
-
             //Query Local WO Record is needed to sync with the server
             if (runAttemptCount > MAX_RUN_ATTEMPT) {
                 Result.failure()
             }
 
             //TODO Execute Sync WO
+            syncUpdateWo()
 
             //If Post to server success then return result.success
             //Else return result.retry until MAX RUN ATTEMPT
@@ -100,43 +98,63 @@ class WorkOrderWorker @WorkerInject constructor(
     //TODO http request
     private fun syncUpdateWo() {
         //TODO Query to local check wo cache offline
+        val woCacheList =
+            workOrderRepository.fetchWoListOffline(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+        val index = 0
+        woCacheList.whatIfNotNullOrEmpty {
+            Timber.d("syncUpdateWo() wo list size %s", it.size)
+            updateStatusWoOffline(it, index)
+        }
 
     }
 
-    fun updateStatusWo(
-        woId: Int?,
-        status: String?,
-        wonum: String?,
-        longdesc: String?,
-        nextStatus: String
+    fun updateStatusWoOffline(
+        listWo: List<WoCacheEntity>,
+        currentIndex: Int,
     ) {
+        val currentWo = listWo.get(currentIndex)
+        currentWo.whatIfNotNull {
+            val prepareBody = WoUtils.convertBodyToMember(it.syncBody.toString())
 
-        workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
+            prepareBody.whatIfNotNull { prepareBody ->
+                val woId = prepareBody.workorderid
+                val wonum = prepareBody.wonum
+                val longdesc = prepareBody.longdescription?.get(0)?.ldtext
+                val status = prepareBody.status
 
-        val member = Member()
-        member.status = nextStatus
-        member.descriptionLongdescription = longdesc
+                val member = Member()
+                member.status = status
+                member.descriptionLongdescription = longdesc
 
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val xMethodeOverride: String = BaseParam.APP_PATCH
-        val contentType: String = ("application/json")
-        GlobalScope.launch(Dispatchers.IO) {
-            if (woId != null) {
-                workOrderRepository.updateStatus(cookie,
-                    xMethodeOverride,
-                    contentType,
-                    woId,
-                    member,
-                    onSuccess = {
-                        workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
-                    },
-                    onError = {
-                        Timber.tag(TAG).i("onError() onError: %s", it)
-                    })
+                Timber.tag(TAG).d("updateStatusWoOffline() updateWo() woId %s, wonum %s, longdesc %s, status %s", woId, wonum, longdesc, status)
+
+                val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+                val xMethodeOverride: String = BaseParam.APP_PATCH
+                val contentType: String = ("application/json")
+                GlobalScope.launch(Dispatchers.IO) {
+                    if (woId != null) {
+                        workOrderRepository.updateStatus(cookie,
+                            xMethodeOverride,
+                            contentType,
+                            woId,
+                            member,
+                            onSuccess = {
+                                workOrderRepository.updateWoCacheAfterSync(
+                                    wonum,
+                                    longdesc,
+                                    status.toString()
+                                )
+                                val nextIndex = currentIndex + 1
+                                if(nextIndex <= listWo.size - 1) {
+                                    updateStatusWoOffline(listWo, nextIndex)
+                                }
+                            },
+                            onError = {
+                                Timber.tag(TAG).i("onError() onError: %s", it)
+                            })
+                    }
+                }
             }
         }
     }
-
-
-
 }
