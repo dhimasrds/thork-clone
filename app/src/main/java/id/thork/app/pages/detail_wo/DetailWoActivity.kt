@@ -488,8 +488,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 BaseParam.COMPLETED
             )
         }
-//        gotoHome()
-        finish()
+        gotoHome()
     }
 
     override fun onLeftButton() {
@@ -519,6 +518,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+        finish()
     }
 
     override fun goToPreviousActivity() {

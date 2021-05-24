@@ -6,6 +6,7 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.dao.MultiAssetDao
 import id.thork.app.persistence.entity.MultiAssetEntity
+import id.thork.app.utils.DateUtils
 import javax.inject.Inject
 /**
  * Created by Dhimas Saputra on 18/5/21
@@ -38,6 +39,7 @@ class MultiAssetRepository @Inject constructor(
         multiAssetEntity.whatIfNotNull {
             it.isScan = isScan
             it.scantype = scantype
+            it.thisfsmtagtime = DateUtils.getDateTimeMaximo()
             multiAssetDao.save(it, appSession.userEntity.username.toString())
         }
     }

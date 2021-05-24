@@ -95,7 +95,7 @@ class WoPagingSource @Inject constructor(
                     error = false
                 },
                 onException = {
-                    error = true
+                    error = false
                 })
         }
         return error
@@ -167,7 +167,7 @@ class WoPagingSource @Inject constructor(
                 && !cacheEntities[i].status.equals(BaseParam.WAPPR)
                 && !cacheEntities[i].status.equals(BaseParam.COMPLETED)
             ) {
-                cacheEntities[i].syncBody.whatIfNotNullOrEmpty {
+                cacheEntities[i].syncBody.whatIfNotNull {
                     body.add(it)
                 }
             }
