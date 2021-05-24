@@ -3,7 +3,6 @@ package id.thork.app.pages.multi_asset
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
@@ -79,6 +78,12 @@ class DetailsAssetActivity : BaseActivity() {
                 loadImageHttps(it.image.toString())
             }
         })
+
+        viewModels.result.observe(this, Observer {
+            if (it.equals(BaseParam.APP_TRUE)) {
+                navigateToListAsset()
+            }
+        })
     }
 
     private fun loadImageHttps(imageUrl: String) {
@@ -95,7 +100,7 @@ class DetailsAssetActivity : BaseActivity() {
 
     override fun goToPreviousActivity() {
         super.goToPreviousActivity()
-        finish()
+        navigateToListAsset()
     }
 
     override fun setupListener() {
@@ -146,7 +151,12 @@ class DetailsAssetActivity : BaseActivity() {
                                 it.getBooleanExtra(BaseParam.RFID_ASSET_IS_MATCH, false)
                             if (multiAssetIsMatch) {
                                 assetIsMatch = multiAssetIsMatch
-                                navigateToListAsset(BaseParam.SCAN_TYPE_RFID)
+                                viewModels.updateMultiAsset(
+                                    intentAssetNum.toString(),
+                                    intentWonum.toString(),
+                                    BaseParam.APP_TRUE,
+                                    BaseParam.SCAN_TYPE_RFID
+                                )
                             }
                         }
                     }
@@ -154,8 +164,12 @@ class DetailsAssetActivity : BaseActivity() {
                     BaseParam.BARCODE_REQUEST_CODE_DETAIL_MULTI_ASSET -> {
                         //TODO
                         if (intentAssetNum.equals(result.contents)) {
-                            navigateToListAsset(BaseParam.SCAN_TYPE_BARCODE)
-
+                            viewModels.updateMultiAsset(
+                                intentAssetNum.toString(),
+                                intentWonum.toString(),
+                                BaseParam.APP_TRUE,
+                                BaseParam.SCAN_TYPE_BARCODE
+                            )
                         }
                     }
                 }
@@ -163,17 +177,16 @@ class DetailsAssetActivity : BaseActivity() {
         }
     }
 
-    private fun navigateToListAsset(scanType: String) {
+    private fun navigateToListAsset() {
         Timber.d("retrieveFromIntent() navigate to list asset ")
         val intent = Intent(this, ListAssetActivity::class.java)
         intent.putExtra(BaseParam.WONUM, intentWonum)
         startActivity(intent)
-        viewModels.updateMultiAsset(
-            intentAssetNum.toString(),
-            intentWonum.toString(),
-            BaseParam.APP_TRUE,
-            scanType
-        )
         finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        navigateToListAsset()
     }
 }
