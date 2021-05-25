@@ -27,20 +27,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.rfid_mutli_asset.RfidMultiAssetActivity"></activity>
+        <activity android:name=".pages.rfid_create_wo_location.RfidCreateWoLocationActivity"></activity>
+        <activity android:name=".pages.rfid_create_wo_asset.RfidCreateWoAssetActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".pages.rfid_mutli_asset.RfidMultiAssetActivity" />
         <activity android:name=".pages.rfid_location.RfidLocationActivity" />
-        <activity android:name=".pages.find_asset_location.FindLocationActivity"></activity>
+        <activity android:name=".pages.find_asset_location.FindLocationActivity" />
         <activity android:name=".pages.find_asset_location.FindAssetActivity" />
-        <activity android:name=".pages.rfid_location.RfidLocationActivity" />
         <activity android:name=".pages.rfid_asset.RfidAssetAcitivty" />
         <activity android:name=".pages.example.RfidExActivity" />
         <activity android:name=".pages.multi_asset.DetailsAssetActivity" />
         <activity android:name=".pages.multi_asset.ListAssetActivity" />
         <activity android:name=".pages.attachment.AttachmentActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".pages.example.ImageActivity" />
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
@@ -70,10 +78,13 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".pages.main.MainActivity" />
 

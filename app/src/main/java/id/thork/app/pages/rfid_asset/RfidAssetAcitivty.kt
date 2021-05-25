@@ -12,6 +12,7 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidAssetBinding
 import id.thork.app.helper.rfid.RFIDHandler
+import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.rfid_asset.element.RfidAssetActivityViewModel
 import timber.log.Timber
 
@@ -98,7 +99,7 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
     override fun setupListener() {
         super.setupListener()
         binding.btnContinue.setOnClickListener {
-            val intent = Intent()
+            val intent = Intent(this, CreateWoActivity::class.java)
             intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, assetIsMatch)
             setResult(RESULT_OK, intent)
             finish()
@@ -125,7 +126,7 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
     }
 
     override fun onDisconnected() {
-        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show()
     }
 
     override fun handleTagdata(tagData: Array<out TagData>?) {
