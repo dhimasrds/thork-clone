@@ -46,9 +46,5 @@ object WorkOrderModule {
         return WorkOrderClient(workOrderApi)
     }
 
-    @Provides
-    @ActivityRetainedScoped
-    fun provideDoclinksClient(doclinksApi: DoclinksApi): DoclinksClient {
-        return DoclinksClient(doclinksApi)
-    }
+
 }

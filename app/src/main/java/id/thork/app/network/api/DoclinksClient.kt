@@ -9,7 +9,6 @@ import javax.inject.Named
  * Jakarta, Indonesia.
  */
 class DoclinksClient @Inject constructor(
-    @Named("docklinksApiGlobal")
     private val doclinksApi: DoclinksApi
 ) {
 

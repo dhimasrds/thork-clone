@@ -568,7 +568,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_weight="7"
-                                android:text="@string/image" />
+                                android:text="@string/attachments" />
 
                             <TextView
                                 android:id="@+id/total_foto"
