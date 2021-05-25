@@ -57,7 +57,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private lateinit var locationManager: LocationManager
     private val REQUEST_CODE_CREATE = 0
-    private val REQUEST_CODE_CREATE_ASSET = 0
+    private val REQUEST_CODE_CREATE_ASSET = 10
     private val TAG_CREATE = "TAG_CREATE"
 
     private var longDesc: String? = null
@@ -128,6 +128,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Timber.d("onActivityResult() requestCode %s, resultCode %s", requestCode, resultCode)
         if (requestCode == REQUEST_CODE_CREATE && resultCode == RESULT_OK) {
             longDesc = data!!.getStringExtra("longdesc")
             Timber.d("createWoLongdesc : %s", longDesc)

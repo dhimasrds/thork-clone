@@ -25,13 +25,17 @@ import kotlin.collections.ArrayList
 class FindAssetAdapter constructor(
     private val assetEntity: List<AssetEntity>,
     private val requestOption: RequestOptions,
+    activity: FindAssetActivity
 ):
     RecyclerView.Adapter<FindAssetAdapter.ViewHolder>(),Filterable {
     var assetEntityFilterList = ArrayList<AssetEntity>()
+    var activityFindAsset: FindAssetActivity
 
 
     init {
         assetEntityFilterList = assetEntity as ArrayList<AssetEntity>
+        activityFindAsset = activity
+
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -45,15 +49,14 @@ class FindAssetAdapter constructor(
 
     class ViewHolder(val binding: CardviewFindassetBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(assetEntity: AssetEntity) {
+        fun bind(assetEntity: AssetEntity, activity: FindAssetActivity) {
             binding.apply {
                 assetnum.text = assetEntity.assetnum
 
                 cardAsset.setOnClickListener {
                     val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
-                    intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, assetIsMatch)
-                    activity.setResult, intent)
-                    finish()
+                    intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, "assetIsMatch")
+                    activity.setResult(AppCompatActivity.RESULT_OK, intent)
                 }
             }
         }
@@ -62,7 +65,7 @@ class FindAssetAdapter constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val assetEntity: AssetEntity = assetEntityFilterList[position]
-        holder.bind(assetEntity)
+        holder.bind(assetEntity, activityFindAsset)
     }
 
     override fun getItemCount(): Int {
