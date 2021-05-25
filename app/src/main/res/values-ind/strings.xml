@@ -50,6 +50,9 @@
     <string name="action_detail">Detail</string>
     <string name="action_scan">Memindai Kode</string>
     <string name="action_report">Melaporkan</string>
+    <string name="action_capture_image">Ambil Gambar</string>
+    <string name="action_attach_image">Pilih Gambar</string>
+    <string name="action_attach_document">Pilih Dokumen</string>
 
     <!-- Menu base bottom navigation bar-->
     <!--Title Bottom Navigation-->
@@ -278,8 +281,8 @@
     <string name="button_layout_next">Next</string>
     <string name="button_layout_skip">Skip</string>
 
-    <!-- Dialog View Image -->
-    <string name="dialog_view_image">Deskripsi :</string>
+    <!-- Attachment preview Image -->
+    <string name="attachment_preview_caption">Tambah keterangan...</string>
 
     <!-- Dialog Estdur -->
     <string name="dialog_estdur">Perkiraan Waktu Kerja</string>

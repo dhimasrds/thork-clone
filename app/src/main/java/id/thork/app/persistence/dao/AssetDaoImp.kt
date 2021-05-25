@@ -8,6 +8,7 @@ import id.thork.app.persistence.entity.AssetEntity_
 import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.MultiAssetEntity_
 import io.objectbox.Box
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -15,6 +16,8 @@ import java.util.*
  * Jakarta, Indonesia.
  */
 class AssetDaoImp: AssetDao {
+    val TAG = AssetDaoImp::class.java.name
+
     var assetEntityBox: Box<AssetEntity>
 
     init {
@@ -24,6 +27,9 @@ class AssetDaoImp: AssetDao {
     private fun addUpdateInfo(assetEntity: AssetEntity, username: String?) {
         assetEntity.createdBy.whatIfNotNullOrEmpty(
             whatIf = {
+                Timber.tag(TAG).d("addUpdateInfo() update entity")
+            },
+            whatIfNot = {
                 assetEntity.createdDate = Date()
                 assetEntity.createdBy = username
             }

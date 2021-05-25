@@ -64,6 +64,9 @@ buildscript {
         //Percentage View
         percentageViewVersion = '0.3.1'
 
+        //Image Picker
+        imagePickerVersion = "2.0"
+        pickItVersion = "0.1.14"
     }
 
     repositories {

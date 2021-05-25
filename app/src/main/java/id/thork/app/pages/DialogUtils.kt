@@ -80,12 +80,11 @@ class DialogUtils {
         dialogView = inflater!!.inflate(resource!!, root)
         builder.setView(dialogView)
         builder.setCancelable(false)
-        dialog = builder.show()
         return this
     }
 
     fun show() {
-        dialog.show()
+        dialog = builder.show()
     }
 
     fun setRounded(rounded: Boolean): DialogUtils {

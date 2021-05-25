@@ -23,9 +23,12 @@ import dagger.hilt.components.SingletonComponent
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
+import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.AssetDao
+import id.thork.app.persistence.dao.AttachmentDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.repository.AttachmentRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.MoshiUtils
@@ -46,11 +49,14 @@ class WorkerCoordinator @Inject constructor(
     val httpLoggingInterceptor: HttpLoggingInterceptor,
     val woCacheDao: WoCacheDao,
     val appSession: AppSession,
-    val assetDao: AssetDao
+    val assetDao: AssetDao,
+    val attachmentDao: AttachmentDao,
+    val doclinksClient: DoclinksClient
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
     var workOrderRepository: WorkOrderRepository
+    var attachmentRepository: AttachmentRepository
     var response = WorkOrderResponse()
 
     //Work manager only execute when connected to internet
@@ -60,8 +66,13 @@ class WorkerCoordinator @Inject constructor(
 
     init {
         val workerRepository =
-            WorkerRepository(preferenceManager, httpLoggingInterceptor, woCacheDao, appSession, assetDao)
+            WorkerRepository(context,
+                preferenceManager, httpLoggingInterceptor,
+                woCacheDao, appSession,
+                assetDao, attachmentDao, doclinksClient)
         workOrderRepository = workerRepository.buildWorkorderRepository()
+        attachmentRepository = workerRepository.buildAttachmentRepository()
+
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }
 

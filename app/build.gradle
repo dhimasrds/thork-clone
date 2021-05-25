@@ -144,7 +144,6 @@ dependencies {
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
 
     //ViewPager
-    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     //Paging
@@ -194,5 +193,10 @@ dependencies {
 
     //Progress bar
     implementation "com.ramijemli.percentagechartview:percentagechartview:$rootProject.percentageViewVersion"
+
+    //Camera and File Picker
+    implementation "com.github.dhaval2404:imagepicker:$rootProject.imagePickerVersion"
+    implementation "com.github.HBiSoft:PickiT:$rootProject.pickItVersion"
+
 }
 apply plugin: 'io.objectbox'

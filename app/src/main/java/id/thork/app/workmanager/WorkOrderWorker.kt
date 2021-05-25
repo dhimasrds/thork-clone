@@ -23,9 +23,11 @@ import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.AssetDao
+import id.thork.app.persistence.dao.AttachmentDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.WorkOrderRepository
@@ -45,7 +47,9 @@ class WorkOrderWorker @WorkerInject constructor(
     val mx: AppResourceMx,
     val httpLoggingInterceptor: HttpLoggingInterceptor,
     val woCacheDao: WoCacheDao,
-    val assetDao: AssetDao
+    val assetDao: AssetDao,
+    val attachmentDao: AttachmentDao,
+    val doclinksClient: DoclinksClient
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -56,11 +60,14 @@ class WorkOrderWorker @WorkerInject constructor(
     init {
         val workerRepository =
             WorkerRepository(
+                context,
                 preferenceManager,
                 httpLoggingInterceptor,
                 woCacheDao,
                 appSession,
-                assetDao
+                assetDao,
+                attachmentDao,
+                doclinksClient
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)

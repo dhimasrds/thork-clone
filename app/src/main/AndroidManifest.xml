@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -21,6 +22,7 @@
         android:icon="@mipmap/ic_this_new_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_this_new_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
@@ -32,11 +34,10 @@
         <activity android:name=".pages.multi_asset.DetailsAssetActivity" />
         <activity android:name=".pages.multi_asset.ListAssetActivity" />
         <activity android:name=".pages.attachment.AttachmentActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".pages.example.ImageActivity" />
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
@@ -66,11 +67,10 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
         <activity android:name=".pages.main.MainActivity" />
 

@@ -45,6 +45,12 @@ class LogDaoImp : LogDao {
         return logEntity
     }
 
+    override fun save(logEntities: MutableList<LogEntity>, username: String) {
+        logEntities.forEach {
+            addUpdateInfo(it, username)
+        }
+        logEntityBox.put(logEntities)
+    }
     override fun save(trxId: String, message: String, username: String): LogEntity {
         val logEntity = LogEntity(trxId, message)
         addUpdateInfo(logEntity, username)

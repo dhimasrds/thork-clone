@@ -27,8 +27,10 @@ import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.DateUtils
+import id.thork.app.persistence.entity.*
 import id.thork.app.utils.StringUtils
 import id.thork.app.utils.WoUtils
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -42,6 +44,7 @@ class WorkOrderRepository @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
     private val assetDao: AssetDao,
+    private val attachmentRepository: AttachmentRepository
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
@@ -296,6 +299,21 @@ class WorkOrderRepository @Inject constructor(
                     woCacheEntity.createdBy = appSession.userEntity.username
                     woCacheEntity.updatedBy = appSession.userEntity.username
                     saveWoList(woCacheEntity, appSession.userEntity.username)
+
+                    Timber.tag(TAG).d("addWoToObjectBox() doclinks woCacheEntity: %s",woCacheEntity)
+                    runBlocking {
+                        Timber.tag(TAG).d("addWoToObjectBox() doclinks")
+                        wo.doclinks.whatIfNotNull { doclinks ->
+                            appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
+                                doclinks.href.whatIfNotNullOrEmpty { href ->
+                                    attachmentRepository.createAttachmentFromDocklinks(
+                                        href,
+                                        username
+                                    )
+                                }
+                            }
+                        }
+                    }
                 })
         }
     }
@@ -575,7 +593,8 @@ class WorkOrderRepository @Inject constructor(
                     replaceWolocalChace(woCahce, wo)
                 }
             } else if (woListObjectBox!![wo.status] != null && woListObjectBox!![wo.status]!!.equals(
-                    BaseParam.COMPLETED)
+                    BaseParam.COMPLETED
+                )
             ) {
                 Timber.tag(TAG).d("compareWoLocalWithServer() add new Wo")
                 addWoToObjectBox(wo)
@@ -617,7 +636,7 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
-    fun multiAssetToObjectBox(member: Member){
+    private fun multiAssetToObjectBox(member: Member) {
         member.multiassetlocci.whatIfNotNullOrEmpty {
             for (multiAsset in it) {
                 val multiAssetEntity = MultiAssetEntity()
@@ -648,6 +667,12 @@ class WorkOrderRepository @Inject constructor(
                 saveMultiAssetToObjectBox(multiAssetEntity)
             }
         }
+    }
+
+    private fun saveDoclinkToAttachment() {
+        val attachmentEntities: MutableList<AttachmentEntity> = mutableListOf()
+        val attachmentEntity = AttachmentEntity()
+        attachmentEntities.add(attachmentEntity)
     }
 
     fun findByAssetnum(assetnum: String): AssetEntity? {

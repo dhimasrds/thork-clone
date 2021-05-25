@@ -5,6 +5,7 @@ import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.MultiAssetEntity_
 import io.objectbox.Box
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -12,6 +13,8 @@ import java.util.*
  * Jakarta, Indonesia.
  */
 class MultiAssetDaoImp : MultiAssetDao {
+    val TAG = MultiAssetDaoImp::class.java.name
+
     var multiAssetEntityBox: Box<MultiAssetEntity>
 
     init {
@@ -21,6 +24,9 @@ class MultiAssetDaoImp : MultiAssetDao {
     private fun addUpdateInfo(multiAssetEntity: MultiAssetEntity, username: String) {
         multiAssetEntity.createdBy.whatIfNotNullOrEmpty(
             whatIf = {
+                Timber.tag(TAG).d("addUpdateInfo() update entity")
+            },
+            whatIfNot = {
                 multiAssetEntity.createdDate = Date()
                 multiAssetEntity.createdBy = username
             }

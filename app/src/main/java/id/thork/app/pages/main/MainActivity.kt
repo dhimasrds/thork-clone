@@ -36,7 +36,6 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
 import id.thork.app.pages.multi_asset.ListAssetActivity
-import id.thork.app.pages.settings.SettingsActivity
 import timber.log.Timber
 
 

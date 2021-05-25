@@ -7,6 +7,8 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
+import id.thork.app.network.api.DoclinksApi
+import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,7 +34,21 @@ object WorkOrderModule {
 
     @Provides
     @ActivityRetainedScoped
+    fun provideDoclinksApi(preferenceManager: PreferenceManager, httpLoggingInterceptor: HttpLoggingInterceptor): DoclinksApi {
+        Timber.tag(TAG).i("provideLoginApi() init")
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        return retrofit.create(DoclinksApi::class.java)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
     fun provideWorkOrderClient(workOrderApi: WorkOrderApi): WorkOrderClient {
         return WorkOrderClient(workOrderApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideDoclinksClient(doclinksApi: DoclinksApi): DoclinksClient {
+        return DoclinksClient(doclinksApi)
     }
 }
