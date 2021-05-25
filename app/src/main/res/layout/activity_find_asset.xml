@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="id.thork.app.pages.find_asset.element.FindAssetViewModel" />
+            type="id.thork.app.pages.find_asset_location.element.FindAssetViewModel" />
 
     </data>
 
@@ -35,7 +35,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/cardview_findasset"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:clipToPadding="true"
