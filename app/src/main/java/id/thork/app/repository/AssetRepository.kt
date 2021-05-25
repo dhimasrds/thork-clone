@@ -19,4 +19,8 @@ class AssetRepository @Inject constructor(
         return assetDao.findByAssetnum(assetnum)
     }
 
+    fun findAllAsset(): List<AssetEntity>? {
+        return assetDao.findAllAsset()
+    }
+
 }

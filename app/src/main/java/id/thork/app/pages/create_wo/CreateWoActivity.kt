@@ -36,6 +36,7 @@ import id.thork.app.databinding.ActivityCreateWorkorderBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
+import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.utils.DateUtils
@@ -108,6 +109,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         binding.takePhoto.setOnClickListener {
             Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
                 .show()
+        }
+
+        binding.findAsset.setOnClickListener {
+            gotoFindAsset()
         }
 
         binding.createWo.setOnClickListener {
@@ -211,6 +216,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun gotoListMaterial() {
         val intent = Intent(this, ListMaterialActivity::class.java)
         intent.putExtra(BaseParam.WONUM, tempWonum)
+        startActivity(intent)
+    }
+
+    private fun gotoFindAsset() {
+        val intent = Intent(this, FindAssetActivity::class.java)
         startActivity(intent)
     }
 
