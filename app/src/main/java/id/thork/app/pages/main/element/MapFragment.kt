@@ -117,7 +117,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private fun onMapReadyState() {
         with(map) {
             setOnMarkerClickListener(this@MapFragment)
-//            setInfoWindowAdapter(customInfoWindowForGoogleMap)
             uiSettings.isMyLocationButtonEnabled = false
             uiSettings.isMapToolbarEnabled = true
         }
@@ -147,36 +146,32 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             }
         })
 
-        mapViewModel.listMemberLocation.observe(viewLifecycleOwner, {
-            it.forEach { member ->
-                member.serviceaddress.whatIfNotNullOrEmpty {
-                    val latitudeLocation = it.get(0).latitudey
-                    val longitudeLocation = it.get(0).longitudex
-                    if (latitudeLocation != null && longitudeLocation != null) {
-                        val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
-                        MapsUtils.renderLocationMarker(
-                            map,
-                            locationLatLng,
-                            member.location.toString()
-                        )
-                    }
+        mapViewModel.listLocation.observe(viewLifecycleOwner, {
+            it.forEach { locationCache ->
+                val latitudeLocation = locationCache.latitudey
+                val longitudeLocation = locationCache.longitudex
+                if(latitudeLocation != null && longitudeLocation != null) {
+                    val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
+                    MapsUtils.renderLocationMarker(
+                        map,
+                        locationLatLng,
+                        locationCache.location.toString()
+                    )
                 }
             }
         })
 
-        mapViewModel.listMemberAsset.observe(viewLifecycleOwner, {
-            it.forEach { member ->
-                member.serviceaddress.whatIfNotNullOrEmpty {
-                    val latitudeLocation = it.get(0).latitudey
-                    val longitudeLocation = it.get(0).longitudex
-                    if (latitudeLocation != null && longitudeLocation != null) {
-                        val locationLatLng = LatLng(latitudeLocation, longitudeLocation)
-                        MapsUtils.renderAssetMarker(
-                            map,
-                            locationLatLng,
-                            member.assetnum.toString()
-                        )
-                    }
+        mapViewModel.listAsset.observe(viewLifecycleOwner, {
+            it.forEach { assetCache ->
+                    val lattitudeAsset = assetCache.latitudey
+                    val longitudeAsset = assetCache.longitudex
+                if(lattitudeAsset != null && longitudeAsset != null) {
+                    val assetLatlng = LatLng(lattitudeAsset, longitudeAsset)
+                    MapsUtils.renderAssetMarker(
+                        map,
+                        assetLatlng,
+                        assetCache.assetnum.toString()
+                    )
                 }
             }
         })
@@ -414,6 +409,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
                     BaseParam.APP_TAG_MARKER_LOCATION -> {
                         mapViewModel.setDataLocation(it.snippet, it.tag.toString())
+                    }
+
+                    BaseParam.APP_TAG_MARKER_CREW -> {
+                        mapViewModel.setDataCrew(it.snippet, it.tag.toString())
                     }
                 }
             }

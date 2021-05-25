@@ -22,9 +22,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.base.MxResponse
-import id.thork.app.di.module.AppPropertiesMx
-import id.thork.app.di.module.AppSession
-import id.thork.app.di.module.ResourceProvider
+import id.thork.app.di.module.*
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
@@ -33,6 +31,7 @@ import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.LoginRepository
+import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.StringUtils
 import kotlinx.coroutines.Dispatchers
@@ -43,8 +42,7 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val appSession: AppSession,
-    private val appPropertiesMx: AppPropertiesMx
+    private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 
@@ -290,11 +288,11 @@ class LoginViewModel @ViewModelInject constructor(
     }
 
     private fun saveSystemResource(member: id.thork.app.network.response.system_properties.Member) {
-        val username =  appSession.userEntity.username
+        val username = appSession.userEntity.username
         val sysResEntityList = mutableListOf<SysResEntity>()
         member.thisfsmresource.whatIfNotNullOrEmpty {
             member.thisfsmresource?.forEach {
-                val sysResEntity =  SysResEntity()
+                val sysResEntity = SysResEntity()
                 sysResEntity.createdDate = Date()
                 sysResEntity.createdBy = username
                 sysResEntity.updatedDate = Date()
@@ -316,5 +314,4 @@ class LoginViewModel @ViewModelInject constructor(
             loginRepository.createListSystemResource(sysResEntityList)
         }
     }
-
 }

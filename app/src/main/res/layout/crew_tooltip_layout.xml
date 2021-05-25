@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/general_margin_10dp"
-            android:src="@drawable/ic_crew_tooltip_red" />
+            android:src="@drawable/ic_crew_tooltip_green" />
 
         <LinearLayout
             android:layout_width="match_parent"
