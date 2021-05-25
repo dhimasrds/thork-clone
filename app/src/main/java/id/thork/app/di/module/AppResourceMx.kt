@@ -24,6 +24,7 @@ class AppResourceMx @Inject constructor(context: Context) {
     var fsmResAsset: String? = null
     var fsmResLocations: String? = null
     var fsmResWorkorder: String? = null
+    var fsmResWorkorderHistory: String? = null
     var sysResDao: SysResDao = SysResDaoImp()
 
     init {
@@ -47,6 +48,12 @@ class AppResourceMx @Inject constructor(context: Context) {
             sysResDao.findBypropertiesKey(ResourceMxParam.FMS_RES_WORKORDER)
         resourceWorkorder.whatIfNotNull {
             fsmResWorkorder = it.resourcevalue
+        }
+
+        val resourceWorkorderHistory: SysResEntity? =
+            sysResDao.findBypropertiesKey(ResourceMxParam.FMS_RES_WORKORDER_HISTORY)
+        resourceWorkorderHistory.whatIfNotNull {
+            fsmResWorkorderHistory = it.resourcevalue
         }
     }
 
