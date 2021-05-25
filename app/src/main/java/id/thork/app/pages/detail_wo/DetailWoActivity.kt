@@ -23,6 +23,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailWoBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.ScannerActivity
+import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
@@ -258,8 +259,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     override fun setupListener() {
         super.setupListener()
         binding.attachment.setOnClickListener {
-            Toast.makeText(this, "Upload Attachment Feature is Coming Soon", Toast.LENGTH_LONG)
-                .show()
+            goToAttachments()
         }
 
         binding.btnRfid.setOnClickListener {
@@ -294,6 +294,12 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         intent.putExtra(BaseParam.LONGDESC, workorderLongdesc)
         intent.putExtra(BaseParam.WONUM, workorderNumber)
         startActivityForResult(intent, REQUEST_CODE_DETAIL)
+    }
+
+    private fun goToAttachments() {
+        val intent = Intent(this, AttachmentActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        startActivity(intent)
     }
 
     //TODO navigate to Rfid Asset

@@ -66,7 +66,7 @@ class WorkerCoordinator @Inject constructor(
 
     init {
         val workerRepository =
-            WorkerRepository(
+            WorkerRepository(context,
                 preferenceManager, httpLoggingInterceptor,
                 woCacheDao, appSession,
                 assetDao, attachmentDao, doclinksClient)

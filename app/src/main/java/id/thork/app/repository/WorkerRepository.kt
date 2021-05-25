@@ -12,6 +12,7 @@
 
 package id.thork.app.repository
 
+import android.content.Context
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
@@ -26,6 +27,7 @@ import id.thork.app.persistence.dao.WoCacheDao
 import okhttp3.logging.HttpLoggingInterceptor
 
 class WorkerRepository constructor(
+    private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
     private val woCacheDao: WoCacheDao,
@@ -37,7 +39,7 @@ class WorkerRepository constructor(
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())
-        val attachmentRepository = AttachmentRepository(preferenceManager, attachmentDao, doclinksClient)
+        val attachmentRepository = AttachmentRepository(context, preferenceManager, attachmentDao, doclinksClient)
         return WorkOrderRepository(
             workOrderClient,
             woCacheDao,
@@ -54,7 +56,7 @@ class WorkerRepository constructor(
 
     fun buildAttachmentRepository(): AttachmentRepository {
         val doclinksClient = DoclinksClient(provideDoclinksApi())
-        return AttachmentRepository(preferenceManager, attachmentDao, doclinksClient)
+        return AttachmentRepository(context, preferenceManager, attachmentDao, doclinksClient)
     }
 
     private fun provideDoclinksApi(): DoclinksApi {

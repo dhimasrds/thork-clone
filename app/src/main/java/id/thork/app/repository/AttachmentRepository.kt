@@ -1,6 +1,7 @@
 package id.thork.app.repository
 
 import android.annotation.SuppressLint
+import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.message
@@ -28,10 +29,12 @@ import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.utils.DateUtils
+import id.thork.app.utils.FileUtils
 import timber.log.Timber
 
 
 class AttachmentRepository constructor(
+    private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val attachmentDao: AttachmentDao,
     private val doclinksClient: DoclinksClient
@@ -54,8 +57,12 @@ class AttachmentRepository constructor(
         }
     }
 
-    private fun createAttachment( doclinksMember: DoclinksMember, username: String) {
-        Timber.tag(TAG).i("createAttachment() doclinksMember: %s username: %s", doclinksMember, username)
+    private fun createAttachment(
+        doclinksMember: DoclinksMember,
+        username: String
+    ): MutableList<AttachmentEntity> {
+        Timber.tag(TAG)
+            .i("createAttachment() doclinksMember: %s username: %s", doclinksMember, username)
         var attachmentEntities: MutableList<AttachmentEntity> = mutableListOf()
         doclinksMember.whatIfNotNull {
             it.member.whatIfNotNullOrEmpty { member ->
@@ -63,13 +70,19 @@ class AttachmentRepository constructor(
                     val describedBy = it.describedBy
                     describedBy.whatIfNotNull { describedBy ->
                         val modifiedDate = DateUtils.convertStringToMaximoDate(describedBy.modified)
-                        Timber.tag(TAG).i("createAttachment() modifiedDate: %s", modifiedDate)
+                        var mimeType = BaseParam.APP_EMPTY_STRING
+                        describedBy.format.whatIfNotNull { fileFormat ->
+                            fileFormat.label.whatIfNotNull {
+                                mimeType = it
+                            }
+                        }
+                        Timber.tag(TAG).i("createAttachment() modifiedDate: %s mimeType: %s", modifiedDate, mimeType)
                         val attachmentEntity = AttachmentEntity(
                             docInfoId = describedBy.docinfoid, docType = describedBy.docType,
-                            fileName = describedBy.fileName, mimeType = "",
+                            fileName = describedBy.fileName, mimeType = mimeType,
                             description = describedBy.description, title = describedBy.title,
                             modifiedDate = modifiedDate, syncStatus = true,
-                            uriString = describedBy.href, workOrderId = describedBy.ownerid,
+                            uriString = it.href, workOrderId = describedBy.ownerid,
                             wonum = ""
                         )
                         attachmentEntities.add(attachmentEntity)
@@ -78,6 +91,7 @@ class AttachmentRepository constructor(
             }
         }
         attachmentDao.save(attachmentEntities, username)
+        return attachmentEntities
     }
 
     private suspend fun getDoclinks(
@@ -86,7 +100,7 @@ class AttachmentRepository constructor(
         onError: (String) -> Unit
     ) {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val response = doclinksClient.getDoclinks(cookie,url + "?lean=1")
+        val response = doclinksClient.getDoclinks(cookie, url + "?lean=1")
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 onSuccess(response)
@@ -98,5 +112,9 @@ class AttachmentRepository constructor(
             Timber.tag(TAG).i("getDoclinks() exception: %s", message())
             onError(message())
         }
+    }
+
+    fun getAttachmentByWoId(woId: Int): MutableList<AttachmentEntity> {
+        return attachmentDao.fetchAttachmentByWoId(woId).toMutableList()
     }
 }

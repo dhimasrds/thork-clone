@@ -1,5 +1,6 @@
 package id.thork.app.di.module.workorder
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,9 +57,10 @@ object WorkOrderRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideAttachmentRepository(
+        context: Context,
         preferenceManager: PreferenceManager,
         doclinksClient: DoclinksClient
     ): AttachmentRepository {
-        return AttachmentRepository(preferenceManager, AttachmentDaoImp(), doclinksClient)
+        return AttachmentRepository(context, preferenceManager, AttachmentDaoImp(), doclinksClient)
     }
 }

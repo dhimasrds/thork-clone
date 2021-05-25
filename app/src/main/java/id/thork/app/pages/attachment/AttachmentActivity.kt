@@ -39,11 +39,14 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.skydoves.whatif.whatIf
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityAttachmentBinding
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.attachment.element.AttachmentAdapter
 import id.thork.app.pages.attachment.element.AttachmentViewModel
@@ -74,10 +77,14 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     @Named("svgRequestOption")
     lateinit var svgRequestOptions: RequestOptions
 
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
     override fun setupView() {
         super.setupView()
         attachmentEntities = mutableListOf()
-        attachmentAdapter = AttachmentAdapter(this, svgRequestOptions, this, attachmentEntities)
+        attachmentAdapter =
+            AttachmentAdapter(this, preferenceManager, svgRequestOptions, this, attachmentEntities)
 
         binding.apply {
             lifecycleOwner = this@AttachmentActivity
@@ -104,12 +111,13 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
             option = true
         )
 
-        viewModel.fetchAttachments(1)
-
         pickiT = PickiT(this, this, this)
         requestPermission()
 
         setupDialog()
+
+        retrieveFromIntent()
+        viewModel.fetchAttachments(intentWoId)
     }
 
     override fun setupObserver() {
@@ -124,8 +132,10 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Timber.tag(TAG).d("onActivityResult() request code: %s result code: %s data: %s",
-        requestCode, resultCode, data)
+        Timber.tag(TAG).d(
+            "onActivityResult() request code: %s result code: %s data: %s",
+            requestCode, resultCode, data
+        )
         when (requestCode) {
             SELECT_DOCUMENT_REQUEST -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
@@ -154,6 +164,11 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
     override fun onBackPressed() {
         super.onBackPressed()
+    }
+
+    private fun retrieveFromIntent() {
+        intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
     }
 
     private fun requestPermission() {
@@ -198,19 +213,19 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val etAttachmentCaption = dialogUtils.setViewId(R.id.et_attachment_caption) as EditText
         mimeType.whatIfNotNullOrEmpty {
             whatIf(FileUtils.isImageType(it),
-            whatIf = {
-                Timber.tag(TAG).d("navigateToPreview() is Image: true")
-                layoutDocPreview.visibility = View.INVISIBLE
-                ivPreview.visibility = View.VISIBLE
-                ivPreview.setImageURI(uri)
-            },
-            whatIfNot = {
-                Timber.tag(TAG).d("navigateToPreview() is Document: true")
-                layoutDocPreview.visibility = View.VISIBLE
-                ivPreview.visibility = View.INVISIBLE
-                val tvdocName = dialogUtils.setViewId(R.id.tv_doc_preview) as TextView
-                tvdocName.text = fileName
-            })
+                whatIf = {
+                    Timber.tag(TAG).d("navigateToPreview() is Image: true")
+                    layoutDocPreview.visibility = View.INVISIBLE
+                    ivPreview.visibility = View.VISIBLE
+                    ivPreview.setImageURI(uri)
+                },
+                whatIfNot = {
+                    Timber.tag(TAG).d("navigateToPreview() is Document: true")
+                    layoutDocPreview.visibility = View.VISIBLE
+                    ivPreview.visibility = View.INVISIBLE
+                    val tvdocName = dialogUtils.setViewId(R.id.tv_doc_preview) as TextView
+                    tvdocName.text = fileName
+                })
         }
 
         val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
@@ -218,8 +233,15 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         fabSave.setOnClickListener {
             Timber.tag(TAG).d("navigateToPreview() fileName: %s mimeType: %s", fileName, mimeType)
             if (fileName != null && !fileName.isEmpty() &&
-                mimeType != null && !mimeType.isEmpty()) {
-                addAttachment(WoCacheEntity(), uri.toString(), etAttachmentCaption.text.toString(), fileName, mimeType)
+                mimeType != null && !mimeType.isEmpty()
+            ) {
+                addAttachment(
+                    WoCacheEntity(),
+                    uri.toString(),
+                    etAttachmentCaption.text.toString(),
+                    fileName,
+                    mimeType
+                )
             }
             dialogUtils.dismiss()
         }
@@ -258,12 +280,17 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     }
 
     private fun addAttachment(
-        woCacheEntity: WoCacheEntity, uriString: String, description: String, name: String, mimeType: String) {
+        woCacheEntity: WoCacheEntity,
+        uriString: String,
+        description: String,
+        name: String,
+        mimeType: String
+    ) {
         val attachmentEntity = AttachmentEntity(
-            mimeType = mimeType,syncStatus = false,
+            mimeType = mimeType, syncStatus = false,
             uriString = uriString, description = description,
-            title =  name, workOrderId = woCacheEntity.woId,
-            wonum = woCacheEntity.wonum, modifiedDate  = Date()
+            title = name, workOrderId = woCacheEntity.woId,
+            wonum = woCacheEntity.wonum, modifiedDate = Date()
         )
 
         viewModel.addItem(attachmentEntity)

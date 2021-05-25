@@ -12,11 +12,14 @@
 
 package id.thork.app.utils
 
+import android.app.DownloadManager
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
+import androidx.core.content.FileProvider
+import id.thork.app.BuildConfig
 import id.thork.app.base.BaseApplication
 import timber.log.Timber
 import java.io.*
@@ -62,6 +65,8 @@ object FileUtils {
         var fileName: String? = null
         if (schema.equals("file")) {
             fileName = uri.lastPathSegment
+        } else if (!schema.isNullOrEmpty() && schema.startsWith("http")) {
+            fileName = uri.lastPathSegment
         } else if (schema.equals("content")) {
             val returnCursor = context.contentResolver.query(uri, null, null, null, null)
             val nameIndex = returnCursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -106,4 +111,5 @@ object FileUtils {
         }
         return tempFile
     }
+
 }

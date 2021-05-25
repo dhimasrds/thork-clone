@@ -20,7 +20,7 @@ import id.thork.app.BuildConfig
 
 object IntentUtils {
     fun displayData(context: Context, uriString: String) {
-        var uri: Uri = Uri.parse(uriString)
+        val uri: Uri = Uri.parse(uriString)
         val intent = Intent(Intent.ACTION_VIEW)
         val tmpUri = FileProvider.getUriForFile(
             context,

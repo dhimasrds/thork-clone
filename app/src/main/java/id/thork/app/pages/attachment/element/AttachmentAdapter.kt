@@ -19,18 +19,25 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.AttachmentItemBinding
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.utils.*
+import timber.log.Timber
 
 
 class AttachmentAdapter constructor(
     private val context: Context,
+    private val preferenceManager: PreferenceManager,
     private val requestOptions: RequestOptions,
     private val attachmentActivity: AttachmentActivity,
     private val attachmentEntities: List<AttachmentEntity>
@@ -73,22 +80,41 @@ class AttachmentAdapter constructor(
             attachmentEntity: AttachmentEntity,
             imageView: ImageView
         ) {
-            var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.image_broken)
-            attachmentEntity.mimeType.whatIfNotNullOrEmpty {
-                if (FileUtils.isImageType(it)) {
-                    uri = Uri.parse(attachmentEntity.uriString.toString())
-                } else if (FileUtils.isExcelType(it)) {
-                    uri = PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
-                } else if (FileUtils.isWordType(it)) {
-                    uri = PathUtils.getDrawableUri(context, R.drawable.ic_word_file)
-                } else if (FileUtils.isPdfType(it)) {
-                    uri = PathUtils.getDrawableUri(context, R.drawable.ic_pdf_file)
+            attachmentEntity.whatIfNotNull { attachmentEntity ->
+                var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.image_broken)
+                attachmentEntity.uriString.whatIfNotNullOrEmpty {
+                    Timber.tag(TAG).d("classifyImageThumbnail() uristring: %s", it)
+
+                    if (it.startsWith("http")) {
+                        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+                        Timber.tag(TAG).d("classifyImageThumbnail() cookies: %s", cookie)
+                        val glideUrl = GlideUrl(
+                            it, LazyHeaders.Builder()
+                                .addHeader("Cookie", cookie)
+                                .build()
+                        )
+                        GlideApp.with(context).load(glideUrl)
+                            .apply(requestOptions)
+                            .into(imageView)
+                    } else {
+                        attachmentEntity.mimeType.whatIfNotNullOrEmpty { mimeType ->
+                            if (FileUtils.isImageType(mimeType)) {
+                                uri = Uri.parse(it)
+                            } else if (FileUtils.isExcelType(mimeType)) {
+                                uri = PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
+                            } else if (FileUtils.isWordType(mimeType)) {
+                                uri = PathUtils.getDrawableUri(context, R.drawable.ic_word_file)
+                            } else if (FileUtils.isPdfType(mimeType)) {
+                                uri = PathUtils.getDrawableUri(context, R.drawable.ic_pdf_file)
+                            }
+                            Timber.tag(TAG).d("classifyImageThumbnail() thumbnail uri: %s", uri)
+                            GlideApp.with(context).load(uri)
+                                .apply(requestOptions)
+                                .into(imageView)
+                        }
+                    }
                 }
             }
-
-            GlideApp.with(context).load(uri)
-                .apply(requestOptions)
-                .into(imageView)
         }
     }
 }

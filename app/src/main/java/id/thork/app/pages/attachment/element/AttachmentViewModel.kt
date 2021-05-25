@@ -19,12 +19,14 @@ import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.AttachmentEntity
+import id.thork.app.repository.AttachmentRepository
 import id.thork.app.utils.PathUtils
 import timber.log.Timber
 
 class AttachmentViewModel @ViewModelInject constructor(
     private val context: Context,
     private val appSession: AppSession,
+    private val attachmentRepository: AttachmentRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = AttachmentViewModel::class.java.name
 
@@ -35,7 +37,7 @@ class AttachmentViewModel @ViewModelInject constructor(
 
     fun fetchAttachments(woId: Int) {
         Timber.tag(TAG).d("fetchAttachments() woId: %s", woId)
-        attachmentEntities = mutableListOf()
+        attachmentEntities = attachmentRepository.getAttachmentByWoId(woId)
         _attachments.value = attachmentEntities
     }
 
