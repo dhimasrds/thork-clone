@@ -39,7 +39,7 @@ class WorkerRepository constructor(
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())
-        val attachmentRepository = AttachmentRepository(context, preferenceManager, attachmentDao, doclinksClient)
+        val attachmentRepository = AttachmentRepository(context, preferenceManager, attachmentDao, httpLoggingInterceptor)
         return WorkOrderRepository(
             workOrderClient,
             woCacheDao,
@@ -55,8 +55,7 @@ class WorkerRepository constructor(
     }
 
     fun buildAttachmentRepository(): AttachmentRepository {
-        val doclinksClient = DoclinksClient(provideDoclinksApi())
-        return AttachmentRepository(context, preferenceManager, attachmentDao, doclinksClient)
+        return AttachmentRepository(context, preferenceManager, attachmentDao, httpLoggingInterceptor)
     }
 
     private fun provideDoclinksApi(): DoclinksApi {

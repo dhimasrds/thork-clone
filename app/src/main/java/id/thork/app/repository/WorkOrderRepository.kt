@@ -300,12 +300,14 @@ class WorkOrderRepository @Inject constructor(
                     woCacheEntity.updatedBy = appSession.userEntity.username
                     saveWoList(woCacheEntity, appSession.userEntity.username)
 
-                    Timber.tag(TAG).d("addWoToObjectBox() doclinks woCacheEntity: %s",woCacheEntity)
                     runBlocking {
                         Timber.tag(TAG).d("addWoToObjectBox() doclinks")
                         wo.doclinks.whatIfNotNull { doclinks ->
+                            Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
                             appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
                                 doclinks.href.whatIfNotNullOrEmpty { href ->
+                                    Timber.tag(TAG).d("addWoToObjectBox() username: %s href: %s",
+                                        username, href)
                                     attachmentRepository.createAttachmentFromDocklinks(
                                         href,
                                         username

@@ -236,7 +236,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                 mimeType != null && !mimeType.isEmpty()
             ) {
                 addAttachment(
-                    WoCacheEntity(),
+                    WoCacheEntity(woId = intentWoId),
                     uri.toString(),
                     etAttachmentCaption.text.toString(),
                     fileName,
@@ -290,6 +290,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
             mimeType = mimeType, syncStatus = false,
             uriString = uriString, description = description,
             title = name, workOrderId = woCacheEntity.woId,
+            fileName = name,
             wonum = woCacheEntity.wonum, modifiedDate = Date()
         )
 
