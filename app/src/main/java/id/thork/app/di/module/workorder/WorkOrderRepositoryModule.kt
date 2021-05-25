@@ -15,6 +15,7 @@ import id.thork.app.repository.AttachmentRepository
 import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WoActivityRepository
 import id.thork.app.repository.WorkOrderRepository
+import okhttp3.logging.HttpLoggingInterceptor
 
 /**
  * Created by Dhimas Saputra on 13/01/21
@@ -59,8 +60,8 @@ object WorkOrderRepositoryModule {
     fun provideAttachmentRepository(
         context: Context,
         preferenceManager: PreferenceManager,
-        doclinksClient: DoclinksClient
+        httpLoggingInterceptor: HttpLoggingInterceptor
     ): AttachmentRepository {
-        return AttachmentRepository(context, preferenceManager, AttachmentDaoImp(), doclinksClient)
+        return AttachmentRepository(context, preferenceManager, AttachmentDaoImp(), httpLoggingInterceptor)
     }
 }

@@ -36,6 +36,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".pages.rfid_mutli_asset.RfidMultiAssetActivity" />
+        <activity android:name=".pages.attachment.element.image_preview.AttachmentImagePreviewActivity"></activity>
+        <activity android:name=".pages.rfid_mutli_asset.RfidMultiAssetActivity" />
         <activity android:name=".pages.rfid_location.RfidLocationActivity" />
         <activity android:name=".pages.find_asset_location.FindLocationActivity" />
         <activity android:name=".pages.find_asset_location.FindAssetActivity" />

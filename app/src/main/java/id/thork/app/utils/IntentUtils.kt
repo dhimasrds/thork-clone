@@ -15,27 +15,40 @@ package id.thork.app.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import id.thork.app.BuildConfig
+import id.thork.app.base.BaseApplication
+import timber.log.Timber
+
 
 object IntentUtils {
     fun displayData(context: Context, uriString: String) {
-        val uri: Uri = Uri.parse(uriString)
-        val intent = Intent(Intent.ACTION_VIEW)
-        val tmpUri = FileProvider.getUriForFile(
-            context,
-            BuildConfig.APPLICATION_ID + ".provider",
-            FileUtils.createTempFileFromContentUri(context, uri)
-        )
-        context.grantUriPermission(
-            context.packageName, tmpUri,
-            Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-        )
-        intent.setDataAndType(tmpUri, FileUtils.getMimeType(context, tmpUri))
+        if (uriString.startsWith("http")) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriString))
+            try {
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                Timber.tag(BaseApplication.TAG).d("displayData() error: %s", e)
+            }
+        } else {
+            val uri: Uri = Uri.parse(uriString)
+            val intent = Intent(Intent.ACTION_VIEW)
+            val tmpUri = FileProvider.getUriForFile(
+                context,
+                BuildConfig.APPLICATION_ID + ".provider",
+                FileUtils.createTempFileFromContentUri(context, uri)
+            )
+            context.grantUriPermission(
+                context.packageName, tmpUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+            )
+            intent.setDataAndType(tmpUri, FileUtils.getMimeType(context, tmpUri))
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        context.startActivity(intent)
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            context.startActivity(intent)
+        }
     }
 }

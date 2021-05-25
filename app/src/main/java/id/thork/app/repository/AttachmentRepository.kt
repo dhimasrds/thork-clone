@@ -14,6 +14,8 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.MxResponse
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.RetrofitBuilder
+import id.thork.app.network.api.DoclinksApi
 import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.api.LoginClient
 import id.thork.app.network.api.WorkOrderClient
@@ -30,6 +32,7 @@ import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
+import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 
 
@@ -37,11 +40,18 @@ class AttachmentRepository constructor(
     private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val attachmentDao: AttachmentDao,
-    private val doclinksClient: DoclinksClient
+    private val httpLoggingInterceptor: HttpLoggingInterceptor
 ) : BaseRepository {
     val TAG = AttachmentRepository::class.java.name
 
+    private val doclinksClient: DoclinksClient
+
+    init {
+        doclinksClient = DoclinksClient(provideDoclinksApi())
+    }
+
     suspend fun createAttachmentFromDocklinks(url: String, username: String) {
+        Timber.tag(TAG).i("createAttachmentFromDocklinks() url: %s", url)
         var doclinksMember: DoclinksMember? = null
         getDoclinks(
             url = url,
@@ -49,7 +59,7 @@ class AttachmentRepository constructor(
                 doclinksMember = it
             },
             onError = {
-                Timber.tag(TAG).i("loginByPerson() error: %s", it)
+                Timber.tag(TAG).i("createAttachmentFromDocklinks() error: %s", it)
             }
         )
         doclinksMember.whatIfNotNull {
@@ -116,5 +126,14 @@ class AttachmentRepository constructor(
 
     fun getAttachmentByWoId(woId: Int): MutableList<AttachmentEntity> {
         return attachmentDao.fetchAttachmentByWoId(woId).toMutableList()
+    }
+
+    private fun provideDoclinksApi(): DoclinksApi {
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        return retrofit.create(DoclinksApi::class.java)
+    }
+
+    fun save(attachmentEntity: AttachmentEntity, username: String) {
+        attachmentDao.save(attachmentEntity, username)
     }
 }

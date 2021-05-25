@@ -16,6 +16,7 @@ import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.AttachmentEntity
@@ -30,10 +31,19 @@ class AttachmentViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = AttachmentViewModel::class.java.name
 
+    private var username: String? = null
     private val _attachments = MutableLiveData<List<AttachmentEntity>>()
     val attachments: LiveData<List<AttachmentEntity>> get() = _attachments
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
+
+    init {
+        appSession.userEntity.let { userEntity ->
+           if (userEntity.username != null) {
+               username = userEntity.username
+           }
+        }
+    }
 
     fun fetchAttachments(woId: Int) {
         Timber.tag(TAG).d("fetchAttachments() woId: %s", woId)
@@ -42,8 +52,11 @@ class AttachmentViewModel @ViewModelInject constructor(
     }
 
     fun addItem(attachmentEntity: AttachmentEntity) {
-        attachmentEntities.add(attachmentEntity)
-        _attachments.value = attachmentEntities
+        username.whatIfNotNullOrEmpty {
+            attachmentEntities.add(attachmentEntity)
+            attachmentRepository.save(attachmentEntity, it)
+            _attachments.value = attachmentEntities
+        }
     }
 
 }

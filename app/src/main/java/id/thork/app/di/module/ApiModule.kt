@@ -34,7 +34,7 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideDoclinksApi(preferenceManager: PreferenceManager, httpLoggingInterceptor: HttpLoggingInterceptor): DoclinksApi {
-        Timber.tag(WorkOrderModule.TAG).i("provideDoclinksApi() init")
+        Timber.tag(WorkOrderModule.TAG).i("provideDoclinksApi() init global")
         val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
         return retrofit.create(DoclinksApi::class.java)
     }

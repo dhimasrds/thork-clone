@@ -16,6 +16,7 @@ import android.app.DownloadManager
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
@@ -23,6 +24,7 @@ import id.thork.app.BuildConfig
 import id.thork.app.base.BaseApplication
 import timber.log.Timber
 import java.io.*
+import java.net.URL
 
 object FileUtils {
     fun getMimeType(context: Context, uri: Uri): String? {
@@ -110,6 +112,23 @@ object FileUtils {
             e.printStackTrace()
         }
         return tempFile
+    }
+
+    fun createFileFromRemoteUrl(context: Context, urlString: String) {
+        val url = URL(urlString)
+        val inputStream = url.openStream()
+        try {
+            val storagePath = context.getExternalFilesDir(null)
+            storagePath?.createNewFile()
+
+            val oStream = FileOutputStream(storagePath)
+            inputStream?.let {
+                copy(inputStream, oStream)
+            }
+            oStream.flush()
+        } catch (e: Exception) {
+            Timber.tag(BaseApplication.TAG).d("createFileFromRemoteUrl() error: %s", e)
+        }
     }
 
 }
