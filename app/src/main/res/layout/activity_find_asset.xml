@@ -13,6 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/general_margin_8dp"
+        android:layout_marginRight="@dimen/general_margin_8dp"
         tools:context=".pages.multi_asset.ListAssetActivity">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -32,23 +34,34 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/et_find_asset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:queryHint="@string/search_asset"
+            android:layout_marginTop="@dimen/general_margin_10dp"
+            android:background="@drawable/bg_edit_text"
+            android:textCursorDrawable="@null"
+            app:iconifiedByDefault="false"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar"
+            app:queryBackground="@null"
+            tools:layout_editor_absoluteX="0dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             tools:listitem="@layout/cardview_findasset"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:clipToPadding="true"
-            android:paddingLeft="@dimen/general_padding_16dp"
-            android:paddingRight="@dimen/general_padding_16dp"
             android:paddingBottom="@dimen/general_padding_8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/app_bar"
+            app:layout_constraintTop_toBottomOf="@+id/et_find_asset"
             app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

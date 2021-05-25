@@ -57,6 +57,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private lateinit var locationManager: LocationManager
     private val REQUEST_CODE_CREATE = 0
+    private val REQUEST_CODE_CREATE_ASSET = 0
     private val TAG_CREATE = "TAG_CREATE"
 
     private var longDesc: String? = null
@@ -226,7 +227,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun gotoFindAsset() {
         val intent = Intent(this, FindAssetActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CODE_CREATE_ASSET)
     }
 
     private fun pickLocation() {
