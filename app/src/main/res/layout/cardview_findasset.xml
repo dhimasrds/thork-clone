@@ -25,14 +25,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
+                android:layout_margin="@dimen/general_margin_5dp"
                 android:background="@drawable/ripple_effect"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_asset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/general_margin_5dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginRight="@dimen/general_margin_10dp"
                     android:src="@drawable/default_image"/>
 
                 <TextView

@@ -133,6 +133,13 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             longDesc = data!!.getStringExtra("longdesc")
             Timber.d("createWoLongdesc : %s", longDesc)
         }
+        else if (requestCode == REQUEST_CODE_CREATE_ASSET && resultCode == RESULT_OK) {
+            val asset = data!!.getStringExtra(BaseParam.ASSETNUM)
+            val location = data!!.getStringExtra(BaseParam.LOCATIONS)
+            binding.asset.text = asset
+            binding.tvLocation.text = location
+            Timber.d("onActivityResult asset : %s", asset)
+        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 

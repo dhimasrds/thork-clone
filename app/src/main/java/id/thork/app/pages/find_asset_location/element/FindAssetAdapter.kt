@@ -1,22 +1,36 @@
 package id.thork.app.pages.find_asset_location.element
 
 import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.R
 import id.thork.app.base.BaseApplication
+import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewFindassetBinding
+import id.thork.app.di.module.PreferenceManager
+import id.thork.app.pages.attachment.element.AttachmentAdapter
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.AttachmentEntity
+import id.thork.app.utils.FileUtils
+import id.thork.app.utils.PathUtils
 import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
+import id.thork.app.network.GlideApp
 
 /**
  * Created by Dhimas Saputra on 25/05/21
@@ -25,16 +39,17 @@ import kotlin.collections.ArrayList
 class FindAssetAdapter constructor(
     private val assetEntity: List<AssetEntity>,
     private val requestOption: RequestOptions,
-    activity: FindAssetActivity
-):
+    private  val activity: FindAssetActivity,
+    private val preferenceManager: PreferenceManager
+
+    ):
     RecyclerView.Adapter<FindAssetAdapter.ViewHolder>(),Filterable {
     var assetEntityFilterList = ArrayList<AssetEntity>()
-    var activityFindAsset: FindAssetActivity
+    val TAG = FindAssetAdapter::class.java.name
 
 
     init {
         assetEntityFilterList = assetEntity as ArrayList<AssetEntity>
-        activityFindAsset = activity
 
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,16 +62,18 @@ class FindAssetAdapter constructor(
         )
     }
 
-    class ViewHolder(val binding: CardviewFindassetBinding) :
+    inner class ViewHolder(val binding: CardviewFindassetBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(assetEntity: AssetEntity, activity: FindAssetActivity) {
-            binding.apply {
+            with(binding) {
+                classifyImageThumbnail(assetEntity,ivAsset)
                 assetnum.text = assetEntity.assetnum
-
                 cardAsset.setOnClickListener {
                     val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
-                    intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, "assetIsMatch")
+                    intent.putExtra(BaseParam.ASSETNUM, assetEntity.assetnum)
+                    intent.putExtra(BaseParam.LOCATIONS, assetEntity.assetLocation)
                     activity.setResult(AppCompatActivity.RESULT_OK, intent)
+                    activity.finish()
                 }
             }
         }
@@ -65,7 +82,7 @@ class FindAssetAdapter constructor(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val assetEntity: AssetEntity = assetEntityFilterList[position]
-        holder.bind(assetEntity, activityFindAsset)
+        holder.bind(assetEntity, activity)
     }
 
     override fun getItemCount(): Int {
@@ -104,4 +121,33 @@ class FindAssetAdapter constructor(
         }
     }
 
-}
+    private fun classifyImageThumbnail(
+        assetEntity: AssetEntity,
+        imageView: ImageView
+    ) {
+        assetEntity.whatIfNotNull { assetEntity ->
+            var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.default_image)
+            assetEntity.image.whatIfNotNullOrEmpty {
+                Timber.tag(TAG).d("classifyImageThumbnail() uristring: %s", it)
+
+                if (it.startsWith("https")) {
+                    val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+                    Timber.tag(TAG).d("classifyImageThumbnail() cookies: %s", cookie)
+                    val glideUrl = GlideUrl(
+                        it, LazyHeaders.Builder()
+                            .addHeader("Cookie", cookie)
+                            .build()
+                    )
+                    GlideApp.with(context).load(glideUrl)
+                        .apply(requestOption)
+                        .into(imageView)
+                } else {
+                        GlideApp.with(context).load(uri)
+                            .apply(requestOption)
+                            .into(imageView)
+                    }
+                }
+            }
+        }
+    }
+

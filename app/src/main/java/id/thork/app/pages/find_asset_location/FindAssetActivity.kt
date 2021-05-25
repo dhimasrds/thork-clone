@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityFindAssetBinding
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.pages.find_asset_location.element.FindAssetViewModel
@@ -31,6 +32,9 @@ class FindAssetActivity : BaseActivity() {
     @Inject
     lateinit var requestOptions: RequestOptions
 
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
     override fun setupView() {
         super.setupView()
         binding.apply {
@@ -38,7 +42,7 @@ class FindAssetActivity : BaseActivity() {
             viewModel =viewModels
         }
         assetEntities = mutableListOf()
-        findAssetAdapter = FindAssetAdapter(assetEntities,requestOptions,this)
+        findAssetAdapter = FindAssetAdapter(assetEntities,requestOptions,this,preferenceManager)
 
         binding.recyclerView.adapter = findAssetAdapter
         viewModels.findAllAsset()
