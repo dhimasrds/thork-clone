@@ -37,7 +37,7 @@ class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterfac
         }
 
         setupToolbarWithHomeNavigation(
-            getString(R.string.scan_asset),
+            getString(R.string.scan_location),
             navigation = false,
             filter = false,
             scannerIcon = false,

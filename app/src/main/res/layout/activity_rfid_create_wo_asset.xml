@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".pages.rfid_asset.RfidAssetAcitivty">
+        tools:context=".pages.rfid_create_wo_asset.RfidCreateWoAssetActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,7 +124,5 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

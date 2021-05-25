@@ -387,6 +387,8 @@
     </string-array>
     <!-- Rfid Asset -->
     <string name="scan_asset">Scanning Asset</string>
+    <!-- Rfid Location -->
+    <string name="scan_location">Scanning Location</string>
     <!-- Asset-->
     <string name="asset_rfid_is_match_begin">Item Aset</string>
     <string name="asset_rfid_is_not_match">Item Aset tidak sesuai</string>

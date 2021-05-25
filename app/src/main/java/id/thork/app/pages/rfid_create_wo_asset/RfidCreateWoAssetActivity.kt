@@ -96,7 +96,8 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
             rfidHandler!!.performInventory()
         } else {
             rfidHandler!!.stopInventory()
-        }    }
+        }
+    }
 
     override fun handleLocationData(distance: Short?) {
         TODO("Not yet implemented")
