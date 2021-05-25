@@ -37,6 +37,7 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
+import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.utils.DateUtils
@@ -108,6 +109,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.takePhoto.setOnClickListener {
             goToAttachments()
+        }
+
+        binding.findAsset.setOnClickListener {
+            gotoFindAsset()
         }
 
         binding.createWo.setOnClickListener {
@@ -216,6 +221,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun goToAttachments() {
         val intent = Intent(this, AttachmentActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun gotoFindAsset() {
+        val intent = Intent(this, FindAssetActivity::class.java)
         startActivity(intent)
     }
 

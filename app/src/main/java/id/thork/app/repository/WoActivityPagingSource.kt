@@ -88,13 +88,13 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun checkWoOnLocal(): List<WoCacheEntity> {
-        return woCacheDao.findAllWo()
+        return woCacheDao.findListWoByStatus(BaseParam.COMPLETED)
     }
 
     private suspend fun fetchWo(position: Int): Boolean {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
-        val savedQuery = appResourceMx.fsmResWorkorder
+        val savedQuery = appResourceMx.fsmResWorkorderHistory
 
         savedQuery?.let {
             repository.getWorkOrderList(
@@ -160,7 +160,7 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
-        val listwo: List<WoCacheEntity> = woCacheDao.findAllWo(offset)
+        val listwo: List<WoCacheEntity> = woCacheDao.findListWoByStatus(BaseParam.COMPLETED,offset)
         Timber.d("checkingWoInObjectBox savelocal :%s", listwo.size)
         if (listwo.isEmpty()) {
             Timber.d("checkingWoInObjectBox savelocal :%s", list.size)
