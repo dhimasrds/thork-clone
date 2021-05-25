@@ -104,19 +104,27 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
             binding.locationTooltipContent.locationTooltipDesc.text =
                 StringUtils.NVL(it.description, BaseParam.APP_DASH)
         })
+
+        sharedViewModel.crewName.observe(viewLifecycleOwner, Observer {
+            binding.crewTooltipContent.crewTooltipCrewName.text = it
+        })
     }
 
     private fun validateViewBottomSheet(tag: String) {
-        when {
-            tag.equals(BaseParam.APP_TAG_MARKER_ASSET) -> {
+        when (tag){
+           BaseParam.APP_TAG_MARKER_ASSET -> {
                 binding.assetTooltipContent.root.visibility = VISIBLE
             }
-            tag.equals(BaseParam.APP_TAG_MARKER_WO) -> {
+            BaseParam.APP_TAG_MARKER_WO -> {
                 binding.woTooltipContent.root.visibility = VISIBLE
             }
-            tag.equals(BaseParam.APP_TAG_MARKER_LOCATION) -> {
+            BaseParam.APP_TAG_MARKER_LOCATION -> {
                 binding.locationTooltipContent.root.visibility = VISIBLE
             }
+            BaseParam.APP_TAG_MARKER_CREW -> {
+                binding.crewTooltipContent.root.visibility = VISIBLE
+            }
+
         }
     }
 

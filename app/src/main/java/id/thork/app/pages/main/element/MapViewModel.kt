@@ -53,14 +53,6 @@ class MapViewModel @ViewModelInject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    private val _getWoCache = MutableLiveData<WoCacheEntity>()
-    val getWoCache: LiveData<WoCacheEntity> get() = _getWoCache
-
-    fun setDataWo(wonum : String){
-        val wocache = workOrderRepository.findWobyWonum(wonum)
-        _getWoCache.value = wocache
-    }
-
     private val locationDao: LocationDao
 
     init {
@@ -73,23 +65,25 @@ class MapViewModel @ViewModelInject constructor(
 
     private val _listWo = MutableLiveData<List<WoCacheEntity>>()
     private val _listMember = MutableLiveData<List<Member>>()
-    private val _listMemberLocation =
-        MutableLiveData<List<id.thork.app.network.response.fsm_location.Member>>()
-    private val _listMemberAsset =
-        MutableLiveData<List<id.thork.app.network.response.asset_response.Member>>()
     private val _woCache = MutableLiveData<WoCacheEntity>()
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
     private val _resultTagMarker = MutableLiveData<String>()
+    private val _getWoCache = MutableLiveData<WoCacheEntity>()
+    private val _listAsset = MutableLiveData<List<AssetEntity>>()
+    private val _listLocation = MutableLiveData<List<LocationEntity>>()
+    private val _crewName = MutableLiveData<String>()
 
+    val getWoCache: LiveData<WoCacheEntity> get() = _getWoCache
     val listWo: LiveData<List<WoCacheEntity>> get() = _listWo
     val listMember: LiveData<List<Member>> get() = _listMember
-    val listMemberLocation: LiveData<List<id.thork.app.network.response.fsm_location.Member>> get() = _listMemberLocation
-    val listMemberAsset: LiveData<List<id.thork.app.network.response.asset_response.Member>> get() = _listMemberAsset
     val woCache: LiveData<WoCacheEntity> get() = _woCache
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
     val resultTagMarker: MutableLiveData<String>get() = _resultTagMarker
+    val listAsset : MutableLiveData<List<AssetEntity>> get() = _listAsset
+    val listLocation: MutableLiveData<List<LocationEntity>> get() = _listLocation
+    val crewName: MutableLiveData<String> get() = _crewName
 
     init {
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("CREW_POSITION")
@@ -118,6 +112,11 @@ class MapViewModel @ViewModelInject constructor(
     fun setDataLocation(loc : String, tag: String){
         val locationCache = workOrderRepository.findByLocation(loc)
         _locationCache.value = locationCache
+        _resultTagMarker.value = tag
+    }
+
+    fun setDataCrew(crew : String, tag: String) {
+        _crewName.value = crew
         _resultTagMarker.value = tag
     }
 
@@ -247,55 +246,18 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    suspend fun fetchLocationMarker() {
-        val cookie = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
-        val savedQuery = appResourceMx.fsmResLocations
-        workOrderRepository.deleteLocation()
-        savedQuery.whatIfNotNull {
-            viewModelScope.launch(Dispatchers.IO) {
-                workOrderRepository.locationMarker(cookie,
-                    it,
-                    select,
-                    onSuccess = { fsmLocation ->
-                        fsmLocation.member.whatIfNotNullOrEmpty {
-                            workOrderRepository.addLocationToObjectBox(it)
-                            _listMemberLocation.postValue(it)
-                        }
-                    },
-                    onError = {
-                        Timber.tag(TAG).i("fetchLocationMarker() error: %s", it)
-                        _error.postValue(it)
-                    })
-            }
+    fun fetchLocationMarker() {
+        val listLocationCache = workOrderRepository.fetchLocalMarker()
+        listLocationCache.whatIfNotNullOrEmpty {
+            _listLocation.value = it
         }
-
         fetchAsset()
     }
 
     fun fetchAsset() {
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
-        val savedQuery = appResourceMx.fsmResAsset
-        workOrderRepository.deleteAssetEntity()
-        savedQuery.whatIfNotNull {
-            viewModelScope.launch(Dispatchers.IO) {
-                workOrderRepository.getAssetList(cookie, it, select,
-                    onSuccess = { assetResponse ->
-                        assetResponse.member.whatIfNotNullOrEmpty {
-                            workOrderRepository.addAssetToObjectBox(it)
-                            _listMemberAsset.postValue(it)
-                        }
-                    },
-                    onError = {
-                        Timber.d("fetchAsset() onError :%s", it)
-                        _error.postValue(it)
-                    },
-                    onException = {
-                        Timber.d("fetchAsset() onException :%s", it)
-                        _error.postValue(it)
-                    })
-            }
+        val listAssetCache =  workOrderRepository.fetchAssetList()
+        listAssetCache.whatIfNotNullOrEmpty {
+            _listAsset.value = it
         }
     }
 }

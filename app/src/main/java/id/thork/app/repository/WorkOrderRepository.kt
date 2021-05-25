@@ -398,6 +398,7 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun addLocationToObjectBox(member: List<id.thork.app.network.response.fsm_location.Member>) {
+        deleteLocation()
         for (location in member) {
             val locationEntity = LocationEntity()
             locationEntity.location = location.location
@@ -463,6 +464,7 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun addAssetToObjectBox(list: List<id.thork.app.network.response.asset_response.Member>) {
+        deleteAssetEntity()
         for (asset in list) {
             val assetEntity = AssetEntity(
                 assetnum = asset.assetnum,

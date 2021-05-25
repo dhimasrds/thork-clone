@@ -94,8 +94,10 @@ object MapsUtils {
         } else {
             val options = MarkerOptions()
                 .position(latLng)
-                .title(title)
+                .snippet(title)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_group_crew))
+
+            googleMap.addMarker(options).tag = BaseParam.APP_TAG_MARKER_CREW
             newCrewMarker = googleMap.addMarker(options)
             crewListMarkers.put(crewId, newCrewMarker)
         }
