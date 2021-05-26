@@ -4,8 +4,11 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppResourceMx
@@ -49,8 +52,12 @@ class WorkOrderActvityViewModel @ViewModelInject constructor(
     private val _getWoList = MutableLiveData<List<Member>>()
     val getWoList: LiveData<List<Member>> get() = _getWoList
 
+    private val workManager = WorkManager.getInstance(BaseApplication.context)
+    internal val outputWorkInfos: LiveData<List<WorkInfo>>
+
     init {
         woCacheDao = WoCacheDaoImp()
+        outputWorkInfos = workManager.getWorkInfosByTagLiveData("SYNC_WO")
     }
 
     private val currentQuery = state.getLiveData(CURRENT_QUERY, EMPTY_QUERY)
@@ -76,5 +83,10 @@ class WorkOrderActvityViewModel @ViewModelInject constructor(
     fun searchWo(query: String) {
         Timber.d("searchWo viewmodel :%s", query)
         currentQuery.value = query
+    }
+
+    fun pruneWork() {
+        Timber.d("WorkOrderActvityViewModel() pruneWork")
+        workManager.pruneWork()
     }
 }

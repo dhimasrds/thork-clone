@@ -49,7 +49,8 @@ class WorkOrderWorker @WorkerInject constructor(
     val woCacheDao: WoCacheDao,
     val assetDao: AssetDao,
     val attachmentDao: AttachmentDao,
-    val doclinksClient: DoclinksClient
+    val doclinksClient: DoclinksClient,
+//    val workOrderAdapter: WorkOrderAdapter
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -75,6 +76,8 @@ class WorkOrderWorker @WorkerInject constructor(
 
 
     private val MAX_RUN_ATTEMPT = 6
+    private var syncUpdateSuccess = false
+
     override fun doWork(): Result {
         try {
             //Query Local WO Record is needed to sync with the server
@@ -82,19 +85,9 @@ class WorkOrderWorker @WorkerInject constructor(
                 Result.failure()
             }
 
-            //TODO Execute Sync WO
             syncUpdateWo()
-
-            //If Post to server success then return result.success
-            //Else return result.retry until MAX RUN ATTEMPT
-            val workerId = inputData.getString("workerid")
-            val wonum = inputData.getString("wonum")
-            val woid = inputData.getInt("woid", 0)
-            Timber.tag(TAG).i(
-                "WorkOrderWorker() doWork() sync workerId: %s wonum: %s woid: %s",
-                workerId, wonum, woid
-            )
             return Result.success()
+
         } catch (e: Exception) {
             Timber.tag(TAG).e("doWork() error: %s", e.message)
             return Result.retry()
@@ -133,7 +126,13 @@ class WorkOrderWorker @WorkerInject constructor(
                 member.status = status
                 member.descriptionLongdescription = longdesc
 
-                Timber.tag(TAG).d("updateStatusWoOffline() updateWo() woId %s, wonum %s, longdesc %s, status %s", woId, wonum, longdesc, status)
+                Timber.tag(TAG).d(
+                    "updateStatusWoOffline() updateWo() woId %s, wonum %s, longdesc %s, status %s",
+                    woId,
+                    wonum,
+                    longdesc,
+                    status
+                )
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val xMethodeOverride: String = BaseParam.APP_PATCH
@@ -152,8 +151,12 @@ class WorkOrderWorker @WorkerInject constructor(
                                     status.toString()
                                 )
                                 val nextIndex = currentIndex + 1
-                                if(nextIndex <= listWo.size - 1) {
+                                if (nextIndex <= listWo.size - 1) {
                                     updateStatusWoOffline(listWo, nextIndex)
+                                } else {
+//                                    workOrderAdapter.refresh()
+                                    syncUpdateSuccess = true
+                                    Timber.tag(TAG).i("WorkOrderWorker() syncUpdateSuccess %s",syncUpdateSuccess)
                                 }
                             },
                             onError = {

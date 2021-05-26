@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.work.WorkInfo
 import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -30,6 +32,8 @@ class ActivityFragment : Fragment() {
     private lateinit var binding: FragmentActivityBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
     private val viewModel: WorkOrderActvityViewModel by viewModels()
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,8 +44,7 @@ class ActivityFragment : Fragment() {
         binding.viewModel = viewModel
         pullRefreshLayout = binding.swipeRefreshLayout
         woActivityAdapter = WorkOrderAdapter()
-
-
+        viewModel.pruneWork()
         return binding.root
     }
 
@@ -71,7 +74,7 @@ class ActivityFragment : Fragment() {
         }
     }
 
-    private fun swipeRefresh(){
+    private fun swipeRefresh() {
         pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
         pullRefreshLayout.setColorSchemeColors(
             ContextCompat.getColor(requireContext(), R.color.blueTextStatus),
@@ -82,8 +85,8 @@ class ActivityFragment : Fragment() {
         pullRefreshLayout.setOnRefreshListener {
             woActivityAdapter.refresh()
             woActivityAdapter.addLoadStateListener { loadstate ->
-                Timber.d("loadresult wo :%s",loadstate.refresh)
-                if (loadstate.refresh !is LoadState.Loading){
+                Timber.d("loadresult wo :%s", loadstate.refresh)
+                if (loadstate.refresh !is LoadState.Loading) {
                     pullRefreshLayout.setRefreshing(false)
                 }
             }
@@ -175,6 +178,24 @@ class ActivityFragment : Fragment() {
                     )
                 }
             })
+        }
+    }
+
+    private fun workInfosObserver() : Observer<List<WorkInfo>> {
+        return Observer { listWorkInfo ->
+            // Note that these next few lines grab a single WorkInfo if it exists
+            // This code could be in a Transformation in the ViewModel; they are included here
+            // so that the entire process of displaying a WorkInfo is in one location.
+
+            // If there are no matching work info, do nothing
+            if(listWorkInfo.isNullOrEmpty()) {
+                return@Observer
+            }
+
+            Timber.d("workInfosObserver() refresh adapter")
+            woActivityAdapter.refresh()
+            viewModel.pruneWork()
+
         }
     }
 }

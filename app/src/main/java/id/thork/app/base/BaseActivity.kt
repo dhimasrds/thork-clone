@@ -35,11 +35,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber
@@ -62,6 +65,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var workerCoordinator: WorkerCoordinator
+
+    @Inject
+    lateinit var woCacheDao: WoCacheDao
 
     var isConnected = false
 
@@ -256,14 +262,24 @@ abstract class BaseActivity : AppCompatActivity() {
         Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
         //TODO sync update status Workorder when online
-        workerCoordinator.addSyncWoQueue()
+        val woCacheList =
+            woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+        Timber.tag(BaseApplication.TAG).i("onGoodConnection() size local cache %s", woCacheList.size)
+        woCacheList.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncWoQueue()
+        }
     }
 
     open fun onSlowConnection() {
         CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow))
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
         //TODO sync update status Workorder when online
-        workerCoordinator.addSyncWoQueue()
+        val woCacheList =
+            woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+        Timber.tag(BaseApplication.TAG).i("onSlowConnection() size local cache %s", woCacheList.size)
+        woCacheList.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncWoQueue()
+        }
     }
 
     open fun onLostConnection() {
