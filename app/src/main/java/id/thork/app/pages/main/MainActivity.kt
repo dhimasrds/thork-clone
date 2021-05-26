@@ -94,8 +94,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
         val fabCreateWo = binding.fabCreateWo
         fabCreateWo.setOnClickListener {
-            viewModel.checkWorkManager()
-//            startActivity(Intent(this, CreateWoActivity::class.java))
+//            viewModel.checkWorkManager()
+            startActivity(Intent(this, CreateWoActivity::class.java))
         }
     }
 
