@@ -18,4 +18,8 @@ class LocationRepository @Inject constructor(
         return locationDao.findByLocation(location)
     }
 
+    fun findByTagcode(tagcode: String) : LocationEntity? {
+        return locationDao.findByTagcode(tagcode)
+    }
+
 }

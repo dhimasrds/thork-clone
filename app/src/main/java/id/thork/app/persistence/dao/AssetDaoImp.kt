@@ -1,12 +1,9 @@
 package id.thork.app.persistence.dao
 
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.AssetEntity_
-import id.thork.app.persistence.entity.MultiAssetEntity
-import id.thork.app.persistence.entity.MultiAssetEntity_
 import io.objectbox.Box
 import timber.log.Timber
 import java.util.*
@@ -15,7 +12,7 @@ import java.util.*
  * Created by Raka Putra on 5/11/21
  * Jakarta, Indonesia.
  */
-class AssetDaoImp: AssetDao {
+class AssetDaoImp : AssetDao {
     val TAG = AssetDaoImp::class.java.name
 
     var assetEntityBox: Box<AssetEntity>
@@ -54,7 +51,17 @@ class AssetDaoImp: AssetDao {
     }
 
     override fun findByAssetnum(assetnum: String): AssetEntity? {
-        val assetEntity = assetEntityBox.query().equal(AssetEntity_.assetnum, assetnum).build().find()
+        val assetEntity =
+            assetEntityBox.query().equal(AssetEntity_.assetnum, assetnum).build().find()
+        assetEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
+    override fun findByTagCode(tagcode: String): AssetEntity? {
+        val assetEntity =
+            assetEntityBox.query().equal(AssetEntity_.assetRfid, tagcode).build().find()
         assetEntity.whatIfNotNullOrEmpty {
             return it[0]
         }

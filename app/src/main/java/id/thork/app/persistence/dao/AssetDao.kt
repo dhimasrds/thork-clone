@@ -14,4 +14,5 @@ interface AssetDao {
 
     fun remove()
     fun findByAssetnum(assetnum: String): AssetEntity?
+    fun findByTagCode(tagcode: String): AssetEntity?
 }

@@ -23,4 +23,10 @@ class AssetRepository @Inject constructor(
         return assetDao.findAllAsset()
     }
 
+    fun findbyTagcode(tagcode : String): AssetEntity? {
+        return assetDao.findByTagCode(tagcode)
+    }
+
+
+
 }

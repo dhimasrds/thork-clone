@@ -28,6 +28,9 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import com.google.zxing.integration.android.IntentIntegrator
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseApplication.Constants.context
@@ -35,11 +38,14 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateWorkorderBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
+import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
+import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
+import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -125,13 +131,60 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             }
         }
 
+        binding.btnRfid.setOnClickListener {
+            gotoFindAssetRfid()
+        }
+
+        binding.btnQrcode.setOnClickListener {
+            gotoFindAssetBarcode()
+        }
+
+        binding.btnRfidLocation.setOnClickListener {
+            gotoFindLocationRfid()
+        }
+
+        binding.btnQrcodeLocation.setOnClickListener {
+            gotoFindLocationBarcode()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Timber.d("onActivityResult() requestCode %s, resultCode %s", requestCode, resultCode)
+        val result = IntentIntegrator.parseActivityResult(resultCode, data)
         if (requestCode == REQUEST_CODE_CREATE && resultCode == RESULT_OK) {
             longDesc = data!!.getStringExtra("longdesc")
             Timber.d("createWoLongdesc : %s", longDesc)
+        }
+
+        else if (requestCode == BaseParam.RFID_REQUEST_CODE && resultCode == RESULT_OK) {
+            data.whatIfNotNull {
+                val assetNum = it.getStringExtra(BaseParam.ASSETNUM)
+                val location = it.getStringExtra(BaseParam.LOCATIONS)
+                binding.asset.text = assetNum
+                binding.tvLocation.text = location
+            }
+        }
+
+        else if (requestCode == BaseParam.BARCODE_REQUEST_CODE && resultCode == RESULT_OK) {
+            result.whatIfNotNull {
+                //TODO Query to local
+                Timber.d("onActivityResult() result scanner %s", it.contents)
+                viewModel.checkResultAsset(it.contents)
+            }
+        }
+
+        else if (requestCode == BaseParam.RFID_REQUEST_CODE_LOCATION && resultCode == RESULT_OK) {
+            data.whatIfNotNull {
+                val location = it.getStringExtra(BaseParam.LOCATIONS)
+                binding.tvLocation.text = location
+            }
+        }
+
+        else if (requestCode == BaseParam.BARCODE_REQUEST_CODE_LOCATION && resultCode == RESULT_OK) {
+            result.whatIfNotNull {
+                viewModel.checkResultLocation(it.contents)
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -229,6 +282,24 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun gotoFindAsset() {
         val intent = Intent(this, FindAssetActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE_CREATE_ASSET)
+    }
+
+    private fun gotoFindAssetRfid() {
+        val intent = Intent(this, RfidCreateWoAssetActivity::class.java)
+        startActivityForResult(intent, BaseParam.RFID_REQUEST_CODE)
+    }
+
+    private fun gotoFindAssetBarcode() {
+        startQRScanner(BaseParam.BARCODE_REQUEST_CODE)
+    }
+
+    private fun gotoFindLocationRfid() {
+        val intent = Intent(this, RfidCreateWoLocationActivity::class.java)
+        startActivityForResult(intent, BaseParam.RFID_REQUEST_CODE_LOCATION)
+    }
+
+    private fun gotoFindLocationBarcode() {
+        startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
     }
 
     private fun pickLocation() {
@@ -379,5 +450,25 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun gotoHome() {
         finish()
+    }
+
+    private fun startQRScanner(requestCode: Int) {
+        IntentIntegrator(this).apply {
+            setCaptureActivity(ScannerActivity::class.java)
+            setRequestCode(requestCode)
+            initiateScan()
+        }
+    }
+
+    override fun setupObserver() {
+        super.setupObserver()
+        viewModel.assetCache.observe(this, Observer {
+            binding.asset.text = it.assetnum
+            binding.tvLocation.text = it.assetLocation
+        })
+
+        viewModel.locationCache.observe(this, Observer {
+            binding.tvLocation.text = it.location
+        })
     }
 }

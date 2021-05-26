@@ -99,7 +99,7 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
     override fun setupListener() {
         super.setupListener()
         binding.btnContinue.setOnClickListener {
-            val intent = Intent(this, CreateWoActivity::class.java)
+            val intent = Intent()
             intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, assetIsMatch)
             setResult(RESULT_OK, intent)
             finish()

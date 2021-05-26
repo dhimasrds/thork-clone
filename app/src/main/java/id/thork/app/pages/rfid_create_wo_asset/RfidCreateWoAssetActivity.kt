@@ -1,11 +1,15 @@
 package id.thork.app.pages.rfid_create_wo_asset
 
+import android.content.Intent
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.zebra.rfid.api3.TagData
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidCreateWoAssetBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_create_wo_asset.element.RfidCreateWoAssetActivityViewModel
@@ -50,10 +54,23 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
 
     override fun setupObserver() {
         super.setupObserver()
+
+        rfidCreateWoAssetViewModel.assetCache.observe(this, Observer {
+            binding.tvAssetNum.text = it.assetnum
+            binding.tvAssetLocation.text = it.assetLocation
+            binding.layoutAction.visibility = View.VISIBLE
+        })
     }
 
     override fun setupListener() {
         super.setupListener()
+        binding.btnContinue.setOnClickListener {
+            val intent = Intent()
+            intent.putExtra(BaseParam.ASSETNUM,  binding.tvAssetNum.text.toString())
+            intent.putExtra(BaseParam.LOCATIONS, binding.tvAssetLocation.text.toString())
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
 
     override fun onPause() {
@@ -87,6 +104,8 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
             }
             runOnUiThread {
                 Timber.tag(TAG).d("handleTagdata() tag data: %s", sb.toString())
+                //Check to local cache
+                rfidCreateWoAssetViewModel.checkAssetTagCode(sb.toString())
             }
         }
     }

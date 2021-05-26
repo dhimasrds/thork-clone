@@ -7,4 +7,5 @@ interface LocationDao {
     fun deleteLocation()
     fun locationList(): List<LocationEntity>
     fun findByLocation(location: String): LocationEntity?
+    fun findByTagcode(tagcode: String): LocationEntity?
 }
