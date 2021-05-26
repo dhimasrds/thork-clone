@@ -33,7 +33,6 @@ class ActivityFragment : Fragment() {
     private lateinit var pullRefreshLayout: PullRefreshLayout
     private val viewModel: WorkOrderActvityViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,6 +71,8 @@ class ActivityFragment : Fragment() {
                 Timber.d("onCreateView :%s", it)
             }
         }
+
+        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
     }
 
     private fun swipeRefresh() {
@@ -181,14 +182,14 @@ class ActivityFragment : Fragment() {
         }
     }
 
-    private fun workInfosObserver() : Observer<List<WorkInfo>> {
+    private fun workInfosObserver(): Observer<List<WorkInfo>> {
         return Observer { listWorkInfo ->
             // Note that these next few lines grab a single WorkInfo if it exists
             // This code could be in a Transformation in the ViewModel; they are included here
             // so that the entire process of displaying a WorkInfo is in one location.
 
             // If there are no matching work info, do nothing
-            if(listWorkInfo.isNullOrEmpty()) {
+            if (listWorkInfo.isNullOrEmpty()) {
                 return@Observer
             }
 

@@ -6,24 +6,17 @@ import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseApplication
-import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.network.ApiParam
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.pages.login.element.LoginViewModel
 import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.repository.WoActivityRepository
 import id.thork.app.repository.WorkOrderRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
@@ -64,19 +57,23 @@ class WorkOrderActvityViewModel @ViewModelInject constructor(
     val woList = currentQuery.switchMap { query ->
         if (!query.isEmpty()) {
             Timber.d("filter on  viewmodel :%s", query)
-            repository.getSearchWo(appSession,
+            repository.getSearchWo(
+                appSession,
                 repository,
                 query,
                 preferenceManager,
                 appResourceMx,
-                workOrderRepository)
+                workOrderRepository
+            )
         } else {
             Timber.d("filter off viewmodel :%s", query)
-            repository.getWoList(appSession,
+            repository.getWoList(
+                appSession,
                 repository,
                 preferenceManager,
                 appResourceMx,
-                workOrderRepository).cachedIn(viewModelScope)
+                workOrderRepository
+            ).cachedIn(viewModelScope)
         }
     }
 

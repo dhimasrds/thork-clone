@@ -76,7 +76,6 @@ class WorkOrderWorker @WorkerInject constructor(
 
 
     private val MAX_RUN_ATTEMPT = 6
-    private var syncUpdateSuccess = false
 
     override fun doWork(): Result {
         try {
@@ -153,10 +152,6 @@ class WorkOrderWorker @WorkerInject constructor(
                                 val nextIndex = currentIndex + 1
                                 if (nextIndex <= listWo.size - 1) {
                                     updateStatusWoOffline(listWo, nextIndex)
-                                } else {
-//                                    workOrderAdapter.refresh()
-                                    syncUpdateSuccess = true
-                                    Timber.tag(TAG).i("WorkOrderWorker() syncUpdateSuccess %s",syncUpdateSuccess)
                                 }
                             },
                             onError = {

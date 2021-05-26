@@ -31,9 +31,7 @@ class WorkOrderListFragment : Fragment() {
     private val viewModel: WorkOrderListViewModel by viewModels()
     private lateinit var binding: FragmentWorkOrderListBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
-
     lateinit var workOrderAdapter: WorkOrderAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +44,6 @@ class WorkOrderListFragment : Fragment() {
         pullRefreshLayout = binding.swipeRefreshLayout
         workOrderAdapter = WorkOrderAdapter()
         viewModel.pruneWork()
-
 
         return binding.root
     }
@@ -68,7 +65,6 @@ class WorkOrderListFragment : Fragment() {
                 footer = WoLoadStateAdapter { workOrderAdapter.retry() }
             )
         }
-
     }
 
     private fun setupObserver() {
@@ -80,7 +76,6 @@ class WorkOrderListFragment : Fragment() {
         }
 
         viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
-
     }
 
     private fun swipeRefresh() {
