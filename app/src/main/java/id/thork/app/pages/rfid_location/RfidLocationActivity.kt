@@ -67,7 +67,6 @@ class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterfac
     }
 
 
-
     @SuppressLint("SetTextI18n")
     override fun setupObserver() {
         super.setupObserver()
@@ -106,6 +105,13 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
             intent.putExtra(BaseParam.RFID_LOCATION_IS_MATCH, locationIsMatch)
             setResult(RESULT_OK, intent)
             finish()
+        }
+
+        binding.btnRetry.setOnClickListener {
+            binding.percentChartView.setProgress(0f, true)
+            binding.tvAssetResult.visibility = View.GONE
+            binding.layoutAction.visibility = View.GONE
+            locationIsMatch = false
         }
 
     }

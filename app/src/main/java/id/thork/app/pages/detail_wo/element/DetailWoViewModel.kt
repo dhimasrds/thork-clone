@@ -139,7 +139,7 @@ class DetailWoViewModel @ViewModelInject constructor(
     fun validateAsset(assetnum: String) {
         val assetEntity = assetRepository.findbyAssetnum(assetnum)
         assetEntity.whatIfNotNull {
-            it.assetRfid.whatIfNotNull(
+            it.assetrfid.whatIfNotNull(
                 whatIf = { rfidvalue ->
                     _AssetRfid.value = it.assetnum
                 },

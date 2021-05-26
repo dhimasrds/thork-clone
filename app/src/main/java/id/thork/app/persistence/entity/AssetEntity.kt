@@ -19,7 +19,7 @@ data class AssetEntity(
     var orgid: String? = null,
     var latitudey: Double? = null,
     var longitudex: Double? = null,
-    var assetRfid: String? = null,
+    var assetrfid: String? = null,
     var image: String? = null,
     var assetTagTime: String? = null
 ) :BaseEntity(){

@@ -26,6 +26,7 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
      */
     private var rfidHandler: RFIDHandler? = null
 
+    private var tempTagcode: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -66,10 +67,16 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
         super.setupListener()
         binding.btnContinue.setOnClickListener {
             val intent = Intent()
-            intent.putExtra(BaseParam.ASSETNUM,  binding.tvAssetNum.text.toString())
+            intent.putExtra(BaseParam.ASSETNUM, binding.tvAssetNum.text.toString())
             intent.putExtra(BaseParam.LOCATIONS, binding.tvAssetLocation.text.toString())
             setResult(RESULT_OK, intent)
             finish()
+        }
+
+        binding.btnRetry.setOnClickListener {
+            binding.tvAssetNum.text = BaseParam.APP_EMPTY_STRING
+            binding.tvAssetLocation.text = BaseParam.APP_EMPTY_STRING
+            binding.layoutAction.visibility = View.GONE
         }
     }
 
@@ -100,12 +107,12 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
         tagData.whatIfNotNullOrEmpty {
             val sb: StringBuilder = StringBuilder()
             for (i in 0..(it.size - 1)) {
-                sb.append(it[i].tagID + "\n")
+                sb.append(it[i].tagID)
             }
             runOnUiThread {
                 Timber.tag(TAG).d("handleTagdata() tag data: %s", sb.toString())
                 //Check to local cache
-                rfidCreateWoAssetViewModel.checkAssetTagCode(sb.toString())
+                tempTagcode = sb.toString()
             }
         }
     }
@@ -114,6 +121,7 @@ class RfidCreateWoAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInt
         if (pressed) {
             rfidHandler!!.performInventory()
         } else {
+            rfidCreateWoAssetViewModel.checkAssetTagCode(tempTagcode.toString())
             rfidHandler!!.stopInventory()
         }
     }

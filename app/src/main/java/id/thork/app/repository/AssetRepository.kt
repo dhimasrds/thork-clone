@@ -4,6 +4,7 @@ import id.thork.app.base.BaseRepository
 import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.AssetDaoImp
 import id.thork.app.persistence.entity.AssetEntity
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -23,8 +24,13 @@ class AssetRepository @Inject constructor(
         return assetDao.findAllAsset()
     }
 
-    fun findbyTagcode(tagcode : String): AssetEntity? {
+    fun findByTagCode(tagcode : String): AssetEntity? {
         return assetDao.findByTagCode(tagcode)
+    }
+
+    fun findByTagCodeStatus(tagcode : String, status : String): AssetEntity? {
+        Timber.d("findByTagCode %s", tagcode)
+        return assetDao.findByTagCodeAndStatus(tagcode, status)
     }
 
 

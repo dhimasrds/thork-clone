@@ -1,10 +1,12 @@
 package id.thork.app.persistence.dao
 
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.AssetEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.inValues
 import timber.log.Timber
 import java.util.*
 
@@ -61,7 +63,20 @@ class AssetDaoImp : AssetDao {
 
     override fun findByTagCode(tagcode: String): AssetEntity? {
         val assetEntity =
-            assetEntityBox.query().equal(AssetEntity_.assetRfid, tagcode).build().find()
+            assetEntityBox.query().equal(AssetEntity_.assetrfid, tagcode).build().find()
+        Timber.d("findByTagCode size query %s", assetEntity.size)
+        assetEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+
+    }
+
+    override fun findByTagCodeAndStatus(tagcode: String, status: String): AssetEntity? {
+        val assetEntity =
+            assetEntityBox.query().equal(AssetEntity_.assetrfid, tagcode)
+                .equal(AssetEntity_.status, status).build().find()
+        Timber.d("findByTagCode size query %s", assetEntity.size)
         assetEntity.whatIfNotNullOrEmpty {
             return it[0]
         }

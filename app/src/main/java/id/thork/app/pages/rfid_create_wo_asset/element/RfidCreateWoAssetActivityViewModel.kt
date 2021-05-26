@@ -4,10 +4,12 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
+import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.repository.AssetRepository
+import timber.log.Timber
 
 /**
  * Created by M.Reza Sulaiman on 25/05/2021
@@ -22,11 +24,11 @@ class RfidCreateWoAssetActivityViewModel @ViewModelInject constructor(
     private val _assetCache = MutableLiveData<AssetEntity>()
     val assetCache: LiveData<AssetEntity> get() = _assetCache
 
-
     fun checkAssetTagCode(tagCode: String) {
-        val assetEntity = assetRepository.findbyTagcode(tagCode)
+        val assetEntity = assetRepository.findByTagCode(tagCode)
+        Timber.tag(TAG).d("checkAssetTagCode() assetnum %s", assetEntity)
         assetEntity.whatIfNotNull {
-            _assetCache.value = it
+            _assetCache.postValue(it)
         }
     }
 

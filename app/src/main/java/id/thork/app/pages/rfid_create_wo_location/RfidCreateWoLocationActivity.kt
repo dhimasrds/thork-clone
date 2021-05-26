@@ -26,6 +26,7 @@ class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandler
      */
     private var rfidHandler: RFIDHandler? = null
 
+    private var tempTagcode: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -70,6 +71,11 @@ class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandler
             setResult(RESULT_OK, intent)
             finish()
         }
+
+        binding.btnRetry.setOnClickListener {
+            binding.tvLocation.text = BaseParam.APP_EMPTY_STRING
+            binding.layoutAction.visibility = View.GONE
+        }
     }
 
     override fun onPause() {
@@ -100,11 +106,11 @@ class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandler
         tagData.whatIfNotNullOrEmpty {
             val sb: StringBuilder = StringBuilder()
             for (i in 0..(it.size - 1)) {
-                sb.append(it[i].tagID + "\n")
+                sb.append(it[i].tagID)
             }
             runOnUiThread {
                 Timber.tag(TAG).d("handleTagdata() tag data: %s", sb.toString())
-                rfidCreateWoAssetActivityViewModel.checkLocationTagcode(sb.toString())
+                tempTagcode = sb.toString()
             }
         }
     }
@@ -113,6 +119,7 @@ class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandler
         if (pressed) {
             rfidHandler!!.performInventory()
         } else {
+            rfidCreateWoAssetActivityViewModel.checkLocationTagcode(tempTagcode.toString())
             rfidHandler!!.stopInventory()
         }
     }

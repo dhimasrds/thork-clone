@@ -26,7 +26,7 @@ class RfidCreateWoLocationActivityViewModel @ViewModelInject constructor(
     fun checkLocationTagcode(tagcode : String) {
         val locationEntity =  locationRepository.findByTagcode(tagcode)
         locationEntity.whatIfNotNull {
-            _locationCache.value = it
+            _locationCache.postValue(it)
         }
     }
 
