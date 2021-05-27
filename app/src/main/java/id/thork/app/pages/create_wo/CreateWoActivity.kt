@@ -61,6 +61,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private lateinit var dialogUtils: DialogUtils
     private lateinit var radioButtonPriority: RadioButton
     private lateinit var tempWonum: String
+    private var tempWorkOrderId: Int = 0
 
     private lateinit var locationManager: LocationManager
     private val REQUEST_CODE_CREATE = 0
@@ -84,6 +85,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         }
 
         tempWonum = viewModel.getTempWonum()!!
+        tempWorkOrderId = viewModel.getTempWoId()!!
         binding.complaintDate.setText(DateUtils.getDateTime())
         locationManager = (getSystemService(LOCATION_SERVICE) as LocationManager)
         customDialogUtils = CustomDialogUtils(this)
@@ -312,6 +314,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun goToAttachments() {
         val intent = Intent(this, AttachmentActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
         startActivity(intent)
     }
 
