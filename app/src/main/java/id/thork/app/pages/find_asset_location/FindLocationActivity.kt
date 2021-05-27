@@ -47,7 +47,7 @@ class FindLocationActivity: BaseActivity() {
         viewModels.getAllLocation()
 
         setupToolbarWithHomeNavigation(
-            getString(R.string.find_asset),
+            getString(R.string.find_location),
             navigation = false,
             filter = false,
             scannerIcon = false,

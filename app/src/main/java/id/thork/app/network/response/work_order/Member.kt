@@ -35,7 +35,7 @@ data class Member(
     @Json(name = "apptrequired")
     val apptrequired: Boolean? = null,
     @Json(name = "assetnum")
-    val assetnum: String? = null,
+    var assetnum: String? = null,
     @Json(name = "assignment")
     val assignment: List<Assignment>? = null,
     @Json(name = "assignment_collectionref")
@@ -241,5 +241,9 @@ data class Member(
     @Json(name = "wpservice_collectionref")
     val wpserviceCollectionref: String? = null,
     @Json(name = "wptool_collectionref")
-    val wptoolCollectionref: String? = null
+    val wptoolCollectionref: String? = null,
+    @Json(name = "origrecordid")
+    val origrecordid: String? = null,
+    @Json(name = "origrecordclass")
+    val origrecordclass: String? = null,
 )

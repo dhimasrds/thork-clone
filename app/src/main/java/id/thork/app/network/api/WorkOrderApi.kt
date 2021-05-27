@@ -34,9 +34,9 @@ interface WorkOrderApi {
 
     @POST("/maximo/oslc/os/THISFSMWODETAIL?lean=1")
     suspend fun createWO(
-        @Header(BaseParam.APP_MAX_AUTH) maxAuth: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Body body: Member?,
-    ): ApiResponse<Member>
+    ): ApiResponse<Void>
 
     @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
     suspend fun updateStatus(

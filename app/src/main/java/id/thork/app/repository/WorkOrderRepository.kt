@@ -134,14 +134,12 @@ class WorkOrderRepository @Inject constructor(
     suspend fun createWo(
         headerParam: String,
         body: Member,
-        onSuccess: (Member) -> Unit,
+        onSuccess: () -> Unit,
         onError: (String) -> Unit,
     ) {
         val response = workOrderClient.createWo(headerParam, body)
         response.suspendOnSuccess {
-            data.whatIfNotNull { response ->
-                onSuccess(response)
-            }
+                onSuccess()
         }.onError {
             Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
             onError(message())

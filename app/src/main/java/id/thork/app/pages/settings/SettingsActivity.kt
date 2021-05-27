@@ -251,4 +251,14 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         startActivity(intent)
         finish()
     }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
+    }
 }

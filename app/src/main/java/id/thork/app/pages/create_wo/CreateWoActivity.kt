@@ -132,7 +132,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.createWo.setOnClickListener {
             val desc: String = binding.deskWo.text.toString()
-            if (desc.isEmpty() || latitudey == null || longitudex == null) {
+            if (desc.isEmpty()) {
                 dialogWarning()
             } else {
                 buttonCreateWo()
@@ -396,8 +396,14 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun updateWoOnline() {
         viewModel.createWorkOrderOnline(
-            binding.deskWo.text.toString(), longitudex,
-            latitudey, estDur, getWorkPriority(), longDesc, tempWonum
+            binding.deskWo.text.toString(),
+            estDur,
+            getWorkPriority(),
+            longDesc,
+            tempWonum,
+            tempWorkOrderId,
+            binding.asset.text.toString(),
+            binding.tvLocation.text.toString()
         )
         Toast.makeText(
             this,
@@ -408,12 +414,12 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun updateWoOffline() {
         viewModel.createNewWoCache(
-            longitudex,
-            latitudey,
             binding.deskWo.text.toString(),
             estDur,
             getWorkPriority(),
-            longDesc
+            longDesc,
+            binding.asset.text.toString(),
+            binding.tvLocation.text.toString()
         )
         Toast.makeText(
             this,
@@ -514,5 +520,15 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         viewModel.locationCache.observe(this, Observer {
             binding.tvLocation.text = it.location
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
     }
 }
