@@ -456,7 +456,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 binding.layoutStatus.visibility = GONE
             }
         }
-        
+
 //        binding.scanQr.setOnClickListener {
 //            if (workorderStatus == BaseParam.COMPLETED) {
 //                Toast.makeText(this, R.string.stat_complete, Toast.LENGTH_SHORT).show()
