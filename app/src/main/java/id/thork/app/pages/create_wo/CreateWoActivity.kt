@@ -118,7 +118,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             gotoLongDescActivity()
         }
 
-        binding.takePhoto.setOnClickListener {
+        binding.attachment.setOnClickListener {
             goToAttachments()
         }
 
