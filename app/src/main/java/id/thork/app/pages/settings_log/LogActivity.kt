@@ -72,7 +72,8 @@ class LogActivity : BaseActivity() {
     }
 
     override fun goToPreviousActivity() {
-        finish()
+        //finish()
+        super.goToPreviousActivity()
     }
 
 }

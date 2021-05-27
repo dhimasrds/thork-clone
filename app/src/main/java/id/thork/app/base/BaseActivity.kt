@@ -348,6 +348,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun goToPreviousActivity() {
-
+        finish()
     }
 }

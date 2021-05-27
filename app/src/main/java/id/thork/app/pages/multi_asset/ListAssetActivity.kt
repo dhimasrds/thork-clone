@@ -56,7 +56,7 @@ class ListAssetActivity : BaseActivity() {
 
     override fun goToPreviousActivity() {
         super.goToPreviousActivity()
-        finish()
+        //finish()
     }
 
     private fun retriveFromIntent() {

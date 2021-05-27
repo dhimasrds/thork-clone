@@ -143,6 +143,7 @@ class ListMaterialActivity : BaseActivity() {
     }
 
     override fun goToPreviousActivity() {
-        finish()
+        //finish()
+        super.goToPreviousActivity()
     }
 }

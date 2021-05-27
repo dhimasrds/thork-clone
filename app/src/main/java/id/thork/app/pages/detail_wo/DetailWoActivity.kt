@@ -534,7 +534,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     override fun goToPreviousActivity() {
         detailWoViewModel.removeScanner(workorderId!!)
-        finish()
+        //finish()
+        super.goToPreviousActivity()
     }
 
     private fun startQRScanner(requestCode: Int) {
