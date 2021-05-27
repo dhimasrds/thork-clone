@@ -16,41 +16,35 @@ import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseApplication
-import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewFindassetBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.pages.attachment.element.AttachmentAdapter
-import id.thork.app.pages.create_wo.CreateWoActivity
-import id.thork.app.pages.find_asset_location.FindAssetActivity
-import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.AttachmentEntity
-import id.thork.app.utils.FileUtils
-import id.thork.app.utils.PathUtils
-import timber.log.Timber
-import java.util.*
-import kotlin.collections.ArrayList
 import id.thork.app.network.GlideApp
+import id.thork.app.pages.create_wo.CreateWoActivity
+import id.thork.app.pages.find_asset_location.FindLocationActivity
+import id.thork.app.persistence.entity.LocationEntity
+import id.thork.app.utils.PathUtils
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
 
 /**
- * Created by Dhimas Saputra on 25/05/21
+ * Created by Dhimas Saputra on 27/05/21
  * Jakarta, Indonesia.
  */
-class FindAssetAdapter constructor(
-    private val assetEntity: List<AssetEntity>,
+class FindLocationAdapter  constructor(
+    private val locationEntity: List<LocationEntity>,
     private val requestOption: RequestOptions,
-    private  val activity: FindAssetActivity,
+    private  val activity: FindLocationActivity,
     private val preferenceManager: PreferenceManager
 
-    ):
-    RecyclerView.Adapter<FindAssetAdapter.ViewHolder>(),Filterable {
-    var assetEntityFilterList = ArrayList<AssetEntity>()
-    val TAG = FindAssetAdapter::class.java.name
+):
+    RecyclerView.Adapter<FindLocationAdapter.ViewHolder>(), Filterable {
+    var locationEntityFilterList = ArrayList<LocationEntity>()
+    val TAG = FindLocationAdapter::class.java.name
 
 
     init {
-        assetEntityFilterList = assetEntity as ArrayList<AssetEntity>
+        locationEntityFilterList = locationEntity as ArrayList<LocationEntity>
 
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -65,14 +59,13 @@ class FindAssetAdapter constructor(
 
     inner class ViewHolder(val binding: CardviewFindassetBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(assetEntity: AssetEntity, activity: FindAssetActivity) {
+        fun bind(locationEntity : LocationEntity, activity: FindLocationActivity) {
             with(binding) {
-                classifyImageThumbnail(assetEntity,ivAsset)
-                assetnum.text =StringUtils.NVL(assetEntity.assetnum,BaseParam.APP_DASH)
+                classifyImageThumbnail(locationEntity,ivAsset)
+                assetnum.text = StringUtils.NVL(locationEntity.formatAddress,BaseParam.APP_DASH)
                 cardAsset.setOnClickListener {
                     val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
-                    intent.putExtra(BaseParam.ASSETNUM, assetEntity.assetnum)
-                    intent.putExtra(BaseParam.LOCATIONS, assetEntity.assetLocation)
+                    intent.putExtra(BaseParam.LOCATIONS, locationEntity.formatAddress)
                     activity.setResult(AppCompatActivity.RESULT_OK, intent)
                     activity.finish()
                 }
@@ -82,12 +75,12 @@ class FindAssetAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val assetEntity: AssetEntity = assetEntityFilterList[position]
-        holder.bind(assetEntity, activity)
+        val locationEntity: LocationEntity = locationEntityFilterList[position]
+        holder.bind(locationEntity, activity)
     }
 
     override fun getItemCount(): Int {
-        return assetEntityFilterList.size
+        return locationEntityFilterList.size
     }
 
     override fun getFilter(): Filter {
@@ -95,27 +88,27 @@ class FindAssetAdapter constructor(
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charSearch = constraint.toString()
                 if (charSearch.isEmpty()) {
-                    assetEntityFilterList = assetEntity as ArrayList<AssetEntity>
+                    locationEntityFilterList = locationEntity as ArrayList<LocationEntity>
                 } else {
-                    Timber.d("filter result :%s",assetEntity.size)
-                    val resultList = ArrayList<AssetEntity>()
-                    for (asset in assetEntity) {
-                        if (asset.assetnum?.toLowerCase()?.contains(charSearch.toLowerCase()) == true) {
-                            Timber.d("filter result text:%s",asset.assetnum)
-                            resultList.add(asset)
+                    Timber.d("filter result :%s",locationEntity.size)
+                    val resultList = ArrayList<LocationEntity>()
+                    for (location in locationEntity) {
+                        if (location.formatAddress?.toLowerCase()?.contains(charSearch.toLowerCase()) == true) {
+                            Timber.d("filter result text:%s",location.formatAddress)
+                            resultList.add(location)
                         }
                     }
-                    assetEntityFilterList = resultList
+                    locationEntityFilterList = resultList
                 }
                 val filterResults = FilterResults()
-                filterResults.values = assetEntityFilterList
+                filterResults.values = locationEntityFilterList
                 Timber.d("filter result :%s",filterResults)
                 return filterResults
             }
 
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                assetEntityFilterList = results?.values as ArrayList<AssetEntity>
+                locationEntityFilterList = results?.values as ArrayList<LocationEntity>
                 notifyDataSetChanged()
             }
 
@@ -123,12 +116,12 @@ class FindAssetAdapter constructor(
     }
 
     private fun classifyImageThumbnail(
-        assetEntity: AssetEntity,
+        locationEntity: LocationEntity,
         imageView: ImageView
     ) {
-        assetEntity.whatIfNotNull { assetEntity ->
-            var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.default_image)
-            assetEntity.image.whatIfNotNullOrEmpty {
+        locationEntity.whatIfNotNull { locationEntity ->
+            var uri: Uri = PathUtils.getDrawableUri(BaseApplication.context, R.drawable.default_image)
+            locationEntity.image.whatIfNotNullOrEmpty {
                 Timber.tag(TAG).d("classifyImageThumbnail() uristring: %s", it)
 
                 if (it.startsWith("https")) {
@@ -139,16 +132,15 @@ class FindAssetAdapter constructor(
                             .addHeader("Cookie", cookie)
                             .build()
                     )
-                    GlideApp.with(context).load(glideUrl)
+                    GlideApp.with(BaseApplication.context).load(glideUrl)
                         .apply(requestOption)
                         .into(imageView)
                 } else {
-                        GlideApp.with(context).load(uri)
-                            .apply(requestOption)
-                            .into(imageView)
-                    }
+                    GlideApp.with(BaseApplication.context).load(uri)
+                        .apply(requestOption)
+                        .into(imageView)
                 }
             }
         }
     }
-
+}

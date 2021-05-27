@@ -28,6 +28,9 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.skydoves.whatif.whatIf
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
@@ -42,6 +45,7 @@ import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
+import id.thork.app.pages.find_asset_location.FindLocationActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
@@ -64,6 +68,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private lateinit var locationManager: LocationManager
     private val REQUEST_CODE_CREATE = 0
     private val REQUEST_CODE_CREATE_ASSET = 10
+    private val REQUEST_CODE_CREATE_LOCATION = 20
     private val TAG_CREATE = "TAG_CREATE"
 
     private var longDesc: String? = null
@@ -122,6 +127,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             gotoFindAsset()
         }
 
+        binding.findLocation.setOnClickListener {
+            gotoFindLocation()
+        }
+
         binding.createWo.setOnClickListener {
             val desc: String = binding.deskWo.text.toString()
             if (desc.isEmpty() || latitudey == null || longitudex == null) {
@@ -155,6 +164,34 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         if (requestCode == REQUEST_CODE_CREATE && resultCode == RESULT_OK) {
             longDesc = data!!.getStringExtra("longdesc")
             Timber.d("createWoLongdesc : %s", longDesc)
+
+        when (resultCode) {
+            RESULT_OK -> {
+                when (requestCode) {
+                    REQUEST_CODE_CREATE -> {
+                        longDesc = data!!.getStringExtra("longdesc")
+                        Timber.d("createWoLongdesc : %s", longDesc)
+                    }
+                    REQUEST_CODE_CREATE_ASSET -> {
+                        val asset = data!!.getStringExtra(BaseParam.ASSETNUM)
+                        val location = data!!.getStringExtra(BaseParam.LOCATIONS)
+                        binding.asset.text = asset
+                        location.whatIfNotNull(
+                            whatIf = { binding.tvLocation.text = location },
+                            whatIfNot = {
+                                binding.tvLocation.text = getString(R.string.line)
+                            }
+                        )
+                        Timber.d("onActivityResult asset : %s", asset)
+                    }
+                    REQUEST_CODE_CREATE_LOCATION -> {
+                        val location = data!!.getStringExtra(BaseParam.LOCATIONS)
+                        binding.asset.text = getString(R.string.line)
+                        binding.tvLocation.text = location
+                        Timber.d("onActivityResult location : %s", location)
+                    }
+                }
+            }
         }
 
         else if (requestCode == BaseParam.RFID_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -186,6 +223,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
                 viewModel.checkResultLocation(it.contents)
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -282,6 +320,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun gotoFindAsset() {
         val intent = Intent(this, FindAssetActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE_CREATE_ASSET)
+    }
+
+    private fun gotoFindLocation() {
+        val intent = Intent(this, FindLocationActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_CREATE_LOCATION)
     }
 
     private fun gotoFindAssetRfid() {

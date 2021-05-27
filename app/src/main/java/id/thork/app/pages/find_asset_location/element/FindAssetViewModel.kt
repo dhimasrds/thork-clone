@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.repository.AssetRepository
 import timber.log.Timber
@@ -21,9 +22,18 @@ class FindAssetViewModel @ViewModelInject constructor(
     private val _getFindAssetList = MutableLiveData<List<AssetEntity>>()
     val getFindAssetList: LiveData<List<AssetEntity>> get() = _getFindAssetList
 
-        fun findAllAsset(){
+    private val _getLocationList = MutableLiveData<List<LocationEntity>>()
+    val getLocationList: LiveData<List<LocationEntity>> get() = _getLocationList
+
+        fun getAllAsset(){
           val findAssetList = assetRepository.findAllAsset()
-            Timber.d("findAllAsset :%s",findAssetList!!.size)
+            Timber.d("getAllAsset :%s",findAssetList!!.size)
             _getFindAssetList.value = findAssetList
         }
+
+    fun getAllLocation(){
+        val findLocationList = assetRepository.findAllLocation()
+        Timber.d("getAllLocation :%s",findLocationList!!.size)
+        _getLocationList.value = findLocationList
+    }
 }
