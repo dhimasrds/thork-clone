@@ -53,7 +53,7 @@ object BaseParam {
     const val APP_X_METHOD_OVERRIDE = "x-method-override"
     const val APP_PATCH = "PATCH"
     const val APP_MERGE = "MERGE"
-    const val APP_SLUG = "Slug"
+    const val APP_SLUG = "slug"
     const val APP_X_DOCUMENT_DESCRIPTION = "x-document-description"
     const val APP_X_DOCUMENT_META = "x-document-meta"
     const val APP_CONTENT_TYPE = "Content-Type"
@@ -204,4 +204,6 @@ object BaseParam {
      * Attachment type
      */
     const val ATTACHMENTURI = "ATTACHMENTURI"
+    const val ATTACHMENT_FOLDER = "Attachments"
+    const val IMAGES_FOLDER = "Images"
 }

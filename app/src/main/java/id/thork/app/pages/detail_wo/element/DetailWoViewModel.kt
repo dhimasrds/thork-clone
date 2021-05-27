@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
@@ -12,6 +13,7 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.helper.MapsLocation
 import id.thork.app.network.response.google_maps.ResponseRoute
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.*
@@ -33,7 +35,8 @@ class DetailWoViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
     private val assetRepository: AssetRepository,
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val attachmentRepository: AttachmentRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = DetailWoViewModel::class.java.name
 
@@ -52,6 +55,17 @@ class DetailWoViewModel @ViewModelInject constructor(
     val Result: LiveData<Int> get() = _Result
     val LocationRfid: LiveData<String> get() = _LocationRfid
     val ResultLocation: LiveData<Int> get() = _ResultLocation
+
+    private lateinit var attachmentEntities: MutableList<AttachmentEntity>
+    private var username: String? = null
+
+    init {
+        appSession.userEntity.let { userEntity ->
+            if (userEntity.username != null) {
+                username = userEntity.username
+            }
+        }
+    }
 
     fun fetchWobyWonum(wonum: String) {
         val woCacheEntity: WoCacheEntity? = workOrderRepository.findWobyWonum(wonum)
@@ -88,7 +102,6 @@ class DetailWoViewModel @ViewModelInject constructor(
         longdesc: String?,
         nextStatus: String
     ) {
-
         workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
         Timber.tag(TAG).d("updateWo() updateWoCacheBeforeSync()")
 
@@ -109,6 +122,7 @@ class DetailWoViewModel @ViewModelInject constructor(
                     onSuccess = {
                         workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
                         saveScannerMaterial(woId)
+                        uploadAttachments(woId)
                     },
                     onError = {
                         Timber.tag(TAG).i("updateWo() onError() onError: %s", it)
@@ -126,6 +140,16 @@ class DetailWoViewModel @ViewModelInject constructor(
         for (i in materialList!!.indices)
             materialList[i]!!.workorderId = woId
         materialRepository.saveMaterialList(materialList)
+    }
+
+    fun uploadAttachments(woId: Int) {
+        attachmentEntities = attachmentRepository.getAttachmentByWoId(woId)
+        Timber.tag(TAG).d("uploadAttachments() woId: %s attachmentEntities: %s", woId, attachmentEntities)
+        viewModelScope.launch(Dispatchers.IO) {
+            username.whatIfNotNullOrEmpty { username ->
+                attachmentRepository.uploadAttachment(attachmentEntities, username)
+            }
+        }
     }
 
     fun removeScanner(woId: Int): Long {

@@ -39,6 +39,7 @@ object IntentUtils {
                 BuildConfig.APPLICATION_ID + ".provider",
                 FileUtils.createTempFileFromContentUri(context, uri)
             )
+            Timber.tag(BaseApplication.TAG).d("displayData() oldUri: %s newUri: %s", uri, tmpUri)
             context.grantUriPermission(
                 context.packageName, tmpUri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION

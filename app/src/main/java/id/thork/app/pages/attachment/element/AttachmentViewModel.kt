@@ -16,12 +16,14 @@ import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.repository.AttachmentRepository
-import id.thork.app.utils.PathUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class AttachmentViewModel @ViewModelInject constructor(
@@ -39,9 +41,9 @@ class AttachmentViewModel @ViewModelInject constructor(
 
     init {
         appSession.userEntity.let { userEntity ->
-           if (userEntity.username != null) {
-               username = userEntity.username
-           }
+            if (userEntity.username != null) {
+                username = userEntity.username
+            }
         }
     }
 
@@ -59,4 +61,11 @@ class AttachmentViewModel @ViewModelInject constructor(
         }
     }
 
+    fun uploadAttachment() {
+        viewModelScope.launch(Dispatchers.IO) {
+            username.whatIfNotNullOrEmpty { username ->
+                attachmentRepository.uploadAttachment(attachmentEntities, username)
+            }
+        }
+    }
 }

@@ -53,6 +53,7 @@ import id.thork.app.pages.attachment.element.AttachmentViewModel
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.FileUtils
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -118,6 +119,17 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
         retrieveFromIntent()
         viewModel.fetchAttachments(intentWoId)
+
+
+
+    }
+
+    override fun setupListener() {
+        super.setupListener()
+        binding.btnUpload.setOnClickListener {
+            Timber.tag(TAG).d("setupListener() upload start")
+            viewModel.uploadAttachment()
+        }
     }
 
     override fun setupObserver() {
@@ -286,14 +298,18 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         name: String,
         mimeType: String
     ) {
+        var docType: String? = BaseParam.ATTACHMENT_FOLDER
+        if (FileUtils.isImageType(mimeType)) {
+            docType = BaseParam.IMAGES_FOLDER
+        }
+
         val attachmentEntity = AttachmentEntity(
             mimeType = mimeType, syncStatus = false,
             uriString = uriString, description = description,
             title = name, workOrderId = woCacheEntity.woId,
-            fileName = name,
+            fileName = name, docType = docType,
             wonum = woCacheEntity.wonum, modifiedDate = Date()
         )
-
         viewModel.addItem(attachmentEntity)
     }
 }

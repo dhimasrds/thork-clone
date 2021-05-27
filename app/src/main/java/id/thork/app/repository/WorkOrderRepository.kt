@@ -169,7 +169,6 @@ class WorkOrderRepository @Inject constructor(
         response.suspendOnSuccess {
                 onSuccess()
                 Timber.tag(TAG).i("updateStatus() code: %s ", statusCode.code)
-
         }
             .onError {
                 Timber.tag(TAG).i("updateStatus() code: %s error: %s", statusCode.code, message())
