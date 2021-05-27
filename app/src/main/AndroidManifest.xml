@@ -27,15 +27,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.rfid_create_wo_location.RfidCreateWoLocationActivity"></activity>
+        <activity android:name=".pages.followup_wo.FollowUpWoActivity"></activity>
+        <activity android:name=".pages.rfid_create_wo_location.RfidCreateWoLocationActivity" />
         <activity android:name=".pages.rfid_create_wo_asset.RfidCreateWoAssetActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".pages.attachment.element.image_preview.AttachmentImagePreviewActivity"></activity>
+        <activity android:name=".pages.attachment.element.image_preview.AttachmentImagePreviewActivity" />
         <activity android:name=".pages.rfid_mutli_asset.RfidMultiAssetActivity" />
         <activity android:name=".pages.rfid_location.RfidLocationActivity" />
         <activity android:name=".pages.find_asset_location.FindLocationActivity" />
@@ -79,13 +82,11 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".pages.main.MainActivity" />
 

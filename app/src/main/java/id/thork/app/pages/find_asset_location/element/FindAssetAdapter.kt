@@ -66,7 +66,7 @@ class FindAssetAdapter constructor(
     inner class ViewHolder(val binding: CardviewFindassetBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(assetEntity: AssetEntity, activity: FindAssetActivity) {
-            with(binding) {
+            binding.apply {
                 classifyImageThumbnail(assetEntity,ivAsset)
                 assetnum.text =StringUtils.NVL(assetEntity.assetnum,BaseParam.APP_DASH)
                 cardAsset.setOnClickListener {
