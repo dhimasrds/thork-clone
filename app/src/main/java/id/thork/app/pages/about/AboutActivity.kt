@@ -44,7 +44,7 @@ class AboutActivity : BaseActivity() {
         if (webView.canGoBack()) {
             webView.goBack()
         } else {
-            super.onBackPressed()
+            super.goToPreviousActivity()
         }
     }
 }

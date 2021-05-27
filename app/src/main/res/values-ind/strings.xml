@@ -308,6 +308,8 @@
     <string name="wo_address">Alamat</string>
     <string name="wo_title">Original Address</string>
     <string name="wo_info">Original Address</string>
+    <string name="wo_material_plan">Material Plan</string>
+    <string name="wo_material_actual">Material Actual</string>
 
     <!-- Splash Screen -->
     <string name="powered">POWERED BY</string>
@@ -335,7 +337,7 @@
     <string name="next_step">Apakah kamu ingin memperbarui wo ini?</string>
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
-    <string name="wo">Wo :</string>
+    <string name="wo">WO :</string>
     <string name="this_fsm">THIS FSM</string>
     <string name="list_work_order">List Work Order</string>
     <string name="activity">Activity</string>
@@ -429,5 +431,6 @@
     <string name="search_location">Search location</string>
     <string name="followup_wo">Follow Up Wo</string>
 
-
+    <!-- Material Plan -->
+    <string name="material_plan">Material Plan</string>
 </resources>

@@ -249,7 +249,8 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
-        finish()
+        //finish()
+        super.goToPreviousActivity()
     }
 
     override fun onResume() {

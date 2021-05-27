@@ -335,6 +335,8 @@
     <string name="wo_address">Original Address</string>
     <string name="wo_title">Work Order</string>
     <string name="wo_info">Do you want to cancel image attachment?</string>
+    <string name="wo_material_plan">Material Plan</string>
+    <string name="wo_material_actual">Material Actual</string>
 
     <!-- Splash Screen -->
     <string name="powered">POWERED BY</string>
@@ -380,7 +382,7 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="wo">Wo :</string>
+    <string name="wo">WO :</string>
     <string name="approve">Approve</string>
     <string name="this_fsm">THIS FSM</string>
     <string name="list_work_order">List Work Order</string>

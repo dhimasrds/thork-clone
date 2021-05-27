@@ -103,6 +103,7 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
     }
 
     override fun goToPreviousActivity() {
-        finish()
+        //finish()
+        super.goToPreviousActivity()
     }
 }
