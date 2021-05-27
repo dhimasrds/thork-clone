@@ -28,9 +28,6 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.skydoves.whatif.whatIf
-import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
@@ -161,10 +158,6 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Timber.d("onActivityResult() requestCode %s, resultCode %s", requestCode, resultCode)
         val result = IntentIntegrator.parseActivityResult(resultCode, data)
-        if (requestCode == REQUEST_CODE_CREATE && resultCode == RESULT_OK) {
-            longDesc = data!!.getStringExtra("longdesc")
-            Timber.d("createWoLongdesc : %s", longDesc)
-
         when (resultCode) {
             RESULT_OK -> {
                 when (requestCode) {
@@ -172,58 +165,63 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
                         longDesc = data!!.getStringExtra("longdesc")
                         Timber.d("createWoLongdesc : %s", longDesc)
                     }
+
                     REQUEST_CODE_CREATE_ASSET -> {
-                        val asset = data!!.getStringExtra(BaseParam.ASSETNUM)
-                        val location = data!!.getStringExtra(BaseParam.LOCATIONS)
-                        binding.asset.text = asset
-                        location.whatIfNotNull(
-                            whatIf = { binding.tvLocation.text = location },
-                            whatIfNot = {
-                                binding.tvLocation.text = getString(R.string.line)
-                            }
-                        )
-                        Timber.d("onActivityResult asset : %s", asset)
+                        data.whatIfNotNull {
+                            val asset = it.getStringExtra(BaseParam.ASSETNUM)
+                            val location = it.getStringExtra(BaseParam.LOCATIONS)
+                            binding.asset.text = asset
+                            location.whatIfNotNull(
+                                whatIf = { binding.tvLocation.text = location },
+                                whatIfNot = {
+                                    binding.tvLocation.text = getString(R.string.line)
+                                }
+                            )
+                            Timber.d("onActivityResult asset : %s", asset)
+                        }
                     }
+
                     REQUEST_CODE_CREATE_LOCATION -> {
-                        val location = data!!.getStringExtra(BaseParam.LOCATIONS)
-                        binding.asset.text = getString(R.string.line)
-                        binding.tvLocation.text = location
-                        Timber.d("onActivityResult location : %s", location)
+                        data.whatIfNotNull {
+                            val location = it.getStringExtra(BaseParam.LOCATIONS)
+                            binding.asset.text = getString(R.string.line)
+                            binding.tvLocation.text = location
+                            Timber.d("onActivityResult location : %s", location)
+                        }
+                    }
+
+                    BaseParam.RFID_REQUEST_CODE -> {
+                        data.whatIfNotNull {
+                            val assetNum = it.getStringExtra(BaseParam.ASSETNUM)
+                            val location = it.getStringExtra(BaseParam.LOCATIONS)
+                            binding.asset.text = assetNum
+                            binding.tvLocation.text = location
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE -> {
+                        result.whatIfNotNull {
+                            //TODO Query to local
+                            Timber.d("onActivityResult() result scanner %s", it.contents)
+                            viewModel.checkResultAsset(it.contents)
+                        }
+                    }
+
+                    BaseParam.RFID_REQUEST_CODE_LOCATION -> {
+                        data.whatIfNotNull {
+                            val location = it.getStringExtra(BaseParam.LOCATIONS)
+                            binding.tvLocation.text = location
+                        }
+                    }
+
+                    BaseParam.BARCODE_REQUEST_CODE_LOCATION -> {
+                        result.whatIfNotNull {
+                            viewModel.checkResultLocation(it.contents)
+                        }
                     }
                 }
             }
         }
-
-        else if (requestCode == BaseParam.RFID_REQUEST_CODE && resultCode == RESULT_OK) {
-            data.whatIfNotNull {
-                val assetNum = it.getStringExtra(BaseParam.ASSETNUM)
-                val location = it.getStringExtra(BaseParam.LOCATIONS)
-                binding.asset.text = assetNum
-                binding.tvLocation.text = location
-            }
-        }
-
-        else if (requestCode == BaseParam.BARCODE_REQUEST_CODE && resultCode == RESULT_OK) {
-            result.whatIfNotNull {
-                //TODO Query to local
-                Timber.d("onActivityResult() result scanner %s", it.contents)
-                viewModel.checkResultAsset(it.contents)
-            }
-        }
-
-        else if (requestCode == BaseParam.RFID_REQUEST_CODE_LOCATION && resultCode == RESULT_OK) {
-            data.whatIfNotNull {
-                val location = it.getStringExtra(BaseParam.LOCATIONS)
-                binding.tvLocation.text = location
-            }
-        }
-
-        else if (requestCode == BaseParam.BARCODE_REQUEST_CODE_LOCATION && resultCode == RESULT_OK) {
-            result.whatIfNotNull {
-                viewModel.checkResultLocation(it.contents)
-            }
-        }
-
         super.onActivityResult(requestCode, resultCode, data)
     }
 
