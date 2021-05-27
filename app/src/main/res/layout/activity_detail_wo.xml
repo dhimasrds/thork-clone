@@ -525,56 +525,56 @@
                     </androidx.cardview.widget.CardView>
 
                     <!--Scan QR-->
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/scan_qr"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:id="@+id/scan_qr"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="72dp"-->
+<!--                        android:layout_marginLeft="@dimen/margin_left_wo_detail"-->
+<!--                        android:layout_marginRight="16dp"-->
+<!--                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"-->
+<!--                        android:clickable="true"-->
+<!--                        android:foreground="?android:attr/selectableItemBackground">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:weightSum="10">-->
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="8dp"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
+<!--                            <LinearLayout-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_marginLeft="8dp"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:gravity="center_vertical">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_scan_qr" />
-                            </LinearLayout>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:background="@drawable/ic_scan_qr" />-->
+<!--                            </LinearLayout>-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="7"
-                                android:text="@string/wo_scan_material" />
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="5dp"-->
+<!--                                android:layout_weight="7"-->
+<!--                                android:text="@string/wo_scan_material" />-->
 
-                            <TextView
-                                android:id="@+id/total_qr"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/total_qr"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1" />-->
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+<!--                            <ImageView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:src="@drawable/ic_arrow_next" />-->
+<!--                        </LinearLayout>-->
+<!--                    </androidx.cardview.widget.CardView>-->
 
                     <include
                         android:id="@+id/include_material_plan"
