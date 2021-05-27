@@ -28,6 +28,9 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.skydoves.whatif.whatIf
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseApplication.Constants.context
@@ -38,6 +41,7 @@ import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
+import id.thork.app.pages.find_asset_location.FindLocationActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.utils.DateUtils
@@ -58,6 +62,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private lateinit var locationManager: LocationManager
     private val REQUEST_CODE_CREATE = 0
     private val REQUEST_CODE_CREATE_ASSET = 10
+    private val REQUEST_CODE_CREATE_LOCATION = 20
     private val TAG_CREATE = "TAG_CREATE"
 
     private var longDesc: String? = null
@@ -116,6 +121,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             gotoFindAsset()
         }
 
+        binding.findLocation.setOnClickListener {
+            gotoFindLocation()
+        }
+
         binding.createWo.setOnClickListener {
             val desc: String = binding.deskWo.text.toString()
             if (desc.isEmpty() || latitudey == null || longitudex == null) {
@@ -129,17 +138,36 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Timber.d("onActivityResult() requestCode %s, resultCode %s", requestCode, resultCode)
-        if (requestCode == REQUEST_CODE_CREATE && resultCode == RESULT_OK) {
-            longDesc = data!!.getStringExtra("longdesc")
-            Timber.d("createWoLongdesc : %s", longDesc)
+
+        when (resultCode) {
+            RESULT_OK -> {
+                when (requestCode) {
+                    REQUEST_CODE_CREATE -> {
+                        longDesc = data!!.getStringExtra("longdesc")
+                        Timber.d("createWoLongdesc : %s", longDesc)
+                    }
+                    REQUEST_CODE_CREATE_ASSET -> {
+                        val asset = data!!.getStringExtra(BaseParam.ASSETNUM)
+                        val location = data!!.getStringExtra(BaseParam.LOCATIONS)
+                        binding.asset.text = asset
+                        location.whatIfNotNull(
+                            whatIf = { binding.tvLocation.text = location },
+                            whatIfNot = {
+                                binding.tvLocation.text = getString(R.string.line)
+                            }
+                        )
+                        Timber.d("onActivityResult asset : %s", asset)
+                    }
+                    REQUEST_CODE_CREATE_LOCATION -> {
+                        val location = data!!.getStringExtra(BaseParam.LOCATIONS)
+                        binding.asset.text = getString(R.string.line)
+                        binding.tvLocation.text = location
+                        Timber.d("onActivityResult location : %s", location)
+                    }
+                }
+            }
         }
-        else if (requestCode == REQUEST_CODE_CREATE_ASSET && resultCode == RESULT_OK) {
-            val asset = data!!.getStringExtra(BaseParam.ASSETNUM)
-            val location = data!!.getStringExtra(BaseParam.LOCATIONS)
-            binding.asset.text = asset
-            binding.tvLocation.text = location
-            Timber.d("onActivityResult asset : %s", asset)
-        }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -236,6 +264,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun gotoFindAsset() {
         val intent = Intent(this, FindAssetActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE_CREATE_ASSET)
+    }
+
+    private fun gotoFindLocation() {
+        val intent = Intent(this, FindLocationActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_CREATE_LOCATION)
     }
 
     private fun pickLocation() {

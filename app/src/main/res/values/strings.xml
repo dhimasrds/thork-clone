@@ -435,5 +435,6 @@
     <string name="find_asset">Find Asset</string>
     <string name="find_location">Find Location</string>
     <string name="search_asset">Search asset</string>
+    <string name="search_location">Search location</string>
 
 </resources>

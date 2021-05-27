@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             app:queryHint="@string/search_asset"
             android:layout_marginTop="@dimen/general_margin_10dp"
+            app:searchIcon="@drawable/ic_search"
             android:background="@drawable/bg_edit_text"
             android:textCursorDrawable="@null"
             app:iconifiedByDefault="false"

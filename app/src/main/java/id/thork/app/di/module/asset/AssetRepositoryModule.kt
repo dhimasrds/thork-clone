@@ -21,6 +21,6 @@ object AssetRepositoryModule {
     @ActivityRetainedScoped
     fun provideAssetRepository(
     ): AssetRepository {
-        return AssetRepository(AssetDaoImp())
+        return AssetRepository(AssetDaoImp(),LocationDaoImp())
     }
 }

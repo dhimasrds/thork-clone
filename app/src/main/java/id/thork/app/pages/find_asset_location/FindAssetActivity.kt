@@ -45,7 +45,7 @@ class FindAssetActivity : BaseActivity() {
         findAssetAdapter = FindAssetAdapter(assetEntities,requestOptions,this,preferenceManager)
 
         binding.recyclerView.adapter = findAssetAdapter
-        viewModels.findAllAsset()
+        viewModels.getAllAsset()
 
         setupToolbarWithHomeNavigation(
             getString(R.string.find_asset),
