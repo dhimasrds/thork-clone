@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.collections.ArrayList
 
 /**
@@ -43,6 +44,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val TAG = CreateWoViewModel::class.java.name
 
     private var tempWonum: String? = null
+    private var tempWoId: Int? = null
 
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
@@ -56,6 +58,14 @@ class CreateWoViewModel @ViewModelInject constructor(
             Timber.d("getTempWonum %s", tempWonum)
         }
         return tempWonum
+    }
+
+    fun getTempWoId(): Int? {
+        if (tempWoId == null) {
+            tempWoId = ThreadLocalRandom.current().nextInt()
+            Timber.d("getTempWoId %s", tempWoId)
+        }
+        return tempWoId
     }
 
     fun estDuration(jam: Int, menit: Int): Double {

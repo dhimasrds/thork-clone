@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
   ~
   ~ This software is the confidential and proprietary information of
@@ -14,43 +13,44 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    
+
     <item
         android:id="@+id/action_conn"
-        android:title="Connection"
         android:icon="@drawable/ic_conn_on"
+        android:title="Connection"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_notif"
-        android:title="Send"
         android:icon="@drawable/ic_notification"
+        android:title="Send"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_filter"
-        android:title="Send"
         android:icon="@drawable/ic_filter"
+        android:title="Send"
         app:showAsAction="always" />
 
-    <group
-        android:id="@+id/action_option">
-        <item
-            android:id="@+id/action_capture_image"
-            android:title="@string/action_capture_image"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/action_attach_image"
-            android:title="@string/action_attach_image"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/action_attach_document"
-            android:title="@string/action_attach_document"
-            app:showAsAction="never" />
-    </group>
+    <item
+        android:id="@+id/action_capture_image"
+        android:title="@string/action_capture_image"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_attach_image"
+        android:title="@string/action_attach_image"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_attach_document"
+        android:title="@string/action_attach_document"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_create_followup"
+        android:title="@string/action_create_followup"
+        app:showAsAction="never"/>
 
-
-    <item android:id="@+id/scan_menu"
+    <item
+        android:id="@+id/scan_menu"
         android:icon="@drawable/ic_add_black"
-        app:showAsAction="ifRoom"
-        android:title="add" />
+        android:title="add"
+        app:showAsAction="ifRoom" />
 </menu>

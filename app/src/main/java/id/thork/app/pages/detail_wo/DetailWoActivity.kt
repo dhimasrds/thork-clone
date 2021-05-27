@@ -3,6 +3,7 @@ package id.thork.app.pages.detail_wo
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
+import android.view.Menu
 import android.view.View
 import android.view.View.GONE
 import android.widget.RelativeLayout
@@ -79,8 +80,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = true
         )
+        enableFollowUpWo(true)
         retrieveFromIntent()
     }
 

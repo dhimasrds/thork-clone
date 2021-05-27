@@ -544,9 +544,9 @@
 
                     <!--Attachment-->
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/take_photo"
+                        android:id="@+id/attachment"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="72dp"
                         android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground">
@@ -595,7 +595,7 @@
                     <androidx.cardview.widget.CardView
                         android:id="@+id/scan_qr"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="72dp"
                         android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground">
@@ -640,11 +640,11 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                <!--Scan QR-->
+                <!--Asset-->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_asset"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="72dp"
                     android:layout_marginBottom="@dimen/general_margin_20dp"
                     android:clickable="true"
                     android:foreground="?android:attr/selectableItemBackground">

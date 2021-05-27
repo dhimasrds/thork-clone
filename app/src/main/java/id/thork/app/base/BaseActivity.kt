@@ -78,6 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var scannerIcon: Boolean = false
     private var notificationIcon: Boolean = false
     private var optionIcon: Boolean = false
+    private var followUpWoIcon: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,13 +142,22 @@ abstract class BaseActivity : AppCompatActivity() {
         setupToolbarOverflowIcon()
     }
 
+    open fun enableFollowUpWo(enable: Boolean) {
+        if (enable) {
+            this.followUpWoIcon = enable
+        }
+    }
+
     @Suppress("DEPRECATION")
     private fun setupToolbarOverflowIcon() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             toolBar.overflowIcon?.colorFilter =
                 BlendModeColorFilter(Color.parseColor("#AEAEAE"), BlendMode.SRC_ATOP)
         } else {
-            toolBar.overflowIcon?.setColorFilter(Color.parseColor("#AEAEAE"), PorterDuff.Mode.SRC_ATOP);
+            toolBar.overflowIcon?.setColorFilter(
+                Color.parseColor("#AEAEAE"),
+                PorterDuff.Mode.SRC_ATOP
+            );
         }
     }
 
@@ -157,7 +167,11 @@ abstract class BaseActivity : AppCompatActivity() {
         optionMenu?.findItem(R.id.action_filter)?.setVisible(filterIcon)
         optionMenu?.findItem(R.id.scan_menu)?.setVisible(scannerIcon)
         optionMenu?.findItem(R.id.action_notif)?.setVisible(notificationIcon)
-        optionMenu?.findItem(R.id.action_option)?.setVisible(optionIcon)
+
+        optionMenu?.findItem(R.id.action_capture_image)?.setVisible(optionIcon)
+        optionMenu?.findItem(R.id.action_attach_image)?.setVisible(optionIcon)
+        optionMenu?.findItem(R.id.action_attach_document)?.setVisible(optionIcon)
+        optionMenu?.findItem(R.id.action_create_followup)?.setVisible(followUpWoIcon)
         return true
     }
 
@@ -203,6 +217,12 @@ abstract class BaseActivity : AppCompatActivity() {
             openDocuments()
             return true
         }
+
+        if (id == R.id.action_create_followup) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action create follow up")
+            createFollowUp()
+            return true
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -227,6 +247,9 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivityForResult(intent, SELECT_DOCUMENT_REQUEST);
     }
 
+    private fun createFollowUp() {
+
+    }
 
     open fun setupMainView(mainView: ViewGroup) {
         this.mainView = mainView
@@ -264,7 +287,8 @@ abstract class BaseActivity : AppCompatActivity() {
         //TODO sync update status Workorder when online
         val woCacheList =
             woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
-        Timber.tag(BaseApplication.TAG).i("onGoodConnection() size local cache %s", woCacheList.size)
+        Timber.tag(BaseApplication.TAG)
+            .i("onGoodConnection() size local cache %s", woCacheList.size)
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
         }
@@ -276,7 +300,8 @@ abstract class BaseActivity : AppCompatActivity() {
         //TODO sync update status Workorder when online
         val woCacheList =
             woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
-        Timber.tag(BaseApplication.TAG).i("onSlowConnection() size local cache %s", woCacheList.size)
+        Timber.tag(BaseApplication.TAG)
+            .i("onSlowConnection() size local cache %s", woCacheList.size)
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
         }

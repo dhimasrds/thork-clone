@@ -12,7 +12,15 @@
 
 package id.thork.app.example
 
+import java.util.concurrent.ThreadLocalRandom
+
 fun main() {
+    val current = System.currentTimeMillis()
+    println(current)
+
+    val angka: Int =ThreadLocalRandom.current().nextInt()
+    println(angka)
+
     val a = if (1 == 1) {
         true
     } else {
