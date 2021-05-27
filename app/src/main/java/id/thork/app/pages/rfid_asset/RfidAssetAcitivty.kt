@@ -69,9 +69,9 @@ class RfidAssetAcitivty : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
     override fun setupObserver() {
         super.setupObserver()
         rfidAssetViewModel.assetEntity.observe(this, {
-            rfidHandler?.setTagId(it.assetRfid)
+            rfidHandler?.setTagId(it.assetrfid)
             binding.tvAssetNum.text = it.assetnum
-            binding.tvAssetName.text = it.description
+            binding.tvAssetLocation.text = it.description
         })
 
         rfidAssetViewModel.percentageResult.observe(this, {
@@ -86,11 +86,11 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
             if (it == BaseParam.APP_TRUE) {
                 binding.tvAssetResult.visibility = View.VISIBLE
                 binding.layoutAction.visibility = View.VISIBLE
-            assetIsMatch = true
+                assetIsMatch = true
             } else {
                 binding.tvAssetResult.visibility = View.GONE
                 binding.layoutAction.visibility = View.GONE
-            assetIsMatch = false
+                assetIsMatch = false
             }
         })
     }
@@ -102,6 +102,13 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
             intent.putExtra(BaseParam.RFID_ASSET_IS_MATCH, assetIsMatch)
             setResult(RESULT_OK, intent)
             finish()
+        }
+
+        binding.btnRetry.setOnClickListener {
+            binding.percentChartView.setProgress(0f, true)
+            binding.tvAssetResult.visibility = View.GONE
+            binding.layoutAction.visibility = View.GONE
+            assetIsMatch = false
         }
     }
 
@@ -125,7 +132,7 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
     }
 
     override fun onDisconnected() {
-        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show()
     }
 
     override fun handleTagdata(tagData: Array<out TagData>?) {

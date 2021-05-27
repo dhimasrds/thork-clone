@@ -11,10 +11,12 @@
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_asset"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
+            android:padding="@dimen/general_padding_5dp"
             android:layout_margin="@dimen/general_margin_4dp"
             app:cardCornerRadius="@dimen/general_margin_8dp"
             android:elevation="@dimen/general_margin_4dp"
@@ -24,7 +26,14 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:background="@drawable/ripple_effect"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_asset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/general_margin_5dp"
+                    android:src="@drawable/default_image"/>
 
                 <TextView
                     android:id="@+id/assetnum"

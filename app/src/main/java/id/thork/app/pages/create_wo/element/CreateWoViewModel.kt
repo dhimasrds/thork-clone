@@ -1,8 +1,11 @@
 package id.thork.app.pages.create_wo.element
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.skydoves.whatif.whatIfNotNull
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
@@ -10,8 +13,12 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.Woserviceaddres
+import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.repository.AssetRepository
+import id.thork.app.repository.LocationRepository
 import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.DateUtils
@@ -28,12 +35,20 @@ import kotlin.collections.ArrayList
  */
 class CreateWoViewModel @ViewModelInject constructor(
     private val materialRepository: MaterialRepository,
-    private val appSession: AppSession
+    private val appSession: AppSession,
+    private val assetRepository: AssetRepository,
+    private val locationRepository: LocationRepository,
+    private val workOrderRepository: WorkOrderRepository
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
     private var tempWonum: String? = null
-    private val workOrderRepository: WorkOrderRepository? = null
+
+    private val _assetCache = MutableLiveData<AssetEntity>()
+    private val _locationCache = MutableLiveData<LocationEntity>()
+
+    val assetCache: LiveData<AssetEntity> get() = _assetCache
+    val locationCache: LiveData<LocationEntity> get() = _locationCache
 
     fun getTempWonum(): String? {
         if (tempWonum == null) {
@@ -148,4 +163,20 @@ class CreateWoViewModel @ViewModelInject constructor(
     fun removeScanner(wonum : String): Long {
         return materialRepository.removeMaterialByWonum(wonum)
     }
+
+    fun checkResultAsset(assetnum : String) {
+        val assetEntity = assetRepository.findbyAssetnum(assetnum)
+        assetEntity.whatIfNotNull {
+            _assetCache.value = it
+        }
+    }
+
+    fun checkResultLocation(location: String) {
+        val locationEntity = locationRepository.findByLocation(location)
+        locationEntity.whatIfNotNull {
+            _locationCache.value = it
+        }
+    }
+
+
 }

@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.work.WorkInfo
 import com.baoyz.widget.PullRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -26,11 +28,10 @@ import java.util.*
 
 @AndroidEntryPoint
 class WorkOrderListFragment : Fragment() {
-    private lateinit var workOrderAdapter: WorkOrderAdapter
     private val viewModel: WorkOrderListViewModel by viewModels()
     private lateinit var binding: FragmentWorkOrderListBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
-
+    lateinit var workOrderAdapter: WorkOrderAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +43,7 @@ class WorkOrderListFragment : Fragment() {
         binding.viewModel = viewModel
         pullRefreshLayout = binding.swipeRefreshLayout
         workOrderAdapter = WorkOrderAdapter()
-
-
+        viewModel.pruneWork()
 
         return binding.root
     }
@@ -65,7 +65,6 @@ class WorkOrderListFragment : Fragment() {
                 footer = WoLoadStateAdapter { workOrderAdapter.retry() }
             )
         }
-
     }
 
     private fun setupObserver() {
@@ -75,9 +74,11 @@ class WorkOrderListFragment : Fragment() {
                 Timber.d("onCreateView :%s", it)
             }
         }
+
+        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
     }
 
-    private fun swipeRefresh(){
+    private fun swipeRefresh() {
         pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
         pullRefreshLayout.setColorSchemeColors(
             ContextCompat.getColor(requireContext(), R.color.blueTextStatus),
@@ -88,8 +89,8 @@ class WorkOrderListFragment : Fragment() {
         pullRefreshLayout.setOnRefreshListener {
             workOrderAdapter.refresh()
             workOrderAdapter.addLoadStateListener { loadstate ->
-                Timber.d("loadresult wo :%s",loadstate.refresh)
-                if (loadstate.refresh !is LoadState.Loading){
+                Timber.d("loadresult wo :%s", loadstate.refresh)
+                if (loadstate.refresh !is LoadState.Loading) {
                     pullRefreshLayout.setRefreshing(false)
                 }
             }
@@ -120,7 +121,7 @@ class WorkOrderListFragment : Fragment() {
                     val errorState = when {
                         loadState.append is LoadState.Error -> loadState.append as LoadState.Error
                         loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-                        loadState.refresh is LoadState.Error  -> {
+                        loadState.refresh is LoadState.Error -> {
                             Timber.d("btnretry :%s", "sukses")
                             btnRetry.visibility = View.VISIBLE
                             loadState.refresh as LoadState.Error
@@ -183,4 +184,23 @@ class WorkOrderListFragment : Fragment() {
             })
         }
     }
+
+    private fun workInfosObserver(): Observer<List<WorkInfo>> {
+        return Observer { listOfWorkInfo ->
+            // Note that these next few lines grab a single WorkInfo if it exists
+            // This code could be in a Transformation in the ViewModel; they are included here
+            // so that the entire process of displaying a WorkInfo is in one location.
+
+            // If there are no matching work info, do nothing
+            if (listOfWorkInfo.isNullOrEmpty()) {
+                return@Observer
+            }
+
+            Timber.d("workInfosObserver() refresh adapter")
+            workOrderAdapter.refresh()
+            viewModel.pruneWork()
+
+        }
+    }
+
 }

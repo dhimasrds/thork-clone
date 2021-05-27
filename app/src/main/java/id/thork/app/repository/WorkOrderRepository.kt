@@ -477,7 +477,7 @@ class WorkOrderRepository @Inject constructor(
                 orgid = asset.orgid,
                 latitudey = asset.serviceaddress?.get(0)?.latitudey,
                 longitudex = asset.serviceaddress?.get(0)?.longitudex,
-                assetRfid = asset.thisfsmrfid,
+                assetrfid = asset.thisfsmrfid,
                 image = asset.imagelibref,
                 assetTagTime = asset.thisfsmtagtime
             )

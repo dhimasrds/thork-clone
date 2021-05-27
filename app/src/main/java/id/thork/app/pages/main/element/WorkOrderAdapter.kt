@@ -23,9 +23,10 @@ import timber.log.Timber
  * Created by Dhimas Saputra on 08/01/21
  * Jakarta, Indonesia.
  */
+
 class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(DiffCallback) {
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Member>(){
+    companion object DiffCallback : DiffUtil.ItemCallback<Member>() {
 
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
             return oldItem.wonum === newItem.wonum
@@ -40,25 +41,30 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
     class ViewHolder(val binding: CardViewWorkOrderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(woEntity: Member){
+        fun bind(woEntity: Member) {
             val woCacheDao: WoCacheDao = WoCacheDaoImp()
-            val woCache = woCacheDao.findWoByWonumAndIslatest(woEntity.wonum.toString(), BaseParam.APP_TRUE)
+            val woCache =
+                woCacheDao.findWoByWonumAndIslatest(woEntity.wonum.toString(), BaseParam.APP_TRUE)
             woCache.whatIfNotNull {
-                if(it.syncStatus == BaseParam.APP_FALSE && it.isChanged == BaseParam.APP_TRUE) {
+                if (it.syncStatus == BaseParam.APP_FALSE && it.isChanged == BaseParam.APP_TRUE) {
                     binding.ivOffline.visibility = View.VISIBLE
                 } else {
                     binding.ivOffline.visibility = View.GONE
                 }
             }
 
-            Timber.d("adapter wonum :%s",woEntity.wonum)
-            Timber.d("adapter assetnum   :%s",woEntity.assetnum)
+            Timber.d("adapter wonum :%s", woEntity.wonum)
+            Timber.d("adapter assetnum   :%s", woEntity.assetnum)
             binding.wo = woEntity
             binding.tvWonum.text = woEntity.wonum
             binding.desc.text = woEntity.description
-            binding.tvWoAsset.text =id.thork.app.utils.StringUtils.NVL(woEntity.assetnum, BaseParam.APP_DASH)
+            binding.tvWoAsset.text =
+                id.thork.app.utils.StringUtils.NVL(woEntity.assetnum, BaseParam.APP_DASH)
             binding.tvWoLocation.text = woEntity.location
-            binding.tvWoServiceAddress.text =id.thork.app.utils.StringUtils.truncate(woEntity.woserviceaddress!![0].formattedaddress, 13)
+            binding.tvWoServiceAddress.text = id.thork.app.utils.StringUtils.truncate(
+                woEntity.woserviceaddress!![0].formattedaddress,
+                13
+            )
             binding.tvStatus.text = woEntity.status
             binding.executePendingBindings()
 

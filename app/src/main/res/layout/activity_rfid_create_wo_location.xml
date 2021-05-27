@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
-            type="id.thork.app.pages.rfid_mutli_asset.element.RfidMultiAssetActivityViewModel" />
-
+            type="id.thork.app.pages.rfid_create_wo_location.element.RfidCreateWoLocationActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".pages.rfid_asset.RfidAssetAcitivty">
+        tools:context=".pages.rfid_create_wo_location.RfidCreateWoLocationActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,6 +34,7 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <LinearLayout
+                android:visibility="visible"
                 android:id="@+id/layout_asset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,11 +42,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_asset_num"
+                    android:id="@+id/tv_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="Asset_num"
                     tools:text="-" />
 
                 <TextView
@@ -53,7 +53,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:text="Asset_name"
                     tools:text="-" />
             </LinearLayout>
 
@@ -65,23 +64,29 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.ramijemli.percentagechartview.PercentageChartView
-                    android:id="@+id/percent_chart_view"
+                <ImageView
                     android:layout_width="300dp"
                     android:layout_height="300dp"
                     android:layout_marginBottom="20dp"
-                    app:pcv_animDuration="1"
-                    app:pcv_animInterpolator="anticipate_overshoot"
-                    app:pcv_backgroundBarThickness="30dp"
-                    app:pcv_mode="ring"
-                    app:pcv_orientation="clockwise"
-                    app:pcv_progress="0"
-                    app:pcv_progressBarThickness="30dp"
-                    app:pcv_progressColor="@color/colorPrimaryBackground"
-                    app:pcv_startAngle="90"
-                    app:pcv_textColor="@android:color/black"
-                    app:pcv_textSize="50dp" />
+                    android:background="@drawable/iv_rfid"/>
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_asset_result2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="18dp"
+                    android:text="Please, point your phone at your front code"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -119,7 +124,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -398,6 +398,9 @@
     <!-- Rfid Asset -->
     <string name="scan_asset">Scanning Asset</string>
 
+    <!-- Rfid Location -->
+    <string name="scan_location">Scanning Location</string>
+
     <!-- Asset-->
     <string name="asset_rfid_is_match_begin">This Asset Item is</string>
     <string name="asset_rfid_is_not_match">This Asset Item is not match</string>
@@ -434,5 +437,6 @@
     <string name="location_rfid_is_match_end">Continue with this location?</string>
     <string name="find_asset">Find Asset</string>
     <string name="find_location">Find Location</string>
+    <string name="search_asset">Search asset</string>
 
 </resources>

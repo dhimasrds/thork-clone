@@ -37,7 +37,7 @@ class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterfac
         }
 
         setupToolbarWithHomeNavigation(
-            getString(R.string.scan_asset),
+            getString(R.string.scan_location),
             navigation = false,
             filter = false,
             scannerIcon = false,
@@ -65,7 +65,6 @@ class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterfac
             rfidLocationViewModel.initLocation(it)
         }
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -106,6 +105,13 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
             intent.putExtra(BaseParam.RFID_LOCATION_IS_MATCH, locationIsMatch)
             setResult(RESULT_OK, intent)
             finish()
+        }
+
+        binding.btnRetry.setOnClickListener {
+            binding.percentChartView.setProgress(0f, true)
+            binding.tvAssetResult.visibility = View.GONE
+            binding.layoutAction.visibility = View.GONE
+            locationIsMatch = false
         }
 
     }

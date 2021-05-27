@@ -78,7 +78,7 @@ class RfidMultiAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterf
         rfidMultiAssetViewModel.multiAssetEntity.observe(this, Observer {
             rfidHandler?.setTagId(it.thisfsmrfid)
             binding.tvAssetNum.text = it.assetNum
-            binding.tvAssetName.text = it.description
+            binding.tvAssetLocation.text = it.description
             intentAsset = it.assetNum
             Timber.d("setupObserver() init assetnum %s", intentAsset)
         })
@@ -113,6 +113,13 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
             intent.putExtra(BaseParam.RFID_ASSETNUM, intentAsset)
             setResult(RESULT_OK, intent)
             finish()
+        }
+
+        binding.btnRetry.setOnClickListener {
+            binding.percentChartView.setProgress(0f, true)
+            binding.tvAssetResult.visibility = View.GONE
+            binding.layoutAction.visibility = View.GONE
+            assetIsMatch = false
         }
 
     }
