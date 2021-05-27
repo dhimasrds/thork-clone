@@ -29,7 +29,6 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.attachment.AttachmentActivity
-import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
 import id.thork.app.pages.followup_wo.element.FollowUpWoViewModel
@@ -388,8 +387,13 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private fun updateWoOnline() {
         viewModel.createWorkOrderOnline(
-            binding.deskWo.text.toString(), longitudex,
-            latitudey, estDur, getWorkPriority(), longDesc, tempWonum
+            binding.deskWo.text.toString(),
+            estDur,
+            getWorkPriority(),
+            longDesc,
+            tempWonum,
+            binding.asset.text.toString(),
+            binding.tvLocation.text.toString()
         )
         Toast.makeText(
             this,
@@ -400,12 +404,12 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private fun updateWoOffline() {
         viewModel.createNewWoCache(
-            longitudex,
-            latitudey,
             binding.deskWo.text.toString(),
             estDur,
             getWorkPriority(),
-            longDesc
+            longDesc,
+            binding.asset.text.toString(),
+            binding.tvLocation.text.toString()
         )
         Toast.makeText(
             this,
@@ -470,7 +474,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     @Suppress("DEPRECATION")
     private fun vibrateAndPickLocation() {
-        val vibrator = BaseApplication.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator =
+            BaseApplication.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             vibrator.vibrate(
                 VibrationEffect.createOneShot(

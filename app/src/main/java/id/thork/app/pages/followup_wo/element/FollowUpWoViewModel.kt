@@ -12,7 +12,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.network.response.work_order.Woserviceaddres
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
@@ -29,13 +28,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.collections.ArrayList
 
 /**
  * Created by Dhimas Saputra on 27/05/21
  * Jakarta, Indonesia.
  */
-class FollowUpWoViewModel  @ViewModelInject constructor(
+class FollowUpWoViewModel @ViewModelInject constructor(
     private val materialRepository: MaterialRepository,
     private val appSession: AppSession,
     private val assetRepository: AssetRepository,
@@ -79,23 +77,25 @@ class FollowUpWoViewModel  @ViewModelInject constructor(
 
     fun createWorkOrderOnline(
         deskWo: String,
-        longitudex: Double?, latitudey: Double?,
-        estDur: Double?, workPriority: Int, longdesc: String?, tempWonum: String
+        estDur: Double?, workPriority: Int, longdesc: String?, tempWonum: String,
+        assetnum: String,
+        location: String
     ) {
 
-        val wsa = Woserviceaddres()
-        wsa.longitudex = longitudex
-        wsa.latitudey = latitudey
-        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
-        woserviceaddress.add(wsa)
+//        val wsa = Woserviceaddres()
+//        wsa.longitudex = longitudex
+//        wsa.latitudey = latitudey
+//        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
+//        woserviceaddress.add(wsa)
 
         val member = Member()
         member.siteid = appSession.siteId
-        member.location = appSession.siteId
+        member.location = location
+        member.assetnum = assetnum
         member.description = deskWo
         member.status = BaseParam.WAPPR
         member.reportdate = DateUtils.getDateTimeMaximo()
-        member.woserviceaddress = woserviceaddress
+//        member.woserviceaddress = woserviceaddress
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
@@ -106,11 +106,10 @@ class FollowUpWoViewModel  @ViewModelInject constructor(
 
         val maxauth: String? = appSession.userHash
         viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository?.createWo(
+            workOrderRepository.createWo(
                 maxauth!!, member,
                 onSuccess = {
-                    saveScannerMaterial(tempWonum, it.workorderid!!)
-                    Timber.tag(TAG).i("createWo() success: %s", it)
+
                 }, onError = {
                     Timber.tag(TAG).i("createWo() error: %s", it)
                 }
@@ -118,36 +117,34 @@ class FollowUpWoViewModel  @ViewModelInject constructor(
         }
     }
 
-    private fun saveScannerMaterial(tempWonum: String, woId: Int){
-        val materialList: List<MaterialEntity?>? = materialRepository.listMaterialsByWonum(tempWonum)
+    private fun saveScannerMaterial(tempWonum: String, woId: Int) {
+        val materialList: List<MaterialEntity?>? =
+            materialRepository.listMaterialsByWonum(tempWonum)
         for (i in materialList!!.indices)
-            if (materialList[i]!!.workorderId == null){
+            if (materialList[i]!!.workorderId == null) {
                 materialList[i]!!.workorderId = woId
             }
         materialRepository.saveMaterialList(materialList)
     }
 
     fun createNewWoCache(
-        longitudex: Double?, latitudey: Double?, deskWo: String,
-        estDur: Double?, workPriority: Int, longdesc: String?
+        deskWo: String,
+        estDur: Double?, workPriority: Int, longdesc: String?, assetnum: String, location: String
     ) {
-        Timber.d(
-            "createNewWo() desc:%s, long:%s, lat:%s, estDur:%s, workPriority:%s, longdesc:%s",
-            deskWo, longitudex, latitudey, estDur, workPriority, longdesc
-        )
-        val wsa = Woserviceaddres()
-        wsa.longitudex = longitudex
-        wsa.latitudey = latitudey
-        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
-        woserviceaddress.add(wsa)
+//        val wsa = Woserviceaddres()
+//        wsa.longitudex = longitudex
+//        wsa.latitudey = latitudey
+//        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
+//        woserviceaddress.add(wsa)
 
         val member = Member()
         member.siteid = appSession.siteId
-        member.location = appSession.siteId
+        member.location = location
+        member.assetnum = assetnum
         member.description = deskWo
         member.status = BaseParam.WAPPR
         member.reportdate = DateUtils.getDateTimeMaximo()
-        member.woserviceaddress = woserviceaddress
+//        member.woserviceaddress = woserviceaddress
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
@@ -162,7 +159,7 @@ class FollowUpWoViewModel  @ViewModelInject constructor(
         tWoCacheEntity.updatedDate = Date()
         tWoCacheEntity.wonum = tempWonum
         tWoCacheEntity.status = BaseParam.WAPPR
-        workOrderRepository?.saveWoList(tWoCacheEntity, appSession.userEntity.username)
+        workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
         Timber.d("createwointeractor: %s", longdesc)
     }
 
@@ -171,11 +168,11 @@ class FollowUpWoViewModel  @ViewModelInject constructor(
         return gson.toJson(member)
     }
 
-    fun removeScanner(wonum : String): Long {
+    fun removeScanner(wonum: String): Long {
         return materialRepository.removeMaterialByWonum(wonum)
     }
 
-    fun checkResultAsset(assetnum : String) {
+    fun checkResultAsset(assetnum: String) {
         val assetEntity = assetRepository.findbyAssetnum(assetnum)
         assetEntity.whatIfNotNull {
             _assetCache.value = it
