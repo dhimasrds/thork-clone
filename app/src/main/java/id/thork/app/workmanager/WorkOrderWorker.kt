@@ -29,7 +29,9 @@ import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.AttachmentDao
 import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.repository.AttachmentRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.WoUtils
@@ -57,6 +59,8 @@ class WorkOrderWorker @WorkerInject constructor(
 
     var workOrderRepository: WorkOrderRepository
     var response = WorkOrderResponse()
+    var attachmentRepository: AttachmentRepository
+    private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
     init {
         val workerRepository =
@@ -71,6 +75,8 @@ class WorkOrderWorker @WorkerInject constructor(
                 doclinksClient
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
+        attachmentRepository = workerRepository.buildAttachmentRepository()
+
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)
     }
 
@@ -132,6 +138,9 @@ class WorkOrderWorker @WorkerInject constructor(
                     longdesc,
                     status
                 )
+                woId.whatIfNotNull {
+                    checklistAttachment(it)
+                }
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val xMethodeOverride: String = BaseParam.APP_PATCH
@@ -149,6 +158,7 @@ class WorkOrderWorker @WorkerInject constructor(
                                     longdesc,
                                     status.toString()
                                 )
+
                                 val nextIndex = currentIndex + 1
                                 if (nextIndex <= listWo.size - 1) {
                                     updateStatusWoOffline(listWo, nextIndex)
@@ -159,6 +169,15 @@ class WorkOrderWorker @WorkerInject constructor(
                             })
                     }
                 }
+            }
+        }
+    }
+
+    fun checklistAttachment(woId: Int) {
+        attachmentEntities = attachmentRepository.getAttachmentByWoIdAndSyncStatus(woId, false)
+        attachmentEntities.whatIfNotNullOrEmpty {
+            GlobalScope.launch(Dispatchers.IO) {
+                attachmentRepository.uploadAttachment(it as MutableList<AttachmentEntity>, appSession.userEntity.username.toString())
             }
         }
     }

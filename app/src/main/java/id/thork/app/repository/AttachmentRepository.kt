@@ -229,4 +229,12 @@ class AttachmentRepository constructor(
         }
         attachmentDao.save(attachmentEntities, username)
     }
+
+    fun getAttachmentByWoIdAndSyncStatus(woId: Int, syncStatus: Boolean) : MutableList<AttachmentEntity> {
+        return attachmentDao.fetchAttachmentByWoIdAndSyncStatus(woId, syncStatus).toMutableList()
+    }
+
+    fun deleteAttachmentCache() {
+        attachmentDao.delete()
+    }
 }

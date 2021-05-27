@@ -24,4 +24,5 @@ interface AttachmentDao {
     fun findAttachment(id: Long): AttachmentEntity
     fun findAttachmentBySyncStatus(syncStatus: Boolean): List<AttachmentEntity>
 
+    fun fetchAttachmentByWoIdAndSyncStatus(woId: Int, syncStatus: Boolean): List<AttachmentEntity>
 }
