@@ -19,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -67,6 +68,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private var latitudey: Double? = null
     private var longitudex: Double? = null
     private var validateDialogExit: Boolean = false
+    private var intentWonum: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -90,6 +92,13 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             notification = false,
             option = false
         )
+        retriveFromIntent()
+    }
+
+    private fun retriveFromIntent() {
+        intentWonum = intent.getStringExtra(BaseParam.WONUM)
+        Timber.d("retrieveFromIntent() %s", intentWonum)
+
     }
 
     override fun setupListener() {
@@ -123,7 +132,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
         binding.createWo.setOnClickListener {
             val desc: String = binding.deskWo.text.toString()
-            if (desc.isEmpty() || latitudey == null || longitudex == null) {
+            if (desc.isEmpty()) {
                 dialogWarning()
             } else {
                 buttonCreateWo()
@@ -393,7 +402,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             longDesc,
             tempWonum,
             binding.asset.text.toString(),
-            binding.tvLocation.text.toString()
+            binding.tvLocation.text.toString(),
+            intentWonum.toString()
         )
         Toast.makeText(
             this,
@@ -409,7 +419,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             getWorkPriority(),
             longDesc,
             binding.asset.text.toString(),
-            binding.tvLocation.text.toString()
+            binding.tvLocation.text.toString(),
+            intentWonum.toString()
         )
         Toast.makeText(
             this,
@@ -511,5 +522,15 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         viewModel.locationCache.observe(this, Observer {
             binding.tvLocation.text = it.location
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
     }
 }

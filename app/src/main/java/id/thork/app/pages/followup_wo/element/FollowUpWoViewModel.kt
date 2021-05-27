@@ -11,6 +11,7 @@ import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.persistence.entity.AssetEntity
@@ -38,7 +39,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val assetRepository: AssetRepository,
     private val locationRepository: LocationRepository,
-    private val workOrderRepository: WorkOrderRepository
+    private val workOrderRepository: WorkOrderRepository,
+    private val preferenceManager: PreferenceManager
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
@@ -79,7 +81,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         deskWo: String,
         estDur: Double?, workPriority: Int, longdesc: String?, tempWonum: String,
         assetnum: String,
-        location: String
+        location: String, origwonum: String
     ) {
 
 //        val wsa = Woserviceaddres()
@@ -99,15 +101,17 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
+        member.origrecordid = origwonum
+        member.origrecordclass = BaseParam.WORKORDER
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
-        val maxauth: String? = appSession.userHash
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.createWo(
-                maxauth!!, member,
+                cookie, member,
                 onSuccess = {
 
                 }, onError = {
@@ -129,7 +133,12 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
     fun createNewWoCache(
         deskWo: String,
-        estDur: Double?, workPriority: Int, longdesc: String?, assetnum: String, location: String
+        estDur: Double?,
+        workPriority: Int,
+        longdesc: String?,
+        assetnum: String,
+        location: String,
+        origwonum: String
     ) {
 //        val wsa = Woserviceaddres()
 //        wsa.longitudex = longitudex
@@ -148,6 +157,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
+        member.origrecordid = origwonum
+        member.origrecordclass = BaseParam.WORKORDER
 
         val tWoCacheEntity = WoCacheEntity()
         tWoCacheEntity.syncBody = convertToJson(member)

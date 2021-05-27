@@ -114,7 +114,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     override fun goToSettingsActivity() {
         finish()
-        startActivity(Intent(this, FollowUpWoActivity::class.java))
+        startActivity(Intent(this, SettingsActivity::class.java))
     }
 
     /**

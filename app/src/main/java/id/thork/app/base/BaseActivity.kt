@@ -41,6 +41,8 @@ import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.pages.followup_wo.FollowUpWoActivity
+import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.CommonUtils
@@ -79,6 +81,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var notificationIcon: Boolean = false
     private var optionIcon: Boolean = false
     private var followUpWoIcon: Boolean = false
+    private var originWo: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,9 +145,10 @@ abstract class BaseActivity : AppCompatActivity() {
         setupToolbarOverflowIcon()
     }
 
-    open fun enableFollowUpWo(enable: Boolean) {
+    open fun enableFollowUpWo(enable: Boolean, wonum: String) {
         if (enable) {
             this.followUpWoIcon = enable
+            originWo = wonum
         }
     }
 
@@ -248,7 +252,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun createFollowUp() {
-
+        val intent = Intent(this, FollowUpWoActivity::class.java)
+        intent.putExtra(BaseParam.WONUM, originWo)
+        startActivity(intent)
+        finish()
     }
 
     open fun setupMainView(mainView: ViewGroup) {

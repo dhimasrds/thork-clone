@@ -140,6 +140,7 @@ object BaseParam {
     const val LOCATIONS = "Location"
     const val LISTITEM = "List Item"
     const val WORKORDERID = "WORKORDERID"
+    const val WORKORDER = "WORKORDER"
     const val STATUS = "STATUS"
     const val LATITUDE = "SERVICEADDRESS_latitude"
     const val LONGITUDE = "SERVICEADDRESS_longitude"

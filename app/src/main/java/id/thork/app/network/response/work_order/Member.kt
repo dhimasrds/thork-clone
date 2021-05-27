@@ -243,7 +243,7 @@ data class Member(
     @Json(name = "wptool_collectionref")
     val wptoolCollectionref: String? = null,
     @Json(name = "origrecordid")
-    val origrecordid: String? = null,
+    var origrecordid: String? = null,
     @Json(name = "origrecordclass")
-    val origrecordclass: String? = null,
+    var origrecordclass: String? = null,
 )
