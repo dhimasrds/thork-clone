@@ -218,7 +218,7 @@
 
     <!--Toolbar-->
     <string name="list_wo">Daftar Pekerjaan</string>
-    <string name="create_wo">Work Order</string>
+    <string name="create_wo">Buat Work Order</string>
     <string name="history_work">Riwayat Pekerjaan</string>
 
     <!--Dialog update status-->

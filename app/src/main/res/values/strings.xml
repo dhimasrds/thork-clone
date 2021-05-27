@@ -247,7 +247,7 @@
 
     <!--Toolbar-->
     <string name="list_wo">List of Work Order</string>
-    <string name="create_wo">Work Order</string>
+    <string name="create_wo">Create Work Order</string>
     <string name="history_work">History Work Order</string>
 
     <!--Dialog update status-->

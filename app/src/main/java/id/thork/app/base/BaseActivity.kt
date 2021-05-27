@@ -157,7 +157,10 @@ abstract class BaseActivity : AppCompatActivity() {
         optionMenu?.findItem(R.id.action_filter)?.setVisible(filterIcon)
         optionMenu?.findItem(R.id.scan_menu)?.setVisible(scannerIcon)
         optionMenu?.findItem(R.id.action_notif)?.setVisible(notificationIcon)
-        optionMenu?.findItem(R.id.action_option)?.setVisible(optionIcon)
+
+        optionMenu?.findItem(R.id.action_capture_image)?.setVisible(optionIcon)
+        optionMenu?.findItem(R.id.action_attach_image)?.setVisible(optionIcon)
+        optionMenu?.findItem(R.id.action_attach_document)?.setVisible(optionIcon)
         return true
     }
 

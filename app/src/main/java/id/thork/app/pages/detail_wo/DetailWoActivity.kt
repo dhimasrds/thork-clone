@@ -79,7 +79,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = true
         )
         retrieveFromIntent()
     }
