@@ -119,9 +119,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
         retrieveFromIntent()
         viewModel.fetchAttachments(intentWoId)
-
-
-
     }
 
     override fun setupListener() {
@@ -270,15 +267,12 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     }
 
     override fun PickiTonUriReturned() {
-        TODO("Not yet implemented")
     }
 
     override fun PickiTonStartListener() {
-        TODO("Not yet implemented")
     }
 
     override fun PickiTonProgressUpdate(progress: Int) {
-        TODO("Not yet implemented")
     }
 
     override fun PickiTonCompleteListener(

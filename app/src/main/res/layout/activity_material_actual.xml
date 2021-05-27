@@ -17,12 +17,12 @@
     <data>
         <variable
             name="vm"
-            type="id.thork.app.pages.material_plan.element.MaterialPlanViewModel" />
+            type="id.thork.app.pages.material_actual.element.MaterialActualViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".pages.material_plan.MaterialPlanActivity">
+        tools:context=".pages.material_actual.MaterialActualActivity">
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

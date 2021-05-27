@@ -10,28 +10,24 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.material_plan
+package id.thork.app.pages.material_actual
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.activity.viewModels
-import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
-import id.thork.app.databinding.ActivityAttachmentBinding
+import id.thork.app.databinding.ActivityMaterialActualBinding
 import id.thork.app.databinding.ActivityMaterialPlanBinding
-import id.thork.app.pages.attachment.AttachmentActivity
-import id.thork.app.pages.attachment.element.AttachmentViewModel
+import id.thork.app.pages.material_actual.element.MaterialActualViewModel
+import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import timber.log.Timber
 
-@AndroidEntryPoint
-class MaterialPlanActivity : BaseActivity() {
-    val TAG = MaterialPlanActivity::class.java.name
+class MaterialActualActivity  : BaseActivity() {
+    val TAG = MaterialActualActivity::class.java.name
 
-    val viewModel: MaterialPlanViewModel by viewModels()
-    private val binding: ActivityMaterialPlanBinding by binding(R.layout.activity_material_plan)
+    val viewModel: MaterialActualViewModel by viewModels()
+    private val binding: ActivityMaterialActualBinding by binding(R.layout.activity_material_actual)
 
     private var intentWoId = 0
 
@@ -39,7 +35,7 @@ class MaterialPlanActivity : BaseActivity() {
         super.setupView()
 
         binding.apply {
-            lifecycleOwner = this@MaterialPlanActivity
+            lifecycleOwner = this@MaterialActualActivity
             vm = viewModel
         }
 
@@ -59,4 +55,5 @@ class MaterialPlanActivity : BaseActivity() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
     }
+
 }

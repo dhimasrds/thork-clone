@@ -335,6 +335,8 @@
     <string name="wo_address">Original Address</string>
     <string name="wo_title">Work Order</string>
     <string name="wo_info">Do you want to cancel image attachment?</string>
+    <string name="wo_material_plan">Material Plan</string>
+    <string name="wo_material_actual">Material Actual</string>
 
     <!-- Splash Screen -->
     <string name="powered">POWERED BY</string>
@@ -440,5 +442,4 @@
     <string name="find_location">Find Location</string>
     <string name="search_asset">Search asset</string>
     <string name="search_location">Search location</string>
-
 </resources>

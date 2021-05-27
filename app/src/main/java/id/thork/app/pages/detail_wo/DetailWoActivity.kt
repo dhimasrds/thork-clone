@@ -29,6 +29,8 @@ import id.thork.app.pages.detail_wo.element.DetailWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.material_actual.MaterialActualActivity
+import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.multi_asset.ListAssetActivity
 import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.pages.rfid_location.RfidLocationActivity
@@ -312,6 +314,18 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         startActivity(intent)
     }
 
+    private fun goToMaterialPlan() {
+        val intent = Intent(this, MaterialPlanActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        startActivity(intent)
+    }
+
+    private fun goToMaterialActual() {
+        val intent = Intent(this, MaterialActualActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        startActivity(intent)
+    }
+
     //TODO navigate to Rfid Asset
     private fun gotoRfidAsset(assetnum: String) {
         val intent = Intent(this, RfidAssetAcitivty::class.java)
@@ -448,6 +462,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             } else {
                 gotoListMaterial()
             }
+        }
+
+        binding.includeMaterialPlan.materialPlan.setOnClickListener {
+            goToMaterialPlan()
+        }
+
+        binding.includeMaterialActual.materialActual.setOnClickListener {
+            goToMaterialActual()
         }
 
         binding.longdesc.setOnClickListener {
