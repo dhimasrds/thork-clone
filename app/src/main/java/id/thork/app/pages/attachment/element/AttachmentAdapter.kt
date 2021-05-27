@@ -81,32 +81,34 @@ class AttachmentAdapter constructor(
             imageView: ImageView
         ) {
             attachmentEntity.whatIfNotNull { attachmentEntity ->
-                var uri: Uri = PathUtils.getDrawableUri(context, R.drawable.image_broken)
+                var uri: Uri?
                 attachmentEntity.uriString.whatIfNotNullOrEmpty {
                     Timber.tag(TAG).d("classifyImageThumbnail() uristring: %s", it)
 
                     if (it.startsWith("http")) {
-                        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-                        Timber.tag(TAG).d("classifyImageThumbnail() cookies: %s", cookie)
-                        val glideUrl = GlideUrl(
-                            it, LazyHeaders.Builder()
-                                .addHeader("Cookie", cookie)
-                                .build()
-                        )
-                        GlideApp.with(context).load(glideUrl)
-                            .apply(requestOptions)
-                            .into(imageView)
+                        attachmentEntity.mimeType?.let { mimeType ->
+                            if (FileUtils.isImageType(mimeType)) {
+                                val cookie: String =
+                                    preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+                                Timber.tag(TAG).d("classifyImageThumbnail() cookies: %s", cookie)
+                                val glideUrl = GlideUrl(
+                                    it, LazyHeaders.Builder()
+                                        .addHeader("Cookie", cookie)
+                                        .build()
+                                )
+                                GlideApp.with(context).load(glideUrl)
+                                    .apply(requestOptions)
+                                    .into(imageView)
+                            } else {
+                                uri = fetchUri(mimeType)
+                                GlideApp.with(context).load(uri)
+                                    .apply(requestOptions)
+                                    .into(imageView)
+                            }
+                        }
                     } else {
                         attachmentEntity.mimeType.whatIfNotNullOrEmpty { mimeType ->
-                            if (FileUtils.isImageType(mimeType)) {
-                                uri = Uri.parse(it)
-                            } else if (FileUtils.isExcelType(mimeType)) {
-                                uri = PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
-                            } else if (FileUtils.isWordType(mimeType)) {
-                                uri = PathUtils.getDrawableUri(context, R.drawable.ic_word_file)
-                            } else if (FileUtils.isPdfType(mimeType)) {
-                                uri = PathUtils.getDrawableUri(context, R.drawable.ic_pdf_file)
-                            }
+                            val uri: Uri = fetchUri(it, mimeType)
                             Timber.tag(TAG).d("classifyImageThumbnail() thumbnail uri: %s", uri)
                             GlideApp.with(context).load(uri)
                                 .apply(requestOptions)
@@ -116,5 +118,34 @@ class AttachmentAdapter constructor(
                 }
             }
         }
+
+        private fun fetchUri(mimeType: String): Uri {
+            val uri = if (FileUtils.isExcelType(mimeType)) {
+                PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
+            } else if (FileUtils.isWordType(mimeType)) {
+                PathUtils.getDrawableUri(context, R.drawable.ic_word_file)
+            } else if (FileUtils.isPdfType(mimeType)) {
+                PathUtils.getDrawableUri(context, R.drawable.ic_pdf_file)
+            } else {
+                PathUtils.getDrawableUri(context, R.drawable.image_broken)
+            }
+            return uri
+        }
+
+        private fun fetchUri(uriString: String, mimeType: String): Uri {
+            val uri = if (FileUtils.isImageType(mimeType)) {
+                Uri.parse(uriString)
+            } else if (FileUtils.isExcelType(mimeType)) {
+                PathUtils.getDrawableUri(context, R.drawable.ic_excel_file)
+            } else if (FileUtils.isWordType(mimeType)) {
+                PathUtils.getDrawableUri(context, R.drawable.ic_word_file)
+            } else if (FileUtils.isPdfType(mimeType)) {
+                PathUtils.getDrawableUri(context, R.drawable.ic_pdf_file)
+            } else {
+                PathUtils.getDrawableUri(context, R.drawable.image_broken)
+            }
+            return uri
+        }
+
     }
 }

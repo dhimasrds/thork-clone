@@ -1,46 +1,40 @@
 package id.thork.app.repository
 
-import android.annotation.SuppressLint
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.suspendOnSuccess
+import android.net.Uri
+import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
-import id.thork.app.base.MxResponse
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.helper.DoclinksParam
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.DoclinksApi
 import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.api.LoginClient
-import id.thork.app.network.api.WorkOrderClient
-import id.thork.app.network.model.user.LoginCookie
-import id.thork.app.network.model.user.Logout
-import id.thork.app.network.model.user.UserResponse
-import id.thork.app.network.response.ErrorResponse.ErrorResponse
-import id.thork.app.network.response.system_properties.SystemProperties
 import id.thork.app.network.response.work_order.doclinks.DoclinksMember
-import id.thork.app.persistence.dao.*
+import id.thork.app.persistence.dao.AttachmentDao
 import id.thork.app.persistence.entity.AttachmentEntity
-import id.thork.app.persistence.entity.SysPropEntity
-import id.thork.app.persistence.entity.SysResEntity
-import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
+import java.io.*
 
 
 class AttachmentRepository constructor(
     private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val attachmentDao: AttachmentDao,
-    private val httpLoggingInterceptor: HttpLoggingInterceptor
+    private val httpLoggingInterceptor: HttpLoggingInterceptor,
 ) : BaseRepository {
     val TAG = AttachmentRepository::class.java.name
 
@@ -86,7 +80,11 @@ class AttachmentRepository constructor(
                                 mimeType = it
                             }
                         }
-                        Timber.tag(TAG).i("createAttachment() modifiedDate: %s mimeType: %s", modifiedDate, mimeType)
+                        Timber.tag(TAG).i(
+                            "createAttachment() modifiedDate: %s mimeType: %s",
+                            modifiedDate,
+                            mimeType
+                        )
                         val attachmentEntity = AttachmentEntity(
                             docInfoId = describedBy.docinfoid, docType = describedBy.docType,
                             fileName = describedBy.fileName, mimeType = mimeType,
@@ -124,6 +122,83 @@ class AttachmentRepository constructor(
         }
     }
 
+    suspend fun uploadAttachment(
+        attachmentEntities: MutableList<AttachmentEntity>,
+        username: String
+    ) {
+        runBlocking {
+            launch {
+                attachmentEntities.forEach { attachment ->
+                    Timber.tag(TAG).d("uploadAttachment() attachment ${attachment.fileName} start")
+                    uploadAttachment(attachment, username,
+                        onSuccess = {
+                            Timber.tag(TAG)
+                                .d("uploadAttachment() attachment ${attachment.fileName} success")
+                        },
+                        onError = {
+                            Timber.tag(TAG)
+                                .d("uploadAttachment() attachment ${attachment.fileName} failed")
+                        })
+                }
+            }
+        }
+    }
+
+    suspend fun uploadAttachment(
+        attachment: AttachmentEntity,
+        username: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val attachmentCaches: MutableList<AttachmentEntity> = mutableListOf()
+        attachment.uriString?.let { uriString ->
+            attachment.syncStatus?.let { syncStatus ->
+                attachment.fileName?.let { fileName ->
+                    Timber.tag(TAG)
+                        .d("uploadAttachment() uriString: %s sync status: %s", uriString, syncStatus)
+                    if (!uriString.startsWith("http") && !syncStatus) {
+                        val requestBody = attachment.uriString?.let { urlString ->
+                            attachment.mimeType?.let { mimeType ->
+                                createRequestBody(
+                                    cookie = cookie,
+                                    filePath = urlString,
+                                )
+                            }
+                        }
+                        val doclinksParam = DoclinksParam(
+                            cookie, attachment.workOrderId, attachment.fileName, attachment.docType,
+                            attachment.description, attachment.mimeType, requestBody
+                        )
+                        Timber.tag(TAG).d(
+                            "uploadAttachment() doclinksParam: %s requestBody:%s",
+                            doclinksParam.mimeType,
+                            requestBody
+                        )
+                        val response = doclinksClient.uploadAttachments(doclinksParam)
+                        response.onSuccess {
+                            Timber.tag(TAG)
+                                .d("uploadAttachment() response: %s", "suspendOnSuccess")
+                            attachmentCaches.add(attachment)
+                        }.onError {
+                            Timber.tag(TAG)
+                                .d(
+                                    "uploadAttachment() code: %s error: %s",
+                                    statusCode.code,
+                                    message()
+                                )
+                            onError(statusCode.code.toString())
+                        }.onException {
+                            Timber.tag(TAG).d("uploadAttachment() exception: %s", message())
+                            onError(message())
+                        }
+                    }
+                }
+            }
+        }
+        updateCacheIfUploaded(attachmentCaches, username)
+    }
+
     fun getAttachmentByWoId(woId: Int): MutableList<AttachmentEntity> {
         return attachmentDao.fetchAttachmentByWoId(woId).toMutableList()
     }
@@ -135,5 +210,23 @@ class AttachmentRepository constructor(
 
     fun save(attachmentEntity: AttachmentEntity, username: String) {
         attachmentDao.save(attachmentEntity, username)
+    }
+
+    private fun createRequestBody(
+        cookie: String,
+        filePath: String,
+    ): RequestBody? {
+        var requestFile: RequestBody? = FileUtils.createRequestBodyFromUri(context, filePath)
+        return requestFile
+    }
+
+    private fun updateCacheIfUploaded(
+        attachmentEntities: MutableList<AttachmentEntity>,
+        username: String
+    ) {
+        attachmentEntities.forEach {
+            it.syncStatus = true
+        }
+        attachmentDao.save(attachmentEntities, username)
     }
 }

@@ -1,5 +1,6 @@
 package id.thork.app.network.api
 
+import id.thork.app.helper.DoclinksParam
 import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Named
@@ -14,4 +15,8 @@ class DoclinksClient @Inject constructor(
 
     suspend fun getDoclinks(cookie: String, url: String) =
         doclinksApi.getDoclinks(cookie, url)
+
+    suspend fun uploadAttachments(param: DoclinksParam) =
+        doclinksApi.uploadAttachment(param.woId!!, param.cookie, param.fileName,
+            param.fileType, param.description, param.mimeType, param.requestBody!!)
 }

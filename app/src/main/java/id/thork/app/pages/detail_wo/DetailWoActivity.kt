@@ -494,6 +494,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 BaseParam.COMPLETED
             )
         }
+//        workorderId.whatIfNotNull {
+//            detailWoViewModel.uploadAttachments(it)
+//        }
         gotoHome()
     }
 

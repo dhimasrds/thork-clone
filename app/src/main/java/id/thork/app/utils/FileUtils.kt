@@ -12,19 +12,18 @@
 
 package id.thork.app.utils
 
-import android.app.DownloadManager
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
-import androidx.core.content.FileProvider
-import id.thork.app.BuildConfig
 import id.thork.app.base.BaseApplication
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import timber.log.Timber
 import java.io.*
-import java.net.URL
 
 object FileUtils {
     fun getMimeType(context: Context, uri: Uri): String? {
@@ -62,21 +61,25 @@ object FileUtils {
     }
 
     fun getFilename(context: Context, uri: Uri): String? {
-        val schema = uri.scheme
-        Timber.tag(BaseApplication.TAG).d("getFileName() schema: %s", schema)
         var fileName: String? = null
-        if (schema.equals("file")) {
-            fileName = uri.lastPathSegment
-        } else if (!schema.isNullOrEmpty() && schema.startsWith("http")) {
-            fileName = uri.lastPathSegment
-        } else if (schema.equals("content")) {
-            val returnCursor = context.contentResolver.query(uri, null, null, null, null)
-            val nameIndex = returnCursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            returnCursor?.moveToFirst()
-            fileName = nameIndex?.let { returnCursor.getString(it) }
-            returnCursor?.close()
+        try {
+            val schema = uri.scheme
+            Timber.tag(BaseApplication.TAG).d("getFileName() schema: %s uri: %s", schema, uri)
+            if (schema.equals("file")) {
+                fileName = uri.lastPathSegment
+            } else if (!schema.isNullOrEmpty() && schema.startsWith("http")) {
+                fileName = uri.lastPathSegment
+            } else if (schema.equals("content")) {
+                val returnCursor = context.contentResolver.query(uri, null, null, null, null)
+                val nameIndex = returnCursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                returnCursor?.moveToFirst()
+                fileName = nameIndex?.let { returnCursor.getString(it) }
+                returnCursor?.close()
+            }
+            Timber.tag(BaseApplication.TAG).d("getFileName() fileName: %s", fileName)
+        } catch (e: Exception) {
+            Timber.tag(BaseApplication.TAG).d("getFileName() error: %s", e)
         }
-        Timber.tag(BaseApplication.TAG).d("getFileName() fileName: %s", fileName)
         return fileName
     }
 
@@ -96,13 +99,16 @@ object FileUtils {
         val fileName = getFilename(context, contentUri)
 
         // Creating Temp file
+        Timber.tag(BaseApplication.TAG).d(
+            "createTempFileFromContentUri() content uri: %s context: %s fileName: %s",
+            contentUri, context.cacheDir, fileName
+        )
         val tempFile = File(context.cacheDir, fileName)
         tempFile.createNewFile()
 
         try {
             val oStream = FileOutputStream(tempFile)
             val inputStream = context.contentResolver.openInputStream(contentUri)
-
             inputStream?.let {
                 FileUtils.copy(inputStream, oStream)
             }
@@ -114,21 +120,46 @@ object FileUtils {
         return tempFile
     }
 
-    fun createFileFromRemoteUrl(context: Context, urlString: String) {
-        val url = URL(urlString)
-        val inputStream = url.openStream()
-        try {
-            val storagePath = context.getExternalFilesDir(null)
-            storagePath?.createNewFile()
-
-            val oStream = FileOutputStream(storagePath)
-            inputStream?.let {
-                copy(inputStream, oStream)
-            }
-            oStream.flush()
-        } catch (e: Exception) {
-            Timber.tag(BaseApplication.TAG).d("createFileFromRemoteUrl() error: %s", e)
+    @Throws(IOException::class)
+    fun getBytes(inputStream: InputStream): ByteArray {
+        Timber.tag(BaseApplication.TAG).d("getBytes() inputStream: %s", inputStream)
+        val byteBuff = ByteArrayOutputStream()
+        val buffSize = 1024
+        val buff = ByteArray(buffSize)
+        var len = 0
+        while (inputStream.read(buff).also { len = it } != -1) {
+            byteBuff.write(buff, 0, len)
         }
+        return byteBuff.toByteArray()
+    }
+
+    /**
+     * Create Retrofit Request Body from File URI
+     */
+    fun createRequestBodyFromUri(context: Context, uriString: String): RequestBody? {
+        var requestFile: RequestBody? = null
+        if (!uriString.isNullOrBlank()) {
+//            val fileUri = Uri.parse(uriString)
+            val mimeType = getMimeType(context, Uri.parse(uriString))
+            val fileName = getFilename(context, Uri.parse(uriString))
+            val tempFile = File(context.cacheDir, fileName)
+            tempFile.createNewFile()
+            try {
+                val oStream = FileOutputStream(tempFile)
+                val inputStream = context.contentResolver.openInputStream(Uri.parse(uriString))
+                inputStream?.let {
+                    copy(inputStream, oStream)
+                }
+                oStream.flush()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Timber.tag(BaseApplication.TAG).d("createRequestBodyFromUri() error: %s", e)
+            }
+            requestFile = tempFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+            Timber.tag(BaseApplication.TAG)
+                .d("createRequestBodyFromUri() requestFile: %s", requestFile)
+        }
+        return requestFile
     }
 
 }
