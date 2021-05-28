@@ -264,7 +264,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     override fun setupListener() {
         super.setupListener()
-        binding.attachment.setOnClickListener {
+        binding.includeAttachments.attachment.setOnClickListener {
             goToAttachments()
         }
 
@@ -474,11 +474,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             goToMaterialActual()
         }
 
-        binding.longdesc.setOnClickListener {
+        binding.includeLongdesc.longdesc.setOnClickListener {
             gotoLongDescription()
         }
 
-        binding.cardAsset.setOnClickListener {
+        binding.includeAssets.cardAsset.setOnClickListener {
             gotoListAsset()
         }
     }

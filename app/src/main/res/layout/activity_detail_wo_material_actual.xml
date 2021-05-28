@@ -40,7 +40,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_material_plan" />
+                    android:background="@drawable/ic_material_actual" />
             </LinearLayout>
 
             <TextView
