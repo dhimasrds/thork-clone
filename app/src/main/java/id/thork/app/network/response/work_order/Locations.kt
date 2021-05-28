@@ -50,8 +50,6 @@ data class Locations(
     val statusDescription: String? = null,
     @Json(name = "statusdate")
     val statusdate: String? = null,
-    @Json(name = "thisfsmrfid")
-    val thisfsmrfid: String? = null,
     @Json(name = "thisfsmtagprogress")
     val thisfsmtagprogress: Boolean? = null,
     @Json(name = "thisfsmtagtime")

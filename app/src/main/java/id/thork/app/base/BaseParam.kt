@@ -114,9 +114,9 @@ object BaseParam {
     /**
      * Base Parameter Priority Workorder
      */
-    const val PRIORITY_NORMAL_DESC = "Normal"
-    const val PRIORITY_MEDIUM_DESC = "Medium"
-    const val PRIORITY_HIGH_DESC = "High"
+    const val PRIORITY_NORMAL_DESC = "NORMAL"
+    const val PRIORITY_MEDIUM_DESC = "MEDIUM"
+    const val PRIORITY_HIGH_DESC = "HIGH"
 
 
     /**

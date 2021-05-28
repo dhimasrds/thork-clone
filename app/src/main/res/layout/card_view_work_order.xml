@@ -206,6 +206,7 @@
                 app:srcCompat="@drawable/ic_offline" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/followup_cardwo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -240,6 +241,7 @@
                 android:textColor="@color/priority_normal"
                 app:layout_constraintEnd_toEndOf="@+id/tv_wo_type"
                 app:layout_constraintTop_toBottomOf="@+id/tvStatus"
+                app:setPriority="@{wo.wopriority  }"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

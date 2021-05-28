@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import id.thork.app.R
 import id.thork.app.base.BaseParam
+import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
 /**
@@ -54,9 +55,10 @@ object BindingWoAdapter {
     }
 
     @BindingAdapter("setPriority")
-    @JvmStatic fun setPriority(view: TextView, priority: String?) {
+    @JvmStatic fun setPriority(view: TextView, priority: Int) {
         Timber.d("setStatus :%s", priority)
-        when (priority) {
+        val convertWopriority = StringUtils.createPriority(priority)
+        when (convertWopriority) {
             BaseParam.NORMAL -> {
                 view.text = BaseParam.NORMAL
                 view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_normal))

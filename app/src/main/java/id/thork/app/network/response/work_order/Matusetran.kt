@@ -1,0 +1,91 @@
+package id.thork.app.network.response.work_order
+
+
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
+data class Matusetran(
+    @Json(name = "actualcost")
+    val actualcost: Double? = null,
+    @Json(name = "actualdate")
+    val actualdate: String? = null,
+    @Json(name = "assetnum")
+    val assetnum: String? = null,
+    @Json(name = "condrate")
+    val condrate: Int? = null,
+    @Json(name = "consignment")
+    val consignment: Boolean? = null,
+    @Json(name = "conversion")
+    val conversion: Double? = null,
+    @Json(name = "curbal")
+    val curbal: Double? = null,
+    @Json(name = "currencycode")
+    val currencycode: String? = null,
+    @Json(name = "currencylinecost")
+    val currencylinecost: Double? = null,
+    @Json(name = "currencyunitcost")
+    val currencyunitcost: Double? = null,
+    @Json(name = "description")
+    val description: String? = null,
+    @Json(name = "enterby")
+    val enterby: String? = null,
+    @Json(name = "enteredastask")
+    val enteredastask: Boolean? = null,
+    @Json(name = "exchangerate")
+    val exchangerate: Double? = null,
+    @Json(name = "financialperiod")
+    val financialperiod: String? = null,
+    @Json(name = "href")
+    val href: String? = null,
+    @Json(name = "issuetype")
+    val issuetype: String? = null,
+    @Json(name = "issuetype_description")
+    val issuetypeDescription: String? = null,
+    @Json(name = "issueunit")
+    val issueunit: String? = null,
+    @Json(name = "itemnum")
+    val itemnum: String? = null,
+    @Json(name = "itemsetid")
+    val itemsetid: String? = null,
+    @Json(name = "linecost")
+    val linecost: Double? = null,
+    @Json(name = "linetype")
+    val linetype: String? = null,
+    @Json(name = "linetype_description")
+    val linetypeDescription: String? = null,
+    @Json(name = "localref")
+    val localref: String? = null,
+    @Json(name = "location")
+    val location: String? = null,
+    @Json(name = "matusetransid")
+    val matusetransid: Int? = null,
+    @Json(name = "orgid")
+    val orgid: String? = null,
+    @Json(name = "outside")
+    val outside: Boolean? = null,
+    @Json(name = "physcnt")
+    val physcnt: Double? = null,
+    @Json(name = "qtyrequested")
+    val qtyrequested: Double? = null,
+    @Json(name = "quantity")
+    val quantity: Double? = null,
+    @Json(name = "refwo")
+    val refwo: String? = null,
+    @Json(name = "rollup")
+    val rollup: Boolean? = null,
+    @Json(name = "_rowstamp")
+    val rowstamp: String? = null,
+    @Json(name = "sparepartadded")
+    val sparepartadded: Boolean? = null,
+    @Json(name = "storeloc")
+    val storeloc: String? = null,
+    @Json(name = "tositeid")
+    val tositeid: String? = null,
+    @Json(name = "transdate")
+    val transdate: String? = null,
+    @Json(name = "unitcost")
+    val unitcost: Double? = null,
+    @Json(name = "wpitemid")
+    val wpitemid: Int? = null
+)

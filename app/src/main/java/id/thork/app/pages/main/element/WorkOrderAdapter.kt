@@ -68,6 +68,10 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
             binding.tvStatus.text = woEntity.status
             binding.executePendingBindings()
 
+            woEntity.origrecordid.whatIfNotNull {
+                binding.followupCardwo.visibility = View.VISIBLE
+            }
+
             binding.cardWo.setOnClickListener {
                 val intent = Intent(context, DetailWoActivity::class.java)
                 val bundle = Bundle()

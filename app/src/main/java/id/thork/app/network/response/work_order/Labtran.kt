@@ -18,12 +18,6 @@ data class Labtran(
     val enteredastask: Boolean? = null,
     @Json(name = "financialperiod")
     val financialperiod: String? = null,
-    @Json(name = "finishdateentered")
-    val finishdateentered: String? = null,
-    @Json(name = "finishdatetime")
-    val finishdatetime: String? = null,
-    @Json(name = "finishtimeentered")
-    val finishtimeentered: String? = null,
     @Json(name = "genapprservreceipt")
     val genapprservreceipt: Boolean? = null,
     @Json(name = "href")
@@ -54,10 +48,6 @@ data class Labtran(
     val rowstamp: String? = null,
     @Json(name = "startdateentered")
     val startdateentered: String? = null,
-    @Json(name = "startdatetime")
-    val startdatetime: String? = null,
-    @Json(name = "starttimeentered")
-    val starttimeentered: String? = null,
     @Json(name = "transdate")
     val transdate: String? = null,
     @Json(name = "transtype")
