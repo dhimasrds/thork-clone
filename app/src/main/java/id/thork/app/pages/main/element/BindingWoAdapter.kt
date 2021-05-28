@@ -52,4 +52,27 @@ object BindingWoAdapter {
             }
         }
     }
+
+    @BindingAdapter("setPriority")
+    @JvmStatic fun setPriority(view: TextView, priority: String?) {
+        Timber.d("setStatus :%s", priority)
+        when (priority) {
+            BaseParam.NORMAL -> {
+                view.text = BaseParam.NORMAL
+                view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_normal))
+                view.setBackgroundResource(R.drawable.bg_priority_normal)
+
+            }
+            BaseParam.MEDIUM -> {
+                view.text = BaseParam.MEDIUM
+                view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_normal))
+                view.background = ContextCompat.getDrawable(view.context,R.drawable.bg_priority_medium)
+            }
+            BaseParam.HIGH -> {
+                view.text = BaseParam.HIGH
+                view.setTextColor(ContextCompat.getColor(view.context,R.color.priority_high))
+                view.setBackgroundResource(R.drawable.bg_priority_high)
+            }
+        }
+    }
 }
