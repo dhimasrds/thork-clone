@@ -88,6 +88,14 @@ object BaseParam {
     const val DONE = "DONE"
 
     /**
+     *  Workorder priority
+     *
+     */
+    const val NORMAL = "NORMAL"
+    const val MEDIUM = "MEDIUM"
+    const val HIGH = "HIGH"
+
+    /**
      * Base Parameter Google Maps
      */
     const val APP_WONUM = "WO. Number "

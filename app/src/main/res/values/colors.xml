@@ -76,6 +76,9 @@
 
     <color name="color_stat_blue">#4D436CFF</color>
     <color name="blueTextStatus">#436CFF</color>
+    <color name="priority_high">#FF2323</color>
+    <color name="priority_medium">#FF7511</color>
+    <color name="priority_normal">#436CFF</color>
 </resources>
 
 
