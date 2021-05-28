@@ -15,6 +15,7 @@ package id.thork.app.network.api
 import com.skydoves.sandwich.ApiResponse
 import id.thork.app.base.BaseParam
 import id.thork.app.network.response.material_response.MaterialResponse
+import id.thork.app.network.response.storeroom_response.StoreroomResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -30,4 +31,12 @@ interface MaterialApi {
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Query(value = "lean") lean: Int
     ): ApiResponse<MaterialResponse>
+
+    @GET("maximo/oslc/os/THISFSMSTOREROOM?")
+    suspend fun getStoreroom(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Query(value = "lean") lean: Int,
+        @Query(value = "oslc.select") select: String,
+        @Query(value = "oslc.where") where: String
+    ): ApiResponse<StoreroomResponse>
 }

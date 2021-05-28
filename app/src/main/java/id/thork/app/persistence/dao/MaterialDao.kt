@@ -1,24 +1,12 @@
 package id.thork.app.persistence.dao
 
-import id.thork.app.persistence.entity.MaterialBackupEntity
+import id.thork.app.persistence.entity.MaterialEntity
 
 /**
- * Created by Raka Putra on 3/4/21
+ * Created by M.Reza Sulaiman on 28/05/2021
  * Jakarta, Indonesia.
  */
 interface MaterialDao {
-    fun saveMaterial(materialBackupEntity: MaterialBackupEntity): MaterialBackupEntity?
-
-    fun saveMaterialList(materialBackupEntity: List<MaterialBackupEntity?>?): List<MaterialBackupEntity?>?
-
-    fun listMaterials(workorderId: Int): List<MaterialBackupEntity?>?
-
-    fun listMaterialsByWonum(wonum: String): List<MaterialBackupEntity?>?
-
-    fun listMaterialsByWoid(woid: Int): List<MaterialBackupEntity?>?
-
-    fun removeMaterialByWonum(wonum: String): Long
-
-    fun removeMaterialByWoid(woid: Int): Long
-
+    fun save(materialEntity: MaterialEntity, username: String)
+    fun remove()
 }
