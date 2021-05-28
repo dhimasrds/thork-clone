@@ -14,6 +14,7 @@ package id.thork.app.pages.material_plan
 
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
@@ -26,7 +27,8 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import id.thork.app.pages.material_plan.element.material_plan_list.MaterialPlanItem
-import id.thork.app.persistence.entity.MatTransEntity
+import id.thork.app.persistence.entity.WpmaterialEntity
+import okhttp3.internal.notify
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,7 +41,7 @@ class MaterialPlanActivity : BaseActivity() {
     private val binding: ActivityMaterialPlanBinding by binding(R.layout.activity_material_plan)
 
     private lateinit var materialPlanAdapter: MaterialPlanAdapter
-    private lateinit var matTransEntities: MutableList<MatTransEntity>
+    private lateinit var wpmaterialList: MutableList<WpmaterialEntity>
 
     private var intentWoId = 0
 
@@ -52,9 +54,9 @@ class MaterialPlanActivity : BaseActivity() {
 
     override fun setupView() {
         super.setupView()
-
+        wpmaterialList = mutableListOf()
         materialPlanAdapter =
-            MaterialPlanAdapter(this, preferenceManager, svgRequestOptions, matTransEntities)
+            MaterialPlanAdapter(this, preferenceManager, svgRequestOptions, wpmaterialList)
 
         binding.apply {
             lifecycleOwner = this@MaterialPlanActivity
@@ -95,5 +97,15 @@ class MaterialPlanActivity : BaseActivity() {
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
+        viewModel.initListMaterialPlan(intentWoId.toString())
+    }
+
+    override fun setupObserver() {
+        super.setupObserver()
+        viewModel.listMaterial.observe(this, Observer {
+            wpmaterialList.clear()
+            wpmaterialList.addAll(it)
+            materialPlanAdapter.notifyDataSetChanged()
+        })
     }
 }

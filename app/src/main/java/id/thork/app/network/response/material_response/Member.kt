@@ -75,5 +75,7 @@ data class Member(
     @Json(name = "statusdate")
     val statusdate: String? = null,
     @Json(name = "taxexempt")
-    val taxexempt: Boolean? = null
+    val taxexempt: Boolean? = null,
+    @Json(name = "thisfsmrfid")
+    val thisfsmrfid: String? = null,
 )

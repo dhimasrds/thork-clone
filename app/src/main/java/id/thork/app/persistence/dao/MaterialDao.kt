@@ -9,4 +9,8 @@ import id.thork.app.persistence.entity.MaterialEntity
 interface MaterialDao {
     fun save(materialEntity: MaterialEntity, username: String)
     fun remove()
+    fun findByItemnum(itemnum: String): MaterialEntity?
+    fun findBytagcode(tagcode: String): MaterialEntity?
+    fun listMaterial(): List<MaterialEntity>?
+    fun saveListMaterialMaster(materialList: List<MaterialEntity>): List<MaterialEntity>
 }

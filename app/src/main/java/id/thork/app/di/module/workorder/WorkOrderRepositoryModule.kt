@@ -30,11 +30,12 @@ object WorkOrderRepositoryModule {
     fun provideWorkOrderRepository(
         workOrderClient: WorkOrderClient,
         appSession: AppSession,
-        attachmentRepository: AttachmentRepository
+        attachmentRepository: AttachmentRepository,
+        materialRepository: MaterialRepository,
     ): WorkOrderRepository {
         return WorkOrderRepository(
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
-            attachmentRepository
+            attachmentRepository, materialRepository
         )
     }
 
@@ -49,9 +50,15 @@ object WorkOrderRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideMaterialRepository(
-        workOrderClient: WorkOrderClient,
+        appSession: AppSession,
     ): MaterialRepository {
-        return MaterialRepository(workOrderClient, MaterialBackupDaoImp())
+        return MaterialRepository(
+            MaterialBackupDaoImp(),
+            MatusetransDaoImp(),
+            WpmaterialDaoImp(),
+            MaterialDaoImp(),
+            appSession
+        )
     }
 
     @Provides
@@ -61,6 +68,11 @@ object WorkOrderRepositoryModule {
         preferenceManager: PreferenceManager,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): AttachmentRepository {
-        return AttachmentRepository(context, preferenceManager, AttachmentDaoImp(), httpLoggingInterceptor)
+        return AttachmentRepository(
+            context,
+            preferenceManager,
+            AttachmentDaoImp(),
+            httpLoggingInterceptor
+        )
     }
 }

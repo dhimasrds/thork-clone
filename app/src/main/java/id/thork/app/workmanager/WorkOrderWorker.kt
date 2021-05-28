@@ -26,12 +26,11 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
-import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.AttachmentDao
-import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.AttachmentRepository
+import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.DateUtils
@@ -53,7 +52,10 @@ class WorkOrderWorker @WorkerInject constructor(
     val assetDao: AssetDao,
     val attachmentDao: AttachmentDao,
     val doclinksClient: DoclinksClient,
-//    val workOrderAdapter: WorkOrderAdapter
+    val materialBackupDao: MaterialBackupDao,
+    val matusetransDao: MatusetransDao,
+    val wpmaterialDao: WpmaterialDao,
+    val materialDao: MaterialDao
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -61,6 +63,7 @@ class WorkOrderWorker @WorkerInject constructor(
     var workOrderRepository: WorkOrderRepository
     var response = WorkOrderResponse()
     var attachmentRepository: AttachmentRepository
+    var materialRepository: MaterialRepository
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
     init {
@@ -73,10 +76,12 @@ class WorkOrderWorker @WorkerInject constructor(
                 appSession,
                 assetDao,
                 attachmentDao,
-                doclinksClient
+                doclinksClient,
+                materialBackupDao, matusetransDao, wpmaterialDao, materialDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
+        materialRepository = workerRepository.buildMaterialRepository()
 
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)
     }
@@ -234,7 +239,11 @@ class WorkOrderWorker @WorkerInject constructor(
                         cookie, member,
                         onSuccess = {
                             //TODO handle create wo cache after update
-                            workOrderRepository.updateWoCacheAfterSync(it.wonum, longdesc, status.toString())
+                            workOrderRepository.updateWoCacheAfterSync(
+                                it.wonum,
+                                longdesc,
+                                status.toString()
+                            )
 
                             val nextIndex = currentIndex + 1
                             if (nextIndex <= listWo.size - 1) {

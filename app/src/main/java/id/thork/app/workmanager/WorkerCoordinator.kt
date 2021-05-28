@@ -23,11 +23,11 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
 import id.thork.app.network.api.DoclinksClient
+import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.work_order.WorkOrderResponse
-import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.AttachmentDao
-import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.*
 import id.thork.app.repository.AttachmentRepository
+import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.MoshiUtils
@@ -49,12 +49,17 @@ class WorkerCoordinator @Inject constructor(
     val appSession: AppSession,
     val assetDao: AssetDao,
     val attachmentDao: AttachmentDao,
-    val doclinksClient: DoclinksClient
+    val doclinksClient: DoclinksClient,
+    val materialBackupDao: MaterialBackupDao,
+    val matusetransDao: MatusetransDao,
+    val wpmaterialDao: WpmaterialDao,
+    val materialDao: MaterialDao
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
     var workOrderRepository: WorkOrderRepository
     var attachmentRepository: AttachmentRepository
+    var materialRepository: MaterialRepository
     var response = WorkOrderResponse()
 
     //Work manager only execute when connected to internet
@@ -64,12 +69,23 @@ class WorkerCoordinator @Inject constructor(
 
     init {
         val workerRepository =
-            WorkerRepository(context,
-                preferenceManager, httpLoggingInterceptor,
-                woCacheDao, appSession,
-                assetDao, attachmentDao, doclinksClient)
+            WorkerRepository(
+                context,
+                preferenceManager,
+                httpLoggingInterceptor,
+                woCacheDao,
+                appSession,
+                assetDao,
+                attachmentDao,
+                doclinksClient,
+                materialBackupDao,
+                matusetransDao,
+                wpmaterialDao,
+                materialDao
+            )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
+        materialRepository = workerRepository.buildMaterialRepository()
 
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }

@@ -20,9 +20,7 @@ import id.thork.app.network.api.DoclinksApi
 import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
-import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.AttachmentDao
-import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.*
 import okhttp3.logging.HttpLoggingInterceptor
 
 class WorkerRepository constructor(
@@ -33,18 +31,31 @@ class WorkerRepository constructor(
     private val appSession: AppSession,
     private val assetDao: AssetDao,
     private val attachmentDao: AttachmentDao,
-    private val doclinksClient: DoclinksClient
+    private val doclinksClient: DoclinksClient,
+    private val materialBackupDao: MaterialBackupDao,
+    private val matusetransDao: MatusetransDao,
+    private val wpmaterialDao: WpmaterialDao,
+    private val materialDao: MaterialDao,
 ) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())
-        val attachmentRepository = AttachmentRepository(context, preferenceManager, attachmentDao, httpLoggingInterceptor)
+        val attachmentRepository =
+            AttachmentRepository(context, preferenceManager, attachmentDao, httpLoggingInterceptor)
+        val materialRepository = MaterialRepository(
+            materialBackupDao,
+            matusetransDao,
+            wpmaterialDao,
+            materialDao,
+            appSession
+        )
         return WorkOrderRepository(
             workOrderClient,
             woCacheDao,
             appSession,
             assetDao,
-            attachmentRepository
+            attachmentRepository,
+            materialRepository
         )
     }
 
@@ -54,11 +65,28 @@ class WorkerRepository constructor(
     }
 
     fun buildAttachmentRepository(): AttachmentRepository {
-        return AttachmentRepository(context, preferenceManager, attachmentDao, httpLoggingInterceptor)
+        return AttachmentRepository(
+            context,
+            preferenceManager,
+            attachmentDao,
+            httpLoggingInterceptor
+        )
     }
 
     private fun provideDoclinksApi(): DoclinksApi {
         val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
         return retrofit.create(DoclinksApi::class.java)
     }
+
+    fun buildMaterialRepository(): MaterialRepository {
+        return MaterialRepository(
+            materialBackupDao,
+            matusetransDao,
+            wpmaterialDao,
+            materialDao,
+            appSession
+        )
+    }
+
+
 }
