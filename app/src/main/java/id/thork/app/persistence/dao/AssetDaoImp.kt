@@ -1,12 +1,10 @@
 package id.thork.app.persistence.dao
 
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.AssetEntity_
 import io.objectbox.Box
-import io.objectbox.kotlin.inValues
 import timber.log.Timber
 import java.util.*
 

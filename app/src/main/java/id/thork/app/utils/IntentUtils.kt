@@ -15,7 +15,6 @@ package id.thork.app.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import id.thork.app.BuildConfig
 import id.thork.app.base.BaseApplication

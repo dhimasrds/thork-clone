@@ -3,11 +3,9 @@ package id.thork.app.pages.detail_wo
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.location.Location
-import android.view.Menu
 import android.view.View
 import android.view.View.GONE
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient

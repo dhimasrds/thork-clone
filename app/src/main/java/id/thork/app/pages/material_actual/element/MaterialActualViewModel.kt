@@ -15,7 +15,6 @@ package id.thork.app.pages.material_actual.element
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 
 class MaterialActualViewModel@ViewModelInject constructor(
     private val context: Context

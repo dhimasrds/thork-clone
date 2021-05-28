@@ -39,7 +39,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.skydoves.whatif.whatIf
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -53,7 +52,6 @@ import id.thork.app.pages.attachment.element.AttachmentViewModel
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.utils.FileUtils
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject

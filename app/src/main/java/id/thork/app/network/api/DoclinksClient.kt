@@ -1,9 +1,7 @@
 package id.thork.app.network.api
 
 import id.thork.app.helper.DoclinksParam
-import okhttp3.RequestBody
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Created by Reja on 24/05/21

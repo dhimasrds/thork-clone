@@ -16,12 +16,10 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
-import id.thork.app.example.Person
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.AttachmentEntity_
 import id.thork.app.persistence.entity.LogEntity
-import id.thork.app.persistence.entity.UserEntity
 import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*

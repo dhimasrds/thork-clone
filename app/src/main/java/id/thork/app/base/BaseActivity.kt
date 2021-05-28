@@ -13,7 +13,6 @@
 package id.thork.app.base
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
@@ -42,9 +41,7 @@ import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
-import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.persistence.dao.WoCacheDao
-import id.thork.app.repository.WorkerRepository
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
 import timber.log.Timber

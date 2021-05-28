@@ -3,7 +3,6 @@ package id.thork.app.persistence.dao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.MaterialBackupEntity_
-import id.thork.app.persistence.entity.MaterialEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
 

@@ -1,7 +1,5 @@
 package id.thork.app.pages.find_asset_location
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -9,13 +7,10 @@ import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.databinding.ActivityFindAssetBinding
 import id.thork.app.databinding.ActivityFindLocationBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.pages.find_asset_location.element.FindAssetViewModel
 import id.thork.app.pages.find_asset_location.element.FindLocationAdapter
-import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
 import timber.log.Timber
 import javax.inject.Inject
@@ -64,9 +59,7 @@ class FindLocationActivity: BaseActivity() {
                 findLocationAdapter.filter.filter(newText)
                 return false
             }
-
         })
-
     }
 
     override fun setupObserver() {

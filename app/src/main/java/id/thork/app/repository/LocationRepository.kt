@@ -1,7 +1,6 @@
 package id.thork.app.repository
 
 import id.thork.app.persistence.dao.LocationDao
-import id.thork.app.persistence.dao.LocationDaoImp
 import id.thork.app.persistence.entity.LocationEntity
 import javax.inject.Inject
 

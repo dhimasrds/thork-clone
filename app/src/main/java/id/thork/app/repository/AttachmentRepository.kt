@@ -1,19 +1,16 @@
 package id.thork.app.repository
 
 import android.content.Context
-import android.net.Uri
 import com.skydoves.sandwich.*
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
-import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.helper.DoclinksParam
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.DoclinksApi
 import id.thork.app.network.api.DoclinksClient
-import id.thork.app.network.api.LoginClient
 import id.thork.app.network.response.work_order.doclinks.DoclinksMember
 import id.thork.app.persistence.dao.AttachmentDao
 import id.thork.app.persistence.entity.AttachmentEntity
@@ -21,13 +18,9 @@ import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
-import java.io.*
 
 
 class AttachmentRepository constructor(
