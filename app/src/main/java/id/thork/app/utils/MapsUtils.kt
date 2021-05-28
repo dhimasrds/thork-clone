@@ -60,7 +60,7 @@ object MapsUtils {
         val options = MarkerOptions()
             .position(latLng)
             .snippet(title)
-            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_asset_marker))
+            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_assetbackup_marker_backup_foreground))
 
         googleMap.addMarker(options)
             .tag = BaseParam.APP_TAG_MARKER_ASSET
