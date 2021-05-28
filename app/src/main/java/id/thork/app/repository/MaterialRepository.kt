@@ -2,7 +2,7 @@ package id.thork.app.repository
 
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.WorkOrderClient
-import id.thork.app.persistence.dao.MaterialDao
+import id.thork.app.persistence.dao.MaterialBackupDao
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ import javax.inject.Inject
  */
 class MaterialRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
-    private val materialDao: MaterialDao) : BaseRepository {
+    private val materialDao: MaterialBackupDao) : BaseRepository {
 
     fun saveMaterial(materialBackupEntity: MaterialBackupEntity): MaterialBackupEntity? {
         return materialDao.saveMaterial(materialBackupEntity)

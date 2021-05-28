@@ -28,5 +28,7 @@ object ApiParam {
     const val WORKORDER_WHERE_STATUS_SEARCH_COMP = " and status in [\"COMP\"] and wonum=\"%"
     const val WORKORDER_WHERE_WOID = " and status in [\"APPR\",\"INPRG\"] and workorderid="
 
+    const val STOREROOM_WHERE_ENDPOINT = "inventory.itemnum=\""
+
 
 }

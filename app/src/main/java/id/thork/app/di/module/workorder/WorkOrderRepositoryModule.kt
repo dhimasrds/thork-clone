@@ -8,7 +8,6 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.*
 import id.thork.app.repository.AttachmentRepository
@@ -52,7 +51,7 @@ object WorkOrderRepositoryModule {
     fun provideMaterialRepository(
         workOrderClient: WorkOrderClient,
     ): MaterialRepository {
-        return MaterialRepository(workOrderClient, MaterialDaoImp())
+        return MaterialRepository(workOrderClient, MaterialBackupDaoImp())
     }
 
     @Provides
