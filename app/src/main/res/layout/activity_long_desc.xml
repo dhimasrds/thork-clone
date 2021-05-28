@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="id.thork.app.pages.long_description.element.LongDescViewModel" />
@@ -36,7 +35,6 @@
         android:orientation="horizontal"
         android:weightSum="2">
         <Button
-
             android:id="@+id/cancel"
             android:text="@string/dialog_cancel"
             android:textColor="@color/blue"
@@ -98,24 +96,7 @@
             android:layout_marginBottom="90dp"
             android:fontFamily="@font/poppins"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/menu_wo_text_size"/>
+            android:textSize="@dimen/text_size_wo_detail_16"/>
     </LinearLayout>
-
-<!--    <EditText-->
-<!--        android:id="@+id/longdesc"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:cursorVisible="true"-->
-<!--        android:layout_below="@id/tvLongdesc"-->
-<!--        android:layout_marginBottom="90dp"-->
-<!--        android:fontFamily="@font/poppins"-->
-<!--        android:textColor="@color/colorBlack"-->
-<!--        android:textSize="@dimen/menu_wo_text_size"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        android:layout_marginRight="16dp"-->
-<!--        android:layout_marginLeft="16dp"/>-->
-
-
-
 </RelativeLayout>
 </layout>
