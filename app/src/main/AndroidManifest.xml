@@ -27,7 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.material_plan.element.material_plan_list.MaterialPlanItem"></activity>
+        <activity android:name=".pages.material_plan.element.form.MaterialPlanFormActivity"></activity>
+        <activity android:name=".pages.material_plan.element.material_plan_list.MaterialPlanItem" />
         <activity android:name=".pages.followup_wo.FollowUpWoActivity" />
         <activity android:name=".pages.rfid_create_wo_location.RfidCreateWoLocationActivity" />
         <activity android:name=".pages.material_plan.MaterialPlanActivity" />
