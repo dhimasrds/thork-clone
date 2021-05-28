@@ -19,7 +19,6 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity

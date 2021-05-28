@@ -4,9 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
-import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.repository.AssetRepository
 import timber.log.Timber

@@ -13,28 +13,16 @@
 package id.thork.app.pages.material_plan.element
 
 import android.content.Context
-import android.net.Uri
 import android.view.LayoutInflater.from
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
-import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
-import id.thork.app.base.BaseParam
-import id.thork.app.databinding.AttachmentItemBinding
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.network.GlideApp
-import id.thork.app.pages.attachment.AttachmentActivity
-import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.MaterialEntity
-import id.thork.app.utils.*
-import timber.log.Timber
+import id.thork.app.utils.StringUtils
 
 
 class MaterialPlanAdapter constructor(

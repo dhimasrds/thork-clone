@@ -22,12 +22,8 @@ import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.*
-import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.LocationEntity
-import id.thork.app.persistence.entity.MultiAssetEntity
-import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.utils.DateUtils
 import id.thork.app.persistence.entity.*
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.runBlocking

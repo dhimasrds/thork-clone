@@ -15,9 +15,6 @@ package id.thork.app.pages.material_plan.element
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.di.module.AppSession
-import id.thork.app.pages.attachment.element.AttachmentViewModel
-import id.thork.app.repository.AttachmentRepository
 
 class MaterialPlanViewModel @ViewModelInject constructor(
     private val context: Context

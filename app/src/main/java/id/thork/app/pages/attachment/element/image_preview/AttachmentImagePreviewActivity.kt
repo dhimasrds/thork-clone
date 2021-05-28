@@ -13,8 +13,6 @@
 package id.thork.app.pages.attachment.element.image_preview
 
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.activity.viewModels
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
@@ -22,12 +20,9 @@ import com.bumptech.glide.request.RequestOptions
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
-import id.thork.app.databinding.ActivityAttachmentBinding
 import id.thork.app.databinding.ActivityAttachmentImagePreviewBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.GlideApp
-import id.thork.app.pages.attachment.AttachmentActivity
-import id.thork.app.pages.attachment.element.AttachmentViewModel
 import timber.log.Timber
 import javax.inject.Inject
 

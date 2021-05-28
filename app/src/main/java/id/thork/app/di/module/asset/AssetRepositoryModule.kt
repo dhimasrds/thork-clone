@@ -5,7 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import id.thork.app.persistence.dao.*
+import id.thork.app.persistence.dao.AssetDaoImp
+import id.thork.app.persistence.dao.LocationDaoImp
 import id.thork.app.repository.AssetRepository
 
 /**

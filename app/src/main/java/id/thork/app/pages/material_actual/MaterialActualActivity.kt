@@ -17,10 +17,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMaterialActualBinding
-import id.thork.app.databinding.ActivityMaterialPlanBinding
 import id.thork.app.pages.material_actual.element.MaterialActualViewModel
-import id.thork.app.pages.material_plan.MaterialPlanActivity
-import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import timber.log.Timber
 
 class MaterialActualActivity  : BaseActivity() {

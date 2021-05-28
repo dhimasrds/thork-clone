@@ -12,17 +12,7 @@
 
 package id.thork.app.example
 
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.suspendOnSuccess
-import com.skydoves.whatif.whatIfNotNull
-import id.thork.app.di.module.PreferenceManager
-import id.thork.app.network.RetrofitBuilder
-import id.thork.app.network.api.DoclinksApi
-import id.thork.app.network.api.DoclinksClient
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 fun main() {
     val list: List<String> = listOf("A", "B", "C")

@@ -110,15 +110,15 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             vibrateAndPickLocation()
         }
 
-        binding.scanQr.setOnClickListener {
-            gotoListMaterial()
-        }
+//        binding.scanQr.setOnClickListener {
+//            gotoListMaterial()
+//        }
 
-        binding.longdesc.setOnClickListener {
+        binding.includeLongdesc.longdesc.setOnClickListener {
             gotoLongDescActivity()
         }
 
-        binding.attachment.setOnClickListener {
+        binding.includeAttachments.attachment.setOnClickListener {
             goToAttachments()
         }
 

@@ -20,18 +20,13 @@ import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewFindassetBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.pages.attachment.element.AttachmentAdapter
+import id.thork.app.network.GlideApp
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.AttachmentEntity
-import id.thork.app.utils.FileUtils
 import id.thork.app.utils.PathUtils
-import timber.log.Timber
-import java.util.*
-import kotlin.collections.ArrayList
-import id.thork.app.network.GlideApp
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
 
 /**
  * Created by Dhimas Saputra on 25/05/21

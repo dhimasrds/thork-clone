@@ -15,15 +15,12 @@ package id.thork.app.di.module
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.di.module.workorder.WorkOrderModule
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.DoclinksApi
-import id.thork.app.persistence.dao.*
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module

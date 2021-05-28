@@ -8,8 +8,6 @@
             type="id.thork.app.persistence.entity.AssetEntity" />
     </data>
 
-
-
         <androidx.cardview.widget.CardView
             android:id="@+id/card_asset"
             android:layout_width="match_parent"

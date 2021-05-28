@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.thork.app.di.ApiKey
 import id.thork.app.di.LibraryKey
-import id.thork.app.pages.main.element.WorkOrderAdapter
 import javax.inject.Singleton
 
 

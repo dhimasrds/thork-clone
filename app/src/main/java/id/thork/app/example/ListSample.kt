@@ -12,9 +12,6 @@
 
 package id.thork.app.example
 
-import android.util.Log
-import id.thork.app.persistence.entity.AttachmentEntity
-
 fun main() {
     val attachmentEntities: MutableList<Int> = mutableListOf(1,2,3)
     println("a1 $attachmentEntities" )

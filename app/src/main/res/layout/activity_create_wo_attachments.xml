@@ -11,18 +11,15 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.cardview.widget.CardView
-        android:id="@+id/material_plan"
+        android:id="@+id/attachment"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
         android:clickable="true"
-        android:elevation="30dp"
         android:foreground="?android:attr/selectableItemBackground">
 
         <LinearLayout
@@ -35,14 +32,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_material_plan" />
+                    android:background="@drawable/ic_image_wo" />
             </LinearLayout>
 
             <TextView
@@ -50,10 +46,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="7"
-                android:text="@string/wo_material_plan" />
+                android:text="@string/attachments" />
 
             <TextView
-                android:id="@+id/total_material_plan"
+                android:id="@+id/total_foto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />

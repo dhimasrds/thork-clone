@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.pages.rfid_create_wo_asset.element.RfidCreateWoAssetActivityViewModel
-import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
-import id.thork.app.repository.AssetRepository
 import id.thork.app.repository.LocationRepository
 
 /**

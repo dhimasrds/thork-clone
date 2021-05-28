@@ -2,7 +2,6 @@ package id.thork.app.repository
 
 import id.thork.app.base.BaseRepository
 import id.thork.app.persistence.dao.AssetDao
-import id.thork.app.persistence.dao.AssetDaoImp
 import id.thork.app.persistence.dao.LocationDao
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity

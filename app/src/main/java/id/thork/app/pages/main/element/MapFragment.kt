@@ -33,7 +33,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentMapBinding
