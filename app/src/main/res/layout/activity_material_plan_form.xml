@@ -115,5 +115,13 @@
         <include
             android:id="@+id/include_material_plan_form"
             layout="@layout/activity_material_plan_form_detail" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:background="@color/colorPrimaryBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Save"/>
     </LinearLayout>
 </layout>
