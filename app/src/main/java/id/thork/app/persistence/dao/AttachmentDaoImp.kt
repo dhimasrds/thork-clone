@@ -80,6 +80,14 @@ class AttachmentDaoImp : AttachmentDao {
         return attachmentEntities
     }
 
+    override fun fetchAttachmentByWoIdAndSyncStatus(woId: Int, syncStatus: Boolean): List<AttachmentEntity> {
+        val attachmentEntities =
+            attachmentEntityBox.query().equal(AttachmentEntity_.workOrderId, woId)
+                .and().equal(AttachmentEntity_.syncStatus, syncStatus)
+                .build().find()
+        return attachmentEntities
+    }
+
     override fun findAttachment(id: Long): AttachmentEntity {
         return attachmentEntityBox.get(id)
     }

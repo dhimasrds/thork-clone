@@ -1,4 +1,4 @@
-package id.thork.app.pages.create_wo.element
+package id.thork.app.pages.followup_wo.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
@@ -14,9 +13,15 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.network.response.work_order.Woserviceaddres
-import id.thork.app.persistence.entity.*
-import id.thork.app.repository.*
+import id.thork.app.pages.create_wo.element.CreateWoViewModel
+import id.thork.app.persistence.entity.AssetEntity
+import id.thork.app.persistence.entity.LocationEntity
+import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.repository.AssetRepository
+import id.thork.app.repository.LocationRepository
+import id.thork.app.repository.MaterialRepository
+import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import kotlinx.coroutines.Dispatchers
@@ -26,16 +31,15 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 /**
- * Created by Raka Putra on 3/15/21
+ * Created by Dhimas Saputra on 27/05/21
  * Jakarta, Indonesia.
  */
-class CreateWoViewModel @ViewModelInject constructor(
+class FollowUpWoViewModel @ViewModelInject constructor(
     private val materialRepository: MaterialRepository,
     private val appSession: AppSession,
     private val assetRepository: AssetRepository,
     private val locationRepository: LocationRepository,
     private val workOrderRepository: WorkOrderRepository,
-    private val attachmentRepository: AttachmentRepository,
     private val preferenceManager: PreferenceManager
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
@@ -48,17 +52,6 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
-
-    private lateinit var attachmentEntities: MutableList<AttachmentEntity>
-    private var username: String? = null
-
-    init {
-        appSession.userEntity.let { userEntity ->
-            if (userEntity.username != null) {
-                username = userEntity.username
-            }
-        }
-    }
 
     fun getTempWonum(): String? {
         if (tempWonum == null) {
@@ -86,13 +79,9 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     fun createWorkOrderOnline(
         deskWo: String,
-        estDur: Double?,
-        workPriority: Int,
-        longdesc: String?,
-        tempWonum: String,
-        tempWoId: Int,
+        estDur: Double?, workPriority: Int, longdesc: String?, tempWonum: String,
         assetnum: String,
-        location: String
+        location: String, origwonum: String
     ) {
 
 //        val wsa = Woserviceaddres()
@@ -112,6 +101,8 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
+        member.origrecordid = origwonum
+        member.origrecordclass = BaseParam.WORKORDER
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -122,7 +113,7 @@ class CreateWoViewModel @ViewModelInject constructor(
             workOrderRepository.createWo(
                 cookie, member,
                 onSuccess = {
-//                    uploadAttachments(tempWoId)
+
                 }, onError = {
                     Timber.tag(TAG).i("createWo() error: %s", it)
                 }
@@ -142,10 +133,13 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     fun createNewWoCache(
         deskWo: String,
-        estDur: Double?, workPriority: Int, longdesc: String?, assetnum: String,
-        location: String
+        estDur: Double?,
+        workPriority: Int,
+        longdesc: String?,
+        assetnum: String,
+        location: String,
+        origwonum: String
     ) {
-
 //        val wsa = Woserviceaddres()
 //        wsa.longitudex = longitudex
 //        wsa.latitudey = latitudey
@@ -163,6 +157,8 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
+        member.origrecordid = origwonum
+        member.origrecordclass = BaseParam.WORKORDER
 
         val tWoCacheEntity = WoCacheEntity()
         tWoCacheEntity.syncBody = convertToJson(member)
@@ -198,17 +194,6 @@ class CreateWoViewModel @ViewModelInject constructor(
         val locationEntity = locationRepository.findByLocation(location)
         locationEntity.whatIfNotNull {
             _locationCache.value = it
-        }
-    }
-
-    fun uploadAttachments(woId: Int) {
-        attachmentEntities = attachmentRepository.getAttachmentByWoId(woId)
-        Timber.tag(TAG)
-            .d("uploadAttachments() woId: %s attachmentEntities: %s", woId, attachmentEntities)
-        viewModelScope.launch(Dispatchers.IO) {
-            username.whatIfNotNullOrEmpty { username ->
-                attachmentRepository.uploadAttachment(attachmentEntities, username)
-            }
         }
     }
 

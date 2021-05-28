@@ -442,4 +442,6 @@
     <string name="find_location">Find Location</string>
     <string name="search_asset">Search asset</string>
     <string name="search_location">Search location</string>
+    <string name="followup_wo">Follow Up Wo</string>
+
 </resources>

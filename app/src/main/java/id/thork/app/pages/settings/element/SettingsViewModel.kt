@@ -10,6 +10,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.entity.UserEntity
+import id.thork.app.repository.AttachmentRepository
 import id.thork.app.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class SettingsViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
+    private val attachmentRepository: AttachmentRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = SettingsViewModel::class.java.name
 
@@ -88,6 +90,7 @@ class SettingsViewModel @ViewModelInject constructor(
         loginRepository.deleteSystemResource()
         loginRepository.deleteWoPropertios()
         loginRepository.deleteMultiAssetEntity()
+        attachmentRepository.deleteAttachmentCache()
         _logout.postValue(BaseParam.APP_TRUE)
     }
 

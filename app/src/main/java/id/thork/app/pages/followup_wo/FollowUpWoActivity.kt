@@ -1,16 +1,4 @@
-/*
- * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
- *
- * This software is the confidential and proprietary information of
- * This.ID. ("Confidential Information").
- *
- * Such Confidential Information shall not be disclosed and shall
- * use it only	 in accordance with the terms of the license agreement
- * entered into with This.ID; other than in accordance with the written
- * permission of This.ID.
- */
-
-package id.thork.app.pages.create_wo
+package id.thork.app.pages.followup_wo
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -31,18 +19,20 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication.Constants.context
+import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
-import id.thork.app.databinding.ActivityCreateWorkorderBinding
+import id.thork.app.databinding.ActivityFollowUpWoBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.attachment.AttachmentActivity
-import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
+import id.thork.app.pages.followup_wo.element.FollowUpWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
@@ -52,10 +42,12 @@ import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
-class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
+
+@AndroidEntryPoint
+class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     DialogUtils.DialogUtilsListener {
-    private val viewModel: CreateWoViewModel by viewModels()
-    private val binding: ActivityCreateWorkorderBinding by binding(R.layout.activity_create_workorder)
+    private val viewModel: FollowUpWoViewModel by viewModels()
+    private val binding: ActivityFollowUpWoBinding by binding(R.layout.activity_follow_up_wo)
 
     private lateinit var customDialogUtils: CustomDialogUtils
     private lateinit var dialogUtils: DialogUtils
@@ -76,11 +68,12 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private var latitudey: Double? = null
     private var longitudex: Double? = null
     private var validateDialogExit: Boolean = false
+    private var intentWonum: String? = null
 
     override fun setupView() {
         super.setupView()
         binding.apply {
-            lifecycleOwner = this@CreateWoActivity
+            lifecycleOwner = this@FollowUpWoActivity
             vm = viewModel
         }
 
@@ -92,13 +85,20 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         dialogUtils = DialogUtils(this)
 
         setupToolbarWithHomeNavigation(
-            getString(R.string.create_wo),
+            getString(R.string.followup_wo),
             navigation = false,
             filter = false,
             scannerIcon = false,
             notification = false,
             option = false
         )
+        retriveFromIntent()
+    }
+
+    private fun retriveFromIntent() {
+        intentWonum = intent.getStringExtra(BaseParam.WONUM)
+        Timber.d("retrieveFromIntent() %s", intentWonum)
+
     }
 
     override fun setupListener() {
@@ -401,9 +401,9 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             getWorkPriority(),
             longDesc,
             tempWonum,
-            tempWorkOrderId,
             binding.asset.text.toString(),
-            binding.tvLocation.text.toString()
+            binding.tvLocation.text.toString(),
+            intentWonum.toString()
         )
         Toast.makeText(
             this,
@@ -419,7 +419,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             getWorkPriority(),
             longDesc,
             binding.asset.text.toString(),
-            binding.tvLocation.text.toString()
+            binding.tvLocation.text.toString(),
+            intentWonum.toString()
         )
         Toast.makeText(
             this,
@@ -484,7 +485,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     @Suppress("DEPRECATION")
     private fun vibrateAndPickLocation() {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator =
+            BaseApplication.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             vibrator.vibrate(
                 VibrationEffect.createOneShot(

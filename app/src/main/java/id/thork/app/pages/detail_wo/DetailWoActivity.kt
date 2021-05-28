@@ -84,7 +84,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             notification = false,
             option = true
         )
-        enableFollowUpWo(true)
+
         retrieveFromIntent()
     }
 
@@ -212,7 +212,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.APP_WONUM)
         intentWonum.whatIfNotNull {
-            detailWoViewModel.fetchWobyWonum(intentWonum!!)
+            detailWoViewModel.fetchWobyWonum(it)
+            enableFollowUpWo(true, it)
         }
     }
 

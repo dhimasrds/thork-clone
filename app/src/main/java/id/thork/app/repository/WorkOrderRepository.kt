@@ -134,14 +134,12 @@ class WorkOrderRepository @Inject constructor(
     suspend fun createWo(
         headerParam: String,
         body: Member,
-        onSuccess: (Member) -> Unit,
+        onSuccess: () -> Unit,
         onError: (String) -> Unit,
     ) {
         val response = workOrderClient.createWo(headerParam, body)
         response.suspendOnSuccess {
-            data.whatIfNotNull { response ->
-                onSuccess(response)
-            }
+                onSuccess()
         }.onError {
             Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
             onError(message())
@@ -342,6 +340,23 @@ class WorkOrderRepository @Inject constructor(
                 woCacheEntity.createdBy = appSession.userEntity.username
                 woCacheEntity.updatedBy = appSession.userEntity.username
                 saveWoList(woCacheEntity, appSession.userEntity.username)
+
+                runBlocking {
+                    Timber.tag(TAG).d("addWoToObjectBox() doclinks")
+                    member.doclinks.whatIfNotNull { doclinks ->
+                        Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
+                        appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
+                            doclinks.href.whatIfNotNullOrEmpty { href ->
+                                Timber.tag(TAG).d("addWoToObjectBox() username: %s href: %s",
+                                    username, href)
+                                attachmentRepository.createAttachmentFromDocklinks(
+                                    href,
+                                    username
+                                )
+                            }
+                        }
+                    }
+                }
             })
     }
 
