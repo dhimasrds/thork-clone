@@ -16,7 +16,7 @@ import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
-import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.AssetRepository
 import id.thork.app.repository.LocationRepository
@@ -122,13 +122,13 @@ class FollowUpWoViewModel @ViewModelInject constructor(
     }
 
     private fun saveScannerMaterial(tempWonum: String, woId: Int) {
-        val materialList: List<MaterialEntity?>? =
+        val materialBackupList: List<MaterialBackupEntity?>? =
             materialRepository.listMaterialsByWonum(tempWonum)
-        for (i in materialList!!.indices)
-            if (materialList[i]!!.workorderId == null) {
-                materialList[i]!!.workorderId = woId
+        for (i in materialBackupList!!.indices)
+            if (materialBackupList[i]!!.workorderId == null) {
+                materialBackupList[i]!!.workorderId = woId
             }
-        materialRepository.saveMaterialList(materialList)
+        materialRepository.saveMaterialList(materialBackupList)
     }
 
     fun createNewWoCache(

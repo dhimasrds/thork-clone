@@ -3,7 +3,7 @@ package id.thork.app.repository
 import id.thork.app.base.BaseRepository
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.MaterialDao
-import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.MaterialBackupEntity
 import javax.inject.Inject
 
 /**
@@ -14,23 +14,23 @@ class MaterialRepository @Inject constructor(
     private val workOrderClient: WorkOrderClient,
     private val materialDao: MaterialDao) : BaseRepository {
 
-    fun saveMaterial(materialEntity: MaterialEntity): MaterialEntity? {
-        return materialDao.saveMaterial(materialEntity)
+    fun saveMaterial(materialBackupEntity: MaterialBackupEntity): MaterialBackupEntity? {
+        return materialDao.saveMaterial(materialBackupEntity)
     }
 
-    fun saveMaterialList(materialEntity: List<MaterialEntity?>): List<MaterialEntity?>? {
-        return materialDao.saveMaterialList(materialEntity)
+    fun saveMaterialList(materialBackupEntity: List<MaterialBackupEntity?>): List<MaterialBackupEntity?>? {
+        return materialDao.saveMaterialList(materialBackupEntity)
     }
 
-    fun listMaterials(workorderId: Int): List<MaterialEntity?>? {
+    fun listMaterials(workorderId: Int): List<MaterialBackupEntity?>? {
         return materialDao.listMaterials(workorderId)
     }
 
-    fun listMaterialsByWonum(wonum: String): List<MaterialEntity?>? {
+    fun listMaterialsByWonum(wonum: String): List<MaterialBackupEntity?>? {
         return materialDao.listMaterialsByWonum(wonum)
     }
 
-    fun listMaterialsByWoid(woid: Int): List<MaterialEntity?>? {
+    fun listMaterialsByWoid(woid: Int): List<MaterialBackupEntity?>? {
         return materialDao.listMaterialsByWoid(woid)
     }
 

@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.R
-import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.MaterialBackupEntity
 
 /**
  * Created by Raka Putra on 3/4/21
  * Jakarta, Indonesia.
  */
 class ListMaterialAdapter(
-    private val listMaterial: List<MaterialEntity?>?
+    private val listMaterialBackup: List<MaterialBackupEntity?>?
 ) : RecyclerView.Adapter<ListMaterialAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,10 +21,10 @@ class ListMaterialAdapter(
         private var tvDateCode: TextView = itemView.findViewById(R.id.date_code)
         private var tvTimeCode: TextView = itemView.findViewById(R.id.time_code)
 
-        fun bind(material: MaterialEntity) {
-            tvResultCode.text = material.resultCode
-            tvDateCode.text = material.date
-            tvTimeCode.text = material.time
+        fun bind(materialBackup: MaterialBackupEntity) {
+            tvResultCode.text = materialBackup.resultCode
+            tvDateCode.text = materialBackup.date
+            tvTimeCode.text = materialBackup.time
         }
     }
 
@@ -35,9 +35,9 @@ class ListMaterialAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(listMaterial?.get(position)!!)
+        holder.bind(listMaterialBackup?.get(position)!!)
     }
 
-    override fun getItemCount(): Int = listMaterial!!.size
+    override fun getItemCount(): Int = listMaterialBackup!!.size
 
 }

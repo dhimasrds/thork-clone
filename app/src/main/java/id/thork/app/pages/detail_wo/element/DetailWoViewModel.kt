@@ -14,7 +14,7 @@ import id.thork.app.helper.MapsLocation
 import id.thork.app.network.response.google_maps.ResponseRoute
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.persistence.entity.AttachmentEntity
-import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.*
 import id.thork.app.utils.MapsUtils
@@ -132,14 +132,14 @@ class DetailWoViewModel @ViewModelInject constructor(
     }
 
     private fun saveScannerMaterial(woId: Int?) {
-        val materialList: List<MaterialEntity?>? = woId?.let {
+        val materialBackupList: List<MaterialBackupEntity?>? = woId?.let {
             materialRepository.listMaterialsByWoid(
                 it
             )
         }
-        for (i in materialList!!.indices)
-            materialList[i]!!.workorderId = woId
-        materialRepository.saveMaterialList(materialList)
+        for (i in materialBackupList!!.indices)
+            materialBackupList[i]!!.workorderId = woId
+        materialRepository.saveMaterialList(materialBackupList)
     }
 
     fun uploadAttachments(woId: Int) {

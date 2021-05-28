@@ -14,7 +14,6 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.network.response.work_order.Woserviceaddres
 import id.thork.app.persistence.entity.*
 import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
@@ -131,13 +130,13 @@ class CreateWoViewModel @ViewModelInject constructor(
     }
 
     private fun saveScannerMaterial(tempWonum: String, woId: Int) {
-        val materialList: List<MaterialEntity?>? =
+        val materialBackupList: List<MaterialBackupEntity?>? =
             materialRepository.listMaterialsByWonum(tempWonum)
-        for (i in materialList!!.indices)
-            if (materialList[i]!!.workorderId == null) {
-                materialList[i]!!.workorderId = woId
+        for (i in materialBackupList!!.indices)
+            if (materialBackupList[i]!!.workorderId == null) {
+                materialBackupList[i]!!.workorderId = woId
             }
-        materialRepository.saveMaterialList(materialList)
+        materialRepository.saveMaterialList(materialBackupList)
     }
 
     fun createNewWoCache(

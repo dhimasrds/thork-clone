@@ -15,11 +15,10 @@ package id.thork.app.persistence.entity
 import io.objectbox.annotation.Entity
 
 @Entity
-class MaterialEntity(
-    var itemNum: String? = null,
-    var itemType: String? = null,
-    var itemSetId: String? = null,
+class StoreroomEntity(
+    var location: String? = null,
     var description: String? = null,
-    var lotType: String? = null,
-    var lotTypeDescription: String? = null,
+    var siteid: String? = null,
+    var orgid: String? = null,
+    var status: String? = null
 ) : BaseEntity()

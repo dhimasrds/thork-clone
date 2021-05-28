@@ -2,7 +2,7 @@ package id.thork.app.pages.list_material.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.repository.MaterialRepository
 
 /**
@@ -12,20 +12,20 @@ import id.thork.app.repository.MaterialRepository
 class ListMaterialViewModel @ViewModelInject constructor(private val repository: MaterialRepository) :
     LiveCoroutinesViewModel() {
 
-    fun fetchMaterialList(workorderId: Int): List<MaterialEntity?>? {
-        val material: List<MaterialEntity?>? = repository.listMaterials(workorderId)
-        val exist = material
+    fun fetchMaterialList(workorderId: Int): List<MaterialBackupEntity?>? {
+        val materialBackup: List<MaterialBackupEntity?>? = repository.listMaterials(workorderId)
+        val exist = materialBackup
         return exist
     }
 
-    fun fetchMaterialListByWonum(wonum: String): List<MaterialEntity?>? {
-        val material: List<MaterialEntity?>? = repository.listMaterialsByWonum(wonum)
-        val exist = material
+    fun fetchMaterialListByWonum(wonum: String): List<MaterialBackupEntity?>? {
+        val materialBackup: List<MaterialBackupEntity?>? = repository.listMaterialsByWonum(wonum)
+        val exist = materialBackup
         return exist
     }
 
     fun saveListMaterial(currentDate: String, currentTime: String, result: String?, woId: Int) {
-        val materialEntity = MaterialEntity()
+        val materialEntity = MaterialBackupEntity()
         materialEntity.time = currentTime
         materialEntity.date = currentDate
         materialEntity.resultCode = result
@@ -34,7 +34,7 @@ class ListMaterialViewModel @ViewModelInject constructor(private val repository:
     }
 
     fun saveListMaterialByWonum(currentDate: String, currentTime: String, result: String?, wonum: String) {
-        val materialEntity = MaterialEntity()
+        val materialEntity = MaterialBackupEntity()
         materialEntity.time = currentTime
         materialEntity.date = currentDate
         materialEntity.resultCode = result
