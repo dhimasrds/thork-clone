@@ -40,7 +40,8 @@ class WorkOrderRepository @Inject constructor(
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
     private val assetDao: AssetDao,
-    private val attachmentRepository: AttachmentRepository
+    private val attachmentRepository: AttachmentRepository,
+    private val materialRepository: MaterialRepository
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
@@ -135,7 +136,7 @@ class WorkOrderRepository @Inject constructor(
     ) {
         val response = workOrderClient.createWo(headerParam, body)
         response.suspendOnSuccess {
-                onSuccess()
+            onSuccess()
         }.onError {
             Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
             onError(message())
@@ -161,8 +162,8 @@ class WorkOrderRepository @Inject constructor(
                 body
             )
         response.suspendOnSuccess {
-                onSuccess()
-                Timber.tag(TAG).i("updateStatus() code: %s ", statusCode.code)
+            onSuccess()
+            Timber.tag(TAG).i("updateStatus() code: %s ", statusCode.code)
         }
             .onError {
                 Timber.tag(TAG).i("updateStatus() code: %s error: %s", statusCode.code, message())
@@ -299,8 +300,10 @@ class WorkOrderRepository @Inject constructor(
                             Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
                             appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
                                 doclinks.href.whatIfNotNullOrEmpty { href ->
-                                    Timber.tag(TAG).d("addWoToObjectBox() username: %s href: %s",
-                                        username, href)
+                                    Timber.tag(TAG).d(
+                                        "addWoToObjectBox() username: %s href: %s",
+                                        username, href
+                                    )
                                     attachmentRepository.createAttachmentFromDocklinks(
                                         href,
                                         username
@@ -308,6 +311,14 @@ class WorkOrderRepository @Inject constructor(
                                 }
                             }
                         }
+                    }
+
+                    wo.wpmaterial.whatIfNotNullOrEmpty {
+                        materialRepository.addMaterialPlanToObjectBox(
+                            it,
+                            wo.wonum.toString(),
+                            wo.workorderid.toString()
+                        )
                     }
                 })
         }
@@ -343,8 +354,10 @@ class WorkOrderRepository @Inject constructor(
                         Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
                         appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
                             doclinks.href.whatIfNotNullOrEmpty { href ->
-                                Timber.tag(TAG).d("addWoToObjectBox() username: %s href: %s",
-                                    username, href)
+                                Timber.tag(TAG).d(
+                                    "addWoToObjectBox() username: %s href: %s",
+                                    username, href
+                                )
                                 attachmentRepository.createAttachmentFromDocklinks(
                                     href,
                                     username
@@ -352,6 +365,14 @@ class WorkOrderRepository @Inject constructor(
                             }
                         }
                     }
+                }
+
+                member.wpmaterial.whatIfNotNullOrEmpty {
+                    materialRepository.addMaterialPlanToObjectBox(
+                        it,
+                        member.wonum.toString(),
+                        member.workorderid.toString()
+                    )
                 }
             })
     }

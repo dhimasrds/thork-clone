@@ -101,8 +101,11 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
-        member.origrecordid = origwonum
-        member.origrecordclass = BaseParam.WORKORDER
+        origwonum.whatIfNotNull {
+            member.origrecordid = it
+            member.origrecordclass = BaseParam.WORKORDER
+        }
+
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -157,8 +160,10 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
-        member.origrecordid = origwonum
-        member.origrecordclass = BaseParam.WORKORDER
+        origwonum.whatIfNotNull {
+            member.origrecordid = it
+            member.origrecordclass = BaseParam.WORKORDER
+        }
 
         val tWoCacheEntity = WoCacheEntity()
         tWoCacheEntity.syncBody = convertToJson(member)

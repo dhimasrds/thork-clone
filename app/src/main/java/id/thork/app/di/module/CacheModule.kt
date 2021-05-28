@@ -53,4 +53,29 @@ object CacheModule {
     fun provideAttachmentDao(): AttachmentDao {
         return AttachmentDaoImp()
     }
+
+    @Singleton
+    @Provides
+    fun provideMaterialBackupDao(): MaterialBackupDao {
+        return MaterialBackupDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMaterialDao(): MaterialDao {
+        return MaterialDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideWpmaterialDao(): WpmaterialDao {
+        return WpmaterialDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMatusetransDao(): MatusetransDao {
+        return MatusetransDaoImp()
+    }
+
 }

@@ -15,7 +15,7 @@
     <data>
         <variable
             name="item"
-            type="id.thork.app.persistence.entity.MatTransEntity" />
+            type="id.thork.app.persistence.entity.MatusetransEntity" />
     </data>
 
     <LinearLayout

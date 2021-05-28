@@ -21,7 +21,8 @@ import com.bumptech.glide.request.RequestOptions
 import id.thork.app.R
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.persistence.entity.MatTransEntity
+import id.thork.app.persistence.entity.MatusetransEntity
+import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.utils.StringUtils
 
 
@@ -29,11 +30,11 @@ class MaterialPlanAdapter constructor(
     private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val requestOptions: RequestOptions,
-    private val materialEntities: List<MatTransEntity>
+    private val wpmaterialEntityList : List<WpmaterialEntity>
 ) : RecyclerView.Adapter<MaterialPlanAdapter.MaterialPlanHolder>() {
     val TAG = MaterialPlanAdapter::class.java.name
 
-    lateinit var matTransEntity: MatTransEntity
+    lateinit var wpmaterialEntity: WpmaterialEntity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
         val binding = DataBindingUtil.inflate<MaterialPlanItemBinding>(
@@ -44,19 +45,19 @@ class MaterialPlanAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: MaterialPlanHolder, position: Int) {
-        val matTransEntity: MatTransEntity = materialEntities[position]
-        holder.bind(matTransEntity)
+        val wpmaterialEntity: WpmaterialEntity = wpmaterialEntityList[position]
+        holder.bind(wpmaterialEntity)
     }
 
-    override fun getItemCount(): Int = materialEntities.size
+    override fun getItemCount(): Int = wpmaterialEntityList.size
 
     inner class MaterialPlanHolder(val binding: MaterialPlanItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(matTransEntity: MatTransEntity) {
+        fun bind(wpmaterialEntity: WpmaterialEntity) {
             with(binding) {
-                tvItemNum.text = StringUtils.truncate(matTransEntity.itemNum, 30)
-                tvItemType.text = StringUtils.truncate(matTransEntity.itemType, 30)
-                tvDescription.text = StringUtils.truncate(matTransEntity.description, 30)
+                tvItemNum.text = StringUtils.truncate(wpmaterialEntity.itemNum, 30)
+                tvItemType.text = StringUtils.truncate(wpmaterialEntity.itemType, 30)
+                tvDescription.text = StringUtils.truncate(wpmaterialEntity.description, 30)
 
                 root.setOnClickListener {
 
