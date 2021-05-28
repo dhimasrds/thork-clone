@@ -24,8 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/general_margin_8dp"
-        android:layout_marginRight="@dimen/general_margin_8dp"
-        tools:context=".pages.material_plan.MaterialPlanActivity">
+        android:layout_marginRight="@dimen/general_margin_8dp">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"

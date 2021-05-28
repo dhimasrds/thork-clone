@@ -12,21 +12,13 @@
 
 package id.thork.app.pages.material_plan.element.material_plan_list
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.databinding.ActivityMaterialPlanBinding
 import id.thork.app.databinding.ActivityMaterialPlanListBinding
-import id.thork.app.databinding.MaterialPlanItemBinding
-import id.thork.app.pages.material_plan.MaterialPlanActivity
-import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
-import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
-import id.thork.app.persistence.entity.MatTransEntity
 import id.thork.app.persistence.entity.MaterialEntity
 
 @AndroidEntryPoint

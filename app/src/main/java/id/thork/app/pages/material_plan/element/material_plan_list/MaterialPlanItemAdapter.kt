@@ -21,8 +21,6 @@ import com.bumptech.glide.request.RequestOptions
 import id.thork.app.R
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
-import id.thork.app.persistence.entity.MatTransEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.utils.StringUtils
 

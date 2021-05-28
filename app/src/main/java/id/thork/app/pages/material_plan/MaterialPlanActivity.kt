@@ -26,9 +26,7 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import id.thork.app.pages.material_plan.element.material_plan_list.MaterialPlanItem
-import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.persistence.entity.MatTransEntity
-import id.thork.app.persistence.entity.MaterialEntity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
