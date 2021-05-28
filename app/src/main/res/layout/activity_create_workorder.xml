@@ -24,100 +24,101 @@
             type="id.thork.app.pages.create_wo.element.CreateWoViewModel" />
     </data>
 
-<RelativeLayout
-    android:id="@+id/root_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="id.thork.app.pages.create_wo.CreateWoActivity">
-
     <RelativeLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context="id.thork.app.pages.create_wo.CreateWoActivity">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar" />
-        </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/app_bar"
-            android:orientation="vertical">
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar" />
+            </com.google.android.material.appbar.AppBarLayout>
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@color/white"
-                android:padding="@dimen/menu_wo_padding">
+                android:layout_below="@+id/app_bar"
+                android:orientation="vertical">
 
-                <!--STATUS-->
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:fontFamily="@font/poppins"-->
-<!--                    android:text="@string/stat"-->
-<!--                    android:textColor="@color/colorBlueNew"/>-->
-                <Spinner
-                    android:visibility="gone"
-                    android:id="@+id/status_wo"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                    android:entries="@array/status_wo"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/line"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/text_size_wo_detail_16" />
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="@dimen/menu_wo_padding">
 
-                <!--WONUM-->
-                <TextView
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/workorder" />
-                <EditText
-                    android:visibility="gone"
-                    android:id="@+id/wonum"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/text_size_wo_detail_16" />
+                    <!--STATUS-->
+                    <!--                <TextView-->
+                    <!--                    android:layout_width="wrap_content"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:fontFamily="@font/poppins"-->
+                    <!--                    android:text="@string/stat"-->
+                    <!--                    android:textColor="@color/colorBlueNew"/>-->
+                    <Spinner
+                        android:id="@+id/status_wo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+                        android:entries="@array/status_wo"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/line"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_16"
+                        android:visibility="gone" />
 
-                <!--DESCRIPTION-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/desc"
-                    android:textColor="@color/colorBlueNew"/>
-                <EditText
-                    android:id="@+id/desk_wo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/text_size_wo_detail_16" />
+                    <!--WONUM-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/workorder"
+                        android:visibility="gone" />
 
-                <!--WORK TYPE-->
-                <TextView
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/worktype"
-                    android:textColor="@color/colorBlueNew"/>
+                    <EditText
+                        android:id="@+id/wonum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_16"
+                        android:visibility="gone" />
+
+                    <!--DESCRIPTION-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/desc"
+                        android:textColor="@color/colorBlueNew" />
+
+                    <EditText
+                        android:id="@+id/desk_wo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    <!--WORK TYPE-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/worktype"
+                        android:textColor="@color/colorBlueNew"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -233,11 +234,11 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                                    android:clickable="true"
-                                    android:focusable="true"
                                     android:background="@drawable/ripple_effect"
+                                    android:clickable="true"
                                     android:drawableStart="@drawable/ic_search_blue"
                                     android:drawablePadding="@dimen/general_margin_5dp"
+                                    android:focusable="true"
                                     android:fontFamily="@font/roboto_regular"
                                     android:gravity="right"
                                     android:text="@string/find_asset"
@@ -363,12 +364,12 @@
                                     android:id="@+id/find_location"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:clickable="true"
-                                    android:focusable="true"
-                                    android:background="@drawable/ripple_effect"
                                     android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                    android:background="@drawable/ripple_effect"
+                                    android:clickable="true"
                                     android:drawableStart="@drawable/ic_search_blue"
                                     android:drawablePadding="@dimen/general_margin_5dp"
+                                    android:focusable="true"
                                     android:fontFamily="@font/roboto_regular"
                                     android:gravity="right"
                                     android:text="@string/find_location"
@@ -435,20 +436,20 @@
 
                     <!--LOCATION-->
                     <TextView
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="@string/location"
-                        android:textColor="@color/colorBlueNew" />
+                        android:textColor="@color/colorBlueNew"
+                        android:visibility="gone" />
 
                     <LinearLayout
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         android:weightSum="10">
 
                         <EditText
@@ -493,214 +494,83 @@
                         android:layout_height="wrap_content" />
 
                     <!--LongDesc-->
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/longdesc"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_note_black_24dp" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="7"
-                                android:text="@string/Note" />
-
-                            <TextView
-                                android:id="@+id/total_note"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
+                    <include
+                        android:id="@+id/include_longdesc"
+                        layout="@layout/activity_create_wo_longdesc" />
                     <!--Attachment-->
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/attachment"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_image_wo" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="7"
-                                android:text="@string/attachments" />
-
-                            <TextView
-                                android:id="@+id/total_foto"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                    <include
+                        android:id="@+id/include_attachments"
+                        layout="@layout/activity_create_wo_attachments" />
+                    <include
+                        android:id="@+id/include_material_plan"
+                        layout="@layout/activity_create_wo_material_plan" />
 
                     <!--Scan QR-->
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/scan_qr"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_marginBottom="@dimen/general_margin_20dp"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:id="@+id/scan_qr"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="72dp"-->
+<!--                        android:layout_marginBottom="@dimen/general_margin_20dp"-->
+<!--                        android:clickable="true"-->
+<!--                        android:foreground="?android:attr/selectableItemBackground">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:weightSum="10">-->
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
+<!--                            <LinearLayout-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:gravity="center_vertical">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_scan_qr" />
-                            </LinearLayout>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:background="@drawable/ic_scan_qr" />-->
+<!--                            </LinearLayout>-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/general_margin_5dp"
-                                android:layout_weight="7"
-                                android:text="@string/wo_scan_material" />
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="@dimen/general_margin_5dp"-->
+<!--                                android:layout_weight="7"-->
+<!--                                android:text="@string/wo_scan_material" />-->
 
-                            <TextView
-                                android:id="@+id/total_qr"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/total_qr"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1" />-->
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+<!--                            <ImageView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:src="@drawable/ic_arrow_next" />-->
+<!--                        </LinearLayout>-->
+<!--                    </androidx.cardview.widget.CardView>-->
 
-                <!--Asset-->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_asset"
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:layout_marginBottom="@dimen/general_margin_20dp"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground">
+                    <!--Asset-->
+                    <include android:id="@+id/include_assets"
+                        layout="@layout/activity_create_wo_assets"/>
+
+                    <!--REPORT DATE-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:text="@string/reportDate" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:weightSum="10">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/ic_asset_grey" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/general_margin_5dp"
-                            android:layout_weight="7"
-                            android:text="@string/Asset" />
-
-                        <TextView
-                            android:id="@+id/total_asset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_arrow_next" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!--REPORT DATE-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/reportDate" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                        android:orientation="horizontal">
 
                         <EditText
                             android:id="@+id/complaint_date"
