@@ -10,10 +10,10 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.material_plan.element
+package id.thork.app.pages.material_plan.element.material_plan_list
 
 import android.content.Context
-import android.view.LayoutInflater.from
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -21,43 +21,43 @@ import com.bumptech.glide.request.RequestOptions
 import id.thork.app.R
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.persistence.entity.MatTransEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.utils.StringUtils
 
-
-class MaterialPlanAdapter constructor(
+class MaterialPlanItemAdapter constructor(
     private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val requestOptions: RequestOptions,
-    private val materialEntities: List<MatTransEntity>
-) : RecyclerView.Adapter<MaterialPlanAdapter.MaterialPlanHolder>() {
-    val TAG = MaterialPlanAdapter::class.java.name
+    private val materialEntities: List<MaterialEntity>
+) : RecyclerView.Adapter<MaterialPlanItemAdapter.MaterialPlanHolder>() {
+    val TAG = MaterialPlanItemAdapter::class.java.name
 
-    lateinit var matTransEntity: MatTransEntity
+    lateinit var materialEntity: MaterialEntity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
         val binding = DataBindingUtil.inflate<MaterialPlanItemBinding>(
-            from(parent.getContext()),
-            R.layout.material_plan_item, parent, false
+            LayoutInflater.from(parent.getContext()),
+            R.layout.material_item, parent, false
         )
         return MaterialPlanHolder(binding)
     }
 
     override fun onBindViewHolder(holder: MaterialPlanHolder, position: Int) {
-        val matTransEntity: MatTransEntity = materialEntities[position]
-        holder.bind(matTransEntity)
+        val materialEntity = materialEntities[position]
+        holder.bind(materialEntity)
     }
 
     override fun getItemCount(): Int = materialEntities.size
 
     inner class MaterialPlanHolder(val binding: MaterialPlanItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(matTransEntity: MatTransEntity) {
+        fun bind(materialEntity: MaterialEntity) {
             with(binding) {
-                tvItemNum.text = StringUtils.truncate(matTransEntity.itemNum, 30)
-                tvItemType.text = StringUtils.truncate(matTransEntity.itemType, 30)
-                tvDescription.text = StringUtils.truncate(matTransEntity.description, 30)
+                tvItemNum.text = StringUtils.truncate(materialEntity.itemNum, 30)
+                tvItemType.text = StringUtils.truncate(materialEntity.itemType, 30)
+                tvDescription.text = StringUtils.truncate(materialEntity.description, 30)
 
                 root.setOnClickListener {
 

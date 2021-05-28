@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.material_plan
 
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,9 @@ import id.thork.app.databinding.ActivityMaterialPlanBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
+import id.thork.app.pages.material_plan.element.material_plan_list.MaterialPlanItem
+import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
+import id.thork.app.persistence.entity.MatTransEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import timber.log.Timber
 import javax.inject.Inject
@@ -37,7 +41,7 @@ class MaterialPlanActivity : BaseActivity() {
     private val binding: ActivityMaterialPlanBinding by binding(R.layout.activity_material_plan)
 
     private lateinit var materialPlanAdapter: MaterialPlanAdapter
-    private lateinit var materialEntities: MutableList<MaterialEntity>
+    private lateinit var matTransEntities: MutableList<MatTransEntity>
 
     private var intentWoId = 0
 
@@ -52,7 +56,7 @@ class MaterialPlanActivity : BaseActivity() {
         super.setupView()
 
         materialPlanAdapter =
-            MaterialPlanAdapter(this, preferenceManager, svgRequestOptions, materialEntities)
+            MaterialPlanAdapter(this, preferenceManager, svgRequestOptions, matTransEntities)
 
         binding.apply {
             lifecycleOwner = this@MaterialPlanActivity
@@ -80,6 +84,14 @@ class MaterialPlanActivity : BaseActivity() {
         )
 
         retrieveFromIntent()
+    }
+
+    override fun setupListener() {
+        super.setupListener()
+        binding.btnAdd.setOnClickListener {
+            val intent = Intent(this, MaterialPlanItem::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun retrieveFromIntent() {

@@ -431,6 +431,5 @@
     <string name="search_location">Search location</string>
     <string name="followup_wo">Follow Up Wo</string>
 
-    <!-- Material Plan -->
-    <string name="material_plan">Material Plan</string>
+    <string name="search_material">Search Material</string>
 </resources>
