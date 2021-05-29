@@ -1,5 +1,6 @@
 package id.thork.app.repository
 
+import android.content.Context
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
@@ -15,6 +16,7 @@ import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.helper.CookieHelper
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
@@ -37,6 +39,7 @@ import javax.inject.Inject
  * Jakarta, Indonesia.
  */
 class WorkOrderRepository @Inject constructor(
+    private val context: Context,
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
     private val appSession: AppSession,
@@ -56,7 +59,6 @@ class WorkOrderRepository @Inject constructor(
     var woListObjectBox: HashMap<String, WoCacheEntity>? = null
 
     suspend fun getWorkOrderList(
-        cookie: String,
         savedQuery: String,
         select: String,
         pageno: Int,
@@ -65,6 +67,13 @@ class WorkOrderRepository @Inject constructor(
         onError: (String) -> Unit,
         onException: (String) -> Unit,
     ) {
+        var maxAuth = BaseParam.APP_EMPTY_STRING
+        appSession.userEntity.userHash.whatIfNotNull {
+            maxAuth = it
+        }
+        val cookie = CookieHelper(context, maxAuth).generateCookieIfExpired()
+        Timber.tag(TAG).i("getWorkOrderList() cookie:%s", cookie)
+
         val response = workOrderClient.getWorkOrderList(
             cookie, savedQuery, select, pageno, pagesize
         )
@@ -73,8 +82,8 @@ class WorkOrderRepository @Inject constructor(
                 //TODO
                 //Save user session into local cache
                 onSuccess(response)
-                Timber.tag(TAG).i("repository getWorkOrderList() code:%s", response.member)
-                Timber.tag(TAG).i("repository getWorkOrderList() code:%s", statusCode.code)
+                Timber.tag(TAG).i("getWorkOrderList() response:%s", response.member)
+                Timber.tag(TAG).i("getWorkOrderList() code:%s", statusCode.code)
             }
         }
             .onError {
@@ -86,7 +95,7 @@ class WorkOrderRepository @Inject constructor(
                 onError(message())
             }
             .onException {
-                Timber.tag(TAG).i("reposs getWorkOrderList() exception: %s", message())
+                Timber.tag(TAG).i("getWorkOrderList() exception: %s", message())
                 onException(message())
             }
 

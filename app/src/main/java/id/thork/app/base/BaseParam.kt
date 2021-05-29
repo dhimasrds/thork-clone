@@ -48,7 +48,7 @@ object BaseParam {
      * Authentication parameter
      */
     const val APP_MAX_AUTH = "MAXAUTH"
-    const val APP_MX_COOKIE = "cookie"
+    const val APP_MX_COOKIE = "Cookie"
     const val APP_AUTHORIZATION = "AUTHORIZATION"
     const val APP_X_METHOD_OVERRIDE = "x-method-override"
     const val APP_PATCH = "PATCH"
@@ -59,6 +59,8 @@ object BaseParam {
     const val APP_CONTENT_TYPE = "Content-Type"
     const val APP_PROPERTIES = "properties"
     const val APP_ALL_PROPERTIES = "*"
+    const val APP_MX_COOKIE_TIMEOUT = "Cookie-Timeout"
+    const val APP_MX_COOKIE_LAST_UPDATE = "Cookie-Last-Update"
 
     const val ID = "ID"
 

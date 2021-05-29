@@ -180,7 +180,7 @@ class MapViewModel @ViewModelInject constructor(
 
         savedQuery?.let {
             workOrderRepository.getWorkOrderList(
-                cookie, it, select, pageno = 1, pagesize = 10,
+                it, select, pageno = 1, pagesize = 10,
                 onSuccess = {
                     response = it
                     _listMember.postValue(it.member)

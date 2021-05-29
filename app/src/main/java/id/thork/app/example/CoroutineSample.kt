@@ -12,30 +12,36 @@
 
 package id.thork.app.example
 
+import id.thork.app.helper.CookieHelper
 import kotlinx.coroutines.*
 
 fun main() {
     val list: List<String> = listOf("A", "B", "C")
-//    list.forEach {
-        println("Start")
-//        GlobalScope.launch(Dispatchers.IO) {
-//            callA(it)
-//        }
-
-        runBlocking {
-            launch {
-                delay(1000L) // non-blocking delay for 1 second (default time unit is ms)
-                println("World!") // print after delay
-            }
-            println("Hello") // main coroutine continues while a previous one is delayed
+    runBlocking {
+        println("start")
+        launch {
+            println("another")
+            delay(5000)
         }
-        println("Finish")
-//    }
-
+        callA("HAI")
+        callAnotherCoroutine("Hai2")
+        println("run")
+    }
+    println("finish")
 }
 
 fun callA(a: String) {
     GlobalScope.launch(Dispatchers.IO) {
+        delay(10000)
         println(a)
     }
+}
+
+
+fun callAnotherCoroutine(a: String) {
+    runBlocking {
+        delay(1000)
+        println(a)
+    }
+
 }

@@ -82,7 +82,7 @@ class WoPagingSource @Inject constructor(
 
         savedQuery?.let {
             repository.getWorkOrderList(
-                cookie, it, select, pageno = position, pagesize = 10,
+                it, select, pageno = position, pagesize = 10,
                 onSuccess = {
                     response = it
                     it.member.whatIfNotNullOrEmpty { listmember ->

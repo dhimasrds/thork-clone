@@ -28,12 +28,13 @@ object WorkOrderRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideWorkOrderRepository(
+        context: Context,
         workOrderClient: WorkOrderClient,
         appSession: AppSession,
         attachmentRepository: AttachmentRepository,
         materialRepository: MaterialRepository,
     ): WorkOrderRepository {
-        return WorkOrderRepository(
+        return WorkOrderRepository(context,
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
             attachmentRepository, materialRepository
         )
@@ -66,11 +67,13 @@ object WorkOrderRepositoryModule {
     fun provideAttachmentRepository(
         context: Context,
         preferenceManager: PreferenceManager,
+        appSession: AppSession,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): AttachmentRepository {
         return AttachmentRepository(
             context,
             preferenceManager,
+            appSession,
             AttachmentDaoImp(),
             httpLoggingInterceptor
         )

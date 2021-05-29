@@ -35,6 +35,19 @@ fun main() {
 //    createJsonArrayFromObject()
 
     //convertMapToJson()
+    createJsonEmptyField()
+}
+
+fun createJsonEmptyField() {
+    val person = Person(name = "Sherlock Holmes")
+
+    val moshi = Moshi.Builder()
+        .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe()).build()
+    val jsonAdapter: JsonAdapter<Person> = moshi.adapter(Person::class.java)
+
+    val jsonString = jsonAdapter.toJson(person)
+    println("Json String: $jsonString")
+    println()
 }
 
 fun createPersonObjectFromJson() {
@@ -112,11 +125,13 @@ fun convertMapToJson() {
 @JsonClass(generateAdapter = true)
 data class Person(
     @Json(name = "name")
-    val name: String,
+    val name: String? = null,
     @Json(name = "address")
-    val address: String,
+    val address: String? = null,
     @Json(name = "age")
-    val age: Int
+    val age: Int? = null,
+    @Transient
+    val newVariable1: String? = null
 )
 
 
