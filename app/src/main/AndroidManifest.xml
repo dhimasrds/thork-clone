@@ -29,10 +29,12 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".pages.material_plan.element.form.MaterialPlanFormActivity"/>
         <activity android:name=".pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem" />
+        <activity android:name=".pages.material_actual.element.form.MaterialActualFormActivity"></activity>
+        <activity android:name=".pages.material_plan.element.form.MaterialPlanFormActivity" />
         <activity android:name=".pages.followup_wo.FollowUpWoActivity" />
         <activity android:name=".pages.rfid_create_wo_location.RfidCreateWoLocationActivity" />
         <activity android:name=".pages.material_plan.MaterialPlanActivity" />
-        <activity android:name=".pages.rfid_create_wo_asset.RfidCreateWoAssetActivity"/>
+        <activity android:name=".pages.rfid_create_wo_asset.RfidCreateWoAssetActivity" />
         <activity android:name=".pages.attachment.element.image_preview.AttachmentImagePreviewActivity" />
         <activity android:name=".pages.rfid_mutli_asset.RfidMultiAssetActivity" />
         <activity android:name=".pages.rfid_location.RfidLocationActivity" />
