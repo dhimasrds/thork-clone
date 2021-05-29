@@ -55,7 +55,7 @@ class WorkOrderWorker @WorkerInject constructor(
     val materialBackupDao: MaterialBackupDao,
     val matusetransDao: MatusetransDao,
     val wpmaterialDao: WpmaterialDao,
-    val materialDao: MaterialDao
+    val materialDao: MaterialDao,
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name

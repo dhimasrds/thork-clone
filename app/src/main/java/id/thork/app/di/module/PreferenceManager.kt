@@ -50,6 +50,12 @@ class PreferenceManager @Inject constructor(context: Context) {
         return sharedPref
     }
 
+    fun putLong(key: String, value: Long):SharedPreferences {
+        sharedPrefEditor.putLong(key, value)
+        sharedPrefEditor.commit()
+        return sharedPref
+    }
+
     fun putBoolean(key: String, value: Boolean): SharedPreferences {
         sharedPrefEditor.putBoolean(key, value)
         sharedPrefEditor.commit()
@@ -66,6 +72,10 @@ class PreferenceManager @Inject constructor(context: Context) {
 
     fun getBoolean(key: String): Boolean {
         return sharedPref.getBoolean(key, true)
+    }
+
+    fun getLong(key: String): Long {
+        return sharedPref.getLong(key, 0)
     }
 
 }

@@ -53,7 +53,7 @@ class WorkerCoordinator @Inject constructor(
     val materialBackupDao: MaterialBackupDao,
     val matusetransDao: MatusetransDao,
     val wpmaterialDao: WpmaterialDao,
-    val materialDao: MaterialDao
+    val materialDao: MaterialDao,
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
@@ -81,8 +81,7 @@ class WorkerCoordinator @Inject constructor(
                 materialBackupDao,
                 matusetransDao,
                 wpmaterialDao,
-                materialDao
-            )
+                materialDao)
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()

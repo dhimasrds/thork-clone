@@ -42,13 +42,7 @@
         <activity android:name=".pages.example.RfidExActivity" />
         <activity android:name=".pages.multi_asset.DetailsAssetActivity" />
         <activity android:name=".pages.multi_asset.ListAssetActivity" />
-        <activity android:name=".pages.attachment.AttachmentActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+        <activity android:name=".pages.attachment.AttachmentActivity"/>
         <activity android:name=".pages.example.ImageActivity" />
         <activity android:name=".pages.detail_wo.DetailWoActivity" />
         <activity android:name=".pages.create_wo.CreateWoActivity" />

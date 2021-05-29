@@ -6,7 +6,9 @@ import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.helper.CookieHelper
 import id.thork.app.helper.DoclinksParam
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.DoclinksApi
@@ -26,6 +28,7 @@ import timber.log.Timber
 class AttachmentRepository constructor(
     private val context: Context,
     private val preferenceManager: PreferenceManager,
+    private val appSession: AppSession,
     private val attachmentDao: AttachmentDao,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
 ) : BaseRepository {
@@ -100,7 +103,10 @@ class AttachmentRepository constructor(
         onSuccess: (DoclinksMember) -> Unit,
         onError: (String) -> Unit
     ) {
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        var cookie = BaseParam.APP_EMPTY_STRING
+        appSession.userEntity.userHash?.let {
+            cookie = CookieHelper(context, it).generateCookieIfExpired()
+        }
         val response = doclinksClient.getDoclinks(cookie, url + "?lean=1")
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
@@ -143,7 +149,10 @@ class AttachmentRepository constructor(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        var cookie = BaseParam.APP_EMPTY_STRING
+        appSession.userEntity.userHash?.let {
+            cookie = CookieHelper(context, it).generateCookieIfExpired()
+        }
         val attachmentCaches: MutableList<AttachmentEntity> = mutableListOf()
         attachment.uriString?.let { uriString ->
             attachment.syncStatus?.let { syncStatus ->
