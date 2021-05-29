@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import id.thork.app.base.BaseParam
@@ -13,6 +14,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.Wpmaterial
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
@@ -79,9 +81,14 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
     fun createWorkOrderOnline(
         deskWo: String,
-        estDur: Double?, workPriority: Int, longdesc: String?, tempWonum: String,
+        estDur: Double?,
+        workPriority: Int,
+        longdesc: String?,
+        tempWonum: String,
         assetnum: String,
-        location: String, origwonum: String
+        location: String,
+        origwonum: String,
+        tempWoid: String
     ) {
 
 //        val wsa = Woserviceaddres()
@@ -89,6 +96,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+
+        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
 
         val member = Member()
         member.siteid = appSession.siteId
@@ -106,6 +115,9 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             member.origrecordclass = BaseParam.WORKORDER
         }
 
+        materialPlanlist.whatIfNotNullOrEmpty {
+            member.wpmaterial = it
+        }
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -141,13 +153,16 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         longdesc: String?,
         assetnum: String,
         location: String,
-        origwonum: String
+        origwonum: String,
+        tempWoid: String
     ) {
 //        val wsa = Woserviceaddres()
 //        wsa.longitudex = longitudex
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+
+        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
 
         val member = Member()
         member.siteid = appSession.siteId
@@ -163,6 +178,9 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         origwonum.whatIfNotNull {
             member.origrecordid = it
             member.origrecordclass = BaseParam.WORKORDER
+        }
+        materialPlanlist.whatIfNotNullOrEmpty {
+            member.wpmaterial = it
         }
 
         val tWoCacheEntity = WoCacheEntity()
@@ -202,5 +220,17 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         }
     }
 
-
+    private fun prepareMaterialTrans(woid: String): List<Wpmaterial> {
+        val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
+        val listMaterialPlan = mutableListOf<Wpmaterial>()
+        materialPlanCache.forEach {
+            val wpmaterial = Wpmaterial()
+            wpmaterial.itemnum = it.itemNum
+            wpmaterial.itemqty = it.itemqty?.toDouble()
+            wpmaterial.description = it.description
+            wpmaterial.location = it.storeroom
+            listMaterialPlan.add(wpmaterial)
+        }
+        return listMaterialPlan
+    }
 }

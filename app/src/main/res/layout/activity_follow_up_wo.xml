@@ -591,8 +591,12 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
+                    <include
+                        android:id="@+id/include_material_plan"
+                        layout="@layout/activity_create_wo_material_plan" />
                     <!--Scan QR-->
                     <androidx.cardview.widget.CardView
+                        android:visibility="gone"
                         android:id="@+id/scan_qr"
                         android:layout_width="match_parent"
                         android:layout_height="72dp"

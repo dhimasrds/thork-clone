@@ -114,7 +114,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
-        materialPlanlist.whatIfNotNull {
+        materialPlanlist.whatIfNotNullOrEmpty {
             member.wpmaterial = it
         }
 
@@ -170,7 +170,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
-        materialPlanlist.whatIfNotNull {
+        materialPlanlist.whatIfNotNullOrEmpty {
             member.wpmaterial = it
         }
 

@@ -34,6 +34,7 @@ import id.thork.app.pages.find_asset_location.FindLocationActivity
 import id.thork.app.pages.followup_wo.element.FollowUpWoViewModel
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
+import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
 import id.thork.app.utils.DateUtils
@@ -152,6 +153,10 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
         binding.btnQrcodeLocation.setOnClickListener {
             gotoFindLocationBarcode()
+        }
+
+        binding.includeMaterialPlan.materialPlan.setOnClickListener {
+            goToMaterialPlan()
         }
 
     }
@@ -402,7 +407,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             tempWonum,
             binding.asset.text.toString(),
             binding.tvLocation.text.toString(),
-            intentWonum.toString()
+            intentWonum.toString(),
+            tempWorkOrderId.toString()
         )
         Toast.makeText(
             this,
@@ -419,7 +425,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             longDesc,
             binding.asset.text.toString(),
             binding.tvLocation.text.toString(),
-            intentWonum.toString()
+            intentWonum.toString(),
+            tempWorkOrderId.toString()
         )
         Toast.makeText(
             this,
@@ -531,5 +538,11 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     override fun onDestroy() {
         super.onDestroy()
         customDialogUtils.dismiss()
+    }
+
+    private fun goToMaterialPlan() {
+        val intent = Intent(this, MaterialPlanActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        startActivity(intent)
     }
 }
