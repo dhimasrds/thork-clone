@@ -25,9 +25,10 @@
         android:text="Description" />
 
     <EditText
+        android:id="@+id/et_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hammer" />
+         />
 
     <!-- Storeroom -->
     <TextView
@@ -56,9 +57,11 @@
         android:text="Qty" />
 
     <EditText
+        android:id="@+id/et_qty"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hammer" />
+        />
 
     <!-- Line Type -->
     <TextView

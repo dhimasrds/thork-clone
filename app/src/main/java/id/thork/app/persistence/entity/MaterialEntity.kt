@@ -22,5 +22,6 @@ class MaterialEntity(
     var description: String? = null,
     var lotType: String? = null,
     var lotTypeDescription: String? = null,
-    var thisfsmrfid: String? = null
+    var thisfsmrfid: String? = null,
+    var storeroom: String? = null
 ) : BaseEntity()

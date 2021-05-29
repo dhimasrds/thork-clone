@@ -91,6 +91,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         locationManager = (getSystemService(LOCATION_SERVICE) as LocationManager)
         customDialogUtils = CustomDialogUtils(this)
         dialogUtils = DialogUtils(this)
+        Timber.d("CreateWoActivity() TempWo: %s", tempWorkOrderId)
 
         setupToolbarWithHomeNavigation(
             getString(R.string.create_wo),

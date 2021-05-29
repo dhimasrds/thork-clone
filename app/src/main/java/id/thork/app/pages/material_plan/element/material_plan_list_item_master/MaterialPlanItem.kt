@@ -47,7 +47,7 @@ class MaterialPlanItem : BaseActivity() {
         super.setupView()
         materialEntities = mutableListOf()
         materialPlanItemAdapter =
-            MaterialPlanItemAdapter(this, preferenceManager, svgRequestOptions, materialEntities)
+            MaterialPlanItemAdapter(this, preferenceManager, svgRequestOptions, materialEntities, this)
 
         binding.apply {
             lifecycleOwner = this@MaterialPlanItem

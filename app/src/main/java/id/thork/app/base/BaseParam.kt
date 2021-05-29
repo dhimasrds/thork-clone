@@ -161,6 +161,8 @@ object BaseParam {
     const val PRIORITY_MEDIUM = "1"
     const val PRIORITY_HIGH = "2"
     const val LONGDESC = "longdescription"
+    const val MATERIAL = "MATERIAL"
+
 
     /**
      * Status Code
@@ -186,6 +188,9 @@ object BaseParam {
     const val BARCODE_REQUEST_CODE_DETAIL_MULTI_ASSET = 1148
 
     const val REQUEST_CODE_MULTI_ASSET = 1159
+
+    const val REQUEST_CODE_MATERIAL_PLAN = 1159
+
 
     const val RFID_ASSETNUM = "assetnum"
     const val RFID_LOCATION = "location"

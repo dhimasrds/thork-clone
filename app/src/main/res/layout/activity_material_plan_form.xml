@@ -67,10 +67,11 @@
                 android:weightSum="6">
 
                 <EditText
+                    android:id="@+id/et_material"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:text="Hammer" />
+                    />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -118,6 +119,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save"
+            android:layout_margin="@dimen/general_margin_20dp"
             android:background="@color/colorPrimaryBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

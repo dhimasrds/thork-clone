@@ -13,6 +13,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidMaterialctivityBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_create_wo_material.element.RfidMaterialActivityViewModel
+import id.thork.app.persistence.entity.MaterialEntity
 import timber.log.Timber
 
 class RfidMaterialctivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
@@ -71,8 +72,8 @@ class RfidMaterialctivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface
         super.setupListener()
         binding.btnContinue.setOnClickListener {
             val intent = Intent()
-            intent.putExtra(BaseParam.ASSETNUM, binding.tvMaterial.text.toString())
-            intent.putExtra(BaseParam.LOCATIONS, binding.tvDescription.text.toString())
+            intent.putExtra(BaseParam.MATERIAL, binding.tvMaterial.text.toString())
+            intent.putExtra(BaseParam.DESCRIPTION, binding.tvDescription.text.toString())
             setResult(RESULT_OK, intent)
             finish()
         }

@@ -98,6 +98,7 @@ class MaterialRepository @Inject constructor(
                 it.thisfsmrfid.whatIfNotNull { tagrfid ->
                     materialEntity.thisfsmrfid = tagrfid
                 }
+                materialEntity.storeroom = it.inventory?.get(0)?.location
                 listMaterialcache.add(materialEntity)
             }
             saveListItemMaster(listMaterialcache)
