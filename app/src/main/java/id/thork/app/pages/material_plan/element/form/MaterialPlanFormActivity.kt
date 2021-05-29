@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.material_plan.element.form
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -50,6 +51,11 @@ class MaterialPlanFormActivity : BaseActivity() {
     private fun retrieveFromIntent() {
         val intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
     }
 
     fun onItemTypeClicked(view: View) {

@@ -28,6 +28,7 @@ import id.thork.app.databinding.ActivityMaterialPlanBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
+import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
 import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem
 import id.thork.app.persistence.entity.WpmaterialEntity
 import timber.log.Timber
@@ -90,7 +91,7 @@ class MaterialPlanActivity : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
         binding.btnAdd.setOnClickListener {
-            val intent = Intent(this, MaterialPlanItem::class.java)
+            val intent = Intent(this, MaterialPlanFormActivity::class.java)
             startActivity(intent)
         }
     }

@@ -26,7 +26,7 @@ import id.thork.app.databinding.ActivityMaterialActualBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_actual.element.MaterialActualAdapter
 import id.thork.app.pages.material_actual.element.MaterialActualViewModel
-import id.thork.app.pages.material_plan.element.material_plan_list.MaterialPlanItem
+import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem
 import id.thork.app.persistence.entity.WpmaterialEntity
 import timber.log.Timber
 import javax.inject.Inject
