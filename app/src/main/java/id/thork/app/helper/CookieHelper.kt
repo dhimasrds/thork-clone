@@ -112,7 +112,7 @@ class CookieHelper constructor(val context: Context, val userHash: String) {
         timeoutLimitInSecond: Long
     ): Boolean {
         val timeDiff = currentTime - lastUpdate
-        val timeDiffInSecond = (timeDiff / 1000) + 60 //add additional 5 second threshold
+        val timeDiffInSecond = (timeDiff / 1000) + 60 //add additional 60 second threshold
         Timber.tag(TAG).d(
             "isExpired() timeDiffInSecond: %s timeoutLimitInSecond: %s",
             timeDiffInSecond, timeoutLimitInSecond
