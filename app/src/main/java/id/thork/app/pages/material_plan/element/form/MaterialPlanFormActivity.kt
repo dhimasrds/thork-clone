@@ -18,13 +18,16 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.RadioButton
 import androidx.activity.viewModels
+import com.skydoves.whatif.whatIfNotNull
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMaterialPlanBinding
 import id.thork.app.databinding.ActivityMaterialPlanFormBinding
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MaterialPlanFormActivity : BaseActivity() {
@@ -40,6 +43,13 @@ class MaterialPlanFormActivity : BaseActivity() {
             lifecycleOwner = this@MaterialPlanFormActivity
             vm = viewModel
         }
+
+        retrieveFromIntent()
+    }
+
+    private fun retrieveFromIntent() {
+        val intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
     }
 
     fun onItemTypeClicked(view: View) {

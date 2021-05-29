@@ -10,10 +10,10 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.material_plan.element.material_plan_list
+package id.thork.app.pages.material_plan.element.material_plan_list_item_master
 
 import android.content.Context
-import android.view.LayoutInflater
+import android.view.LayoutInflater.from
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -35,15 +35,14 @@ class MaterialPlanItemAdapter constructor(
     lateinit var materialEntity: MaterialEntity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
-        val binding = DataBindingUtil.inflate<MaterialPlanItemBinding>(
-            LayoutInflater.from(parent.getContext()),
-            R.layout.material_item, parent, false
-        )
-        return MaterialPlanHolder(binding)
+
+        return MaterialPlanHolder(MaterialPlanItemBinding.inflate(
+            from(context), parent, false
+        ))
     }
 
     override fun onBindViewHolder(holder: MaterialPlanHolder, position: Int) {
-        val materialEntity = materialEntities[position]
+        val materialEntity: MaterialEntity = materialEntities[position]
         holder.bind(materialEntity)
     }
 

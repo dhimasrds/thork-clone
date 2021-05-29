@@ -45,6 +45,7 @@ import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
+import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
 import id.thork.app.utils.DateUtils
@@ -153,6 +154,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.btnQrcodeLocation.setOnClickListener {
             gotoFindLocationBarcode()
+        }
+
+        binding.includeMaterialPlan.materialPlan.setOnClickListener {
+            goToMaterialPlan()
         }
 
     }
@@ -344,6 +349,12 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun gotoFindLocationBarcode() {
         startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
+    }
+
+    private fun goToMaterialPlan() {
+        val intent = Intent(this, MaterialPlanActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        startActivity(intent)
     }
 
     private fun pickLocation() {

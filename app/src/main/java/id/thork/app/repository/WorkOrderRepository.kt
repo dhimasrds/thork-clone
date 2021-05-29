@@ -18,6 +18,7 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
+import id.thork.app.network.response.material_response.MaterialResponse
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
@@ -314,7 +315,7 @@ class WorkOrderRepository @Inject constructor(
                     }
 
                     wo.wpmaterial.whatIfNotNullOrEmpty {
-                        materialRepository.addMaterialPlanToObjectBox(
+                        materialRepository.addListMaterialPlanToObjectBox(
                             it,
                             wo.wonum.toString(),
                             wo.workorderid.toString()
@@ -368,7 +369,7 @@ class WorkOrderRepository @Inject constructor(
                 }
 
                 member.wpmaterial.whatIfNotNullOrEmpty {
-                    materialRepository.addMaterialPlanToObjectBox(
+                    materialRepository.addListMaterialPlanToObjectBox(
                         it,
                         member.wonum.toString(),
                         member.workorderid.toString()
@@ -424,7 +425,26 @@ class WorkOrderRepository @Inject constructor(
                 Timber.tag(TAG).i("repository locationMarker() code:%s", statusCode.code)
             }
         }.onError {
-            Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
+            Timber.tag(TAG).i("locationMarker() code: %s error: %s", statusCode.code, message())
+            onError(message())
+        }
+    }
+
+    suspend fun getItemMaster(
+        cookie: String,
+        select: String,
+        onSuccess: (MaterialResponse) -> Unit,
+        onError: (String) -> Unit
+        ) {
+        val response = workOrderClient.getItemMaster(cookie, select)
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+                Timber.tag(TAG).i("repository getItemMaster() code:%s", it.member)
+                Timber.tag(TAG).i("repository getItemMaster() code:%s", statusCode.code)
+            }
+        }.onError {
+            Timber.tag(TAG).i("getItemMaster() code: %s error: %s", statusCode.code, message())
             onError(message())
         }
 
@@ -717,5 +737,7 @@ class WorkOrderRepository @Inject constructor(
     fun findByLocation(location: String): LocationEntity? {
         return locationDao.findByLocation(location)
     }
+
+
 
 }

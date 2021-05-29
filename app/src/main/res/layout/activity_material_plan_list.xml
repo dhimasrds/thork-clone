@@ -12,12 +12,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".pages.material_plan.element.material_plan_list.MaterialPlanItem">
+    tools:context=".pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem">
 
     <data>
         <variable
             name="vm"
-            type="id.thork.app.pages.material_plan.element.material_plan_list.MaterialPlanItemViewModel" />
+            type="id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItemViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

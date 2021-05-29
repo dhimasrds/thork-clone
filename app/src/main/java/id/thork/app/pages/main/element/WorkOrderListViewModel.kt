@@ -19,6 +19,7 @@ import id.thork.app.persistence.dao.AssetDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     private val workOrderRepository: WorkOrderRepository,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
+    private val materialRepository: MaterialRepository,
     private val assetDao: AssetDao,
     @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
@@ -63,10 +65,21 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     val woList = currentQuery.switchMap { query ->
         if (!query.isEmpty()) {
             Timber.d("filter on  viewmodel :%s", query)
-            workOrderRepository.getSearchWo(appSession, workOrderRepository, query, preferenceManager, appResourceMx)
+            workOrderRepository.getSearchWo(
+                appSession,
+                workOrderRepository,
+                query,
+                preferenceManager,
+                appResourceMx
+            )
         } else {
             Timber.d("filter off viewmodel :%s", query)
-            workOrderRepository.getWoList(appSession, workOrderRepository, preferenceManager, appResourceMx).cachedIn(viewModelScope)
+            workOrderRepository.getWoList(
+                appSession,
+                workOrderRepository,
+                preferenceManager,
+                appResourceMx
+            ).cachedIn(viewModelScope)
         }
     }
 
@@ -74,7 +87,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
         currentQuery.value = query
     }
 
-    fun checkingListWo() : List<WoCacheEntity>{
+    fun checkingListWo(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
     }
 
@@ -90,12 +103,16 @@ class WorkOrderListViewModel @ViewModelInject constructor(
                     select,
                     onSuccess = { fsmLocation ->
                         fsmLocation.member.whatIfNotNullOrEmpty {
-                            Timber.tag(TAG).i("WorkOrderListViewModel() fetchLocationMarker() onSuccess: %s", it)
+                            Timber.tag(TAG).i(
+                                "WorkOrderListViewModel() fetchLocationMarker() onSuccess: %s",
+                                it
+                            )
                             workOrderRepository.addLocationToObjectBox(it)
                         }
                     },
                     onError = {
-                        Timber.tag(TAG).i("WorkOrderListViewModel() fetchLocationMarker() error: %s", it)
+                        Timber.tag(TAG)
+                            .i("WorkOrderListViewModel() fetchLocationMarker() error: %s", it)
                         _error.postValue(it)
                     })
             }
@@ -134,6 +151,23 @@ class WorkOrderListViewModel @ViewModelInject constructor(
         workManager.pruneWork()
     }
 
+    fun fetchItemMaster() {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val select: String = ApiParam.WORKORDER_SELECT
+        viewModelScope.launch(Dispatchers.IO) {
+            workOrderRepository.getItemMaster(cookie, select,
+                onSuccess = {
+                    it.member.whatIfNotNullOrEmpty { members ->
+                        Timber.d("WorkOrderListViewModel() fetchItemMaster() onSuccess :%s", it)
+                        materialRepository.addItemMasterToObjectBox(members)
+                    }
+                },
+                onError = {
+                    Timber.d("WorkOrderListViewModel() fetchAsset() onError :%s", it)
+                }
+            )
+        }
+    }
 
 
 }

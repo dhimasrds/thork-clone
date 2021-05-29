@@ -4,6 +4,7 @@ import com.skydoves.sandwich.ApiResponse
 import id.thork.app.base.BaseParam
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
+import id.thork.app.network.response.material_response.MaterialResponse
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import retrofit2.http.*
@@ -48,6 +49,7 @@ interface WorkOrderApi {
         @Body body: Member?,
     ): ApiResponse<WorkOrderResponse>
 
+    //TODO MUST MIGRATE AFTER POC
 
     @GET("maximo/oslc/os/thisfsmlocations")
     suspend fun getLocationResource(
@@ -63,4 +65,11 @@ interface WorkOrderApi {
         @Query("savedQuery") savedQuery: String?,
         @Query(value = "oslc.select") select: String?,
     ): ApiResponse<AssetResponse>
+
+    @GET("maximo/oslc/os/THISFSMITEM")
+    suspend fun getItemMaster(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Query(value = "lean") lean: Int,
+        @Query(value = "oslc.select") select: String?,
+    ): ApiResponse<MaterialResponse>
 }

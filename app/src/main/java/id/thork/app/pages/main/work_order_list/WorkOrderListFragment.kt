@@ -56,6 +56,7 @@ class WorkOrderListFragment : Fragment() {
         swipeRefresh()
 //        progressBarOnFirstLoad()
         viewModel.fetchLocationMarker()
+        viewModel.fetchItemMaster()
 
     }
 

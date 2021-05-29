@@ -15,9 +15,11 @@ package id.thork.app.pages.material_plan.element.form
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.repository.MaterialRepository
 
 class MaterialPlanFormViewModel @ViewModelInject constructor(
-    private val context: Context
+    private val context: Context,
+    private val materialRepository: MaterialRepository
 ) : LiveCoroutinesViewModel() {
 
 }

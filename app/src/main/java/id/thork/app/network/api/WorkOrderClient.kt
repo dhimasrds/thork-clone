@@ -29,7 +29,6 @@ class WorkOrderClient @Inject constructor(
     suspend fun createWo(headerParam: String, body: Member) =
         workOrderApi.createWO(headerParam, body)
 
-
     suspend fun LocationMarker(headerParam: String, savedQuery: String, select: String) =
         workOrderApi.getLocationResource(headerParam, LEAN, savedQuery, select)
 
@@ -40,12 +39,17 @@ class WorkOrderClient @Inject constructor(
         workOrderId: Int,
         body: Member,
     ) =
-        workOrderApi.updateStatus(cookie,
+        workOrderApi.updateStatus(
+            cookie,
             xMethodeOverride,
             contentType,
             workOrderId,
             LEAN,
-            body)
+            body
+        )
+
+    suspend fun getItemMaster(headerParam: String, select: String) =
+        workOrderApi.getItemMaster(headerParam, LEAN, select)
 
     companion object {
         private const val LEAN = 1
