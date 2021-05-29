@@ -71,4 +71,20 @@ class MatusetransDaoImp : MatusetransDao {
         matusetransEntityBox.put(materialList)
         return materialList
     }
-}
+
+    override fun removeByEntity(matusetransEntity: MatusetransEntity) {
+        matusetransEntityBox.remove(matusetransEntity)
+    }
+
+    override fun findByWoidAndItemnum(workorderid: String, itemnum: String): MatusetransEntity? {
+        val materialEntity =
+            matusetransEntityBox.query().equal(MatusetransEntity_.workorderId, workorderid)
+                .equal(MatusetransEntity_.itemNum, itemnum).build()
+                .find()
+        materialEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
+    }

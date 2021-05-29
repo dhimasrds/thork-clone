@@ -11,6 +11,7 @@ import id.thork.app.persistence.dao.MatusetransDao
 import id.thork.app.persistence.dao.WpmaterialDao
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import javax.inject.Inject
 
@@ -131,6 +132,7 @@ class MaterialRepository @Inject constructor(
         workorderid: String
     ) {
         val templistMaterialPlan = mutableListOf<WpmaterialEntity>()
+        val templistMaterialActual = mutableListOf<MatusetransEntity>()
         wpMaterialList.whatIfNotNull { listMaterialPlan ->
             listMaterialPlan.forEach {
                 val matPlanCache = WpmaterialEntity()
@@ -143,10 +145,27 @@ class MaterialRepository @Inject constructor(
                 matPlanCache.workorderId = workorderid
                 matPlanCache.siteid = appSession.siteId
                 matPlanCache.orgid = appSession.orgId
+                matPlanCache.storeroom = it.location
+                matPlanCache.itemqty = it.itemqty?.toInt()
                 templistMaterialPlan.add(matPlanCache)
-            }
 
+                val matActual = MatusetransEntity()
+                matActual.itemId = it.wpitemid
+                matActual.itemNum = it.itemnum
+                matActual.description = it.description
+                matActual.itemType = it.linetype
+                matActual.itemsetId = it.itemsetid
+                matActual.wonum = wonum
+                matActual.workorderId = workorderid
+                matActual.siteid = appSession.siteId
+                matActual.orgid = appSession.orgId
+                matActual.storeroom = it.location
+                matActual.itemqty = it.itemqty?.toInt()
+                templistMaterialActual.add(matActual)
+
+            }
             saveListMaterialPlan(templistMaterialPlan)
+            saveListMaterialActual(templistMaterialActual)
         }
     }
 
@@ -170,5 +189,31 @@ class MaterialRepository @Inject constructor(
     /**
      * Material Actual
      */
+
+    fun saveMaterialActual(matusetransEntity: MatusetransEntity) {
+        matusetransDao.save(matusetransEntity, appSession.userEntity.username.toString())
+    }
+
+    fun saveListMaterialActual(materialList: List<MatusetransEntity>) : List<MatusetransEntity> {
+        return matusetransDao.saveListMaterialActual(materialList)
+    }
+
+    fun removeListMaterialActual() {
+        return matusetransDao.remove()
+    }
+
+    fun getListMaterialActualByWoid(workorderid: String) : List<MatusetransEntity>? {
+        return matusetransDao.findListMaterialActualByWoid(workorderid)
+    }
+
+    fun getMaterialActualByWoid(workorderid: String, itemnum: String) : MatusetransEntity? {
+        return matusetransDao.findByWoidAndItemnum(workorderid, itemnum)
+    }
+
+    fun removeMaterialActual(matusetransEntity: MatusetransEntity) {
+        return matusetransDao.removeByEntity(matusetransEntity)
+    }
+
+
 
 }

@@ -13,4 +13,6 @@ interface MatusetransDao {
     fun findListMaterialActualByWoid(woid: String): List<MatusetransEntity>?
     fun findListMaterialActualByWonum(wonum: String): List<MatusetransEntity>?
     fun saveListMaterialActual(materialList: List<MatusetransEntity>): List<MatusetransEntity>
+    fun removeByEntity(matusetransEntity: MatusetransEntity)
+    fun findByWoidAndItemnum(workorderid: String, itemnum: String): MatusetransEntity?
 }
