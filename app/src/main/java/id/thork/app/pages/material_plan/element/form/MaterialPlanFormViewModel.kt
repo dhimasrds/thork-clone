@@ -32,7 +32,6 @@ class MaterialPlanFormViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     private val TAG = MaterialPlanFormViewModel::class.java.name
 
-
     private val _materialCache = MutableLiveData<MaterialEntity>()
     val materialCache: LiveData<MaterialEntity> get() = _materialCache
 

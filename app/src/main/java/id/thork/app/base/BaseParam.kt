@@ -191,7 +191,9 @@ object BaseParam {
 
     const val REQUEST_CODE_MULTI_ASSET = 1159
 
-    const val REQUEST_CODE_MATERIAL_PLAN = 1159
+    const val REQUEST_CODE_MATERIAL_PLAN = 1169
+    const val REQUEST_CODE_MATERIAL_ACTUAL = 1179
+
 
 
     const val RFID_ASSETNUM = "assetnum"

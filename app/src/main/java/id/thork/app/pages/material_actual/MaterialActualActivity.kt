@@ -26,21 +26,21 @@ import id.thork.app.databinding.ActivityMaterialActualBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_actual.element.MaterialActualAdapter
 import id.thork.app.pages.material_actual.element.MaterialActualViewModel
-import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem
-import id.thork.app.persistence.entity.WpmaterialEntity
+import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
+import id.thork.app.persistence.entity.MatusetransEntity
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
-class MaterialActualActivity  : BaseActivity() {
+class MaterialActualActivity : BaseActivity() {
     val TAG = MaterialActualActivity::class.java.name
 
     val viewModel: MaterialActualViewModel by viewModels()
     private val binding: ActivityMaterialActualBinding by binding(R.layout.activity_material_actual)
 
     private lateinit var materialActualAdapter: MaterialActualAdapter
-    private lateinit var wpmaterialList: MutableList<WpmaterialEntity>
+    private lateinit var matusetranslist: MutableList<MatusetransEntity>
 
     private var intentWoId = 0
 
@@ -53,9 +53,9 @@ class MaterialActualActivity  : BaseActivity() {
 
     override fun setupView() {
         super.setupView()
-        wpmaterialList = mutableListOf()
+        matusetranslist = mutableListOf()
         materialActualAdapter =
-            MaterialActualAdapter(this, preferenceManager, svgRequestOptions, wpmaterialList)
+            MaterialActualAdapter(this, preferenceManager, svgRequestOptions, matusetranslist, this)
 
         binding.apply {
             lifecycleOwner = this@MaterialActualActivity
@@ -74,7 +74,7 @@ class MaterialActualActivity  : BaseActivity() {
         }
 
         setupToolbarWithHomeNavigation(
-            getString(R.string.wo_material_plan),
+            getString(R.string.wo_material_actual),
             navigation = false,
             filter = false,
             scannerIcon = false,
@@ -88,22 +88,24 @@ class MaterialActualActivity  : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
         binding.btnAdd.setOnClickListener {
-            val intent = Intent(this, MaterialPlanItem::class.java)
+            val intent = Intent(this, MaterialActualFormActivity::class.java)
+            intent.putExtra(BaseParam.WORKORDERID, intentWoId)
             startActivity(intent)
+            finish()
         }
     }
 
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
-        viewModel.initListMaterialPlan(intentWoId.toString())
+        viewModel.initListMaterialActual(intentWoId.toString())
     }
 
     override fun setupObserver() {
         super.setupObserver()
         viewModel.listMaterial.observe(this, Observer {
-            wpmaterialList.clear()
-            wpmaterialList.addAll(it)
+            matusetranslist.clear()
+            matusetranslist.addAll(it)
             materialActualAdapter.notifyDataSetChanged()
         })
     }

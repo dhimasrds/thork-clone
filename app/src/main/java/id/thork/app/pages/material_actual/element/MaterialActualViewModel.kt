@@ -19,6 +19,7 @@ import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
+import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
 
@@ -28,13 +29,13 @@ class MaterialActualViewModel@ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     val TAG = MaterialPlanViewModel::class.java.name
 
-    private val _listMaterial = MutableLiveData<List<WpmaterialEntity>>()
+    private val _listMaterial = MutableLiveData<List<MatusetransEntity>>()
 
-    val listMaterial: LiveData<List<WpmaterialEntity>> get() = _listMaterial
+    val listMaterial: LiveData<List<MatusetransEntity>> get() = _listMaterial
 
 
-    fun initListMaterialPlan(workorderid: String) {
-        val materialPlan = materialRepository.getListMaterialPlanByWoid(workorderid)
+    fun initListMaterialActual(workorderid: String) {
+        val materialPlan = materialRepository.getListMaterialActualByWoid(workorderid)
         materialPlan.whatIfNotNull {
             _listMaterial.value = it
         }
