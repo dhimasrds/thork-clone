@@ -14,11 +14,30 @@ package id.thork.app.pages.material_actual.element
 
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
+import id.thork.app.persistence.entity.WpmaterialEntity
+import id.thork.app.repository.MaterialRepository
 
 class MaterialActualViewModel@ViewModelInject constructor(
-    private val context: Context
+    private val context: Context,
+    private val materialRepository: MaterialRepository
 ) : LiveCoroutinesViewModel() {
-    val TAG = MaterialActualViewModel::class.java.name
+    val TAG = MaterialPlanViewModel::class.java.name
+
+    private val _listMaterial = MutableLiveData<List<WpmaterialEntity>>()
+
+    val listMaterial: LiveData<List<WpmaterialEntity>> get() = _listMaterial
+
+
+    fun initListMaterialPlan(workorderid: String) {
+        val materialPlan = materialRepository.getListMaterialPlanByWoid(workorderid)
+        materialPlan.whatIfNotNull {
+            _listMaterial.value = it
+        }
+    }
 
 }
