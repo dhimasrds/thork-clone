@@ -14,6 +14,7 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.Wpmaterial
 import id.thork.app.persistence.entity.*
 import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
@@ -35,7 +36,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val locationRepository: LocationRepository,
     private val workOrderRepository: WorkOrderRepository,
     private val attachmentRepository: AttachmentRepository,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
@@ -100,6 +101,8 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
 
+        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+
         val member = Member()
         member.siteid = appSession.siteId
         member.location = location
@@ -111,6 +114,9 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
+        materialPlanlist.whatIfNotNull {
+            member.wpmaterial = it
+        }
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -151,6 +157,8 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
 
+        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+
         val member = Member()
         member.siteid = appSession.siteId
         member.location = location
@@ -162,6 +170,9 @@ class CreateWoViewModel @ViewModelInject constructor(
         member.estdur = estDur
         member.wopriority = workPriority
         member.descriptionLongdescription = longdesc
+        materialPlanlist.whatIfNotNull {
+            member.wpmaterial = it
+        }
 
         val tWoCacheEntity = WoCacheEntity()
         tWoCacheEntity.syncBody = convertToJson(member)
@@ -211,5 +222,17 @@ class CreateWoViewModel @ViewModelInject constructor(
         }
     }
 
-
+    private fun prepareMaterialTrans(woid: String) : List<Wpmaterial> {
+        val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
+        val listMaterialPlan = mutableListOf<Wpmaterial>()
+        materialPlanCache.forEach {
+            val wpmaterial = Wpmaterial()
+            wpmaterial.itemnum = it.itemNum
+            wpmaterial.itemqty = it.itemqty?.toDouble()
+            wpmaterial.description = it.description
+            wpmaterial.location = it.storeroom
+            listMaterialPlan.add(wpmaterial)
+        }
+        return listMaterialPlan
+    }
 }

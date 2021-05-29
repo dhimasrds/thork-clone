@@ -232,6 +232,9 @@ class WorkOrderWorker @WorkerInject constructor(
                     member.origrecordid = it
                     member.origrecordclass = prepareBody.origrecordclass
                 }
+                prepareBody.wpmaterial.whatIfNotNullOrEmpty {
+                    member.wpmaterial = it
+                }
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 GlobalScope.launch(Dispatchers.IO) {

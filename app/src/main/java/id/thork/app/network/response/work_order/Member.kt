@@ -249,7 +249,7 @@ data class Member(
     @Json(name = "wplabor_collectionref")
     val wplaborCollectionref: String? = null,
     @Json(name = "wpmaterial")
-    val wpmaterial: List<Wpmaterial>? = null,
+    var wpmaterial: List<Wpmaterial>? = null,
     @Json(name = "wpmaterial_collectionref")
     val wpmaterialCollectionref: String? = null,
     @Json(name = "wpservice_collectionref")

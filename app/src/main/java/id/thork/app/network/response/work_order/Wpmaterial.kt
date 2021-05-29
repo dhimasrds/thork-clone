@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Wpmaterial(
     @Json(name = "description")
-    val description: String? = null,
+    var description: String? = null,
     @Json(name = "directreq")
     val directreq: Boolean? = null,
     @Json(name = "hours")
@@ -15,9 +15,9 @@ data class Wpmaterial(
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "itemnum")
-    val itemnum: String? = null,
+    var itemnum: String? = null,
     @Json(name = "itemqty")
-    val itemqty: Double? = null,
+    var itemqty: Double? = null,
     @Json(name = "itemsetid")
     val itemsetid: String? = null,
     @Json(name = "linecost")
@@ -29,7 +29,7 @@ data class Wpmaterial(
     @Json(name = "localref")
     val localref: String? = null,
     @Json(name = "location")
-    val location: String? = null,
+    var location: String? = null,
     @Json(name = "mktplcitem")
     val mktplcitem: Boolean? = null,
     @Json(name = "orgid")
