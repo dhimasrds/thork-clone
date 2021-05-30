@@ -94,7 +94,6 @@ class LoginRepository constructor(
     }
 
 
-    @SuppressLint("NewApi")
     suspend fun loginPerson(
         select: String,
         where: String,

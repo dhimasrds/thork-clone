@@ -17,6 +17,8 @@ package id.thork.app.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import java.io.File
 import java.util.*
@@ -44,15 +46,26 @@ object StringUtils {
      * @param string
      * @return
      */
-    @SuppressLint("NewApi")
     fun encodeToBase64(string: String): String? {
-        return Base64.getEncoder().encodeToString(string.toByteArray())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Base64.getEncoder().encodeToString(string.toByteArray())
+        } else {
+            val output =
+                android.util.Base64.encode(string.toByteArray(), android.util.Base64.DEFAULT)
+            output.whatIfNotNull {
+                return String(output)
+            }
+        }
+        return BaseParam.APP_EMPTY_STRING
     }
 
-    @SuppressLint("NewApi")
     fun decodeToBase64(string: String): String {
-        val decodedBytes = Base64.getDecoder().decode(string)
-        return String(decodedBytes)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val decodedBytes = Base64.getDecoder().decode(string)
+            return String(decodedBytes)
+        } else {
+            return String(android.util.Base64.decode(string, android.util.Base64.DEFAULT))
+        }
     }
 
 
@@ -74,7 +87,7 @@ object StringUtils {
     }
 
     fun NVL(originText: Int?, replacementText: Int): Int {
-        return originText?: replacementText
+        return originText ?: replacementText
     }
 
     fun createPriority(priority: Int): String {

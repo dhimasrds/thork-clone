@@ -79,8 +79,8 @@ class MapViewModel @ViewModelInject constructor(
     val woCache: LiveData<WoCacheEntity> get() = _woCache
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
-    val resultTagMarker: MutableLiveData<String>get() = _resultTagMarker
-    val listAsset : MutableLiveData<List<AssetEntity>> get() = _listAsset
+    val resultTagMarker: MutableLiveData<String> get() = _resultTagMarker
+    val listAsset: MutableLiveData<List<AssetEntity>> get() = _listAsset
     val listLocation: MutableLiveData<List<LocationEntity>> get() = _listLocation
     val crewName: MutableLiveData<String> get() = _crewName
 
@@ -96,25 +96,25 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    fun setDataWo(wonum : String, tag: String){
+    fun setDataWo(wonum: String, tag: String) {
         val wocache = workOrderRepository.findWobyWonum(wonum)
         _woCache.value = wocache
         _resultTagMarker.value = tag
     }
 
-    fun setDataAsset(asset : String, tag: String){
+    fun setDataAsset(asset: String, tag: String) {
         val assetCache = workOrderRepository.findByAssetnum(asset)
         _assetCache.value = assetCache
         _resultTagMarker.value = tag
     }
 
-    fun setDataLocation(loc : String, tag: String){
+    fun setDataLocation(loc: String, tag: String) {
         val locationCache = workOrderRepository.findByLocation(loc)
         _locationCache.value = locationCache
         _resultTagMarker.value = tag
     }
 
-    fun setDataCrew(crew : String, tag: String) {
+    fun setDataCrew(crew: String, tag: String) {
         _crewName.value = crew
         _resultTagMarker.value = tag
     }
@@ -225,8 +225,6 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-
-    @SuppressLint("NewApi")
     private fun compareWoLocalWithServer(list: List<id.thork.app.network.response.work_order.Member>) {
         for (wo in list) {
             if (woListObjectBox!![wo.wonum!!] != null) {
@@ -254,7 +252,7 @@ class MapViewModel @ViewModelInject constructor(
     }
 
     fun fetchAsset() {
-        val listAssetCache =  workOrderRepository.fetchAssetList()
+        val listAssetCache = workOrderRepository.fetchAssetList()
         listAssetCache.whatIfNotNullOrEmpty {
             _listAsset.value = it
         }
