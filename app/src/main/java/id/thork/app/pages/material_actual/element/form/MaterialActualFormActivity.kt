@@ -2,6 +2,7 @@ package id.thork.app.pages.material_actual.element.form
 
 import android.content.Intent
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.RadioButton
 import androidx.activity.viewModels
@@ -45,6 +46,12 @@ class MaterialActualFormActivity : BaseActivity() {
             notification = false,
             option = false
         )
+
+        //TODO HARDCODE SPINNER
+        var storeroom = arrayOf("STOREROOMGST")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeroom)
+        binding.includeMaterialPlanForm.spinnerStoreroom.adapter = adapter
+
         retrieveFromIntent()
     }
 
