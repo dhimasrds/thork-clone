@@ -14,6 +14,7 @@ package id.thork.app.pages.material_plan.element.form
 
 import android.content.Intent
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.RadioButton
 import androidx.activity.viewModels
@@ -41,6 +42,10 @@ class MaterialPlanFormActivity : BaseActivity() {
     var intentWorkorderId: String? = null
     private var materialEntity: MaterialEntity? = null
 
+    //TODO
+    //Hardcode for a while
+    var storerooms: Array<String> = arrayOf("STOREROOMGST", "STOREROOMKBN", "STOREROOMPJG")
+    
     override fun setupView() {
         super.setupView()
 
@@ -57,6 +62,13 @@ class MaterialPlanFormActivity : BaseActivity() {
             notification = false,
             option = false
         )
+
+        //TODO
+        //Hardcode for a while
+        val arrayAdapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, storerooms)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.includeMaterialPlanForm.spinnerStoreroom.adapter = arrayAdapter
 
         retrieveFromIntent()
     }
@@ -140,7 +152,7 @@ class MaterialPlanFormActivity : BaseActivity() {
         })
 
         viewModel.result.observe(this, Observer {
-            if(it == BaseParam.APP_TRUE) {
+            if (it == BaseParam.APP_TRUE) {
                 gotoMaterialPlan()
             }
         })

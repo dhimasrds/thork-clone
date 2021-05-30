@@ -58,6 +58,7 @@
 
     <color name="colorBlueNew">#1463FF</color>
     <color name="colorBlueSwitch">#3F7FFF</color>
+    <color name="colorBlueCheck">#3F7FFF</color>
 
     <color name="transparant">#00000000</color>
     <color name="green_username">#4E4AFF</color>

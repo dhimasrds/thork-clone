@@ -24,6 +24,7 @@ import id.thork.app.pages.rfid_create_wo_material.element.RfidMaterialActivityVi
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
+import id.thork.app.utils.StringUtils
 
 class MaterialPlanFormViewModel @ViewModelInject constructor(
     private val context: Context,
@@ -46,7 +47,7 @@ class MaterialPlanFormViewModel @ViewModelInject constructor(
         wpmaterialEntity.itemType = materialEntity.itemType
         wpmaterialEntity.workorderId = workorderid
         wpmaterialEntity.storeroom = materialEntity.storeroom
-        wpmaterialEntity.itemqty = itemqty.toInt()
+        wpmaterialEntity.itemqty = StringUtils.NVL(itemqty, "0").toInt()
         materialRepository.saveMaterialPlan(wpmaterialEntity, appSession.userEntity.username.toString())
         _result.value = BaseParam.APP_TRUE
     }

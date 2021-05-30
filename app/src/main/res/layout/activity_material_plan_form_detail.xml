@@ -16,7 +16,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/general_padding_15dp">
+    android:paddingLeft="@dimen/general_padding_15dp"
+    android:paddingRight="@dimen/general_padding_15dp">
 
     <!-- Description -->
     <TextView
@@ -27,8 +28,7 @@
     <EditText
         android:id="@+id/et_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         />
+        android:layout_height="wrap_content" />
 
     <!-- Storeroom -->
     <TextView
@@ -39,15 +39,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Spinner
             android:id="@+id/spinner_storeroom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".70" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".30"/>
+            android:layout_weight=".30" />
     </LinearLayout>
 
     <!-- Qty -->
@@ -58,10 +60,9 @@
 
     <EditText
         android:id="@+id/et_qty"
-        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:inputType="number" />
 
     <!-- Line Type -->
     <TextView
@@ -72,12 +73,15 @@
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:textColor="@color/colorBlack">
 
         <RadioButton
             android:id="@+id/radio_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/colorBlueRadioBt"
+            android:checked="true"
             android:onClick="onItemTypeClicked"
             android:text="Item" />
 
@@ -85,6 +89,7 @@
             android:id="@+id/radio_material"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="@color/colorBlueRadioBt"
             android:onClick="onItemTypeClicked"
             android:text="Material" />
     </RadioGroup>
@@ -100,6 +105,7 @@
         android:id="@+id/checkbox_direct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:buttonTint="@color/colorBlueCheck"
         android:onClick="onIssueTypeCheckec"
         android:text="Direct Issue" />
 

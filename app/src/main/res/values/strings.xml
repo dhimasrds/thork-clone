@@ -177,7 +177,7 @@
     <string name="QR">QR Code</string>
     <string name="lines">--------------------</string>
     <string name="stat">Status</string>
-    <string name="line">---</string>
+    <string name="line">-</string>
     <string name="worktype">Work Type</string>
     <string name="priority">Priority</string>
     <string name="normal">Normal</string>

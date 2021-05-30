@@ -75,7 +75,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="@string/line"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/menu_wo_text_size" />
+                        android:textSize="@dimen/text_size_wo_detail_16" />
 
                     <!--WONUM-->
                     <TextView
@@ -92,7 +92,7 @@
                         android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/menu_wo_text_size" />
+                        android:textSize="@dimen/text_size_wo_detail_16" />
 
                     <!--DESCRIPTION-->
                     <TextView
@@ -108,7 +108,7 @@
                         android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/menu_wo_text_size" />
+                        android:textSize="@dimen/text_size_wo_detail_16" />
 
                     <!--WORK TYPE-->
                     <TextView
@@ -136,7 +136,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="@string/line"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/menu_wo_text_size"
+                        android:textSize="@dimen/text_size_wo_detail_16"
                         android:visibility="gone" />
 
                     <!--Priority-->
@@ -155,7 +155,7 @@
                         android:fontFamily="@font/poppins"
                         android:orientation="horizontal"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/menu_wo_text_size"
+                        android:textSize="@dimen/text_size_wo_detail_16"
                         android:weightSum="3">
 
                         <RadioButton
@@ -200,7 +200,7 @@
                         android:fontFamily="@font/poppins"
                         android:hint="@string/hourminute"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/menu_wo_text_size" />
+                        android:textSize="@dimen/text_size_wo_detail_16" />
 
                     <!--ASSET-->
                     <LinearLayout
@@ -459,7 +459,7 @@
                             android:enabled="false"
                             android:fontFamily="@font/poppins"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/menu_wo_text_size" />
+                            android:textSize="@dimen/text_size_wo_detail_16" />
 
                         <LinearLayout
                             android:layout_width="27dp"
@@ -543,155 +543,65 @@
                     </androidx.cardview.widget.CardView>
 
                     <!--Attachment-->
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/attachment"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_image_wo" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="7"
-                                android:text="@string/attachments" />
-
-                            <TextView
-                                android:id="@+id/total_foto"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
+                    <include android:id="@id/include_attachments"
+                        layout="@layout/activity_create_wo_attachments"/>
+                    <!-- Material Plan -->
                     <include
                         android:id="@+id/include_material_plan"
                         layout="@layout/activity_create_wo_material_plan" />
+                    <!-- Assets -->
+                    <include
+                        android:id="@+id/include_assets"
+                        layout="@layout/activity_create_wo_assets" />
                     <!--Scan QR-->
-                    <androidx.cardview.widget.CardView
-                        android:visibility="gone"
-                        android:id="@+id/scan_qr"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_marginBottom="@dimen/general_margin_20dp"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
+<!--                    <androidx.cardview.widget.CardView-->
+<!--                        android:visibility="gone"-->
+<!--                        android:id="@+id/scan_qr"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="72dp"-->
+<!--                        android:layout_marginBottom="@dimen/general_margin_20dp"-->
+<!--                        android:clickable="true"-->
+<!--                        android:foreground="?android:attr/selectableItemBackground">-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:weightSum="10">-->
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
+<!--                            <LinearLayout-->
+<!--                                android:layout_width="0dp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:gravity="center_vertical">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_scan_qr" />
-                            </LinearLayout>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:background="@drawable/ic_scan_qr" />-->
+<!--                            </LinearLayout>-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/general_margin_5dp"
-                                android:layout_weight="7"
-                                android:text="@string/wo_scan_material" />
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="@dimen/general_margin_5dp"-->
+<!--                                android:layout_weight="7"-->
+<!--                                android:text="@string/wo_scan_material" />-->
 
-                            <TextView
-                                android:id="@+id/total_qr"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/total_qr"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1" />-->
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <!--Asset-->
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/card_asset"
-                        android:layout_width="match_parent"
-                        android:layout_height="72dp"
-                        android:layout_marginBottom="@dimen/general_margin_20dp"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:weightSum="10">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/ic_asset_grey" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/general_margin_5dp"
-                                android:layout_weight="7"
-                                android:text="@string/Asset" />
-
-                            <TextView
-                                android:id="@+id/total_asset"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_arrow_next" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+<!--                            <ImageView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:src="@drawable/ic_arrow_next" />-->
+<!--                        </LinearLayout>-->
+<!--                    </androidx.cardview.widget.CardView>-->
 
                     <!--REPORT DATE-->
                     <TextView
@@ -714,7 +624,7 @@
                             android:enabled="false"
                             android:fontFamily="@font/poppins"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/menu_wo_text_size" />
+                            android:textSize="@dimen/text_size_wo_detail_16" />
 
                         <Button
                             android:id="@+id/pick_date"
