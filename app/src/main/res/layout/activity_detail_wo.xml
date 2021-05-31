@@ -122,15 +122,29 @@
                         android:fontFamily="@font/poppins"
                         android:text="Priority" />
 
+<!--                    <TextView-->
+<!--                        android:id="@+id/priority"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="@dimen/margin_left_wo_detail"-->
+<!--                        android:layout_marginBottom="20dp"-->
+<!--                        android:fontFamily="@font/poppins"-->
+<!--                        android:textColor="@color/colorBlack"-->
+<!--                        android:textSize="@dimen/text_size_wo_detail_16" />-->
+
                     <TextView
                         android:id="@+id/priority"
-                        android:layout_width="wrap_content"
+                        android:layout_width="85dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        android:gravity="center"
+                        android:background="@drawable/bg_priority_normal"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_8dp"
+                        android:singleLine="false"
+                        android:text="@string/normal"
+                        android:textColor="@color/priority_normal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
