@@ -445,6 +445,7 @@
     <string name="followup_wo">Follow Up Wo</string>
 
     <string name="search_material">Search Material</string>
+    <string name="material_actual_dialog">Do you want to delete this material?</string>
 
 
 </resources>

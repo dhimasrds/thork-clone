@@ -24,6 +24,7 @@ import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.material_actual.MaterialActualActivity
 import id.thork.app.pages.material_actual.element.detail_material_actual.MaterialActualDetail
 import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
@@ -37,12 +38,15 @@ class MaterialActualAdapter constructor(
     private val context: Context,
     private val preferenceManager: PreferenceManager,
     private val requestOptions: RequestOptions,
-    private val matusetransEntityList : List<MatusetransEntity>,
+    private val matusetransEntityList: List<MatusetransEntity>,
     private val activity: MaterialActualActivity
-) : RecyclerView.Adapter<MaterialActualAdapter.MaterialPlanHolder>() {
+) : RecyclerView.Adapter<MaterialActualAdapter.MaterialPlanHolder>(),
+    CustomDialogUtils.DialogActionListener {
     val TAG = MaterialActualAdapter::class.java.name
 
     lateinit var matusetransEntity: MatusetransEntity
+    private lateinit var customDialogUtils: CustomDialogUtils
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
         val binding = DataBindingUtil.inflate<MaterialPlanItemBinding>(
@@ -63,9 +67,19 @@ class MaterialActualAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(matusetransEntity: MatusetransEntity, activity: MaterialActualActivity) {
             with(binding) {
+
                 tvItemNum.text = StringUtils.truncate(matusetransEntity.itemNum, 30)
                 tvItemType.text = StringUtils.truncate(matusetransEntity.itemType, 30)
                 tvDescription.text = StringUtils.truncate(matusetransEntity.description, 30)
+                ivDelete.setOnClickListener {
+                    customDialogUtils = CustomDialogUtils(context)
+                    customDialogUtils.setTitle(R.string.information)
+                    customDialogUtils.setDescription(R.string.material_actual_dialog)
+                    customDialogUtils.setRightButtonText(R.string.dialog_yes)
+                    customDialogUtils.setLeftButtonText(R.string.dialog_no)
+                    customDialogUtils.setListener(this@MaterialActualAdapter)
+                    customDialogUtils.show()
+                }
 
                 root.setOnClickListener {
                     val intent =
@@ -79,5 +93,17 @@ class MaterialActualAdapter constructor(
             }
         }
 
+    }
+
+    override fun onRightButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        TODO("Not yet implemented")
     }
 }
