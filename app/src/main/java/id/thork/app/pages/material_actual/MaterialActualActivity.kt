@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
+import com.skydoves.whatif.whatIfNotNull
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -108,5 +109,15 @@ class MaterialActualActivity : BaseActivity() {
             matusetranslist.addAll(it)
             materialActualAdapter.notifyDataSetChanged()
         })
+
+        viewModel.result.observe(this, Observer {
+            viewModel.initListMaterialActual(intentWoId.toString())
+        })
+    }
+
+    fun deleteMaterial(itemnum: String?) {
+        itemnum.whatIfNotNull {
+            viewModel.deleteMaterial(itemnum.toString(), intentWoId.toString())
+        }
     }
 }

@@ -17,6 +17,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
+import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import id.thork.app.persistence.entity.MatusetransEntity
@@ -30,14 +31,24 @@ class MaterialActualViewModel@ViewModelInject constructor(
     val TAG = MaterialPlanViewModel::class.java.name
 
     private val _listMaterial = MutableLiveData<List<MatusetransEntity>>()
+    private val _result = MutableLiveData<Int>()
 
     val listMaterial: LiveData<List<MatusetransEntity>> get() = _listMaterial
+    val result : LiveData<Int> get() = _result
 
 
     fun initListMaterialActual(workorderid: String) {
         val materialPlan = materialRepository.getListMaterialActualByWoid(workorderid)
         materialPlan.whatIfNotNull {
             _listMaterial.value = it
+        }
+    }
+
+    fun deleteMaterial(itemnum: String, workorderid: String) {
+        val materialCache = materialRepository.getMaterialActualByWoid(workorderid, itemnum)
+        materialCache.whatIfNotNull {
+            materialRepository.removeMaterialActual(it)
+            _result.postValue(BaseParam.APP_TRUE)
         }
     }
 

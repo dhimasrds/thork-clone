@@ -15,6 +15,7 @@ package id.thork.app.pages.material_actual.element
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater.from
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,9 +28,7 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.material_actual.MaterialActualActivity
 import id.thork.app.pages.material_actual.element.detail_material_actual.MaterialActualDetail
-import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
 import id.thork.app.persistence.entity.MatusetransEntity
-import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.utils.StringUtils
 import java.util.*
 
@@ -46,6 +45,7 @@ class MaterialActualAdapter constructor(
 
     lateinit var matusetransEntity: MatusetransEntity
     private lateinit var customDialogUtils: CustomDialogUtils
+    var currentItemnum : String? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
@@ -71,6 +71,7 @@ class MaterialActualAdapter constructor(
                 tvItemNum.text = StringUtils.truncate(matusetransEntity.itemNum, 30)
                 tvItemType.text = StringUtils.truncate(matusetransEntity.itemType, 30)
                 tvDescription.text = StringUtils.truncate(matusetransEntity.description, 30)
+                ivDelete.visibility = View.VISIBLE
                 ivDelete.setOnClickListener {
                     customDialogUtils = CustomDialogUtils(context)
                     customDialogUtils.setTitle(R.string.information)
@@ -79,6 +80,7 @@ class MaterialActualAdapter constructor(
                     customDialogUtils.setLeftButtonText(R.string.dialog_no)
                     customDialogUtils.setListener(this@MaterialActualAdapter)
                     customDialogUtils.show()
+                    currentItemnum = matusetransEntity.itemNum
                 }
 
                 root.setOnClickListener {
@@ -96,6 +98,7 @@ class MaterialActualAdapter constructor(
     }
 
     override fun onRightButton() {
+        activity.deleteMaterial(currentItemnum)
         customDialogUtils.dismiss()
     }
 
