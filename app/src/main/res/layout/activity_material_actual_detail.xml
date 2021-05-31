@@ -1,24 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
-  ~
-  ~ This software is the confidential and proprietary information of
-  ~ This.ID. ("Confidential Information").
-  ~
-  ~ Such Confidential Information shall not be disclosed and shall
-  ~ use it only	 in accordance with the terms of the license agreement
-  ~ entered into with This.ID; other than in accordance with the written
-  ~ permission of This.ID.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
-            type="id.thork.app.pages.material_actual.element.form.MaterialActualFormViewModel" />
+            type="id.thork.app.pages.material_actual.element.detail_material_actual.MaterialActualDetailViewModel" />
     </data>
 
     <LinearLayout
@@ -63,54 +51,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="6">
+                android:orientation="horizontal">
 
                 <EditText
+                    android:focusable="false"
                     android:id="@+id/et_material"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
                     />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="@dimen/general_padding_5dp">
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btn_search"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_search"
-                        tools:ignore="NestedWeights" />
-                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:weightSum="8">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_rfid"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:background="@drawable/ic_rfid_detail_wo"
-                    tools:ignore="NestedWeights" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_qrcode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:background="@drawable/ic_qrcode_detail_wo" />
-            </LinearLayout>
         </LinearLayout>
 
         <include

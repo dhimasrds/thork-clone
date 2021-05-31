@@ -101,8 +101,13 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        member.location = location
-        member.assetnum = assetnum
+        if(!location.equals(BaseParam.APP_DASH)) {
+            member.location = location
+        }
+
+        if(!assetnum.equals(BaseParam.APP_DASH)) {
+            member.assetnum = assetnum
+        }
         member.description = deskWo
         member.status = BaseParam.WAPPR
         member.reportdate = DateUtils.getDateTimeMaximo()
@@ -166,8 +171,13 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        member.location = location
-        member.assetnum = assetnum
+        if(!location.equals(BaseParam.APP_DASH)) {
+            member.location = location
+        }
+
+        if(!assetnum.equals(BaseParam.APP_DASH)) {
+            member.assetnum = assetnum
+        }
         member.description = deskWo
         member.status = BaseParam.WAPPR
         member.reportdate = DateUtils.getDateTimeMaximo()

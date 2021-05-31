@@ -95,6 +95,7 @@ class SettingsViewModel @ViewModelInject constructor(
         attachmentRepository.deleteAttachmentCache()
         materialRepository.removeItemMaster()
         materialRepository.removeMaterialPlan()
+        materialRepository.removeListMaterialActual()
         _logout.postValue(BaseParam.APP_TRUE)
     }
 

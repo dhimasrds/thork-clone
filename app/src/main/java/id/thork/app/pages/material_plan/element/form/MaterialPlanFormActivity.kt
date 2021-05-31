@@ -45,7 +45,7 @@ class MaterialPlanFormActivity : BaseActivity() {
     //TODO
     //Hardcode for a while
     var storerooms: Array<String> = arrayOf("STOREROOMGST", "STOREROOMKBN", "STOREROOMPJG")
-    
+
     override fun setupView() {
         super.setupView()
 

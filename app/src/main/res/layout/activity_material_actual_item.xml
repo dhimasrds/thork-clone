@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="id.thork.app.pages.material_actual.element.material_actual_item_master.MaterialActualItemViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/general_margin_8dp"
+        android:layout_marginRight="@dimen/general_margin_8dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/et_find_material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:queryHint="@string/search_material"
+            android:layout_marginTop="@dimen/general_margin_10dp"
+            app:searchIcon="@drawable/ic_search"
+            android:background="@drawable/bg_edit_text"
+            android:textCursorDrawable="@null"
+            app:iconifiedByDefault="false"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar"
+            app:queryBackground="@null"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_materials"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:clipToPadding="true"
+            android:paddingBottom="@dimen/general_padding_8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_find_material"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/cardview_findmaterial" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

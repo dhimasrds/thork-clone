@@ -159,7 +159,7 @@ class WorkOrderRepository @Inject constructor(
     }
 
     suspend fun updateStatus(
-        cookie: String, xMethodeOverride: String, contentType: String,
+        cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
         workOrderId: Int, body: Member,
         onSuccess: () -> Unit, onError: (String) -> Unit,
     ) {
@@ -168,6 +168,7 @@ class WorkOrderRepository @Inject constructor(
                 cookie,
                 xMethodeOverride,
                 contentType,
+                patchType,
                 workOrderId,
                 body
             )
@@ -567,12 +568,15 @@ class WorkOrderRepository @Inject constructor(
             }
 
         Timber.tag(TAG).d("updateWo() updateWoCacheBeforeSync() %s", currentWoCache?.status)
-
+        val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
         currentMember?.status = nextStatus
         currentMember?.descriptionLongdescription = longdesc
+        listMatAct.whatIfNotNullOrEmpty {
+            currentMember?.matusetrans = it
+        }
 
         if (currentWoCache?.isLatest == BaseParam.APP_TRUE) {
             currentWoCache.syncStatus = BaseParam.APP_FALSE
@@ -601,6 +605,7 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun updateWoCacheAfterSync(
+        woId: Int?,
         wonum: String?,
         longdesc: String?,
         nextStatus: String,
@@ -615,12 +620,15 @@ class WorkOrderRepository @Inject constructor(
         }
 
         Timber.tag(TAG).d("updateWo() updateWoCacheAfterSync() %s", currentWoCache?.status)
-
+        val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
         currentMember?.status = nextStatus
         currentMember?.descriptionLongdescription = longdesc
+        listMatAct.whatIfNotNullOrEmpty {
+            currentMember?.matusetrans = it
+        }
 
         currentWoCache?.syncBody = memberJsonAdapter.toJson(currentMember)
         currentWoCache?.syncStatus = BaseParam.APP_TRUE

@@ -149,7 +149,7 @@ data class Member(
     @Json(name = "los")
     val los: Boolean? = null,
     @Json(name = "matusetrans")
-    val matusetrans: List<Matusetran>? = null,
+    var matusetrans: List<Matusetran>? = null,
     @Json(name = "matusetrans_collectionref")
     val matusetransCollectionref: String? = null,
     @Json(name = "milestone")

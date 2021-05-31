@@ -44,6 +44,7 @@ interface WorkOrderApi {
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
         @Path("workorderid") workorderid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: Member?,

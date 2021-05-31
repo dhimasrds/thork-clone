@@ -92,6 +92,7 @@ class LoginPatternViewModel @ViewModelInject constructor(
         attachmentRepository.deleteAttachmentCache()
         materialRepository.removeItemMaster()
         materialRepository.removeMaterialPlan()
+        materialRepository.removeListMaterialActual()
         _switchUser.postValue(BaseParam.APP_TRUE)
     }
 

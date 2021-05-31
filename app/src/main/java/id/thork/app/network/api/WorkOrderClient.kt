@@ -36,6 +36,7 @@ class WorkOrderClient @Inject constructor(
         cookie: String,
         xMethodeOverride: String,
         contentType: String,
+        patchType: String,
         workOrderId: Int,
         body: Member,
     ) =
@@ -43,6 +44,7 @@ class WorkOrderClient @Inject constructor(
             cookie,
             xMethodeOverride,
             contentType,
+            patchType,
             workOrderId,
             LEAN,
             body
