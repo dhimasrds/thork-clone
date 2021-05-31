@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="id.thork.app.pages.detail_wo.element.DetailWoViewModel" />
@@ -92,14 +93,41 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:fontFamily="@font/poppins"
-                        android:text="@string/desc" />
+                        android:text="Status" />
+
+                    <LinearLayout
+                        android:id="@+id/bg_status"
+                        android:layout_width="94dp"
+                        android:layout_height="28dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:fontFamily="@font/poppins"
+                            android:paddingTop="@dimen/general_padding_2dp"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="@dimen/general_margin_20dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Priority" />
+
+                    <TextView
+                        android:id="@+id/priority"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                        android:layout_marginBottom="20dp"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_16" />
@@ -121,48 +149,20 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_16" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="Status" />
-
-                    <LinearLayout
-                        android:id="@+id/bg_status"
-                        android:layout_width="94dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="20dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:fontFamily="@font/poppins"
-                            android:paddingTop="@dimen/general_padding_2dp"
-                            android:text="test"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_wo_detail_16" />
-
-                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:fontFamily="@font/poppins"
-                        android:text="Priority" />
+                        android:text="@string/desc" />
 
                     <TextView
-                        android:id="@+id/priority"
+                        android:id="@+id/description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/text_size_wo_detail_16" />
@@ -422,15 +422,19 @@
                     <include
                         android:id="@+id/include_longdesc"
                         layout="@layout/activity_detail_wo_longdesc" />
+
                     <include
                         android:id="@+id/include_attachments"
                         layout="@layout/activity_detail_wo_attachments" />
+
                     <include
                         android:id="@+id/include_material_plan"
                         layout="@layout/activity_detail_wo_material_plan" />
+
                     <include
                         android:id="@+id/include_material_actual"
                         layout="@layout/activity_detail_wo_material_actual" />
+
                     <include
                         android:id="@+id/include_assets"
                         layout="@layout/activity_detail_wo_assets" />

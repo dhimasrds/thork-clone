@@ -20,16 +20,9 @@ import id.thork.app.workmanager.WorkerCoordinator
 
 class MainViewModel @ViewModelInject constructor(
     private val context: Context,
-    private val preferenceManager: PreferenceManager,
     private val workerCoordinator: WorkerCoordinator
     ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
-
-//    fun checkRepo() {
-//        Timber.tag(TAG).i("checkRepo() loginRepository: %s retrofit: %s", loginRepository, retrofit)
-//        Timber.tag(TAG).i("checkRepo() loginapi: %s", loginApi)
-//
-//    }
 
     fun checkWorkManager() {
         workerCoordinator.addSyncWoQueue()

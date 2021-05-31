@@ -129,6 +129,7 @@ class LoginViewModel @ViewModelInject constructor(
             loginRepository.loginPerson(selectQuery, whereQuery,
                 onSuccess = {
                     userResponse = it
+                    Timber.tag(TAG).d("fetchUserData() loginPerson: %s", userResponse.member)
                 },
                 onError = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
@@ -150,6 +151,7 @@ class LoginViewModel @ViewModelInject constructor(
             var member: Member
             userResponse.member.whatIfNotNullOrEmpty(
                 whatIf = {
+                    Timber.tag(TAG).d("fetchUserData() user response: %s", userResponse.member)
                     member = userResponse.member[0]
                     val isFirstLogin = userIsFirstLogin(member, username, userHash)
                     _firstLogin.postValue(isFirstLogin)

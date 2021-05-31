@@ -11,10 +11,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.text.InputFilter
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
@@ -110,15 +107,11 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             vibrateAndPickLocation()
         }
 
-        binding.scanQr.setOnClickListener {
-            gotoListMaterial()
-        }
-
         binding.longdesc.setOnClickListener {
             gotoLongDescActivity()
         }
 
-        binding.attachment.setOnClickListener {
+        binding.includeAttachments.attachment.setOnClickListener {
             goToAttachments()
         }
 
