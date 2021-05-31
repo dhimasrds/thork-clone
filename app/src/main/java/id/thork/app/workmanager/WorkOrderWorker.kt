@@ -38,6 +38,7 @@ import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 
@@ -165,28 +166,30 @@ class WorkOrderWorker @WorkerInject constructor(
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val xMethodeOverride: String = BaseParam.APP_PATCH
                 val contentType: String = ("application/json")
-                GlobalScope.launch(Dispatchers.IO) {
-                    if (woId != null) {
-                        workOrderRepository.updateStatus(cookie,
-                            xMethodeOverride,
-                            contentType,
-                            woId,
-                            member,
-                            onSuccess = {
-                                workOrderRepository.updateWoCacheAfterSync(
-                                    wonum,
-                                    longdesc,
-                                    status.toString()
-                                )
+                runBlocking {
+                    launch {
+                        if (woId != null) {
+                            workOrderRepository.updateStatus(cookie,
+                                xMethodeOverride,
+                                contentType,
+                                woId,
+                                member,
+                                onSuccess = {
+                                    workOrderRepository.updateWoCacheAfterSync(
+                                        wonum,
+                                        longdesc,
+                                        status.toString()
+                                    )
 
-                                val nextIndex = currentIndex + 1
-                                if (nextIndex <= listWo.size - 1) {
-                                    updateStatusWoOffline(listWo, nextIndex)
-                                }
-                            },
-                            onError = {
-                                Timber.tag(TAG).i("onError() onError: %s", it)
-                            })
+                                    val nextIndex = currentIndex + 1
+                                    if (nextIndex <= listWo.size - 1) {
+                                        updateStatusWoOffline(listWo, nextIndex)
+                                    }
+                                },
+                                onError = {
+                                    Timber.tag(TAG).i("onError() onError: %s", it)
+                                })
+                        }
                     }
                 }
             }
