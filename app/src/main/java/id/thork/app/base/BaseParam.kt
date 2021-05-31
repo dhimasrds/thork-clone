@@ -57,6 +57,7 @@ object BaseParam {
     const val APP_X_DOCUMENT_DESCRIPTION = "x-document-description"
     const val APP_X_DOCUMENT_META = "x-document-meta"
     const val APP_CONTENT_TYPE = "Content-Type"
+    const val APP_PATCHTYPE = "patchtype"
     const val APP_PROPERTIES = "properties"
     const val APP_ALL_PROPERTIES = "*"
     const val APP_MX_COOKIE_TIMEOUT = "Cookie-Timeout"
@@ -164,6 +165,10 @@ object BaseParam {
     const val PRIORITY_HIGH = "2"
     const val LONGDESC = "longdescription"
     const val MATERIAL = "MATERIAL"
+    const val ITEM = "ITEM"
+    const val ISSUE = "ISSUE"
+
+
 
 
     /**

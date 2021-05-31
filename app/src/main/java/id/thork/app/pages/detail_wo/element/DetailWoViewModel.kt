@@ -12,7 +12,9 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.helper.MapsLocation
 import id.thork.app.network.response.google_maps.ResponseRoute
+import id.thork.app.network.response.work_order.Matusetran
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.Wpmaterial
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.WoCacheEntity
@@ -105,22 +107,29 @@ class DetailWoViewModel @ViewModelInject constructor(
         workOrderRepository.updateWoCacheBeforeSync(woId, wonum, status, longdesc, nextStatus)
         Timber.tag(TAG).d("updateWo() updateWoCacheBeforeSync()")
 
+        val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
+
         val member = Member()
         member.status = nextStatus
         member.descriptionLongdescription = longdesc
+        listMatAct.whatIfNotNullOrEmpty {
+            member.matusetrans = it
+        }
 
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val xMethodeOverride: String = BaseParam.APP_PATCH
         val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
         viewModelScope.launch(Dispatchers.IO) {
             if (woId != null) {
                 workOrderRepository.updateStatus(cookie,
                     xMethodeOverride,
                     contentType,
+                    patchType,
                     woId,
                     member,
                     onSuccess = {
-                        workOrderRepository.updateWoCacheAfterSync(wonum, longdesc, nextStatus)
+                        workOrderRepository.updateWoCacheAfterSync(woId,wonum, longdesc, nextStatus)
                         saveScannerMaterial(woId)
                         uploadAttachments(woId)
                     },

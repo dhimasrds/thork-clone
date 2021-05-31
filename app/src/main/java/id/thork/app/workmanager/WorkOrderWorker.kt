@@ -146,10 +146,14 @@ class WorkOrderWorker @WorkerInject constructor(
                 val wonum = prepareBody.wonum
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
+                val listMatAct = prepareBody.matusetrans
 
                 val member = Member()
                 member.status = status
                 member.descriptionLongdescription = longdesc
+                listMatAct.whatIfNotNullOrEmpty {
+                    member.matusetrans = it
+                }
 
                 Timber.tag(TAG).d(
                     "updateStatusWoOffline() updateWo() woId %s, wonum %s, longdesc %s, status %s",
@@ -165,16 +169,18 @@ class WorkOrderWorker @WorkerInject constructor(
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val xMethodeOverride: String = BaseParam.APP_PATCH
                 val contentType: String = ("application/json")
+                val patchType: String = BaseParam.APP_MERGE
                 GlobalScope.launch(Dispatchers.IO) {
                     if (woId != null) {
                         workOrderRepository.updateStatus(cookie,
                             xMethodeOverride,
                             contentType,
+                            patchType,
                             woId,
                             member,
                             onSuccess = {
                                 workOrderRepository.updateWoCacheAfterSync(
-                                    wonum,
+                                    woId, wonum,
                                     longdesc,
                                     status.toString()
                                 )
@@ -243,6 +249,7 @@ class WorkOrderWorker @WorkerInject constructor(
                         onSuccess = {
                             //TODO handle create wo cache after update
                             workOrderRepository.updateWoCacheAfterSync(
+                                it.woId,
                                 it.wonum,
                                 longdesc,
                                 status.toString()

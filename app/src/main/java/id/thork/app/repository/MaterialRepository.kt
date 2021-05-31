@@ -1,9 +1,12 @@
 package id.thork.app.repository
 
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.material_response.Member
+import id.thork.app.network.response.work_order.Matusetran
 import id.thork.app.network.response.work_order.Wpmaterial
 import id.thork.app.persistence.dao.MaterialBackupDao
 import id.thork.app.persistence.dao.MaterialDao
@@ -212,6 +215,33 @@ class MaterialRepository @Inject constructor(
 
     fun removeMaterialActual(matusetransEntity: MatusetransEntity) {
         return matusetransDao.removeByEntity(matusetransEntity)
+    }
+
+    /**
+     * perpare body
+     */
+
+    fun prepareMaterialActual(workorderid : Int?, wonum: String?) : List<Matusetran>? {
+        val listMaterialCache = getListMaterialActualByWoid(workorderid.toString())
+        val listMaterialBody = mutableListOf<Matusetran>()
+        listMaterialCache.whatIfNotNullOrEmpty {
+            it.forEach { entity ->
+                val body = Matusetran()
+                body.refwo = wonum
+                body.storeloc = entity.storeroom
+                body.linetype = BaseParam.ITEM
+                body.itemnum = entity.itemNum
+                body.issuetype = BaseParam.ISSUE
+                entity.itemqty.whatIfNotNull { qty ->
+                    body.quantity = -(qty.toDouble())
+                }
+                body.orgid = appSession.orgId
+                body.tositeid = appSession.siteId
+                listMaterialBody.add(body)
+            }
+            return listMaterialBody
+        }
+        return null
     }
 
 
