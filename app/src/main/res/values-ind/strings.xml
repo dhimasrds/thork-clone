@@ -173,6 +173,8 @@
     <string name="service_request_cancel">Apakah kamu ingin membatalkan Service Request?</string>
     <string name="workorder_create_success">Service Request berhasil disimpan</string>
     <string name="workorder_create_failed">Service Request gagal disimpan</string>
+    <string name="workorder_followup_create_success">Follow Up WO berhasil disimpan</string>
+    <string name="workorder_followup_create_failed">Follow Up WO gagal disimpan</string>
 
     <!-- flash light  -->
     <string name="turn_off_flashlight">Matikan</string>
@@ -331,6 +333,7 @@
     <string name="delete_dialog_negative">Tidak</string>
     <string name="failed_load_image">Gagal memuat gambar</string>
     <string name="create_workorder">Apakah kamu ingin membuat work order?</string>
+    <string name="create_followup_workorder">Apakah kamu ingin membuat Follow Up work order?</string>
     <string name="warning_workorder">Deskripsi dan lokasi tidak boleh kosong?</string>
     <string name="information">Informasi</string>
     <string name="warning">Peringatan!</string>

@@ -202,6 +202,8 @@
     <string name="service_request_cancel">Do you want to cancel Service Request?</string>
     <string name="workorder_create_success">New Service Request have been created</string>
     <string name="workorder_create_failed">New Service Request failed to created</string>
+    <string name="workorder_followup_create_success">New Follow Up WO have been created</string>
+    <string name="workorder_followup_create_failed">New Follow Up WO failed to created</string>
 
     <!-- flash light  -->
     <string name="turn_off_flashlight">Turn Off</string>
@@ -358,6 +360,7 @@
     <string name="delete_dialog_negative">No</string>
     <string name="failed_load_image">Failed to load image</string>
     <string name="create_workorder">Do you want to create work order?</string>
+    <string name="create_followup_workorder">Do you want to create Follow Up work order?</string>
     <string name="warning_workorder">Description and Location cannot empty?</string>
     <string name="information">Information</string>
     <string name="warning">Warning!</string>

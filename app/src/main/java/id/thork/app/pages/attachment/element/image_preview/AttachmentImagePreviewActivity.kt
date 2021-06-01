@@ -50,9 +50,9 @@ class AttachmentImagePreviewActivity : BaseActivity() {
         retrieveFromIntent()
     }
 
-    override fun onLostConnection() {
-
-    }
+//    override fun onLostConnection() {
+//
+//    }
 
     private fun retrieveFromIntent() {
         intentUri = intent.getStringExtra(BaseParam.ATTACHMENTURI)

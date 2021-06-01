@@ -568,6 +568,4 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             initiateScan()
         }
     }
-
-
 }

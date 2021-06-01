@@ -405,7 +405,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         )
         Toast.makeText(
             this,
-            StringUtils.getStringResources(this, R.string.workorder_create_success),
+            StringUtils.getStringResources(this, R.string.workorder_followup_create_success),
             Toast.LENGTH_LONG
         ).show()
     }
@@ -423,7 +423,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         )
         Toast.makeText(
             this,
-            StringUtils.getStringResources(this, R.string.workorder_create_failed),
+            StringUtils.getStringResources(this, R.string.workorder_followup_create_failed),
             Toast.LENGTH_LONG
         ).show()
     }
@@ -457,7 +457,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private fun buttonCreateWo() {
         customDialogUtils.setTitle(R.string.information)
-        customDialogUtils.setDescription(R.string.create_workorder)
+        customDialogUtils.setDescription(R.string.create_followup_workorder)
         customDialogUtils.setRightButtonText(R.string.dialog_yes)
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
         customDialogUtils.setListener(this)

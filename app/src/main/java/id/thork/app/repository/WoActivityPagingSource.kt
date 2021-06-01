@@ -49,7 +49,7 @@ class WoActivityPagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
-        Timber.d("position :%s", position)
+        Timber.d("position :%s query: %s", position, query)
         return try {
             if (query == null) {
                 fetchWo(position)
@@ -96,6 +96,7 @@ class WoActivityPagingSource @Inject constructor(
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResWorkorderHistory
 
+        Timber.tag(TAG).d("fetchWo() saved Query: %s", savedQuery)
         savedQuery?.let {
             repository.getWorkOrderList(
                 cookie, it, select, pageno = position, pagesize = 10,

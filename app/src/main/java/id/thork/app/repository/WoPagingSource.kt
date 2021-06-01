@@ -76,15 +76,15 @@ class WoPagingSource @Inject constructor(
 
 
     private suspend fun fetchWo(position: Int): Boolean {
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.WORKORDER_SELECT
         val savedQuery = appResourceMx.fsmResWorkorder
-
+        Timber.tag(TAG).d("fetchWo() position: %s savedQuery: %s", position, savedQuery)
         savedQuery?.let {
             repository.getWorkOrderList(
                 it, select, pageno = position, pagesize = 10,
                 onSuccess = {
                     response = it
+                    Timber.tag(TAG).d("fetchWo() response: %s", response)
                     it.member.whatIfNotNullOrEmpty { listmember ->
                         checkingWoInObjectBox(listmember)
                     }
