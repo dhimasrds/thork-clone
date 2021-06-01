@@ -19,4 +19,5 @@ class MatusetransEntity :  BaseEntity()  {
     var orgid: String? = null
     var storeroom: String? = null
     var itemqty: Int? = null
+    var syncUpdate: Int? = null
 }

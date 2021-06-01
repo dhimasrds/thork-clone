@@ -147,7 +147,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 val wonum = prepareBody.wonum
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
-                val listMatAct = prepareBody.matusetrans
+                val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
 
                 val member = Member()
                 member.status = status
@@ -186,8 +186,9 @@ class WorkOrderWorker @WorkerInject constructor(
                                     longdesc,
                                     status.toString()
                                 )
+                                materialRepository.checkMatActAfterUpdate(woId)
 
-                                    val nextIndex = currentIndex + 1
+                                val nextIndex = currentIndex + 1
                                     if (nextIndex <= listWo.size - 1) {
                                         updateStatusWoOffline(listWo, nextIndex)
                                     }

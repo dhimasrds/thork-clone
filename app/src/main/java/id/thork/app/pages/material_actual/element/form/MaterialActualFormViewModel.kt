@@ -36,6 +36,7 @@ class MaterialActualFormViewModel @ViewModelInject constructor(
         matusetransEntity.workorderId = workorderid
         matusetransEntity.storeroom = materialEntity.storeroom
         matusetransEntity.itemqty = itemqty.toInt()
+        matusetransEntity.syncUpdate = BaseParam.APP_TRUE
         materialRepository.saveMaterialActual(matusetransEntity)
         _result.value = BaseParam.APP_TRUE
     }

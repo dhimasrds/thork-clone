@@ -5,6 +5,7 @@ import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.MatusetransEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
@@ -62,6 +63,15 @@ class MatusetransDaoImp : MatusetransDao {
             .find()
     }
 
+    override fun findListMaterialActualByWoidAndSyncStatus(
+        woid: String,
+        syncUpdate: Int
+    ): List<MatusetransEntity>? {
+        return matusetransEntityBox.query().equal(MatusetransEntity_.workorderId, woid)
+            .equal(MatusetransEntity_.syncUpdate, syncUpdate).build()
+            .find()
+    }
+
     override fun findListMaterialActualByWonum(wonum: String): List<MatusetransEntity>? {
         return matusetransEntityBox.query().equal(MatusetransEntity_.wonum, wonum).build()
             .find()
@@ -87,4 +97,4 @@ class MatusetransDaoImp : MatusetransDao {
         return null
     }
 
-    }
+}

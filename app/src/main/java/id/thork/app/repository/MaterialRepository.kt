@@ -16,6 +16,7 @@ import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -152,6 +153,7 @@ class MaterialRepository @Inject constructor(
                 matPlanCache.itemqty = it.itemqty?.toInt()
                 templistMaterialPlan.add(matPlanCache)
 
+                //Material Actual Reference from Material Plan
                 val matActual = MatusetransEntity()
                 matActual.itemId = it.wpitemid
                 matActual.itemNum = it.itemnum
@@ -164,6 +166,7 @@ class MaterialRepository @Inject constructor(
                 matActual.orgid = appSession.orgId
                 matActual.storeroom = it.location
                 matActual.itemqty = it.itemqty?.toInt()
+                matActual.syncUpdate = BaseParam.APP_TRUE
                 templistMaterialActual.add(matActual)
 
             }
@@ -194,6 +197,7 @@ class MaterialRepository @Inject constructor(
      */
 
     fun saveMaterialActual(matusetransEntity: MatusetransEntity) {
+        Timber.d("saveMaterialActual() %s", matusetransEntity.wonum)
         matusetransDao.save(matusetransEntity, appSession.userEntity.username.toString())
     }
 
@@ -209,6 +213,11 @@ class MaterialRepository @Inject constructor(
         return matusetransDao.findListMaterialActualByWoid(workorderid)
     }
 
+    fun getListMaterialActualByWoidAndSyncUpdate(workorderid: String, syncUpdate: Int) : List<MatusetransEntity>? {
+        return matusetransDao.findListMaterialActualByWoidAndSyncStatus(workorderid, syncUpdate)
+    }
+
+
     fun getMaterialActualByWoid(workorderid: String, itemnum: String) : MatusetransEntity? {
         return matusetransDao.findByWoidAndItemnum(workorderid, itemnum)
     }
@@ -222,7 +231,7 @@ class MaterialRepository @Inject constructor(
      */
 
     fun prepareMaterialActual(workorderid : Int?, wonum: String?) : List<Matusetran>? {
-        val listMaterialCache = getListMaterialActualByWoid(workorderid.toString())
+        val listMaterialCache = getListMaterialActualByWoidAndSyncUpdate(workorderid.toString(), BaseParam.APP_TRUE)
         val listMaterialBody = mutableListOf<Matusetran>()
         listMaterialCache.whatIfNotNullOrEmpty {
             it.forEach { entity ->
@@ -244,6 +253,21 @@ class MaterialRepository @Inject constructor(
         return null
     }
 
+    /**
+     * Handling after Update
+     */
+
+    fun checkMatActAfterUpdate(workorderid: Int?) {
+        val listMaterialExisting = getListMaterialActualByWoidAndSyncUpdate(workorderid.toString(), BaseParam.APP_TRUE)
+        val tempListMaterial = mutableListOf<MatusetransEntity>()
+        listMaterialExisting.whatIfNotNullOrEmpty {
+            it.forEach {
+                it.syncUpdate = BaseParam.APP_FALSE
+                tempListMaterial.add(it)
+            }
+            saveListMaterialActual(tempListMaterial)
+        }
+    }
 
 
 }
