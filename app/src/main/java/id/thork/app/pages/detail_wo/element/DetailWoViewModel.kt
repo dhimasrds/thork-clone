@@ -130,6 +130,7 @@ class DetailWoViewModel @ViewModelInject constructor(
                     member,
                     onSuccess = {
                         workOrderRepository.updateWoCacheAfterSync(woId,wonum, longdesc, nextStatus)
+                        materialRepository.checkMatActAfterUpdate(woId)
                         saveScannerMaterial(woId)
                         uploadAttachments(woId)
                     },
