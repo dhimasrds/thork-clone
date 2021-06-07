@@ -22,6 +22,7 @@ import id.thork.app.databinding.FragmentWorkOrderListBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
+import id.thork.app.utils.StringUtils
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*

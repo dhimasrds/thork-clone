@@ -25,6 +25,7 @@ import id.thork.app.pages.login.element.LoginViewModel
 import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.utils.CommonUtils
+import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
 class LoginActivity : BaseActivity(),
@@ -47,6 +48,7 @@ class LoginActivity : BaseActivity(),
         //Init Custom Dialog
         customDialogUtils = CustomDialogUtils(this)
         loginViewModel.validateUsername()
+
     }
 
     override fun setupListener() {

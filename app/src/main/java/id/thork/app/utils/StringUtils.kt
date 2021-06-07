@@ -175,4 +175,10 @@ object StringUtils {
         }
         return string
     }
+
+    fun checkingString(string: String) : String {
+        val currentText = string
+        val convertText = currentText.replace("'", BaseParam.APP_EMPTY_STRING).replace("\"", BaseParam.APP_EMPTY_STRING)
+        return convertText
+    }
 }

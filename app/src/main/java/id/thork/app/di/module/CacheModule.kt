@@ -78,4 +78,16 @@ object CacheModule {
         return MatusetransDaoImp()
     }
 
+    @Singleton
+    @Provides
+    fun provideWorklogDao(): WorklogDao {
+        return WorklogDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideWorklogType(): WorklogTypeDao {
+        return WorklogTypeDaoImp()
+    }
+
 }
