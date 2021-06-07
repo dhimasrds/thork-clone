@@ -60,7 +60,10 @@ class LoginActivity : BaseActivity(),
                     binding.includeLoginContent.password.text.toString()
                 )
             } else {
-                loginViewModel.connectionNotAvailable()
+                loginViewModel.validateOfflineCredentials(
+                    binding.includeLoginContent.username.text.toString(),
+                    binding.includeLoginContent.password.text.toString()
+                )
             }
         }
     }
@@ -69,7 +72,11 @@ class LoginActivity : BaseActivity(),
         super.setupObserver()
         loginViewModel.success.observe(this, { success ->
             Timber.tag(TAG).i("setupObserver() success: %s", success)
-            CommonUtils.showToast(success, CommonUtils.POSITION_CENTER)
+            if (success) {
+                navigateToMainActivity()
+            } else {
+                loginViewModel.connectionNotAvailable()
+            }
         })
 
         loginViewModel.username.observe(this, Observer {

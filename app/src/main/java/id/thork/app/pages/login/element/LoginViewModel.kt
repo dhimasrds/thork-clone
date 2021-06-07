@@ -49,7 +49,7 @@ class LoginViewModel @ViewModelInject constructor(
     private val _progressVisible = MutableLiveData<Boolean>(false)
     private val _fetchProgressVisible = MutableLiveData<Boolean>(false)
 
-    private val _success = MutableLiveData<String>()
+    private val _success = MutableLiveData<Boolean>()
     private val _error = MutableLiveData<String>()
     private val _loginState = MutableLiveData<Int>()
     private val _username = MutableLiveData<String>()
@@ -58,12 +58,28 @@ class LoginViewModel @ViewModelInject constructor(
     val progressVisible: LiveData<Boolean> get() = _progressVisible
     val fetchProgressVisible: LiveData<Boolean> get() = _fetchProgressVisible
 
-    val success: LiveData<String> get() = _success
+    val success: LiveData<Boolean> get() = _success
     val error: LiveData<String> get() = _error
     val loginState: LiveData<Int> get() = _loginState
     val firstLogin: LiveData<Boolean> get() = _firstLogin
     val username: LiveData<String> get() = _username
 
+    fun validateOfflineCredentials(username: String, password: String) {
+        if (username.isNullOrEmpty()) {
+            _error.postValue(resourceProvider.getString(R.string.username_error))
+            return
+        }
+
+        if (password.isNullOrEmpty()) {
+            _error.postValue(resourceProvider.getString(R.string.password_error))
+            return
+        }
+
+        _progressVisible.value = true
+
+        val userHash = CommonUtils.encodeToBase64(username + ":" + password)
+        _success.value = (appSession.userHash.equals(userHash))
+    }
 
     fun validateCredentials(username: String, password: String) {
         if (username.isNullOrEmpty()) {
