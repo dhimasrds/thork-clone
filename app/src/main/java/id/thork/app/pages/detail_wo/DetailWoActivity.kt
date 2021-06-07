@@ -32,6 +32,7 @@ import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.multi_asset.ListAssetActivity
 import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.pages.rfid_location.RfidLocationActivity
+import id.thork.app.pages.work_log.WorkLogActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
@@ -283,6 +284,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
         }
 
+
     }
 
     private fun gotoListMaterial() {
@@ -317,6 +319,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
         intent.putExtra(BaseParam.APP_DETAIL, BaseParam.APP_DETAIL)
+        startActivity(intent)
+    }
+
+    private fun goToWorkLog() {
+        val intent = Intent(this, WorkLogActivity::class.java)
         startActivity(intent)
     }
 
@@ -464,6 +471,10 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 //                gotoListMaterial()
 //            }
 //        }
+
+        binding.includeWorklog.worklog.setOnClickListener {
+            goToWorkLog()
+        }
 
         binding.includeMaterialPlan.materialPlan.setOnClickListener {
             goToMaterialPlan()

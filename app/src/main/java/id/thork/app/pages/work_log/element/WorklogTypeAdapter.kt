@@ -11,10 +11,10 @@ import id.thork.app.persistence.entity.WorklogEntity
  * Created by Dhimas Saputra on 07/06/21
  * Jakarta, Indonesia.
  */
-class WorkLogAdapter constructor(
+class WorklogTypeAdapter  constructor(
     private val worklogEntity: List<WorklogEntity>
 ) :
-    RecyclerView.Adapter<WorkLogAdapter.ViewHolder>() {
+    RecyclerView.Adapter<WorklogTypeAdapter.ViewHolder>() {
     val TAG = FindAssetAdapter::class.java.name
 
 
