@@ -434,6 +434,11 @@
                         android:textSize="@dimen/text_size_wo_detail_16" />
 
                     <include
+                        android:id="@+id/include_worklog"
+                        layout="@layout/activity_detail_wo_worklog" />
+
+                    <include
+                        android:visibility="gone"
                         android:id="@+id/include_longdesc"
                         layout="@layout/activity_detail_wo_longdesc" />
 
