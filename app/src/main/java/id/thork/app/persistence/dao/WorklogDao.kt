@@ -9,5 +9,6 @@ import id.thork.app.persistence.entity.WorklogEntity
 interface WorklogDao {
     fun save(worklogEntity: WorklogEntity, username: String)
     fun remove()
-    fun saveListMaterialPlan(worklogList: List<WorklogEntity>): List<WorklogEntity>
+    fun findListWorklogByWoid(woid: String): List<WorklogEntity>
+    fun saveListWorklog(worklogList: List<WorklogEntity>): List<WorklogEntity>
 }

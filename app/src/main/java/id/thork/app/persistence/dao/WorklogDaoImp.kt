@@ -3,6 +3,7 @@ package id.thork.app.persistence.dao
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.WorklogEntity
+import id.thork.app.persistence.entity.WorklogEntity_
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity_
 import io.objectbox.Box
@@ -48,8 +49,13 @@ class WorklogDaoImp : WorklogDao {
         worklogEntityBox.removeAll()
     }
 
-    override fun saveListMaterialPlan(worklogList: List<WorklogEntity>): List<WorklogEntity> {
+    override fun saveListWorklog(worklogList: List<WorklogEntity>): List<WorklogEntity> {
         worklogEntityBox.put(worklogList)
         return worklogList
     }
+
+    override fun findListWorklogByWoid(woid: String): List<WorklogEntity> {
+        return worklogEntityBox.query().equal(WorklogEntity_.workorderid, woid).build().find()
+    }
+
 }

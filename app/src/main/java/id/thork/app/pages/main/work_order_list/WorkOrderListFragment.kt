@@ -58,6 +58,7 @@ class WorkOrderListFragment : Fragment() {
 //        progressBarOnFirstLoad()
         viewModel.fetchLocationMarker()
         viewModel.fetchItemMaster()
+        viewModel.fetchWorklogType()
 
     }
 

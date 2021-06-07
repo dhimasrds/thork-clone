@@ -24,6 +24,7 @@ import id.thork.app.network.response.material_response.MaterialResponse
 import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.network.response.worklogtype_response.WorklogtypeResponse
 import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.*
 import id.thork.app.utils.DateUtils
@@ -445,7 +446,7 @@ class WorkOrderRepository @Inject constructor(
         select: String,
         onSuccess: (MaterialResponse) -> Unit,
         onError: (String) -> Unit
-        ) {
+    ) {
         val response = workOrderClient.getItemMaster(cookie, select)
         response.suspendOnSuccess {
             data.whatIfNotNull {
@@ -455,6 +456,25 @@ class WorkOrderRepository @Inject constructor(
             }
         }.onError {
             Timber.tag(TAG).i("getItemMaster() code: %s error: %s", statusCode.code, message())
+            onError(message())
+        }
+
+    }
+
+    suspend fun getWorklogType(
+        cookie: String,
+        select: String,
+        where: String,
+        onSuccess: (WorklogtypeResponse) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = workOrderClient.getWorklogType(cookie, select, where)
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+        }.onError {
+            Timber.tag(TAG).i("getWorklogType() code: %s error: %s", statusCode.code, message())
             onError(message())
         }
 
@@ -754,7 +774,6 @@ class WorkOrderRepository @Inject constructor(
     fun findByLocation(location: String): LocationEntity? {
         return locationDao.findByLocation(location)
     }
-
 
 
 }

@@ -2,7 +2,7 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.WorklogTypeEntity
+import id.thork.app.persistence.entity.*
 import io.objectbox.Box
 import timber.log.Timber
 import java.util.*
@@ -44,5 +44,15 @@ class WorklogTypeDaoImp : WorklogTypeDao {
 
     override fun remove() {
         worklogTypeEntityBox.removeAll()
+    }
+
+    override fun saveListWorklogType(worklogList: List<WorklogTypeEntity>): List<WorklogTypeEntity> {
+        worklogTypeEntityBox.put(worklogList)
+        return worklogList
+    }
+
+    override fun listWorklogType(): List<WorklogTypeEntity>? {
+        return worklogTypeEntityBox.query().notNull(WorklogTypeEntity_.type).build()
+            .find()
     }
 }

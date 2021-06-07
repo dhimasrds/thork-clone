@@ -7,6 +7,7 @@ import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.material_response.MaterialResponse
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.network.response.worklogtype_response.WorklogtypeResponse
 import retrofit2.http.*
 
 /**
@@ -73,4 +74,12 @@ interface WorkOrderApi {
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,
     ): ApiResponse<MaterialResponse>
+
+    @GET("maximo/oslc/os/THISFSMSYNDOMAIN")
+    suspend fun getWorklogType(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Query(value = "lean") lean: Int,
+        @Query(value = "oslc.select") select: String?,
+        @Query(value = "oslc.where") where: String?
+    ): ApiResponse<WorklogtypeResponse>
 }

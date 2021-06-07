@@ -21,6 +21,7 @@ import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.WorklogRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,6 +37,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     private val appResourceMx: AppResourceMx,
     private val materialRepository: MaterialRepository,
     private val assetDao: AssetDao,
+    private val worklogRepository: WorklogRepository,
     @Assisted state: SavedStateHandle
 ) : LiveCoroutinesViewModel() {
     val TAG = WorkOrderListViewModel::class.java.name
@@ -160,6 +162,25 @@ class WorkOrderListViewModel @ViewModelInject constructor(
                     it.member.whatIfNotNullOrEmpty { members ->
                         Timber.d("WorkOrderListViewModel() fetchItemMaster() onSuccess :%s", it)
                         materialRepository.addItemMasterToObjectBox(members)
+                    }
+                },
+                onError = {
+                    Timber.d("WorkOrderListViewModel() fetchAsset() onError :%s", it)
+                }
+            )
+        }
+    }
+
+    fun fetchWorklogType() {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val select: String = ApiParam.WORKORDER_SELECT
+        val where: String = ApiParam.WORKLOGTYPE_WHERE
+        viewModelScope.launch(Dispatchers.IO) {
+            workOrderRepository.getWorklogType(cookie, select, where,
+                onSuccess = {
+                    Timber.d("WorkOrderListViewModel() fetchWorklogType() onSuccess :%s", it)
+                    it.member.whatIfNotNullOrEmpty { members ->
+                        worklogRepository.saveWorklogtypeToObjectBox(members)
                     }
                 },
                 onError = {

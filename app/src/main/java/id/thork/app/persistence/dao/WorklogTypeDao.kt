@@ -9,4 +9,6 @@ import id.thork.app.persistence.entity.WorklogTypeEntity
 interface WorklogTypeDao {
     fun save(worklogTypeEntity: WorklogTypeEntity, username: String)
     fun remove()
+    fun saveListWorklogType(worklogList: List<WorklogTypeEntity>): List<WorklogTypeEntity>
+    fun listWorklogType(): List<WorklogTypeEntity>?
 }

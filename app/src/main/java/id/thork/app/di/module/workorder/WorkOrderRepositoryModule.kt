@@ -10,10 +10,7 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.*
-import id.thork.app.repository.AttachmentRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WoActivityRepository
-import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.*
 import okhttp3.logging.HttpLoggingInterceptor
 
 /**
@@ -76,6 +73,18 @@ object WorkOrderRepositoryModule {
             appSession,
             AttachmentDaoImp(),
             httpLoggingInterceptor
+        )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideWorklogRepository(
+        appSession: AppSession
+    ): WorklogRepository {
+        return  WorklogRepository(
+            WorklogDaoImp(),
+            WorklogTypeDaoImp(),
+            appSession
         )
     }
 }

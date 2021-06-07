@@ -53,6 +53,9 @@ class WorkOrderClient @Inject constructor(
     suspend fun getItemMaster(headerParam: String, select: String) =
         workOrderApi.getItemMaster(headerParam, LEAN, select)
 
+    suspend fun getWorklogType(headerParam: String, select: String, where: String) =
+        workOrderApi.getWorklogType(headerParam, LEAN, select, where)
+
     companion object {
         private const val LEAN = 1
     }

@@ -30,5 +30,7 @@ object ApiParam {
 
     const val STOREROOM_WHERE_ENDPOINT = "inventory.itemnum=\""
 
+    const val WORKLOGTYPE_WHERE= "domainid=\"LOGTYPE\""
+
 
 }
