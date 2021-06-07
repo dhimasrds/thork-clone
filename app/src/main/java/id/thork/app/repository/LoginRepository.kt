@@ -47,6 +47,10 @@ class LoginRepository constructor(
         return userDao.findUserByPersonUID(personUID)
     }
 
+    fun findUserByUsername(username: String): UserEntity? {
+        return userDao.findUserByUsername(username)
+    }
+
     fun createUserSession(userEntity: UserEntity, username: String): UserEntity {
         return userDao.createUserSession(userEntity, username)
     }
