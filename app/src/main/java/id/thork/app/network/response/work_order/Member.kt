@@ -257,5 +257,7 @@ data class Member(
     @Json(name = "wptool_collectionref")
     val wptoolCollectionref: String? = null,
     @Json(name = "multiassetlocci")
-    val multiassetlocci: List<Multiassetlocci>? = null
+    val multiassetlocci: List<Multiassetlocci>? = null,
+    @Json(name = "worklog")
+    var worklog: List<Worklog>? = null,
 )

@@ -7,6 +7,7 @@ import id.thork.app.persistence.entity.WorklogEntity_
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
@@ -56,6 +57,10 @@ class WorklogDaoImp : WorklogDao {
 
     override fun findListWorklogByWoid(woid: String): List<WorklogEntity> {
         return worklogEntityBox.query().equal(WorklogEntity_.workorderid, woid).build().find()
+    }
+
+    override fun findListWorklogByWoidSyncStatus(woid: String, syncStatus: Int): List<WorklogEntity> {
+        return worklogEntityBox.query().equal(WorklogEntity_.workorderid, woid).equal(WorklogEntity_.syncStatus, syncStatus).build().find()
     }
 
 }
