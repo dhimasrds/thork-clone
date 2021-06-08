@@ -167,6 +167,7 @@ object BaseParam {
     const val MATERIAL = "MATERIAL"
     const val ITEM = "ITEM"
     const val ISSUE = "ISSUE"
+    const val WORKLOGTYPE = "WORKLOGTYPE"
 
 
 

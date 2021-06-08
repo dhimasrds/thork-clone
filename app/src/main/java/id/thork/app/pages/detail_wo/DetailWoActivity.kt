@@ -324,6 +324,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     private fun goToWorkLog() {
         val intent = Intent(this, WorkLogActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId.toString())
+        intent.putExtra(BaseParam.WONUM, workorderNumber.toString())
         startActivity(intent)
     }
 

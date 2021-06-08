@@ -3,8 +3,11 @@ package id.thork.app.pages.work_log
 
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityWorkLogBinding
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.work_log.create_work_log.CreateWorkLogActivity
@@ -13,13 +16,13 @@ import id.thork.app.pages.work_log.element.WorkLogViewModel
 import id.thork.app.persistence.entity.WorklogEntity
 
 class WorkLogActivity : BaseActivity() {
-    val TAG = FindAssetActivity::class.java.name
+    val TAG = WorkLogActivity::class.java.name
     private val viewModels: WorkLogViewModel by viewModels()
     private val binding: ActivityWorkLogBinding by binding(R.layout.activity_work_log)
     private lateinit var workLogAdapter: WorkLogAdapter
     private lateinit var worklogEntity: MutableList<WorklogEntity>
-
-
+    private var intentWonum: String? = null
+    private var intentWoid: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -46,11 +49,35 @@ class WorkLogActivity : BaseActivity() {
             notification = false,
             option = false
         )
-
+        retrieveFromIntent()
     }
+
+    private fun retrieveFromIntent() {
+        intentWonum = intent.getStringExtra(BaseParam.WONUM)
+        intentWoid = intent.getStringExtra(BaseParam.WORKORDERID)
+        intentWoid.whatIfNotNull {
+            viewModels.initWorklog(it)
+        }
+    }
+
 
     override fun setupObserver() {
         super.setupObserver()
+        viewModels.listWorklog.observe(this, Observer {
+            worklogEntity.clear()
+            worklogEntity.addAll(it)
+            workLogAdapter.notifyDataSetChanged()
+        })
+    }
 
+    override fun setupListener() {
+        super.setupListener()
+        binding.btnCreate.setOnClickListener {
+            val intent = Intent(this, CreateWorkLogActivity::class.java)
+            intent.putExtra(BaseParam.WORKORDERID, intentWoid)
+            intent.putExtra(BaseParam.WONUM, intentWonum)
+            startActivity(intent)
+            finish()
+        }
     }
 }

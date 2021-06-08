@@ -1,12 +1,14 @@
 package id.thork.app.repository
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.worklogtype_response.Member
 import id.thork.app.persistence.dao.WorklogDaoImp
 import id.thork.app.persistence.dao.WorklogTypeDaoImp
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogTypeEntity
+import id.thork.app.utils.DateUtils
 import java.util.*
 import javax.inject.Inject
 
@@ -38,6 +40,7 @@ class WorklogRepository @Inject constructor(
     }
 
     fun saveWorklogtypeToObjectBox(members : List<Member>) {
+        removeWorklogType()
         members.whatIfNotNullOrEmpty {
             val listWorklogTypecache = mutableListOf<WorklogTypeEntity>()
             it.forEach {
@@ -71,5 +74,17 @@ class WorklogRepository @Inject constructor(
 
     fun fetchListWorklogByWoid(workorderid: String) : List<WorklogEntity>? {
         return worklogDaoImp.findListWorklogByWoid(workorderid)
+    }
+
+    fun saveWorklogEntity(summary: String, description: String, type: String, wonum: String, workorderid: String) {
+        val worklogEntity = WorklogEntity()
+        worklogEntity.summary = summary
+        worklogEntity.description = description
+        worklogEntity.type = type
+        worklogEntity.date = DateUtils.getDateTimeMaximo()
+        worklogEntity.syncStatus = BaseParam.APP_FALSE
+        worklogEntity.wonum = wonum
+        worklogEntity.workorderid = workorderid
+        saveWorklog(worklogEntity)
     }
 }
