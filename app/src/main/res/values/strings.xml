@@ -453,6 +453,8 @@
     <string name="type">Type</string>
     <string name="create_work_log">Create Work Log</string>
     <string name="work_log">Work Log</string>
+    <string name="type_here">Type here</string>
+    <string name="find_work_type">Find work type</string>
 
 
 </resources>

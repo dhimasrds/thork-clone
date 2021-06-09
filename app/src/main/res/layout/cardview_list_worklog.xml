@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:layout_margin="@dimen/general_margin_5dp"
+            android:layout_margin="@dimen/general_margin_10dp"
             android:background="@drawable/ripple_effect"
             android:orientation="vertical">
 
@@ -38,6 +38,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:gravity="center_vertical"
                     android:textSize="21sp"
+                    android:maxLines="1"
                     android:textFontWeight="700"
                     android:text="Perbaikan Kabel"
                     android:textColor="@color/colorBlack"
@@ -85,6 +86,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
                     android:textColor="@color/colorBlack"
+                    android:minLines="1"
+                    android:maxLines="2"
                     android:textSize="@dimen/base_text_size_16"
                     android:text="Penambahan Kabel di dalam Gorong Gorong Tanah abang Blok C"
                     />

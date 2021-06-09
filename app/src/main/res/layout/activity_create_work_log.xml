@@ -72,9 +72,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/general_margin_5dp"
                     android:drawableEnd="@drawable/ic_search_blue"
+                    android:hint="@string/find_work_type"
                     android:fontFamily="@font/roboto_regular"
                     android:padding="@dimen/general_padding_5dp"
-                    android:text="WORK"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/base_text_size_16" />
@@ -95,7 +95,6 @@
                     android:textColor="@color/colorBlack"
                     android:textFontWeight="700"
                     android:textSize="21sp" />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -103,14 +102,16 @@
                     android:layout_marginBottom="@dimen/general_margin_5dp"
                     />
 
-                <EditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/tv_summary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/general_margin_5dp"
                     android:fontFamily="@font/roboto_regular"
+                    android:background="@color/transparant"
+                    android:inputType="textMultiLine|textVisiblePassword"
                     android:padding="@dimen/general_padding_5dp"
-                    android:text="Penambahan Kabel"
+                    android:hint="@string/type_here"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/base_text_size_16" />
@@ -140,14 +141,16 @@
                     android:layout_marginBottom="@dimen/general_margin_5dp"
                     />
 
-                <EditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/tv_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/general_margin_5dp"
+                    android:background="@color/transparant"
+                    android:backgroundTint="@color/transparant"
+                    android:inputType="textMultiLine|textVisiblePassword"                    android:hint="@string/type_here"
                     android:fontFamily="@font/roboto_regular"
                     android:padding="@dimen/general_padding_5dp"
-                    android:text="Penambahan kabel di dalam Gorong Gorong Tanah abang Blok C"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/base_text_size_16" />

@@ -35,8 +35,8 @@ class WorkLogAdapter constructor(
         @SuppressLint("NewApi")
         fun bind(worklogEntity: WorklogEntity) {
             binding.apply {
-                tvTitle.text = worklogEntity.summary
-                tvDesc.text = StringUtils.truncate(worklogEntity.description, 50)
+                tvTitle.text =StringUtils.truncate(worklogEntity.summary,20)
+                tvDesc.text = StringUtils.truncate(worklogEntity.description, 115)
                 tvType.text = worklogEntity.type
                 tvDate.text = worklogEntity.date
                 cardWorklog.setOnClickListener {
