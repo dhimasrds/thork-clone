@@ -8,7 +8,6 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityWorkLogTypeBinding
 import id.thork.app.pages.work_log.element.WorkLogViewModel
 import id.thork.app.pages.work_log.element.WorklogTypeAdapter
-import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogTypeEntity
 
 class WorkLogTypeActivity : BaseActivity() {

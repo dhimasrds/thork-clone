@@ -193,6 +193,7 @@ class WorkOrderWorker @WorkerInject constructor(
                                         status.toString()
                                     )
                                     materialRepository.checkMatActAfterUpdate(woId)
+                                    worklogRepository.handlingAfterUpdate(woId.toString())
 
                                     val nextIndex = currentIndex + 1
                                     if (nextIndex <= listWo.size - 1) {

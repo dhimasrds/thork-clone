@@ -1,7 +1,6 @@
 package id.thork.app.pages.work_log.create_work_log
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -11,8 +10,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateWorkLogBinding
-import id.thork.app.pages.find_asset_location.FindAssetActivity
-import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.pages.work_log.WorkLogActivity
 import id.thork.app.pages.work_log.element.WorkLogViewModel
 import id.thork.app.pages.work_log.type.WorkLogTypeActivity

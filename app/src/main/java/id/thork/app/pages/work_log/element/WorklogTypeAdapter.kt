@@ -10,8 +10,6 @@ import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewListWorklogBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
-import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
-import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem
 import id.thork.app.pages.work_log.create_work_log.CreateWorkLogActivity
 import id.thork.app.pages.work_log.type.WorkLogTypeActivity
 import id.thork.app.persistence.entity.WorklogTypeEntity

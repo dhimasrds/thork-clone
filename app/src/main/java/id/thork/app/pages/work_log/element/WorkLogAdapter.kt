@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardviewListWorklogBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.persistence.entity.WorklogEntity
-import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 
 /**

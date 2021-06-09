@@ -9,7 +9,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityWorkLogBinding
-import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.work_log.create_work_log.CreateWorkLogActivity
 import id.thork.app.pages.work_log.element.WorkLogAdapter
 import id.thork.app.pages.work_log.element.WorkLogViewModel
