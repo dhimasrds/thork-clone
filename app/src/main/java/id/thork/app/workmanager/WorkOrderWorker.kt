@@ -29,10 +29,7 @@ import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.repository.AttachmentRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WorkOrderRepository
-import id.thork.app.repository.WorkerRepository
+import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +54,8 @@ class WorkOrderWorker @WorkerInject constructor(
     val matusetransDao: MatusetransDao,
     val wpmaterialDao: WpmaterialDao,
     val materialDao: MaterialDao,
+    val worklogDao: WorklogDao,
+    val worklogTypeDao: WorklogTypeDao
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -65,6 +64,8 @@ class WorkOrderWorker @WorkerInject constructor(
     var response = WorkOrderResponse()
     var attachmentRepository: AttachmentRepository
     var materialRepository: MaterialRepository
+    var worklogRepository: WorklogRepository
+
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
     init {
@@ -78,11 +79,13 @@ class WorkOrderWorker @WorkerInject constructor(
                 assetDao,
                 attachmentDao,
                 doclinksClient,
-                materialBackupDao, matusetransDao, wpmaterialDao, materialDao
+                materialBackupDao, matusetransDao, wpmaterialDao, materialDao, worklogDao,
+                worklogTypeDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
+        worklogRepository = workerRepository.buildWorklogRepository()
 
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)
     }
@@ -148,12 +151,15 @@ class WorkOrderWorker @WorkerInject constructor(
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
                 val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
-
+                val listWorklog = worklogRepository.prepareBodyListWorklog(woId.toString(), BaseParam.APP_FALSE)
                 val member = Member()
                 member.status = status
                 member.descriptionLongdescription = longdesc
                 listMatAct.whatIfNotNullOrEmpty {
                     member.matusetrans = it
+                }
+                listWorklog.whatIfNotNullOrEmpty {
+                    member.worklog = listWorklog
                 }
 
                 Timber.tag(TAG).d(
@@ -172,23 +178,23 @@ class WorkOrderWorker @WorkerInject constructor(
                 val contentType: String = ("application/json")
                 val patchType: String = BaseParam.APP_MERGE
                 runBlocking {
-                launch(Dispatchers.IO) {
-                    if (woId != null) {
-                        workOrderRepository.updateStatus(cookie,
-                            xMethodeOverride,
-                            contentType,
-                            patchType,
-                            woId,
-                            member,
-                            onSuccess = {
-                                workOrderRepository.updateWoCacheAfterSync(
-                                    woId, wonum,
-                                    longdesc,
-                                    status.toString()
-                                )
-                                materialRepository.checkMatActAfterUpdate(woId)
+                    launch(Dispatchers.IO) {
+                        if (woId != null) {
+                            workOrderRepository.updateStatus(cookie,
+                                xMethodeOverride,
+                                contentType,
+                                patchType,
+                                woId,
+                                member,
+                                onSuccess = {
+                                    workOrderRepository.updateWoCacheAfterSync(
+                                        woId, wonum,
+                                        longdesc,
+                                        status.toString()
+                                    )
+                                    materialRepository.checkMatActAfterUpdate(woId)
 
-                                val nextIndex = currentIndex + 1
+                                    val nextIndex = currentIndex + 1
                                     if (nextIndex <= listWo.size - 1) {
                                         updateStatusWoOffline(listWo, nextIndex)
                                     }

@@ -23,13 +23,9 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.ApiParam
 import id.thork.app.network.api.DoclinksClient
-import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.*
-import id.thork.app.repository.AttachmentRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WorkOrderRepository
-import id.thork.app.repository.WorkerRepository
+import id.thork.app.repository.*
 import id.thork.app.utils.MoshiUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -54,12 +50,15 @@ class WorkerCoordinator @Inject constructor(
     val matusetransDao: MatusetransDao,
     val wpmaterialDao: WpmaterialDao,
     val materialDao: MaterialDao,
+    val worklogDao: WorklogDao,
+    val worklogTypeDao: WorklogTypeDao
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
     var workOrderRepository: WorkOrderRepository
     var attachmentRepository: AttachmentRepository
     var materialRepository: MaterialRepository
+    var worklogRepository: WorklogRepository
     var response = WorkOrderResponse()
 
     //Work manager only execute when connected to internet
@@ -81,10 +80,14 @@ class WorkerCoordinator @Inject constructor(
                 materialBackupDao,
                 matusetransDao,
                 wpmaterialDao,
-                materialDao)
+                materialDao,
+                worklogDao,
+                worklogTypeDao
+            )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
+        worklogRepository = workerRepository.buildWorklogRepository()
 
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }

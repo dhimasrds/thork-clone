@@ -1,13 +1,12 @@
 package id.thork.app.repository
 
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.work_order.Worklog
 import id.thork.app.network.response.worklogtype_response.Member
-import id.thork.app.persistence.dao.WorklogDaoImp
-import id.thork.app.persistence.dao.WorklogTypeDaoImp
+import id.thork.app.persistence.dao.WorklogDao
+import id.thork.app.persistence.dao.WorklogTypeDao
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogTypeEntity
 import id.thork.app.utils.DateUtils
@@ -19,8 +18,8 @@ import javax.inject.Inject
  * Jakarta, Indonesia.
  */
 class WorklogRepository @Inject constructor(
-    private val worklogDaoImp: WorklogDaoImp,
-    private val worklogTypeDaoImp: WorklogTypeDaoImp,
+    private val worklogDao: WorklogDao,
+    private val worklogTypeDao: WorklogTypeDao,
     private val appSession: AppSession
 ) {
 
@@ -30,15 +29,15 @@ class WorklogRepository @Inject constructor(
      * Worklog Type
      */
     fun saveWorklogtype(worklogtypelist: List<WorklogTypeEntity>): List<WorklogTypeEntity>? {
-        return worklogTypeDaoImp.saveListWorklogType(worklogtypelist)
+        return worklogTypeDao.saveListWorklogType(worklogtypelist)
     }
 
     fun removeWorklogType() {
-        return worklogTypeDaoImp.remove()
+        return worklogTypeDao.remove()
     }
 
     fun fetchListWorklogtype(): List<WorklogTypeEntity>? {
-        return worklogTypeDaoImp.listWorklogType()
+        return worklogTypeDao.listWorklogType()
     }
 
     fun saveWorklogtypeToObjectBox(members: List<Member>) {
@@ -63,19 +62,19 @@ class WorklogRepository @Inject constructor(
      * Worklog
      */
     fun saveWorklog(worklogEntity: WorklogEntity) {
-        return worklogDaoImp.save(worklogEntity, username.toString())
+        return worklogDao.save(worklogEntity, username.toString())
     }
 
     fun saveListWorkLog(worklogList: List<WorklogEntity>): List<WorklogEntity>? {
-        return worklogDaoImp.saveListWorklog(worklogList)
+        return worklogDao.saveListWorklog(worklogList)
     }
 
     fun removeWorklog() {
-        return worklogDaoImp.remove()
+        return worklogDao.remove()
     }
 
     fun fetchListWorklogByWoid(workorderid: String): List<WorklogEntity>? {
-        return worklogDaoImp.findListWorklogByWoid(workorderid)
+        return worklogDao.findListWorklogByWoid(workorderid)
     }
 
     fun saveWorklogEntity(
@@ -100,7 +99,7 @@ class WorklogRepository @Inject constructor(
         workorderid: String,
         syncStatus: Int
     ): List<WorklogEntity> {
-        return worklogDaoImp.findListWorklogByWoidSyncStatus(workorderid, syncStatus)
+        return worklogDao.findListWorklogByWoidSyncStatus(workorderid, syncStatus)
     }
 
     fun prepareBodyWorklog(
@@ -119,7 +118,7 @@ class WorklogRepository @Inject constructor(
     }
 
     fun handlingAfterUpdate(workorderid: String) {
-        val worklogentity = worklogDaoImp.findListWorklogByWoid(workorderid)
+        val worklogentity = worklogDao.findListWorklogByWoid(workorderid)
         worklogentity.whatIfNotNullOrEmpty { list ->
             list.forEach {
                 if (it.syncStatus?.equals(BaseParam.APP_FALSE) == true) {
@@ -128,5 +127,26 @@ class WorklogRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    fun prepareBodyListWorklog(
+        workorderid: String,
+        syncStatus: Int
+    ) : List<Worklog>{
+        val listWorklogBody = mutableListOf<Worklog>()
+        val listWorklogCache = getListWorklogByWoidAndSnycStatus(workorderid, syncStatus)
+        listWorklogCache.whatIfNotNullOrEmpty {
+            it.forEach { localCache ->
+                val worklog = Worklog()
+                worklog.description = localCache.summary
+                worklog.descriptionLongdescription = localCache.description
+                worklog.logtype = localCache.type
+                worklog.recordkey = localCache.wonum
+                worklog.createdate = localCache.date
+                listWorklogBody.add(worklog)
+            }
+        }
+        return listWorklogBody
+
     }
 }

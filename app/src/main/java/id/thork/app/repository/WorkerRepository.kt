@@ -36,12 +36,20 @@ class WorkerRepository constructor(
     private val matusetransDao: MatusetransDao,
     private val wpmaterialDao: WpmaterialDao,
     private val materialDao: MaterialDao,
+    private val worklogDao: WorklogDao,
+    private val worklogTypeDao: WorklogTypeDao
 ) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
         val workOrderClient = WorkOrderClient(provideWorkOrderApi())
         val attachmentRepository =
-            AttachmentRepository(context, preferenceManager, appSession, attachmentDao, httpLoggingInterceptor)
+            AttachmentRepository(
+                context,
+                preferenceManager,
+                appSession,
+                attachmentDao,
+                httpLoggingInterceptor
+            )
         val materialRepository = MaterialRepository(
             materialBackupDao,
             matusetransDao,
@@ -49,6 +57,11 @@ class WorkerRepository constructor(
             materialDao,
             appSession
         )
+
+        val worklogRepository = WorklogRepository(
+            worklogDao, worklogTypeDao, appSession
+        )
+
         return WorkOrderRepository(
             context,
             workOrderClient,
@@ -56,7 +69,8 @@ class WorkerRepository constructor(
             appSession,
             assetDao,
             attachmentRepository,
-            materialRepository
+            materialRepository,
+            worklogRepository
         )
     }
 
@@ -87,6 +101,12 @@ class WorkerRepository constructor(
             wpmaterialDao,
             materialDao,
             appSession
+        )
+    }
+
+    fun buildWorklogRepository(): WorklogRepository {
+        return WorklogRepository(
+            worklogDao, worklogTypeDao, appSession
         )
     }
 
