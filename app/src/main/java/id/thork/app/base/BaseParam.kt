@@ -89,6 +89,7 @@ object BaseParam {
     const val REASSGN = "REASSGN"
     const val WSUPP = "WSUPP"
     const val DONE = "DONE"
+    const val WORK = "WORK"
 
     /**
      *  Workorder priority
