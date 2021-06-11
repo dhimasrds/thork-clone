@@ -11,7 +11,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseParam.TAG_SETTING
 import id.thork.app.databinding.ActivitySettingsBinding
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.about.AboutActivity
+import id.thork.app.pages.profiles.about_us.AboutActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.server.ServerActivity

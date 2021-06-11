@@ -1,4 +1,4 @@
-package id.thork.app.pages.about
+package id.thork.app.pages.profiles.about_us
 
 import android.os.Bundle
 import android.webkit.WebView

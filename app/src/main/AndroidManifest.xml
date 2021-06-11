@@ -61,7 +61,7 @@
         <activity android:name=".pages.settings_language.SettingsLanguageActivity" />
         <activity android:name=".pages.settings_pattern.SettingsPatternActivity" />
         <activity android:name=".pages.settings.SettingsActivity" />
-        <activity android:name=".pages.about.AboutActivity" />
+        <activity android:name=".pages.profiles.about_us.AboutActivity" />
         <activity android:name=".pages.list_material.ListMaterialActivity" />
         <activity android:name=".pages.ScannerActivity" />
         <activity android:name=".pages.long_description.LongDescActivity" />
