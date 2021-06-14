@@ -455,6 +455,17 @@
     <string name="work_log">Work Log</string>
     <string name="type_here">Type here</string>
     <string name="find_work_type">Find work type</string>
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+    <string name="work_hours">Work Hours</string>
+    <string name="your_location">Your Location</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="attendance">Attendance</string>
+    <string name="history_attendance">History Attendance</string>
+    <string name="check_in_location">Check in Location</string>
+    <string name="check_out_location">Check out Location</string>
+    <string name="check_in_image">Check in Image</string>
+    <string name="check_out_image">Check out Image</string>
 
 
 </resources>
