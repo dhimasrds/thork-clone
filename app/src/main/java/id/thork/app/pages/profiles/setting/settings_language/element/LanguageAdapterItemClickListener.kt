@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package id.thork.app.pages.settings_language.element
+package id.thork.app.pages.profiles.setting.settings_language.element
 
 import id.thork.app.persistence.entity.Language
 

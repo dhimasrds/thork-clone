@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_log.element
+package id.thork.app.pages.profiles.setting.settings_log.element
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -32,12 +32,12 @@ class LogAdapter(private val recyclerViewItemClickListener: LogRecyclerViewItemC
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogAdapter.LogViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogViewHolder {
         return LogViewHolder(
             LayoutInflater.from(parent.context)
             .inflate(R.layout.item_settings_logs, parent, false))    }
 
-    override fun onBindViewHolder(holder: LogAdapter.LogViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LogViewHolder, position: Int) {
         getItem(position)?.let {
             holder.bind(it)
         }

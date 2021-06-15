@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings
+package id.thork.app.pages.profiles.setting.settings
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,14 +11,12 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseParam.TAG_SETTING
 import id.thork.app.databinding.ActivitySettingsBinding
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.profiles.about_us.AboutActivity
 import id.thork.app.pages.login_pattern.LoginPatternActivity
-import id.thork.app.pages.main.MainActivity
-import id.thork.app.pages.server.ServerActivity
-import id.thork.app.pages.settings.element.SettingsViewModel
-import id.thork.app.pages.settings_language.SettingsLanguageActivity
-import id.thork.app.pages.settings_log.LogActivity
-import id.thork.app.pages.settings_pattern.SettingsPatternActivity
+import id.thork.app.pages.profiles.profile.ProfileActivity
+import id.thork.app.pages.profiles.setting.settings.element.SettingsViewModel
+import id.thork.app.pages.profiles.setting.settings_language.SettingsLanguageActivity
+import id.thork.app.pages.profiles.setting.settings_log.LogActivity
+import id.thork.app.pages.profiles.setting.settings_pattern.SettingsPatternActivity
 import id.thork.app.utils.LocaleHelper
 
 /**
@@ -75,18 +73,9 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         viewModel.isPattern.observe(this, Observer {
             binding.activatePattern.isChecked = it == BaseParam.APP_TRUE
         })
-        viewModel.logout.observe(this, {
-            if (it == BaseParam.APP_TRUE) {
-                goToServerAcitivity()
-            }
-        })
     }
 
     private fun handlerOnclick() {
-        binding.settingsAbout.setOnClickListener {
-            goToAboutActivity()
-        }
-
         binding.settingsLanguage.setOnClickListener {
             goToLanguageActivity()
         }
@@ -109,10 +98,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
 
         binding.settingsLogs.setOnClickListener {
             goToLogActivity()
-        }
-
-        binding.buttonLogout.setOnClickListener {
-            setDialogLogout()
         }
     }
 
@@ -152,23 +137,8 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
         )
     }
 
-    private fun goToServerAcitivity() {
-        val intent = Intent(this, ServerActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun goToAboutActivity() {
-        startActivity(Intent(this, AboutActivity::class.java))
-    }
-
     private fun goToLogActivity() {
         startActivity(Intent(this, LogActivity::class.java))
-    }
-
-    private fun goToLogout() {
-        LocaleHelper.setLocale(this, BaseParam.APP_DEFAULT_LANG)
-        viewModel.logout()
     }
 
     private fun setDialogSwitchPattern() {
@@ -177,16 +147,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             .setRightButtonText(R.string.dialog_yes)
             .setTittle(R.string.change_switch_dialog)
             .setDescription(R.string.change_switch_dialog_question)
-            .setListener(this)
-        customDialogUtils.show()
-    }
-
-    private fun setDialogLogout() {
-        currentTag = TAG_LOGOUT
-        customDialogUtils.setLeftButtonText(R.string.dialog_no)
-            .setRightButtonText(R.string.dialog_yes)
-            .setTittle(R.string.logout_title)
-            .setDescription(R.string.logout_qustion)
             .setListener(this)
         customDialogUtils.show()
     }
@@ -220,7 +180,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             TAG_ACTIVE_PATTERN -> goToLoginPatternActivity()
             TAG_CHANGE_PATTERN -> goToChangePatternActivity()
             TAG_SWITCH_PATTERN -> goToLoginPatternActivity()
-            TAG_LOGOUT -> goToLogout()
         }
     }
 
@@ -232,7 +191,6 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
             }
             TAG_CHANGE_PATTERN -> customDialogUtils.dismiss()
             TAG_ACTIVE_PATTERN -> customDialogUtils.dismiss()
-            TAG_LOGOUT -> customDialogUtils.dismiss()
         }
     }
 
@@ -246,7 +204,7 @@ class SettingsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener 
     }
 
     override fun goToPreviousActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, ProfileActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         //finish()

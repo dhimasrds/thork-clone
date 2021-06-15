@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_log_detail
+package id.thork.app.pages.profiles.setting.settings_log_detail
 
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -7,8 +7,8 @@ import androidx.core.content.ContextCompat
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySettingsLogDetailBinding
-import id.thork.app.pages.settings_log.LogActivity
-import id.thork.app.pages.settings_log_detail.element.LogDetailViewModel
+import id.thork.app.pages.profiles.setting.settings_log.LogActivity
+import id.thork.app.pages.profiles.setting.settings_log_detail.element.LogDetailViewModel
 import id.thork.app.persistence.entity.LogEntity
 
 /**

@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_language
+package id.thork.app.pages.profiles.setting.settings_language
 
 import android.app.Activity
 import android.content.Intent
@@ -11,7 +11,9 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivitySettingsLanguageBinding
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.settings_language.element.*
+import id.thork.app.pages.profiles.setting.settings_language.element.LanguageAdapter
+import id.thork.app.pages.profiles.setting.settings_language.element.LanguageAdapterItemClickListener
+import id.thork.app.pages.profiles.setting.settings_language.element.SettingsLanguageViewModel
 import id.thork.app.persistence.entity.Language
 import java.util.*
 

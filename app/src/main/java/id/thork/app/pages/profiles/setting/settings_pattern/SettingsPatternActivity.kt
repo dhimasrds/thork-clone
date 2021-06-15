@@ -10,7 +10,7 @@
  * permission of This.ID.
  */
 
-package id.thork.app.pages.settings_pattern
+package id.thork.app.pages.profiles.setting.settings_pattern
 
 import android.content.Intent
 import android.view.View

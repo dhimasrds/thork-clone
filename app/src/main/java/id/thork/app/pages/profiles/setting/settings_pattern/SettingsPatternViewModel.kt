@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_pattern
+package id.thork.app.pages.profiles.setting.settings_pattern
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
