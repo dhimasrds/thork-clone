@@ -51,7 +51,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> binding(
-        @LayoutRes resId: Int
+        @LayoutRes resId: Int,
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
 
     protected val SELECT_DOCUMENT_REQUEST = 555
@@ -96,7 +96,7 @@ abstract class BaseActivity : AppCompatActivity() {
         filter: Boolean,
         scannerIcon: Boolean,
         notification: Boolean,
-        option: Boolean
+        option: Boolean,
     ) {
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
@@ -118,7 +118,11 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             editTextToolbar.visibility = View.GONE
             toolBarTitle.visibility = View.VISIBLE
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            if (toolBarTitle.text == getString(R.string.action_profile)) {
+                toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white)
+            } else {
+                toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            }
             toolBar.setNavigationOnClickListener {
                 goToPreviousActivity()
             }
@@ -158,21 +162,21 @@ abstract class BaseActivity : AppCompatActivity() {
             toolBar.overflowIcon?.setColorFilter(
                 Color.parseColor("#AEAEAE"),
                 PorterDuff.Mode.SRC_ATOP
-            );
+            )
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         optionMenu = menu
         menuInflater.inflate(R.menu.actionbar_menu, optionMenu)
-        optionMenu?.findItem(R.id.action_filter)?.setVisible(filterIcon)
-        optionMenu?.findItem(R.id.scan_menu)?.setVisible(scannerIcon)
-        optionMenu?.findItem(R.id.action_notif)?.setVisible(notificationIcon)
+        optionMenu?.findItem(R.id.action_filter)?.isVisible = filterIcon
+        optionMenu?.findItem(R.id.scan_menu)?.isVisible = scannerIcon
+        optionMenu?.findItem(R.id.action_notif)?.isVisible = notificationIcon
 
-        optionMenu?.findItem(R.id.action_capture_image)?.setVisible(optionIcon)
-        optionMenu?.findItem(R.id.action_attach_image)?.setVisible(optionIcon)
-        optionMenu?.findItem(R.id.action_attach_document)?.setVisible(optionIcon)
-        optionMenu?.findItem(R.id.action_create_followup)?.setVisible(followUpWoIcon)
+        optionMenu?.findItem(R.id.action_capture_image)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_attach_image)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_attach_document)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_create_followup)?.isVisible = followUpWoIcon
         return true
     }
 
@@ -241,11 +245,11 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI)
         }
-        intent.setType("application/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivityForResult(intent, SELECT_DOCUMENT_REQUEST);
+        intent.type = "application/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        intent.putExtra("return-data", true)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivityForResult(intent, SELECT_DOCUMENT_REQUEST)
     }
 
     private fun createFollowUp() {

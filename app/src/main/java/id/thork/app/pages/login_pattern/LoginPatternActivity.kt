@@ -27,7 +27,7 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.server.ServerActivity
-import id.thork.app.pages.settings.SettingsActivity
+import id.thork.app.pages.profiles.setting.settings.SettingsActivity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 

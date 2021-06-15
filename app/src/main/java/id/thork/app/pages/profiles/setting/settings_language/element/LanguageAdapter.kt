@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_language.element
+package id.thork.app.pages.profiles.setting.settings_language.element
 
 import android.view.LayoutInflater
 import android.view.View

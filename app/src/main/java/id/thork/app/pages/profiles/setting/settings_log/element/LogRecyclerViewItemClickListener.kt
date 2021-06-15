@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package id.thork.app.pages.settings_log.element
+package id.thork.app.pages.profiles.setting.settings_log.element
 
 import id.thork.app.persistence.entity.LogEntity
 

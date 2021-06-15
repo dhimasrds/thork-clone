@@ -47,6 +47,7 @@
     <!-- Action menu bar -->
     <string name="action_notifications">Notifikasi</string>
     <string name="action_settings">Pengaturan</string>
+    <string name="action_profile">Profile</string>
     <string name="action_detail">Detail</string>
     <string name="action_scan">Memindai Kode</string>
     <string name="action_report">Melaporkan</string>
@@ -360,8 +361,10 @@
     <string name="settings_cache">Cache</string>
     <string name="settings_logs_detail">Tampilkan Logs</string>
     <string name="settings_cache_detail">Hapus Cache</string>
-    <string name="settings_about">Tentang</string>
+    <string name="settings_about">Tentang Kita</string>
     <string name="settings_about_this">Tentang This</string>
+    <string name="settings_attendance">Absensi</string>
+    <string name="settings_help_center">Pusat Pertolongan</string>
     <string name="settings_language">Bahasa</string>
     <string name="settings_logout">Keluar</string>
     <string name="settings_user">Pengguna</string>

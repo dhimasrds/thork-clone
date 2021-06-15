@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_log_detail.element
+package id.thork.app.pages.profiles.setting.settings_log_detail.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel

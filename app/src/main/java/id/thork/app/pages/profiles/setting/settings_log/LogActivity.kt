@@ -1,4 +1,4 @@
-package id.thork.app.pages.settings_log
+package id.thork.app.pages.profiles.setting.settings_log
 
 import android.content.Intent
 import androidx.activity.viewModels
@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySettingsLogsBinding
-import id.thork.app.pages.settings_log.element.LogAdapter
-import id.thork.app.pages.settings_log.element.LogRecyclerViewItemClickListener
-import id.thork.app.pages.settings_log.element.LogViewModel
-import id.thork.app.pages.settings_log_detail.LogDetailActivity
+import id.thork.app.pages.profiles.setting.settings_log.element.LogAdapter
+import id.thork.app.pages.profiles.setting.settings_log.element.LogRecyclerViewItemClickListener
+import id.thork.app.pages.profiles.setting.settings_log.element.LogViewModel
+import id.thork.app.pages.profiles.setting.settings_log_detail.LogDetailActivity
 import id.thork.app.persistence.entity.LogEntity
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
