@@ -29,7 +29,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".pages.profiles.attendance.HistoryAttendanceDetailsActivity"></activity>
         <activity android:name=".pages.profiles.attendance.HistoryAttendanceActivity" />
-        <activity android:name=".pages.profiles.attendance.AttendenceActivity" />
+        <activity android:name=".pages.profiles.attendance.AttendanceActivity" />
         <activity android:name=".pages.work_log.type.WorkLogTypeActivity" />
         <activity android:name=".pages.work_log.create_work_log.CreateWorkLogActivity" />
         <activity android:name=".pages.work_log.WorkLogActivity" />
@@ -66,7 +66,6 @@
         <activity android:name=".pages.profiles.setting.settings.SettingsActivity" />
         <activity android:name=".pages.profiles.profile.ProfileActivity" />
         <activity android:name=".pages.profiles.about_us.AboutActivity" />
-        <activity android:name=".pages.profiles.attendance.AttandanceActivity" />
         <activity android:name=".pages.profiles.help_center.HelpCenterActivity" />
         <activity android:name=".pages.list_material.ListMaterialActivity" />
         <activity android:name=".pages.ScannerActivity" />

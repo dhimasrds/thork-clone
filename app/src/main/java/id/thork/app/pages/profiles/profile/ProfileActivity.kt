@@ -10,7 +10,7 @@ import id.thork.app.databinding.ActivityProfilesBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.profiles.about_us.AboutActivity
-import id.thork.app.pages.profiles.attendance.AttandanceActivity
+import id.thork.app.pages.profiles.attendance.AttendanceActivity
 import id.thork.app.pages.profiles.help_center.HelpCenterActivity
 import id.thork.app.pages.profiles.profile.element.ProfileViewModel
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
@@ -84,7 +84,7 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     }
 
     private fun goToAttendance() {
-        startActivity(Intent(this, AttandanceActivity::class.java))
+        startActivity(Intent(this, AttendanceActivity::class.java))
     }
 
     private fun goToSetting() {
