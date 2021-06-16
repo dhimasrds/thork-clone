@@ -11,7 +11,7 @@ interface AttendanceDao {
     fun createAttendanceCache(
         attendanceEntity: AttendanceEntity,
         username: String?
-    ): AttendanceEntity
+    )
 
     fun findCheckInAttendance(): AttendanceEntity?
 }

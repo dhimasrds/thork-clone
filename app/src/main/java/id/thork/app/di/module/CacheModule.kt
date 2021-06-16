@@ -90,4 +90,10 @@ object CacheModule {
         return WorklogTypeDaoImp()
     }
 
+    @Singleton
+    @Provides
+    fun provideAttendanceDao(): AttendanceDao {
+        return AttendanceDaoImp()
+    }
+
 }

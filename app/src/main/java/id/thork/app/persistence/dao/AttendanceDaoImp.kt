@@ -41,10 +41,10 @@ class AttendanceDaoImp : AttendanceDao {
         attendanceEntityBox.removeAll()
     }
 
-    override fun createAttendanceCache(attendanceEntity: AttendanceEntity, username: String?): AttendanceEntity {
+    override fun createAttendanceCache(attendanceEntity: AttendanceEntity, username: String?){
         addUpdateInfo(attendanceEntity, username)
         attendanceEntityBox.put(attendanceEntity)
-        return attendanceEntity
+
     }
 
     override fun findCheckInAttendance(): AttendanceEntity? {
