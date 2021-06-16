@@ -8,6 +8,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 /**
  * Created by Raka Putra on 1/20/21
  * Jakarta, Indonesia.
@@ -17,6 +18,13 @@ object DateUtils {
     private val DATE_FORMAT = "dd-MMM-yyyy HH:mm"
     private val DATE_FORMAT_MAXIMO = "yyyy-MM-dd'T'HH:mm:ss"
     private val DATE_FORMAT_OBJECTBOX = "EEE MMM dd yyyy HH:mm:ss 'GMT'Z"
+    private val DATE_ATTENDANCE = "EEEE, dd MMM yyyy"
+    private val DATE_TIME_ATTENDANCE = "HH:mm"
+    private val HOURS_ATTENDANCE = "hh:mm"
+    private val DATE_CARD_ATTENDANCE = "dd/MMM/yyyy"
+    private val DATE_FORMAT_BODYMX = "yyyy-MM-dd"
+    private val DATE_TIME_FORMAT_BODYMX = "HH:mm:ss"
+
 
     /**
      * Get Time Interval from start date and end date
@@ -57,6 +65,69 @@ object DateUtils {
         val sdf = SimpleDateFormat(DATE_FORMAT_MAXIMO)
         return sdf.format(c.time)
     }
+
+    fun getCurrentTimeMillisec(): Long {
+        val c = Date()
+        return c.time
+    }
+
+    /**
+     * HEADER ATTENDANCE
+     * For Display Header Attendance
+     */
+    fun getDateTimeHeaderAttendance(): String? {
+        val c = Calendar.getInstance()
+        val sdf = SimpleDateFormat(DATE_ATTENDANCE)
+        return sdf.format(c.time)
+    }
+
+    /**
+     * CARDVIEW
+     * For get Time to Display Check In And Check Out Attendance
+     * And Date in Cardview Attendance
+     */
+    fun getCheckAttendance(millisec: Long): String? {
+        val c = Date(millisec)
+        val sdf = SimpleDateFormat(DATE_TIME_ATTENDANCE)
+        return sdf.format(c.time)
+    }
+
+    fun getDateTimeCardView(millisec: Long): String? {
+        val c = Date(millisec)
+        val sdf = SimpleDateFormat(DATE_CARD_ATTENDANCE)
+        return sdf.format(c.time)
+    }
+
+    /**
+     * OBJECTBOX
+     * save Date And Time in ObjectBox
+     * for update to maximo
+     */
+    fun getDateAttendanceMaximo(millisec: Long): String? {
+        val c = Date(millisec)
+        val sdf = SimpleDateFormat(DATE_FORMAT_BODYMX)
+        return sdf.format(c.time)
+    }
+
+    fun getTimeAttendanceMaximo(millisec: Long) : String? {
+        val c = Date(millisec)
+        val sdf = SimpleDateFormat(DATE_TIME_FORMAT_BODYMX)
+        return sdf.format(c.time)
+    }
+
+
+    /**
+     * Please Read before u use this utils
+     * For get WorkHours in Attendance
+     * How to get WorkHours (dateCheckoutLocal - dateCheckInLocal)
+     */
+    fun getWorkHours(millisec: Long): String? {
+        val second: Long = millisec / 1000
+        val minutes: Long = second / 60 % 60
+        val hours: Long = second / (60 * 60) % 24
+        return String.format("%02d:%02d", hours, minutes)
+    }
+
 
     fun getDateTimeOB(date: Date?): String? {
         try {

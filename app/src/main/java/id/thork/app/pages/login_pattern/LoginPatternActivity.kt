@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.login_pattern
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
@@ -26,10 +27,13 @@ import id.thork.app.databinding.ActivityLoginPatternBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
 import id.thork.app.pages.main.MainActivity
-import id.thork.app.pages.server.ServerActivity
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
+import id.thork.app.pages.server.ServerActivity
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     private val TAG = LoginPatternActivity::class.java.name
@@ -44,6 +48,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private var tempPattern = BaseParam.APP_EMPTY_STRING
     private var changePatternSetting = BaseParam.APP_EMPTY_STRING
 
+    @SuppressLint("NewApi")
     override fun setupView() {
         super.setupView()
         binding.apply {
