@@ -41,7 +41,8 @@ class RfidAssetAcitivty : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         setupRfid()

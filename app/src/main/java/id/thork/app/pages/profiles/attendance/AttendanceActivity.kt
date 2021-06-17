@@ -34,6 +34,8 @@ import id.thork.app.network.GlideApp
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
+import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
+import id.thork.app.pages.profiles.profile.ProfileActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
 import timber.log.Timber
@@ -71,7 +73,8 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = true
         )
 
         setupCurrentTimeMillSec()
@@ -284,6 +287,12 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
+    }
+
+    override fun gotoHistoryAttendanceActivity() {
+        super.gotoHistoryAttendanceActivity()
+        val intent = Intent(this, HistoryAttendanceActivity::class.java)
+        startActivity(intent)
     }
 
 }

@@ -1,15 +1,10 @@
-package id.thork.app.pages.profiles.attendance.element
+package id.thork.app.pages.profiles.history_attendance.element
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardviewAttendanceBinding
-import id.thork.app.databinding.CardviewListWorklogBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
-import id.thork.app.pages.work_log.element.WorkLogAdapter
-import id.thork.app.persistence.entity.WorklogEntity
-import id.thork.app.utils.StringUtils
 
 /**
  * Created by Dhimas Saputra on 14/06/21

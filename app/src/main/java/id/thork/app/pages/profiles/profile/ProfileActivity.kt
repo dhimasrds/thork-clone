@@ -41,7 +41,8 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         handlerOnclick()

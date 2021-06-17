@@ -43,7 +43,8 @@ class ListMaterialActivity : BaseActivity() {
             filter = false,
             scannerIcon = true,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
         retrieveFromIntent()
         if (intentWonum != null) {

@@ -48,7 +48,9 @@ class SettingsLanguageActivity : BaseActivity(), CustomDialogUtils.DialogActionL
 //        setupToolbar()
         setupToolbarWithHomeNavigation(getString(R.string.action_settings), navigation = false,
             filter = false, scannerIcon = false,
-            notification = false, option = false)
+            notification = false, option = false,
+            historyAttendanceIcon = false
+        )
 
     }
 

@@ -53,4 +53,10 @@
         android:icon="@drawable/ic_add_black"
         android:title="add"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/history_attendance"
+        android:icon="@drawable/ic_history_attendance"
+        android:title="History Attendance"
+        app:showAsAction="always" />
 </menu>

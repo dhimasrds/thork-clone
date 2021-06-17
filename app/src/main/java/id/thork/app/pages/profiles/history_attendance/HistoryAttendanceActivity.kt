@@ -1,4 +1,4 @@
-package id.thork.app.pages.profiles.attendance
+package id.thork.app.pages.profiles.history_attendance
 
 
 import androidx.activity.viewModels
@@ -6,7 +6,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityHistoryAttendanceBinding
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
-import id.thork.app.pages.profiles.attendance.element.HistoryAttendanceAdapter
+import id.thork.app.pages.profiles.history_attendance.element.HistoryAttendanceAdapter
 
 class HistoryAttendanceActivity : BaseActivity() {
     val TAG = HistoryAttendanceActivity::class.java.name
@@ -31,7 +31,8 @@ class HistoryAttendanceActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
     }
 

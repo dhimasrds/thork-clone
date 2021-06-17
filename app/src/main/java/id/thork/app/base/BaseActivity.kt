@@ -78,6 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var notificationIcon: Boolean = false
     private var optionIcon: Boolean = false
     private var followUpWoIcon: Boolean = false
+    private var historyAttendanceIcon: Boolean = false
     private var originWo: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,6 +98,7 @@ abstract class BaseActivity : AppCompatActivity() {
         scannerIcon: Boolean,
         notification: Boolean,
         option: Boolean,
+        historyAttendanceIcon: Boolean
     ) {
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
@@ -139,8 +141,13 @@ abstract class BaseActivity : AppCompatActivity() {
         if (notification) {
             this.notificationIcon = notification
         }
+
         if (option) {
             this.optionIcon = option
+        }
+
+        if (historyAttendanceIcon) {
+            this.historyAttendanceIcon = historyAttendanceIcon
         }
 
         setupToolbarOverflowIcon()
@@ -177,6 +184,7 @@ abstract class BaseActivity : AppCompatActivity() {
         optionMenu?.findItem(R.id.action_attach_image)?.isVisible = optionIcon
         optionMenu?.findItem(R.id.action_attach_document)?.isVisible = optionIcon
         optionMenu?.findItem(R.id.action_create_followup)?.isVisible = followUpWoIcon
+        optionMenu?.findItem(R.id.history_attendance)?.isVisible = historyAttendanceIcon
         return true
     }
 
@@ -226,6 +234,12 @@ abstract class BaseActivity : AppCompatActivity() {
         if (id == R.id.action_create_followup) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action create follow up")
             createFollowUp()
+            return true
+        }
+
+        if (id == R.id.history_attendance) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() history attendance")
+            gotoHistoryAttendanceActivity()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -348,6 +362,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun gotoScannerActivity() {
+
+    }
+
+    open fun gotoHistoryAttendanceActivity() {
 
     }
 
