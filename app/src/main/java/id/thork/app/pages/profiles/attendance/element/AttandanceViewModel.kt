@@ -2,6 +2,7 @@ package id.thork.app.pages.profiles.attendance.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.repository.AttendanceRepository
 
@@ -12,6 +13,7 @@ import id.thork.app.repository.AttendanceRepository
  */
 class AttandanceViewModel @ViewModelInject constructor(
     private val attendanceRepository: AttendanceRepository,
+    private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
 
     fun findCheckInAttendance(): AttendanceEntity? {
@@ -25,5 +27,18 @@ class AttandanceViewModel @ViewModelInject constructor(
     ) {
         attendanceRepository.saveCache(isCheckin, dateLocal, date, hours,
             longitudex, latitudey, uriImage, dateTimeHeader, workHours)
+    }
+
+    private fun updateToMaximo() {
+
+    }
+
+    private fun updateCheckIn() {
+        val attendanceCache = attendanceRepository
+
+    }
+
+    private fun updateCheckOut() {
+
     }
 }

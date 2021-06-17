@@ -53,6 +53,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private var isCheckIn: Boolean? = null
     private var uriImage: String? = null
     private var totalHours: String? = null
+    private var attendanceId: Int = 0
 
     override fun setupView() {
         super.setupView()
@@ -109,6 +110,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                 val millSec = it - attendanceEntity.dateCheckInLocal!!
                 val workHours = DateUtils.getWorkHours(millSec)
                 totalHours = workHours
+//                attendanceId = attendanceEntity.attendanceId
                 binding.cardAttendance.tvCheckInDate.text = attendanceEntity.dateCheckIn
                 binding.cardAttendance.tvCheckInTime.text = attendanceEntity.hoursCheckIn
                 binding.cardAttendance.tvWorkHour.text = workHours
