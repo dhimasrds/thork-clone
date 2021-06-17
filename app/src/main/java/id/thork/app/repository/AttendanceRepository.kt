@@ -32,5 +32,9 @@ class AttendanceRepository @Inject constructor(
         return attendanceDao.remove()
     }
 
+    fun findCheckInAttendance(): AttendanceEntity? {
+        return attendanceDao.findCheckInAttendance()
+    }
+
 
 }
