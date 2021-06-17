@@ -17,4 +17,5 @@ interface AttendanceDao {
     fun findAttendanceBySynUpdate(syncUpdate: Int): AttendanceEntity?
     fun findAttendanceByAttendanceId(attendanceId: Int): AttendanceEntity?
     fun findListAttendanceOfflineMode(offlineMode: Int, syncUpdate: Int): List<AttendanceEntity>
+    fun findListAttendanceLocal(): List<AttendanceEntity>
 }

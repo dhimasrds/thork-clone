@@ -69,8 +69,12 @@ class AttendanceRepository @Inject constructor(
         return attendanceDao.findAttendanceByAttendanceId(attendanceId)
     }
 
-    fun findListAttendanceCache(offlinemode: Int, syncUpdate: Int) : List<AttendanceEntity> {
+    fun findListAttendanceCacheOffline(offlinemode: Int, syncUpdate: Int) : List<AttendanceEntity> {
         return attendanceDao.findListAttendanceOfflineMode(offlinemode, syncUpdate)
+    }
+
+    fun findlistAttendanceCacheLocal() : List<AttendanceEntity> {
+        return attendanceDao.findListAttendanceLocal()
     }
 
     fun prepareBodyCheckIn() : Member{

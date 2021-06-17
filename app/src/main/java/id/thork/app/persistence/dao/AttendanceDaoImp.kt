@@ -77,9 +77,16 @@ class AttendanceDaoImp : AttendanceDao {
         return null
     }
 
-    override fun findListAttendanceOfflineMode(offlineMode: Int, syncUpdate: Int): List<AttendanceEntity> {
+    override fun findListAttendanceOfflineMode(
+        offlineMode: Int,
+        syncUpdate: Int
+    ): List<AttendanceEntity> {
         return attendanceEntityBox.query().equal(AttendanceEntity_.offlineMode, offlineMode)
             .equal(AttendanceEntity_.syncUpdate, syncUpdate).build().find()
+    }
+
+    override fun findListAttendanceLocal(): List<AttendanceEntity> {
+        return attendanceEntityBox.query().notNull(AttendanceEntity_.dateCheckOutLocal).build().find()
     }
 
 
