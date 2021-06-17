@@ -1,4 +1,4 @@
-package id.thork.app.network.response.attendance
+package id.thork.app.network.response.attendance_response
 
 
 import com.squareup.moshi.Json

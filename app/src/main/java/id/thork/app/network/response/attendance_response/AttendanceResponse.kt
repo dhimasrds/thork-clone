@@ -1,11 +1,11 @@
-package id.thork.app.network.response.attendance
+package id.thork.app.network.response.attendance_response
 
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class attendanceResponse(
+data class AttendanceResponse(
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "member")
