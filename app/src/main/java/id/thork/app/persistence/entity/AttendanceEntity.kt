@@ -26,4 +26,6 @@ class AttendanceEntity : BaseEntity(){
     var dateTimeHeader: String? = null
     var username: String? = null
     var syncUpdate: Int? = null
+    var offlineMode: Int? = null
+    var attendanceId: Int? = null
 }
