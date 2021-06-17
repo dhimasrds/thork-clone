@@ -7,7 +7,6 @@ import com.skydoves.sandwich.onSuccess
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
-import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
@@ -80,10 +79,14 @@ class AttendanceRepository @Inject constructor(
         return attendanceDao.findListAttendanceLocal()
     }
 
+    fun findAttendanceOfflineMode() : AttendanceEntity? {
+        return attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
+    }
+
     fun prepareBodyCheckIn() : Member{
-        val attandanceEntity = findAttendanceBySyncUpdate(BaseParam.APP_FALSE)
+        val attendanceEntity = findAttendanceBySyncUpdate(BaseParam.APP_FALSE)
         val memberCheckIn = Member()
-        attandanceEntity.whatIfNotNull {
+        attendanceEntity.whatIfNotNull {
             memberCheckIn.startdate = it.dateCheckIn
             memberCheckIn.starttime = it.hoursCheckIn
             memberCheckIn.thisfsmlongitudex = it.longCheckIn?.toDouble()
@@ -110,6 +113,7 @@ class AttendanceRepository @Inject constructor(
         val attendanceEntity = findAttendanceBySyncUpdate(BaseParam.APP_FALSE)
         attendanceEntity.whatIfNotNull {
             it.attendanceId = attendanceId
+            it.offlineMode = BaseParam.APP_FALSE
             saveAttendanceCache(it)
         }
     }
@@ -126,6 +130,7 @@ class AttendanceRepository @Inject constructor(
         val attendanceEntity = findAttendanceById(attendanceId)
         attendanceEntity.whatIfNotNull {
             it.syncUpdate = BaseParam.APP_TRUE
+            it.offlineMode = BaseParam.APP_FALSE
             saveAttendanceCache(it)
         }
     }
@@ -138,9 +143,40 @@ class AttendanceRepository @Inject constructor(
         }
     }
 
-    fun handlingAttendanceOfflineMode(attendanceEntity: AttendanceEntity) {
+    fun handlingAttendanceCheckInOfflineMode(attendanceEntity: AttendanceEntity, attendanceId: Int) {
         attendanceEntity.offlineMode = BaseParam.APP_FALSE
+        attendanceEntity.attendanceId = attendanceId
         saveAttendanceCache(attendanceEntity)
+    }
+
+    fun handlingAttendanceCheckOutOfflineMode(attendanceEntity: AttendanceEntity) {
+        attendanceEntity.offlineMode = BaseParam.APP_FALSE
+        attendanceEntity.syncUpdate = BaseParam.APP_TRUE
+        saveAttendanceCache(attendanceEntity)
+    }
+
+    fun prepareBodyCheckInOfflineMode(attendanceEntity: AttendanceEntity) : Member {
+        val memberCheckIn = Member()
+        attendanceEntity.whatIfNotNull {
+            memberCheckIn.startdate = it.dateCheckIn
+            memberCheckIn.starttime = it.hoursCheckIn
+            memberCheckIn.thisfsmlongitudex = it.longCheckIn?.toDouble()
+            memberCheckIn.thisfsmlatitudey = it.latCheckIn?.toDouble()
+            memberCheckIn.orgid = appSession.orgId
+            memberCheckIn.laborcode = it.username
+        }
+        return memberCheckIn
+    }
+
+    fun prepareBodyCheckOutOfflineMode(attendanceEntity: AttendanceEntity) : Member {
+        val memberCheckOut = Member()
+        attendanceEntity.whatIfNotNull {
+            memberCheckOut.finishdate = it.dateCheckOut
+            memberCheckOut.finishtime = it.hoursCheckOut
+            memberCheckOut.thisfsmlongitudexout = it.longCheckOut?.toDouble()
+            memberCheckOut.thisfsmlatitudeyout = it.latCheckOut?.toDouble()
+        }
+        return memberCheckOut
     }
 
 
@@ -223,7 +259,8 @@ class AttendanceRepository @Inject constructor(
                 uriImageCheckIn = uriImage,
                 dateTimeHeader = dateTimeHeader,
                 username = laborCode,
-                syncUpdate = BaseParam.APP_FALSE
+                syncUpdate = BaseParam.APP_FALSE,
+                offlineMode = BaseParam.APP_TRUE
             )
             saveAttendanceCache(checkinEntity)
         } else {
@@ -237,7 +274,7 @@ class AttendanceRepository @Inject constructor(
                 it.uriImageCheckOut = uriImage
 
                 it.workHours = workHours
-                it.offlineMode = BaseParam.APP_FALSE
+                it.offlineMode = BaseParam.APP_TRUE
                 saveAttendanceCache(it)
             }
         }

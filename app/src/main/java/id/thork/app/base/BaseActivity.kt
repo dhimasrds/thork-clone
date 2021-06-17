@@ -34,6 +34,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
@@ -41,6 +42,7 @@ import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
+import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
@@ -67,6 +69,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var woCacheDao: WoCacheDao
+
+    @Inject
+    lateinit var attendanceDao: AttendanceDao
 
     var isConnected = false
 
@@ -300,6 +305,11 @@ abstract class BaseActivity : AppCompatActivity() {
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
         }
+
+        val attendance = attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
+        attendance.whatIfNotNull {
+            workerCoordinator.addSyncAttendance()
+        }
     }
 
     open fun onSlowConnection() {
@@ -312,6 +322,11 @@ abstract class BaseActivity : AppCompatActivity() {
             .i("onSlowConnection() size local cache %s", woCacheList.size)
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
+        }
+
+        val attendance = attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
+        attendance.whatIfNotNull {
+            workerCoordinator.addSyncAttendance()
         }
     }
 

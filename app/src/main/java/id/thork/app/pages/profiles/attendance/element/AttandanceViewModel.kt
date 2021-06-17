@@ -36,6 +36,7 @@ class AttandanceViewModel @ViewModelInject constructor(
         longitudex: String, latitudey: String, uriImage: String, dateTimeHeader: String,
         workHours: String?, attendanceId: Int
     ) {
+        Timber.d("saveCache() connection %s", appSession.isConnected)
         attendanceRepository.saveCache(
             isCheckin, dateLocal, date, hours,
             longitudex, latitudey, uriImage, dateTimeHeader, workHours
@@ -75,6 +76,7 @@ class AttandanceViewModel @ViewModelInject constructor(
 
                 },
                 onError = {
+                    attendanceRepository.handlingCheckInFailed()
                     Timber.tag(TAG).i("updateCheckIn() onError() onError: %s", it)
                 }
             )
@@ -105,7 +107,8 @@ class AttandanceViewModel @ViewModelInject constructor(
                     attendanceRepository.handlingCheckOutAfterUpdate(attendanceId)
                 },
                 onError = {
-                    Timber.tag(TAG).i("updateCheckIn() onError() onError: %s", it)
+                    attendanceRepository.handlingCheckOutFailed(attendanceId)
+                    Timber.tag(TAG).i("updateCheckOut() onError() onError: %s", it)
 
                 }
             )

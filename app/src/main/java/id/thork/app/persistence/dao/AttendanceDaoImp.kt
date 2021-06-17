@@ -89,5 +89,15 @@ class AttendanceDaoImp : AttendanceDao {
         return attendanceEntityBox.query().notNull(AttendanceEntity_.dateCheckOutLocal).build().find()
     }
 
+    override fun findAttendanceByOfflinemode(offlinemode: Int): AttendanceEntity? {
+        val attendanceEntity =
+            attendanceEntityBox.query().equal(AttendanceEntity_.offlineMode, offlinemode).build()
+                .find()
+        attendanceEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
 
 }

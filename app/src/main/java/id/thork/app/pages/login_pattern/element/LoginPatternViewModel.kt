@@ -10,10 +10,7 @@ import id.thork.app.di.module.AppPropertiesMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.entity.UserEntity
-import id.thork.app.repository.AttachmentRepository
-import id.thork.app.repository.LoginRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WorklogRepository
+import id.thork.app.repository.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -29,7 +26,8 @@ class LoginPatternViewModel @ViewModelInject constructor(
     private val appPropertiesMx: AppPropertiesMx,
     private val attachmentRepository: AttachmentRepository,
     private val materialRepository: MaterialRepository,
-    private val worklogRepository: WorklogRepository
+    private val worklogRepository: WorklogRepository,
+    private val attendanceRepository: AttendanceRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginPatternViewModel::class.java.name
 
@@ -97,6 +95,7 @@ class LoginPatternViewModel @ViewModelInject constructor(
         materialRepository.removeListMaterialActual()
         worklogRepository.removeWorklogType()
         worklogRepository.removeWorklog()
+        attendanceRepository.removeAttendance()
         _switchUser.postValue(BaseParam.APP_TRUE)
     }
 
