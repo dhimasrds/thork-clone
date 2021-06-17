@@ -119,6 +119,24 @@ class WorkerCoordinator @Inject constructor(
 //        val workInfo = outputWorkInfos.value?.get(0)
     }
 
+    fun addSyncAttendance() {
+        val SYNC_ATTENDANCE = "SYNC_ATTENDANCE"
+
+        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<AttendanceWorker>()
+            .addTag(SYNC_ATTENDANCE)
+            .setConstraints(constraints)
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueue(workRequest)
+
+    }
+
     fun addCrewPositionQueue(remoteMessageMap: MutableMap<String, String>) {
         val CREW_POSITION = "CREW_POSITION"
         val crewId = remoteMessageMap.get("crewId")

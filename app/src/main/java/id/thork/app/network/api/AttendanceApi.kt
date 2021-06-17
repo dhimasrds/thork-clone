@@ -27,7 +27,7 @@ interface AttendanceApi {
         @Header(BaseParam.APP_PROPERTIES) properties: String?,
         @Query(value = "lean") lean: Int,
         @Body body: Member
-        ) : ApiResponse<AttendanceResponse>
+        ) : ApiResponse<Member>
 
 
     @POST("maximo/oslc/os/THISFSMATTENDANCE")
@@ -39,5 +39,5 @@ interface AttendanceApi {
         @Path("attendanceId") attendanceId: Int,
         @Query(value = "lean") lean: Int,
         @Body body: Member
-    ) : ApiResponse<AttendanceResponse>
+    ) : ApiResponse<Void>
 }

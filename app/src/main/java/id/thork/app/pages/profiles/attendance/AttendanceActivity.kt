@@ -87,22 +87,22 @@ class AttendanceActivity : BaseActivity() {
     }
 
     private fun isCheckin() {
-        val checkIn = viewModels.findCheckInAttendance()
-        Timber.d("raka %s", checkIn)
-        if (checkIn == null){
-            isCheckIn = true
-            binding.tvDateCheckIn.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
-            binding.tvCheckIn.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
-            binding.tvDate.text = DateUtils.getDateTimeHeaderAttendance()
-        } else {
-            isCheckIn = false
-            binding.tvDateCheckIn.text = checkIn.dateCheckIn
-            binding.tvCheckIn.text = checkIn.hoursCheckIn
-            binding.tvDateCheckOut.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
-            binding.tvCheckOut.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
-            binding.tvDate.text = checkIn.dateTimeHeader
-        }
-        Timber.d("raka %s", isCheckIn)
+//        val checkIn = viewModels.findCheckInAttendance()
+//        Timber.d("raka %s", checkIn)
+//        if (checkIn == null){
+//            isCheckIn = true
+//            binding.tvDateCheckIn.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
+//            binding.tvCheckIn.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
+//            binding.tvDate.text = DateUtils.getDateTimeHeaderAttendance()
+//        } else {
+//            isCheckIn = false
+//            binding.tvDateCheckIn.text = checkIn.dateCheckIn
+//            binding.tvCheckIn.text = checkIn.hoursCheckIn
+//            binding.tvDateCheckOut.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
+//            binding.tvCheckOut.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
+//            binding.tvDate.text = checkIn.dateTimeHeader
+//        }
+//        Timber.d("raka %s", isCheckIn)
     }
 
     private fun setupCurrentTimeMillSec() {

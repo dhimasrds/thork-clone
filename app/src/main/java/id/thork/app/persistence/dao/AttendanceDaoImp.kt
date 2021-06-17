@@ -2,11 +2,10 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.AssetEntity
-import id.thork.app.persistence.entity.AssetEntity_
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.persistence.entity.AttendanceEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
@@ -41,7 +40,7 @@ class AttendanceDaoImp : AttendanceDao {
         attendanceEntityBox.removeAll()
     }
 
-    override fun createAttendanceCache(attendanceEntity: AttendanceEntity, username: String?){
+    override fun createAttendanceCache(attendanceEntity: AttendanceEntity, username: String?) {
         addUpdateInfo(attendanceEntity, username)
         attendanceEntityBox.put(attendanceEntity)
 
@@ -57,7 +56,31 @@ class AttendanceDaoImp : AttendanceDao {
     }
 
 
+    override fun findAttendanceBySynUpdate(syncUpdate: Int): AttendanceEntity? {
+        val attendanceEntity =
+            attendanceEntityBox.query().equal(AttendanceEntity_.syncUpdate, syncUpdate).build()
+                .find()
+        attendanceEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
 
+
+    override fun findAttendanceByAttendanceId(attendanceId: Int): AttendanceEntity? {
+        val attendanceEntity =
+            attendanceEntityBox.query().equal(AttendanceEntity_.attendanceId, attendanceId).build()
+                .find()
+        attendanceEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
+    override fun findListAttendanceOfflineMode(offlineMode: Int, syncUpdate: Int): List<AttendanceEntity> {
+        return attendanceEntityBox.query().equal(AttendanceEntity_.offlineMode, offlineMode)
+            .equal(AttendanceEntity_.syncUpdate, syncUpdate).build().find()
+    }
 
 
 }
