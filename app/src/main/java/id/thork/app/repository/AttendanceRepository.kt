@@ -54,7 +54,8 @@ class AttendanceRepository @Inject constructor(
                 latCheckIn = latitudey,
                 uriImageCheckIn = uriImage,
                 dateTimeHeader = dateTimeHeader,
-                username = username
+                username = laborCode,
+                syncUpdate = BaseParam.APP_FALSE
             )
             saveAttendanceCache(checkinEntity)
         } else {
@@ -68,7 +69,6 @@ class AttendanceRepository @Inject constructor(
                 it.uriImageCheckOut = uriImage
 
                 it.workHours = workHours
-                it.syncUpdate = BaseParam.APP_FALSE
                 it.offlineMode = BaseParam.APP_FALSE
                 saveAttendanceCache(it)
             }

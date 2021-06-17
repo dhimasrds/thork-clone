@@ -106,19 +106,21 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                 binding.tvDateAttendance.text = DateUtils.getDateTimeHeaderAttendance()
             } else {
                 isCheckIn = false
-                val millSec = it - attendanceEntity.dateCheckInLocal!!
-                val workHours = DateUtils.getWorkHours(millSec)
-                totalHours = workHours
-                binding.cardAttendance.tvCheckInDate.text = attendanceEntity.dateCheckIn
-                binding.cardAttendance.tvCheckInTime.text = attendanceEntity.hoursCheckIn
-                binding.cardAttendance.tvWorkHour.text = workHours
-                binding.tvDateAttendance.text = attendanceEntity.dateTimeHeader
-                binding.cardAttendance.tvCheckOutDate.text = DateUtils.getDateTimeCardView(it)
-                binding.cardAttendance.tvCheckOutTime.text = DateUtils.getCheckAttendance(it)
-                binding.cardAttendance.tvLabelWorkHour.setTextColor(ContextCompat.getColor(this,
-                    R.color.black))
-                binding.cardAttendance.tvWorkHour.setTextColor(ContextCompat.getColor(this,
-                    R.color.black))
+                attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
+                    val millSec = it - dateCheckInLocal
+                    val workHours = DateUtils.getWorkHours(millSec)
+                    totalHours = workHours
+                    binding.cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(dateCheckInLocal)
+                    binding.cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(dateCheckInLocal)
+                    binding.cardAttendance.tvWorkHour.text = workHours
+                    binding.tvDateAttendance.text = attendanceEntity.dateTimeHeader
+                    binding.cardAttendance.tvCheckOutDate.text = DateUtils.getDateTimeCardView(it)
+                    binding.cardAttendance.tvCheckOutTime.text = DateUtils.getCheckAttendance(it)
+                    binding.cardAttendance.tvLabelWorkHour.setTextColor(ContextCompat.getColor(this,
+                        R.color.black))
+                    binding.cardAttendance.tvWorkHour.setTextColor(ContextCompat.getColor(this,
+                        R.color.black))
+                }
             }
         }
     }
@@ -265,8 +267,8 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         currentTimeMillSec.whatIfNotNull {
             viewModels.saveCache(isCheckIn!!,
                 it,
-                DateUtils.getDateTimeCardView(it)!!,
-                DateUtils.getCheckAttendance(it)!!,
+                DateUtils.getDateAttendanceMaximo(it)!!,
+                DateUtils.getTimeAttendanceMaximo(it)!!,
                 longitudex.toString(),
                 latitudey.toString(),
                 uriImage!!,
