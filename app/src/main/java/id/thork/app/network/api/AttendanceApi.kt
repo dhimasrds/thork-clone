@@ -30,13 +30,13 @@ interface AttendanceApi {
         ) : ApiResponse<Member>
 
 
-    @POST("maximo/oslc/os/THISFSMATTENDANCE")
+    @POST("maximo/oslc/os/THISFSMATTENDANCE/{attendanceid}")
     suspend fun updateAttendance(
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
-        @Path("attendanceId") attendanceId: Int,
+        @Path("attendanceid") attendanceid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: Member
     ) : ApiResponse<Void>

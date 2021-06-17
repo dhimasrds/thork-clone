@@ -111,16 +111,28 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                     val millSec = it - dateCheckInLocal
                     val workHours = DateUtils.getWorkHours(millSec)
                     totalHours = workHours
-                    binding.cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(dateCheckInLocal)
-                    binding.cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(dateCheckInLocal)
+                    attendanceId = attendanceEntity.attendanceId!!
+                    Timber.d("isCheckin() %s", attendanceId)
+                    binding.cardAttendance.tvCheckInDate.text =
+                        DateUtils.getDateTimeCardView(dateCheckInLocal)
+                    binding.cardAttendance.tvCheckInTime.text =
+                        DateUtils.getCheckAttendance(dateCheckInLocal)
                     binding.cardAttendance.tvWorkHour.text = workHours
                     binding.tvDateAttendance.text = attendanceEntity.dateTimeHeader
                     binding.cardAttendance.tvCheckOutDate.text = DateUtils.getDateTimeCardView(it)
                     binding.cardAttendance.tvCheckOutTime.text = DateUtils.getCheckAttendance(it)
-                    binding.cardAttendance.tvLabelWorkHour.setTextColor(ContextCompat.getColor(this,
-                        R.color.black))
-                    binding.cardAttendance.tvWorkHour.setTextColor(ContextCompat.getColor(this,
-                        R.color.black))
+                    binding.cardAttendance.tvLabelWorkHour.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
+                    )
+                    binding.cardAttendance.tvWorkHour.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
+                    )
                 }
             }
         }
@@ -266,14 +278,17 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     override fun onRightButton() {
         currentTimeMillSec.whatIfNotNull {
-            viewModels.saveCache(isCheckIn!!,
+            viewModels.saveCache(
+                isCheckIn!!,
                 it,
                 DateUtils.getDateAttendanceMaximo(it)!!,
                 DateUtils.getTimeAttendanceMaximo(it)!!,
                 longitudex.toString(),
                 latitudey.toString(),
                 uriImage!!,
-                DateUtils.getDateTimeHeaderAttendance()!!, totalHours)
+                DateUtils.getDateTimeHeaderAttendance()!!, totalHours,
+                attendanceId
+            )
             finish()
         }
     }
