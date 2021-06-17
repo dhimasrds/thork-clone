@@ -19,29 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="4">
+            android:weightSum="3">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tv_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/general_margin_6dp"
-                    android:background="@drawable/rectangle_grey"
-                    android:fontFamily="@font/roboto_regular"
-                    android:maxLines="2"
-                    android:text="-"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorBlack"
-                    android:textFontWeight="700"
-                    android:textSize="@dimen/base_text_size_16" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -51,9 +30,22 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_check_in_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/general_margin_6dp"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="-"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="@dimen/base_text_size_16" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/general_margin_4dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text="@string/check_in"
                     android:textAlignment="center"
@@ -62,7 +54,7 @@
                     android:textSize="@dimen/base_text_size_16" />
 
                 <TextView
-                    android:id="@+id/tv_check_in"
+                    android:id="@+id/tv_check_in_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_margin_6dp"
@@ -92,9 +84,21 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_check_out_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/general_margin_6dp"
+                    android:layout_marginTop="@dimen/general_margin_4dp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="-"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="700"
+                    android:textSize="@dimen/base_text_size_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/general_margin_4dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text="@string/check_out"
                     android:textAlignment="center"
@@ -103,7 +107,7 @@
                     android:textSize="@dimen/base_text_size_16" />
 
                 <TextView
-                    android:id="@+id/tv_check_out"
+                    android:id="@+id/tv_check_out_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_margin_6dp"
@@ -115,6 +119,15 @@
                     android:textSize="@dimen/base_text_size_16" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/general_margin_4dp"
+                android:layout_marginTop="@dimen/general_margin_8dp"
+                android:layout_marginRight="@dimen/general_margin_4dp"
+                android:layout_marginBottom="@dimen/general_margin_8dp"
+                android:background="@drawable/ic_line" />
 
             <LinearLayout
                 android:layout_width="0dp"
