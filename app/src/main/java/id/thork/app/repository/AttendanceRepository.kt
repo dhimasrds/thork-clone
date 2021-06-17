@@ -20,7 +20,7 @@ class AttendanceRepository @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val appSession: AppSession,
     private val attendanceDao: AttendanceDao,
-    private val httpLoggingInterceptor: HttpLoggingInterceptor
+    private val httpLoggingInterceptor: HttpLoggingInterceptor,
 ) : BaseRepository {
 
     var laborCode = appSession.userEntity.laborcode

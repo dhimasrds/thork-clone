@@ -2,7 +2,6 @@ package id.thork.app.pages.profiles.attendance.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.repository.AttendanceRepository
 

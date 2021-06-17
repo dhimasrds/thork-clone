@@ -88,7 +88,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         }
 
         binding.btnSaveAttendance.setOnClickListener {
-            if (longitudex != null && latitudey != null && uriImage != null && currentTimeMillSec != null){
+            if (longitudex != null && latitudey != null && uriImage != null && currentTimeMillSec != null) {
                 setDialogSaveAttendance()
             } else {
                 setDialogErrorAttendance()
@@ -121,7 +121,6 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                     R.color.black))
             }
         }
-        Timber.d("raka %s", isCheckIn)
     }
 
     private fun setupCurrentTimeMillSec() {
@@ -187,7 +186,6 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                     .into(binding.ivCaptureImage)
                 binding.ivCaptureImage.isEnabled = false
                 uriImage = uri.toString()
-                Timber.d("raka %s", uri.toString())
             }
             dialogUtils.dismiss()
         }
