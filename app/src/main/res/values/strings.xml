@@ -82,6 +82,14 @@
     <string name="logout_title">Logout</string>
     <string name="logout_qustion">Are you sure you want to logout?</string>
 
+    <!-- Save Attendance Dialog -->
+    <string name="attendance_title">Save</string>
+    <string name="attendance_qustion">Are you sure you want to save attendance?</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_attendance_title">Warning!</string>
+    <string name="error_attendance_qustion">Image and your location cannot be empty</string>
+
     <!-- Change Language Dialog -->
     <string name="change_language_dialog">Change Language</string>
     <string name="change_language_question">Are you sure you want to change language?</string>

@@ -83,6 +83,15 @@
     <string name="logout_title">Keluar</string>
     <string name="logout_qustion">Anda yakin ingin keluar?</string>
 
+    <!-- Save Attendance Dialog -->
+    <string name="attendance_title">Simpan</string>
+    <string name="attendance_qustion">Anda yakin ingin simpan absensi ini?</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_attendance_title">Peringatan!</string>
+    <string name="error_attendance_qustion">Gambar dan Lokasi tidak boleh kosong</string>
+
+
     <!-- Change Language Dialog -->
     <string name="change_language_dialog">Ubah Bahasa</string>
     <string name="change_language_question">Apakah anda yakin merubah bahasa?</string>

@@ -61,7 +61,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
+                android:layout_height="150dp"
                 android:layout_marginLeft="@dimen/general_margin_8dp"
                 android:layout_marginRight="@dimen/general_margin_8dp"
                 android:layout_marginBottom="@dimen/general_margin_10dp"
@@ -70,6 +70,7 @@
                 app:cardElevation="5dp">
 
                    <include
+                       android:id="@+id/card_attendance"
                        layout="@layout/cardview_attendance"
                        />
 
@@ -108,7 +109,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:inputType="textMultiLine|textVisiblePassword"
                     android:padding="@dimen/general_padding_5dp"
-                    android:text="-"
+                    android:text="Loading..."
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/base_text_size_16" />
