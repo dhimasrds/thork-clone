@@ -31,10 +31,10 @@ import id.thork.app.databinding.ActivityAttandenceBinding
 import id.thork.app.network.GlideApp
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
 import timber.log.Timber
 import java.util.*
-
 
 class AttendanceActivity : BaseActivity() {
     val TAG = AttendanceActivity::class.java.name
@@ -45,6 +45,8 @@ class AttendanceActivity : BaseActivity() {
     private lateinit var locationManager: LocationManager
     private var latitudey: Double? = null
     private var longitudex: Double? = null
+    private var currentTimeMillSec: Long? = null
+    private var isCheckIn: Boolean? = null
 
 
     override fun setupView() {
@@ -65,8 +67,10 @@ class AttendanceActivity : BaseActivity() {
             option = false
         )
 
+        setupCurrentTimeMillSec()
         setupDialog()
         pickLocation()
+        isCheckin()
     }
 
     override fun setupListener() {
@@ -76,6 +80,33 @@ class AttendanceActivity : BaseActivity() {
                 .cameraOnly()
                 .start()
         }
+
+        binding.btnSaveAttendance.setOnClickListener {
+            //TODO save objectbox
+        }
+    }
+
+    private fun isCheckin() {
+        val checkIn = viewModels.findCheckInAttendance()
+        Timber.d("raka %s", checkIn)
+        if (checkIn == null){
+            isCheckIn = true
+            binding.tvDateCheckIn.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
+            binding.tvCheckIn.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
+            binding.tvDate.text = DateUtils.getDateTimeHeaderAttendance()
+        } else {
+            isCheckIn = false
+            binding.tvDateCheckIn.text = checkIn.dateCheckIn
+            binding.tvCheckIn.text = checkIn.hoursCheckIn
+            binding.tvDateCheckOut.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
+            binding.tvCheckOut.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
+            binding.tvDate.text = checkIn.dateTimeHeader
+        }
+        Timber.d("raka %s", isCheckIn)
+    }
+
+    private fun setupCurrentTimeMillSec() {
+        currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -135,15 +166,8 @@ class AttendanceActivity : BaseActivity() {
             ) {
                 GlideApp.with(context).load(uri)
                     .into(binding.ivCaptureImage)
-                Timber.d("raka%s ", uri.toString())
+                Timber.d("raka %s", uri.toString())
                 binding.ivCaptureImage.isEnabled = false
-//                addAttachment(
-//                    WoCacheEntity(woId = intentWoId),
-//                    uri.toString(),
-//                    etAttachmentCaption.text.toString(),
-//                    fileName,
-//                    mimeType
-//                )
             }
             dialogUtils.dismiss()
         }
@@ -191,9 +215,11 @@ class AttendanceActivity : BaseActivity() {
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
             Timber.tag(TAG).d("locationListener() onStatusChanged")
         }
+
         override fun onProviderEnabled(provider: String) {
             Timber.tag(TAG).d("locationListener() onProviderEnabled")
         }
+
         override fun onProviderDisabled(provider: String) {
             Timber.tag(TAG).d("locationListener() onProviderDisabled")
         }
