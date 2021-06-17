@@ -7,6 +7,7 @@ import com.skydoves.sandwich.onSuccess
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
@@ -29,7 +30,7 @@ class AttendanceRepository @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val appSession: AppSession,
     private val attendanceDao: AttendanceDao,
-    private val httpLoggingInterceptor: HttpLoggingInterceptor
+    private val httpLoggingInterceptor: HttpLoggingInterceptor,
 ) : BaseRepository {
     val TAG = AttendanceRepository::class.java.name
 
@@ -48,6 +49,8 @@ class AttendanceRepository @Inject constructor(
 
     var laborCode = appSession.userEntity.laborcode
     var username = appSession.userEntity.username
+    private var attendanceEntity: AttendanceEntity? = null
+
 
     fun saveAttendanceCache(attendanceEntity: AttendanceEntity) {
         return attendanceDao.createAttendanceCache(attendanceEntity, username.toString())
@@ -205,5 +208,38 @@ class AttendanceRepository @Inject constructor(
             }
     }
 
+    fun saveCache(
+        isCheckin: Boolean, dateLocal: Long, date: String, hours: String,
+        longitudex: String, latitudey: String, uriImage: String, dateTimeHeader: String,
+        workHours: String?,
+    ) {
+        if (isCheckin) {
+            val checkinEntity = AttendanceEntity(
+                dateCheckInLocal = dateLocal,
+                dateCheckIn = date,
+                hoursCheckIn = hours,
+                longCheckIn = longitudex,
+                latCheckIn = latitudey,
+                uriImageCheckIn = uriImage,
+                dateTimeHeader = dateTimeHeader,
+                username = username
+            )
+            saveAttendanceCache(checkinEntity)
+        } else {
+            attendanceEntity = findCheckInAttendance()
+            attendanceEntity.whatIfNotNull {
+                it.dateCheckOutLocal = dateLocal
+                it.dateCheckOut = date
+                it.hoursCheckOut = hours
+                it.longCheckOut = longitudex
+                it.latCheckOut = latitudey
+                it.uriImageCheckOut = uriImage
 
+                it.workHours = workHours
+                it.syncUpdate = BaseParam.APP_FALSE
+                it.offlineMode = BaseParam.APP_FALSE
+                saveAttendanceCache(it)
+            }
+        }
+    }
 }

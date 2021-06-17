@@ -20,15 +20,18 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skydoves.whatif.whatIf
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.databinding.ActivityAttandenceBinding
 import id.thork.app.network.GlideApp
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.utils.DateUtils
@@ -36,18 +39,20 @@ import id.thork.app.utils.FileUtils
 import timber.log.Timber
 import java.util.*
 
-class AttendanceActivity : BaseActivity() {
+class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = AttendanceActivity::class.java.name
     private val viewModels: AttandanceViewModel by viewModels()
     private val binding: ActivityAttandenceBinding by binding(R.layout.activity_attandence)
 
     private lateinit var dialogUtils: DialogUtils
     private lateinit var locationManager: LocationManager
+    private lateinit var customDialogUtils: CustomDialogUtils
     private var latitudey: Double? = null
     private var longitudex: Double? = null
     private var currentTimeMillSec: Long? = null
     private var isCheckIn: Boolean? = null
-
+    private var uriImage: String? = null
+    private var totalHours: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -56,6 +61,7 @@ class AttendanceActivity : BaseActivity() {
             vm = viewModels
         }
 
+        customDialogUtils = CustomDialogUtils(this)
         locationManager = (getSystemService(LOCATION_SERVICE) as LocationManager)
 
         setupToolbarWithHomeNavigation(
@@ -82,27 +88,39 @@ class AttendanceActivity : BaseActivity() {
         }
 
         binding.btnSaveAttendance.setOnClickListener {
-            //TODO save objectbox
+            if (longitudex != null && latitudey != null && uriImage != null && currentTimeMillSec != null) {
+                setDialogSaveAttendance()
+            } else {
+                setDialogErrorAttendance()
+            }
         }
     }
 
     private fun isCheckin() {
-//        val checkIn = viewModels.findCheckInAttendance()
-//        Timber.d("raka %s", checkIn)
-//        if (checkIn == null){
-//            isCheckIn = true
-//            binding.tvDateCheckIn.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
-//            binding.tvCheckIn.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
-//            binding.tvDate.text = DateUtils.getDateTimeHeaderAttendance()
-//        } else {
-//            isCheckIn = false
-//            binding.tvDateCheckIn.text = checkIn.dateCheckIn
-//            binding.tvCheckIn.text = checkIn.hoursCheckIn
-//            binding.tvDateCheckOut.text = DateUtils.getDateTimeCardView(currentTimeMillSec!!)
-//            binding.tvCheckOut.text = DateUtils.getCheckAttendance(currentTimeMillSec!!)
-//            binding.tvDate.text = checkIn.dateTimeHeader
-//        }
-//        Timber.d("raka %s", isCheckIn)
+        val attendanceEntity = viewModels.findCheckInAttendance()
+        currentTimeMillSec.whatIfNotNull {
+            if (attendanceEntity?.dateCheckIn == null || attendanceEntity.dateCheckOut != null) {
+                isCheckIn = true
+                binding.cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
+                binding.cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
+                binding.tvDateAttendance.text = DateUtils.getDateTimeHeaderAttendance()
+            } else {
+                isCheckIn = false
+                val millSec = it - attendanceEntity.dateCheckInLocal!!
+                val workHours = DateUtils.getWorkHours(millSec)
+                totalHours = workHours
+                binding.cardAttendance.tvCheckInDate.text = attendanceEntity.dateCheckIn
+                binding.cardAttendance.tvCheckInTime.text = attendanceEntity.hoursCheckIn
+                binding.cardAttendance.tvWorkHour.text = workHours
+                binding.tvDateAttendance.text = attendanceEntity.dateTimeHeader
+                binding.cardAttendance.tvCheckOutDate.text = DateUtils.getDateTimeCardView(it)
+                binding.cardAttendance.tvCheckOutTime.text = DateUtils.getCheckAttendance(it)
+                binding.cardAttendance.tvLabelWorkHour.setTextColor(ContextCompat.getColor(this,
+                    R.color.black))
+                binding.cardAttendance.tvWorkHour.setTextColor(ContextCompat.getColor(this,
+                    R.color.black))
+            }
+        }
     }
 
     private fun setupCurrentTimeMillSec() {
@@ -166,11 +184,29 @@ class AttendanceActivity : BaseActivity() {
             ) {
                 GlideApp.with(context).load(uri)
                     .into(binding.ivCaptureImage)
-                Timber.d("raka %s", uri.toString())
                 binding.ivCaptureImage.isEnabled = false
+                uriImage = uri.toString()
             }
             dialogUtils.dismiss()
         }
+    }
+
+    private fun setDialogSaveAttendance() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.attendance_title)
+            .setDescription(R.string.attendance_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogErrorAttendance() {
+        customDialogUtils
+            .setMiddleButtonText(R.string.dialog_yes)
+            .setTittle(R.string.error_attendance_title)
+            .setDescription(R.string.error_attendance_qustion)
+            .setListener(this)
+        customDialogUtils.show()
     }
 
     private fun setupDialog() {
@@ -223,6 +259,28 @@ class AttendanceActivity : BaseActivity() {
         override fun onProviderDisabled(provider: String) {
             Timber.tag(TAG).d("locationListener() onProviderDisabled")
         }
+    }
+
+    override fun onRightButton() {
+        currentTimeMillSec.whatIfNotNull {
+            viewModels.saveCache(isCheckIn!!,
+                it,
+                DateUtils.getDateTimeCardView(it)!!,
+                DateUtils.getCheckAttendance(it)!!,
+                longitudex.toString(),
+                latitudey.toString(),
+                uriImage!!,
+                DateUtils.getDateTimeHeaderAttendance()!!, totalHours)
+            finish()
+        }
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
     }
 
 }

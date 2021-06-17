@@ -50,7 +50,7 @@ class AttendanceDaoImp : AttendanceDao {
         val attendanceEntity =
             attendanceEntityBox.query().notNull(AttendanceEntity_.dateCheckIn).build().find()
         attendanceEntity.whatIfNotNullOrEmpty {
-            return it[0]
+            return it[it.size -1]
         }
         return null
     }
