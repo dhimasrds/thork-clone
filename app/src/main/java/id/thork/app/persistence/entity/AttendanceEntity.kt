@@ -3,6 +3,7 @@ package id.thork.app.persistence.entity
 import android.os.Parcelable
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 /**
  * Created by M.Reza Sulaiman on 16/06/2021
@@ -30,7 +31,8 @@ class AttendanceEntity(
     var username: String? = null,
     var syncUpdate: Int? = null,
     var offlineMode: Int? = null,
-    var attendanceId: Int? = null
+    var attendanceId: Int? = null,
+    var date: Date? = null
 ) : BaseEntity(), Parcelable {
 
 

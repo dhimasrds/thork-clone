@@ -18,6 +18,7 @@ import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.entity.AttendanceEntity
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -267,7 +268,8 @@ class AttendanceRepository @Inject constructor(
                 dateTimeHeader = dateTimeHeader,
                 username = laborCode,
                 syncUpdate = BaseParam.APP_FALSE,
-                offlineMode = BaseParam.APP_TRUE
+                offlineMode = BaseParam.APP_TRUE,
+                date = Date()
             )
             saveAttendanceCache(checkinEntity)
         } else {
