@@ -35,7 +35,6 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
-import id.thork.app.pages.profiles.profile.ProfileActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
 import timber.log.Timber
@@ -107,7 +106,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                 isCheckIn = true
                 binding.cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
                 binding.cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
-                binding.tvDateAttendance.text = DateUtils.getDateTimeHeaderAttendance()
+                binding.cardAttendance.tvDateAttendance.text = DateUtils.getDateTimeHeaderAttendance()
             } else {
                 isCheckIn = false
                 attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
@@ -117,13 +116,9 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                     binding.cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(dateCheckInLocal)
                     binding.cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(dateCheckInLocal)
                     binding.cardAttendance.tvWorkHour.text = workHours
-                    binding.tvDateAttendance.text = attendanceEntity.dateTimeHeader
+                    binding.cardAttendance.tvDateAttendance.text = attendanceEntity.dateTimeHeader
                     binding.cardAttendance.tvCheckOutDate.text = DateUtils.getDateTimeCardView(it)
                     binding.cardAttendance.tvCheckOutTime.text = DateUtils.getCheckAttendance(it)
-                    binding.cardAttendance.tvLabelWorkHour.setTextColor(ContextCompat.getColor(this,
-                        R.color.black))
-                    binding.cardAttendance.tvWorkHour.setTextColor(ContextCompat.getColor(this,
-                        R.color.black))
                 }
             }
         }

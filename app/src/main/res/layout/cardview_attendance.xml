@@ -6,6 +6,24 @@
 
     </data>
 
+    <LinearLayout
+        android:id="@+id/card_history_attendance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_date_attendance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:padding="@dimen/general_padding_5dp"
+            android:text="-"
+            android:textAllCaps="false"
+            android:textColor="@color/colorBlack"
+            android:textFontWeight="650"
+            android:textSize="@dimen/base_text_size_18" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -166,6 +184,7 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 
 </layout>
