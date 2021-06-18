@@ -16,7 +16,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -73,12 +72,13 @@ class FormBuilder<T> constructor(val item: T, val context: Context) {
     @SuppressLint("LogNotTimber")
     fun build(): LinearLayout {
         formLayout.setOrientation(LinearLayout.VERTICAL);
-        formLayout.setLayoutParams(
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
         )
+        params.setMargins(getRealDp(10), getRealDp(10), getRealDp(10), getRealDp(10))
+        formLayout.setLayoutParams(params)
+
         var view: View? = null
         for (field in fields) {
             val fieldName = item!!::class.java.getDeclaredField(field)
@@ -126,7 +126,7 @@ class FormBuilder<T> constructor(val item: T, val context: Context) {
             LinearLayout.LayoutParams.MATCH_PARENT,
             1
         )
-        setMargins(separator, 0, 0, 0, 5)
+        setMargins(separator, 0, 0, 0, getRealDp(5))
 
         val editText = AppCompatEditText(context)
         editText.apply {
@@ -219,6 +219,12 @@ class FormBuilder<T> constructor(val item: T, val context: Context) {
             p.setMargins(left, top, right, bottom)
             view.requestLayout()
         }
+    }
+
+    private fun getRealDp(dp: Int):Int {
+        val scale = context.getResources().getDisplayMetrics().density;
+        val realDp: Int = (dp * scale + 0.5f).toInt()
+        return realDp
     }
 
     fun getData(): HashMap<String, Any> {
