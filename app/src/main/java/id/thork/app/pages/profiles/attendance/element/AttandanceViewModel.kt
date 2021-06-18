@@ -4,15 +4,17 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.attendance_response.Member
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.repository.AttendanceRepository
+import timber.log.Timber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 /**
@@ -24,6 +26,9 @@ class AttandanceViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
+    private lateinit var attendanceEntities: List<AttendanceEntity>
+    private val _attendance = MutableLiveData<List<AttendanceEntity>>()
+    val attendance: LiveData<List<AttendanceEntity>> get() = _attendance
     val TAG = AttandanceViewModel::class.java.name
 
 
@@ -44,6 +49,11 @@ class AttandanceViewModel @ViewModelInject constructor(
         updateToMaximo(isCheckin, attendanceId)
     }
 
+    fun fetchAttendance() {
+        attendanceEntities = attendanceRepository.findlistAttendanceCacheLocal()
+        _attendance.value = attendanceEntities
+    }
+
     private fun updateToMaximo(isCheckin: Boolean, attendanceId: Int) {
         if (isCheckin) {
             updateCheckIn()
@@ -51,6 +61,7 @@ class AttandanceViewModel @ViewModelInject constructor(
             updateCheckOut(attendanceId)
         }
     }
+
 
     private fun updateCheckIn() {
 

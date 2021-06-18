@@ -46,22 +46,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/app_bar">
 
-            <TextView
-                android:id="@+id/tv_date_attendance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_regular"
-                android:padding="@dimen/general_padding_5dp"
-                android:text="-"
-                android:textAllCaps="false"
-                android:textColor="@color/colorBlack"
-                android:textFontWeight="700"
-                android:textSize="21sp" />
-
-
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/general_margin_8dp"
                 android:layout_marginRight="@dimen/general_margin_8dp"
                 android:layout_marginBottom="@dimen/general_margin_10dp"

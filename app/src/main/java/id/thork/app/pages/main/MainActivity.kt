@@ -59,7 +59,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         setupToolbarWithHomeNavigation(
             getString(R.string.this_fsm), navigation = true,
             filter = true, scannerIcon = false,
-            notification = true, option = false
+            notification = true, option = false,
+            historyAttendanceIcon = false
         )
         setupBottomNavigationBar()
 

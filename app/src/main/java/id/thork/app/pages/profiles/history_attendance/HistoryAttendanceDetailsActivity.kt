@@ -1,4 +1,4 @@
-package id.thork.app.pages.profiles.attendance
+package id.thork.app.pages.profiles.history_attendance
 
 import androidx.activity.viewModels
 import id.thork.app.R
@@ -26,7 +26,8 @@ class HistoryAttendanceDetailsActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
     }
 

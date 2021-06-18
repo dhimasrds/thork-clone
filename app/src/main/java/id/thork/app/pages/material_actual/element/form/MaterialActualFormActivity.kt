@@ -44,7 +44,8 @@ class MaterialActualFormActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         //TODO HARDCODE SPINNER
