@@ -1,20 +1,20 @@
 package id.thork.app.pages.profiles.attendance.element
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.attendance_response.Member
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.repository.AttendanceRepository
-import timber.log.Timber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 /**
@@ -36,10 +36,14 @@ class AttandanceViewModel @ViewModelInject constructor(
         return attendanceRepository.findCheckInAttendance()
     }
 
+    fun findAttendanceById(attendanceId: Int): AttendanceEntity? {
+        return attendanceRepository.findAttendanceById(attendanceId)
+    }
+
     fun saveCache(
         isCheckin: Boolean, dateLocal: Long, date: String, hours: String,
         longitudex: String, latitudey: String, uriImage: String, dateTimeHeader: String,
-        workHours: String?, attendanceId: Int
+        workHours: String?, attendanceId: Int,
     ) {
         Timber.d("saveCache() connection %s", appSession.isConnected)
         attendanceRepository.saveCache(
@@ -96,7 +100,7 @@ class AttandanceViewModel @ViewModelInject constructor(
     }
 
     private fun updateCheckOut(attendanceId: Int) {
-        if(attendanceId != 0) {
+        if (attendanceId != 0) {
             val localAttendance = attendanceRepository.prepareBodyCheckOut(attendanceId)
             var member = Member()
             localAttendance.whatIfNotNull {
@@ -126,7 +130,6 @@ class AttandanceViewModel @ViewModelInject constructor(
                 )
             }
         }
-
 
 
     }

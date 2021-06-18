@@ -169,6 +169,7 @@ object BaseParam {
     const val ITEM = "ITEM"
     const val ISSUE = "ISSUE"
     const val WORKLOGTYPE = "WORKLOGTYPE"
+    const val ATTENDANCEID = "ATTENDANCEID"
 
 
 
