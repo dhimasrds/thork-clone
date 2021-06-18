@@ -157,13 +157,20 @@ class AttendanceRepository @Inject constructor(
 
     fun prepareBodyCheckInOfflineMode(attendanceEntity: AttendanceEntity) : Member {
         val memberCheckIn = Member()
-        attendanceEntity.whatIfNotNull {
-            memberCheckIn.startdate = it.dateCheckIn
-            memberCheckIn.starttime = it.hoursCheckIn
-            memberCheckIn.thisfsmlongitudex = it.longCheckIn?.toDouble()
-            memberCheckIn.thisfsmlatitudey = it.latCheckIn?.toDouble()
+        attendanceEntity.whatIfNotNull { cache ->
+            memberCheckIn.startdate = cache.dateCheckIn
+            memberCheckIn.starttime = cache.hoursCheckIn
+            memberCheckIn.thisfsmlongitudex = cache.longCheckIn?.toDouble()
+            memberCheckIn.thisfsmlatitudey = cache.latCheckIn?.toDouble()
             memberCheckIn.orgid = appSession.orgId
-            memberCheckIn.laborcode = it.username
+            memberCheckIn.laborcode = cache.username
+
+            cache.dateCheckOutLocal.whatIfNotNull {
+                memberCheckIn.finishdate = cache.dateCheckOut
+                memberCheckIn.finishtime = cache.hoursCheckOut
+                memberCheckIn.thisfsmlongitudexout = cache.longCheckOut?.toDouble()
+                memberCheckIn.thisfsmlatitudeyout = cache.latCheckOut?.toDouble()
+            }
         }
         return memberCheckIn
     }

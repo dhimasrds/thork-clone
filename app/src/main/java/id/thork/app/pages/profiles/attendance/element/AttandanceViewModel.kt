@@ -85,34 +85,37 @@ class AttandanceViewModel @ViewModelInject constructor(
     }
 
     private fun updateCheckOut(attendanceId: Int) {
-        val localAttendance = attendanceRepository.prepareBodyCheckOut(attendanceId)
-        var member = Member()
-        localAttendance.whatIfNotNull {
-            member = it
+        if(attendanceId != 0) {
+            val localAttendance = attendanceRepository.prepareBodyCheckOut(attendanceId)
+            var member = Member()
+            localAttendance.whatIfNotNull {
+                member = it
+            }
+
+            val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+            val xMethodeOverride: String = BaseParam.APP_PATCH
+            val contentType: String = ("application/json")
+            val patchType: String = BaseParam.APP_MERGE
+            viewModelScope.launch(Dispatchers.IO) {
+                attendanceRepository.updateAttendanceToMx(
+                    cookie,
+                    xMethodeOverride,
+                    contentType,
+                    patchType,
+                    attendanceId,
+                    member,
+                    onSuccess = {
+                        attendanceRepository.handlingCheckOutAfterUpdate(attendanceId)
+                    },
+                    onError = {
+                        attendanceRepository.handlingCheckOutFailed(attendanceId)
+                        Timber.tag(TAG).i("updateCheckOut() onError() onError: %s", it)
+
+                    }
+                )
+            }
         }
 
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val xMethodeOverride: String = BaseParam.APP_PATCH
-        val contentType: String = ("application/json")
-        val patchType: String = BaseParam.APP_MERGE
-        viewModelScope.launch(Dispatchers.IO) {
-            attendanceRepository.updateAttendanceToMx(
-                cookie,
-                xMethodeOverride,
-                contentType,
-                patchType,
-                attendanceId,
-                member,
-                onSuccess = {
-                    attendanceRepository.handlingCheckOutAfterUpdate(attendanceId)
-                },
-                onError = {
-                    attendanceRepository.handlingCheckOutFailed(attendanceId)
-                    Timber.tag(TAG).i("updateCheckOut() onError() onError: %s", it)
-
-                }
-            )
-        }
 
 
     }

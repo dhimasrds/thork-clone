@@ -111,7 +111,9 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                     val millSec = it - dateCheckInLocal
                     val workHours = DateUtils.getWorkHours(millSec)
                     totalHours = workHours
-                    attendanceId = attendanceEntity.attendanceId!!
+                    attendanceEntity.attendanceId.whatIfNotNull { id ->
+                        attendanceId = id
+                    }
                     Timber.d("isCheckin() %s", attendanceId)
                     binding.cardAttendance.tvCheckInDate.text =
                         DateUtils.getDateTimeCardView(dateCheckInLocal)
@@ -298,6 +300,16 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     }
 
     override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         customDialogUtils.dismiss()
     }
 
