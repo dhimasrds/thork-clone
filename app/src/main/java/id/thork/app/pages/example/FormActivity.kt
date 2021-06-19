@@ -17,12 +17,12 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.R
-import id.thork.app.helper.builder.FormBuilder
+import id.thork.app.helper.builder.LocomotifBuilder
 import java.util.*
 
 
 class FormActivity : AppCompatActivity() {
-    var formBuilder: FormBuilder<Person>? = null
+    var locomotifBuilder: LocomotifBuilder<Person>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,20 +35,27 @@ class FormActivity : AppCompatActivity() {
         person.name = "REJA"
         person.age = 32
         person.birthDate = calendar.time
+        person.address = "Puri Park View Tower E"
+        person.nik = "1001"
+        person.email = "rejaluo24@gmail.com"
+        person.gender = "Male"
 
-        formBuilder = FormBuilder(person, this)
-        formBuilder?.setupFields(arrayOf("birthDate","name"))
+        locomotifBuilder = LocomotifBuilder(person, this)
+        locomotifBuilder?.setupFields(arrayOf("birthDate","name", "address", "nik", "email", "gender","age"))
+        locomotifBuilder?.setupFieldsCaption(arrayOf("Tanggal Lahir","Nama Lengkap", "Alamat", "NIK", "Email", "Gender", "Umur"))
         val rootView: LinearLayout = findViewById(R.id.root_view)
-        rootView.addView(formBuilder?.build())
+        rootView.addView(locomotifBuilder?.build())
     }
 
     fun getData(view: View) {
-        val data = formBuilder?.getData()
+        val data = locomotifBuilder?.getData()
         println("Get Data $data")
         if (data != null) {
             for ((key, value) in data) {
                 println("Field $key is $value")
             }
         }
+
+        println(locomotifBuilder?.getDataAsJson())
     }
 }

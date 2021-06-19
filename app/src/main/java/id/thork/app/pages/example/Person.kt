@@ -12,13 +12,20 @@
 
 package id.thork.app.pages.example
 
+import id.thork.app.helper.builder.Lov
 import java.util.*
 
 class Person {
     var id: Long = 0
     var name: String? = null
+    var address: String? = null
+    var nik: String? = null
+    var email: String? = null
     var birthDate: Date? = null
     var age: Int? = null
+
+    @Lov
+    var gender: String? = null
 
     constructor()
 }
