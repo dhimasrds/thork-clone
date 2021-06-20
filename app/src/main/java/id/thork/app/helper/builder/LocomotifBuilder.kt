@@ -228,9 +228,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
         }
         widgetValue.whatIfNotNull(
             whatIf = {
-                Log.d(TAG, "date: $it")
                 currentDate = locomotifDateFormat.format(it)
-                Log.d(TAG, "currentDate: $currentDate")
                 fieldValueMap.put(fieldName, currentDate)
             },
             whatIfNot = {
