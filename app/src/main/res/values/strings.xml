@@ -90,6 +90,14 @@
     <string name="error_attendance_title">Warning!</string>
     <string name="error_attendance_qustion">Image and your location cannot be empty</string>
 
+    <!-- Empty Check in Attendance Dialog -->
+    <string name="empty_attendance_checkin_title">Warning!</string>
+    <string name="empty_attendance_checkin_qustion">Click chek in first</string>
+
+    <!-- Empty Check out Attendance Dialog -->
+    <string name="empty_attendance_checkout_title">Warning!</string>
+    <string name="empty_attendance_checkout_qustion">Click check out first</string>
+
     <!-- Change Language Dialog -->
     <string name="change_language_dialog">Change Language</string>
     <string name="change_language_question">Are you sure you want to change language?</string>
@@ -477,6 +485,7 @@
     <string name="check_out_location">Check out Location</string>
     <string name="check_in_image">Check in Image</string>
     <string name="check_out_image">Check out Image</string>
+    <string name="check_out_attendance">Check out</string>
 
 
 </resources>

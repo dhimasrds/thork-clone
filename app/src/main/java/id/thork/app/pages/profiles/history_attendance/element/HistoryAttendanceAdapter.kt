@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewAttendanceBinding
+import id.thork.app.databinding.HistoryCardviewAttendanceBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceDetailsActivity
@@ -31,7 +32,7 @@ class HistoryAttendanceAdapter constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            CardviewAttendanceBinding.inflate(
+            HistoryCardviewAttendanceBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -44,9 +45,11 @@ class HistoryAttendanceAdapter constructor(
         holder.bind(attendanceEntity)
     }
 
-    inner class ViewHolder(val binding: CardviewAttendanceBinding) :
+    inner class ViewHolder(val binding: HistoryCardviewAttendanceBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(attendanceEntity: AttendanceEntity) {
+            binding.cardHistoryAttendance.isClickable = true
+            binding.root.isEnabled = true
             binding.apply {
                 attendanceEntity.dateCheckOutLocal.whatIfNotNull { dateCheckOutLocal ->
                     attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
