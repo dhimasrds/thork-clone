@@ -36,6 +36,7 @@ import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
+import id.thork.app.utils.IntentUtils
 import timber.log.Timber
 import java.util.*
 
@@ -55,6 +56,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private var totalHours: String? = null
     private var attendanceId: Int = 0
     private var dialogCheckOut: Boolean = false
+    private var dialogImage: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -89,64 +91,86 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                 .start()
         }
 
+        binding.ivGlideImage.setOnClickListener {
+            IntentUtils.displayData(context, uriImage.toString())
+        }
+
         binding.btnSaveAttendance.setOnClickListener {
-            if (binding.cardAttendance.tvCheckInDate.text == "-"){
-                setDialogCheckInEmpty()
-            } else if (dialogCheckOut){
-                setDialogCheckOutEmpty()
-            } else if (longitudex != null && latitudey != null && uriImage != null && currentTimeMillSec != null) {
-                setDialogSaveAttendance()
-            } else {
-                setDialogErrorAttendance()
-            }
+            validateSaveAttendance()
+        }
+
+        binding.deleteImage.setOnClickListener {
+            setDialogDeleteImage()
         }
 
         binding.cardAttendance.linearCheckin.setOnClickListener {
-            currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
-            val attendanceEntity = viewModels.findCheckInAttendance()
-            currentTimeMillSec.whatIfNotNull {
-                if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut != null || attendanceEntity?.dateCheckOut == null) {
-                    isCheckIn = true
-                    binding.apply {
-                        cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
-                        cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
-                        cardAttendance.tvDateAttendance.text =
-                            DateUtils.getDateTimeHeaderAttendance()
-                        cardAttendance.linearCheckout.isClickable = false
-                    }
-                }
-            }
+            validateCheckIn()
         }
 
         binding.cardAttendance.linearCheckout.setOnClickListener {
-            currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
-            val attendanceEntity = viewModels.findCheckInAttendance()
-            Timber.d("onCLickCheckOut() %s", attendanceEntity?.dateCheckOut)
-            if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut == null) {
-                isCheckIn = false
-                dialogCheckOut = false
-                currentTimeMillSec.whatIfNotNull {
-                    attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
-                        val millSec = it - dateCheckInLocal
-                        val workHours = DateUtils.getWorkHours(millSec)
-                        totalHours = workHours
-                        attendanceEntity.attendanceId.whatIfNotNull { id ->
-                            attendanceId = id
-                        }
-                        binding.apply {
-                            Timber.d("onClickCheckOut() %s", attendanceId)
-                            cardAttendance.tvCheckInDate.text =
-                                DateUtils.getDateTimeCardView(dateCheckInLocal)
-                            cardAttendance.tvCheckInTime.text =
-                                DateUtils.getCheckAttendance(dateCheckInLocal)
-                            cardAttendance.tvWorkHour.text = workHours
-                            cardAttendance.tvDateAttendance.text =
-                                attendanceEntity.dateTimeHeader
-                            cardAttendance.tvCheckOutDate.text =
-                                DateUtils.getDateTimeCardView(it)
-                            cardAttendance.tvCheckOutTime.text =
-                                DateUtils.getCheckAttendance(it)
-                        }
+            validateCheckOut()
+        }
+    }
+
+    private fun validateSaveAttendance() {
+        if (binding.cardAttendance.tvCheckInDate.text == "-") {
+            setDialogCheckInEmpty()
+        } else if (dialogCheckOut) {
+            setDialogCheckOutEmpty()
+        } else if (longitudex != null && latitudey != null && uriImage != null
+            && currentTimeMillSec != null
+        ) {
+            setDialogSaveAttendance()
+        } else {
+            setDialogErrorAttendance()
+        }
+    }
+
+    private fun validateCheckIn() {
+        currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
+        val attendanceEntity = viewModels.findCheckInAttendance()
+        currentTimeMillSec.whatIfNotNull {
+            if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut != null || attendanceEntity?.dateCheckOut == null) {
+                isCheckIn = true
+                binding.apply {
+                    cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
+                    cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
+                    cardAttendance.tvDateAttendance.text =
+                        DateUtils.getDateTimeHeaderAttendance()
+                    cardAttendance.linearCheckout.isClickable = false
+                }
+            }
+        }
+    }
+
+    private fun validateCheckOut() {
+        currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
+        val attendanceEntity = viewModels.findCheckInAttendance()
+        Timber.d("onCLickCheckOut() %s", attendanceEntity?.dateCheckOut)
+        if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut == null) {
+            isCheckIn = false
+            dialogCheckOut = false
+            currentTimeMillSec.whatIfNotNull {
+                attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
+                    val millSec = it - dateCheckInLocal
+                    val workHours = DateUtils.getWorkHours(millSec)
+                    totalHours = workHours
+                    attendanceEntity.attendanceId.whatIfNotNull { id ->
+                        attendanceId = id
+                    }
+                    binding.apply {
+                        Timber.d("onClickCheckOut() %s", attendanceId)
+                        cardAttendance.tvCheckInDate.text =
+                            DateUtils.getDateTimeCardView(dateCheckInLocal)
+                        cardAttendance.tvCheckInTime.text =
+                            DateUtils.getCheckAttendance(dateCheckInLocal)
+                        cardAttendance.tvWorkHour.text = workHours
+                        cardAttendance.tvDateAttendance.text =
+                            attendanceEntity.dateTimeHeader
+                        cardAttendance.tvCheckOutDate.text =
+                            DateUtils.getDateTimeCardView(it)
+                        cardAttendance.tvCheckOutTime.text =
+                            DateUtils.getCheckAttendance(it)
                     }
                 }
             }
@@ -226,9 +250,10 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             if (fileName != null && fileName.isNotEmpty() &&
                 mimeType != null && mimeType.isNotEmpty()
             ) {
+                binding.linearGlideAttendance.visibility = View.VISIBLE
+                binding.ivCaptureImage.visibility = View.GONE
                 GlideApp.with(context).load(uri)
-                    .into(binding.ivCaptureImage)
-                binding.ivCaptureImage.isEnabled = false
+                    .into(binding.ivGlideImage)
                 uriImage = uri.toString()
             }
             dialogUtils.dismiss()
@@ -258,6 +283,16 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             .setRightButtonText(R.string.dialog_yes)
             .setTittle(R.string.attendance_title)
             .setDescription(R.string.attendance_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogDeleteImage() {
+        dialogImage = true
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.delete_image_attendance_title)
+            .setDescription(R.string.delete_image_attendance_qustion)
             .setListener(this)
         customDialogUtils.show()
     }
@@ -324,24 +359,33 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     }
 
     override fun onRightButton() {
-        val realTimeMillSec = DateUtils.getCurrentTimeMillisec()
-        realTimeMillSec.whatIfNotNull {
-            viewModels.saveCache(
-                isCheckIn!!,
-                it,
-                DateUtils.getDateAttendanceMaximo(it)!!,
-                DateUtils.getTimeAttendanceMaximo(it)!!,
-                longitudex.toString(),
-                latitudey.toString(),
-                uriImage!!,
-                DateUtils.getDateTimeHeaderAttendance()!!, totalHours,
-                attendanceId
-            )
-            finish()
+        if (dialogImage) {
+            uriImage = null
+            binding.linearGlideAttendance.visibility = View.GONE
+            binding.ivCaptureImage.visibility = View.VISIBLE
+            dialogImage = false
+            customDialogUtils.dismiss()
+        } else {
+            val realTimeMillSec = DateUtils.getCurrentTimeMillisec()
+            realTimeMillSec.whatIfNotNull {
+                viewModels.saveCache(
+                    isCheckIn!!,
+                    it,
+                    DateUtils.getDateAttendanceMaximo(it)!!,
+                    DateUtils.getTimeAttendanceMaximo(it)!!,
+                    longitudex.toString(),
+                    latitudey.toString(),
+                    uriImage!!,
+                    DateUtils.getDateTimeHeaderAttendance()!!, totalHours,
+                    attendanceId
+                )
+                finish()
+            }
         }
     }
 
     override fun onLeftButton() {
+        dialogImage = false
         customDialogUtils.dismiss()
     }
 
