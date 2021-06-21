@@ -6,6 +6,7 @@ import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.persistence.entity.AttendanceEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
+import io.objectbox.query.QueryBuilder
 import timber.log.Timber
 import java.util.*
 
@@ -50,7 +51,7 @@ class AttendanceDaoImp : AttendanceDao {
         val attendanceEntity =
             attendanceEntityBox.query().notNull(AttendanceEntity_.dateCheckIn).build().find()
         attendanceEntity.whatIfNotNullOrEmpty {
-            return it[it.size -1]
+            return it[it.size - 1]
         }
         return null
     }
@@ -86,7 +87,9 @@ class AttendanceDaoImp : AttendanceDao {
     }
 
     override fun findListAttendanceLocal(): List<AttendanceEntity> {
-        return attendanceEntityBox.query().notNull(AttendanceEntity_.dateCheckOutLocal).build().find()
+        return attendanceEntityBox.query()
+            .order(AttendanceEntity_.date, QueryBuilder.DESCENDING or QueryBuilder.CASE_SENSITIVE)
+            .build().find()
     }
 
     override fun findAttendanceByOfflinemode(offlinemode: Int): AttendanceEntity? {
