@@ -50,12 +50,10 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private lateinit var customDialogUtils: CustomDialogUtils
     private var latitudey: Double? = null
     private var longitudex: Double? = null
-    private var currentTimeMillSec: Long? = null
-    private var isCheckIn: Boolean? = null
     private var uriImage: String? = null
     private var totalHours: String? = null
     private var attendanceId: Int = 0
-    private var dialogCheckOut: Boolean = false
+    private var isCheckIn: Boolean = true
     private var dialogImage: Boolean = false
 
     override fun setupView() {
@@ -102,95 +100,30 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         binding.deleteImage.setOnClickListener {
             setDialogDeleteImage()
         }
-
-        binding.cardAttendance.linearCheckin.setOnClickListener {
-            validateCheckIn()
-        }
-
-        binding.cardAttendance.linearCheckout.setOnClickListener {
-            validateCheckOut()
-        }
     }
 
     private fun validateSaveAttendance() {
-        if (binding.cardAttendance.tvCheckInDate.text == "-") {
-            setDialogCheckInEmpty()
-        } else if (dialogCheckOut) {
-            setDialogCheckOutEmpty()
-        } else if (longitudex != null && latitudey != null && uriImage != null
-            && currentTimeMillSec != null
-        ) {
+        if (longitudex != null && latitudey != null && uriImage != null) {
             setDialogSaveAttendance()
         } else {
             setDialogErrorAttendance()
         }
     }
 
-    private fun validateCheckIn() {
-        currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
-        val attendanceEntity = viewModels.findCheckInAttendance()
-        currentTimeMillSec.whatIfNotNull {
-            if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut != null || attendanceEntity?.dateCheckOut == null) {
-                isCheckIn = true
-                binding.apply {
-                    cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
-                    cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
-                    cardAttendance.tvDateAttendance.text =
-                        DateUtils.getDateTimeHeaderAttendance()
-                    cardAttendance.linearCheckout.isClickable = false
-                }
-            }
-        }
-    }
-
-    private fun validateCheckOut() {
-        currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
-        val attendanceEntity = viewModels.findCheckInAttendance()
-        Timber.d("onCLickCheckOut() %s", attendanceEntity?.dateCheckOut)
-        if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut == null) {
-            isCheckIn = false
-            dialogCheckOut = false
-            currentTimeMillSec.whatIfNotNull {
-                attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
-                    val millSec = it - dateCheckInLocal
-                    val workHours = DateUtils.getWorkHours(millSec)
-                    totalHours = workHours
-                    attendanceEntity.attendanceId.whatIfNotNull { id ->
-                        attendanceId = id
-                    }
-                    binding.apply {
-                        Timber.d("onClickCheckOut() %s", attendanceId)
-                        cardAttendance.tvCheckInDate.text =
-                            DateUtils.getDateTimeCardView(dateCheckInLocal)
-                        cardAttendance.tvCheckInTime.text =
-                            DateUtils.getCheckAttendance(dateCheckInLocal)
-                        cardAttendance.tvWorkHour.text = workHours
-                        cardAttendance.tvDateAttendance.text =
-                            attendanceEntity.dateTimeHeader
-                        cardAttendance.tvCheckOutDate.text =
-                            DateUtils.getDateTimeCardView(it)
-                        cardAttendance.tvCheckOutTime.text =
-                            DateUtils.getCheckAttendance(it)
-                    }
-                }
-            }
-        }
-    }
-
     private fun displayCheckin() {
+        binding.cardAttendance.tvDateAttendance.text =
+            DateUtils.getDateTimeHeaderAttendance()
         val attendanceEntity = viewModels.findCheckInAttendance()
         attendanceEntity?.dateCheckInLocal.whatIfNotNull {
             if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut == null) {
                 binding.apply {
-                    cardAttendance.linearCheckin.isClickable = false
-                    cardAttendance.linearCheckin.isEnabled = false
                     cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
                     cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
                     cardAttendance.tvDateAttendance.text =
                         DateUtils.getDateTimeHeaderAttendance()
                     btnSaveAttendance.text = getString(R.string.check_out_attendance)
-                    dialogCheckOut = true
                 }
+                isCheckIn = false
             }
         }
     }
@@ -258,24 +191,6 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             }
             dialogUtils.dismiss()
         }
-    }
-
-    private fun setDialogCheckInEmpty() {
-        customDialogUtils
-            .setMiddleButtonText(R.string.dialog_yes)
-            .setTittle(R.string.empty_attendance_checkin_title)
-            .setDescription(R.string.empty_attendance_checkin_qustion)
-            .setListener(this)
-        customDialogUtils.show()
-    }
-
-    private fun setDialogCheckOutEmpty() {
-        customDialogUtils
-            .setMiddleButtonText(R.string.dialog_yes)
-            .setTittle(R.string.empty_attendance_checkout_title)
-            .setDescription(R.string.empty_attendance_checkout_qustion)
-            .setListener(this)
-        customDialogUtils.show()
     }
 
     private fun setDialogSaveAttendance() {
@@ -369,14 +284,14 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             val realTimeMillSec = DateUtils.getCurrentTimeMillisec()
             realTimeMillSec.whatIfNotNull {
                 viewModels.saveCache(
-                    isCheckIn!!,
+                    isCheckIn,
                     it,
-                    DateUtils.getDateAttendanceMaximo(it)!!,
-                    DateUtils.getTimeAttendanceMaximo(it)!!,
+                    DateUtils.getDateAttendanceMaximo(it),
+                    DateUtils.getTimeAttendanceMaximo(it),
                     longitudex.toString(),
                     latitudey.toString(),
                     uriImage!!,
-                    DateUtils.getDateTimeHeaderAttendance()!!, totalHours,
+                    DateUtils.getDateTimeHeaderAttendance(), totalHours,
                     attendanceId
                 )
                 finish()

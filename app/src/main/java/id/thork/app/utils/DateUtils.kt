@@ -75,7 +75,7 @@ object DateUtils {
      * HEADER ATTENDANCE
      * For Display Header Attendance
      */
-    fun getDateTimeHeaderAttendance(): String? {
+    fun getDateTimeHeaderAttendance(): String {
         val c = Calendar.getInstance()
         val sdf = SimpleDateFormat(DATE_ATTENDANCE)
         return sdf.format(c.time)
@@ -103,13 +103,13 @@ object DateUtils {
      * save Date And Time in ObjectBox
      * for update to maximo
      */
-    fun getDateAttendanceMaximo(millisec: Long): String? {
+    fun getDateAttendanceMaximo(millisec: Long): String {
         val c = Date(millisec)
         val sdf = SimpleDateFormat(DATE_FORMAT_BODYMX)
         return sdf.format(c.time)
     }
 
-    fun getTimeAttendanceMaximo(millisec: Long) : String? {
+    fun getTimeAttendanceMaximo(millisec: Long) : String {
         val c = Date(millisec)
         val sdf = SimpleDateFormat(DATE_TIME_FORMAT_BODYMX)
         return sdf.format(c.time)
@@ -121,7 +121,7 @@ object DateUtils {
      * For get WorkHours in Attendance
      * How to get WorkHours (dateCheckoutLocal - dateCheckInLocal)
      */
-    fun getWorkHours(millisec: Long): String? {
+    fun getWorkHours(millisec: Long): String {
         val second: Long = millisec / 1000
         val minutes: Long = second / 60 % 60
         val hours: Long = second / (60 * 60) % 24
@@ -129,7 +129,7 @@ object DateUtils {
     }
 
 
-    fun getDateTimeOB(date: Date?): String? {
+    fun getDateTimeOB(date: Date?): String {
         try {
             val formatter = SimpleDateFormat(DATE_FORMAT_OBJECTBOX)
             formatter.applyPattern(DEFAULT_DATE_FORMAT)
