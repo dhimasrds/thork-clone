@@ -114,7 +114,6 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
 
             Log.d(TAG, "buildField() $field type $type isLovField $isLovField")
             if (isLovField) {
-                //create lov field
                 view = createLovWidget(context, field, index)
             } else if (typeName.equals("java.lang.String")) {
                 view = createTextWidget(context, field, index)

@@ -41,10 +41,12 @@ class FormActivity : AppCompatActivity() {
         person.gender = "Male"
 
         locomotifBuilder = LocomotifBuilder(person, this)
-        locomotifBuilder?.setupFields(arrayOf("birthDate","name", "address", "nik", "email", "gender","age"))
-        locomotifBuilder?.setupFieldsCaption(arrayOf("Tanggal Lahir","Nama Lengkap", "Alamat", "NIK", "Email", "Gender", "Umur"))
+        locomotifBuilder?.setupFields(arrayOf("birthDate","name", "address", "email", "gender"))
+        locomotifBuilder?.setupFieldsCaption(arrayOf("Tanggal Lahir","Nama Lengkap", "Alamat", "NIK", "Email", "Jenis Kelamin"))
         val rootView: LinearLayout = findViewById(R.id.root_view)
         rootView.addView(locomotifBuilder?.build())
+
+        locomotifBuilder?.setFieldReadOnlyByTag("name")
     }
 
     fun getData(view: View) {
