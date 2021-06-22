@@ -28,6 +28,9 @@ class AttandanceViewModel @ViewModelInject constructor(
 ) : LiveCoroutinesViewModel() {
     private lateinit var attendanceEntities: List<AttendanceEntity>
     private val _attendance = MutableLiveData<List<AttendanceEntity>>()
+    private val _filterBydate = MutableLiveData<List<AttendanceEntity>>()
+
+    val filterBydate: LiveData<List<AttendanceEntity>> get() = _filterBydate
     val attendance: LiveData<List<AttendanceEntity>> get() = _attendance
     val TAG = AttandanceViewModel::class.java.name
 
@@ -38,6 +41,13 @@ class AttandanceViewModel @ViewModelInject constructor(
 
     fun findAttendanceById(attendanceId: Int): AttendanceEntity? {
         return attendanceRepository.findAttendanceById(attendanceId)
+    }
+
+    fun filterByDate(startDate: Long, endDate: Long) {
+        Timber.d("filterByDate() start %s end:%s", startDate, endDate)
+        val filterList = attendanceRepository.filterByDate(startDate, endDate)
+        Timber.d("filterByDate() filterList %s", filterList?.size)
+        _filterBydate.value = filterList
     }
 
     fun saveCache(

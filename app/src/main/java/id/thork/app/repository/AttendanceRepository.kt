@@ -84,6 +84,10 @@ class AttendanceRepository @Inject constructor(
         return attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
     }
 
+    fun filterByDate(startDate : Long , endDate : Long) :List<AttendanceEntity>? {
+        return attendanceDao.filterByDate(startDate,endDate)
+    }
+
     fun prepareBodyCheckIn() : Member{
         val attendanceEntity = findAttendanceBySyncUpdate(BaseParam.APP_FALSE)
         val memberCheckIn = Member()
