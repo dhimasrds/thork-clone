@@ -45,11 +45,85 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/general_margin_5dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/general_padding_5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:focusable="false"
+                android:id="@+id/start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparant"
+                android:inputType="textMultiLine|textVisiblePassword"
+                android:layout_marginRight="@dimen/general_margin_15dp"
+                android:drawableStart="@drawable/ic_date_black"
+                android:drawablePadding="@dimen/general_padding_5dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/colorBlack"
+                android:hint="Start date"
+                tools:ignore="Deprecated" />
+
+            <EditText
+                android:focusable="false"
+                android:id="@+id/end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/general_margin_10dp"
+                android:drawableStart="@drawable/ic_date_black"
+                android:drawablePadding="@dimen/general_padding_5dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/colorBlack"
+                android:background="@color/transparant"
+                android:inputType="textMultiLine|textVisiblePassword"
+                android:hint="End date" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_filter"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_button"
+                    android:fontFamily="@font/roboto_regular"
+                    android:drawableEnd="@drawable/ic_filter_white"
+                    android:textFontWeight="700"
+                    android:paddingRight="@dimen/general_padding_10dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/base_text_size_16"
+                    android:text="Filter"
+                    android:textAllCaps="false"
+                    />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/clear_text"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="@dimen/general_margin_10dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_cross"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_history_attendance"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
             android:clipToPadding="true"
             android:paddingBottom="@dimen/general_padding_8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -57,9 +131,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/app_bar"
-            app:layout_constraintVertical_bias="0.0"
-            tools:listitem="@layout/cardview_attendance" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            tools:listitem="@layout/cardview_attendance"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

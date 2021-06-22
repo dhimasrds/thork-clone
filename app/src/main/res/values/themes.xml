@@ -15,6 +15,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:elevation">0dp</item>
+        <item name="android:datePickerDialogTheme">@style/DialogTheme</item>
         <item name="android:actionButtonStyle">@style/ThorkMenuItemStyle</item>
     </style>
 
@@ -38,4 +39,9 @@
     <style name="TextLabel" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/blue</item>
+        <item name="colorOnPrimary">@color/blue</item>
+        <item name="colorOnSecondary">@color/blue</item>
+    </style>
 </resources>

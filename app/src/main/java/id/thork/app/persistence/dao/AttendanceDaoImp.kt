@@ -99,5 +99,9 @@ class AttendanceDaoImp : AttendanceDao {
         return null
     }
 
+    override fun filterByDate(startDate : Long, endDate : Long): List<AttendanceEntity>? {
+        return attendanceEntityBox.query().between(AttendanceEntity_.dateCheckInLocal, startDate, endDate).build().find()
+    }
+
 
 }
