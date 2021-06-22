@@ -56,10 +56,9 @@
                 app:cardCornerRadius="8dp"
                 app:cardElevation="5dp">
 
-                   <include
-                       android:id="@+id/card_attendance"
-                       layout="@layout/cardview_attendance"
-                       />
+                <include
+                    android:id="@+id/card_attendance"
+                    layout="@layout/cardview_attendance" />
 
 
             </androidx.cardview.widget.CardView>
@@ -128,11 +127,47 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_capture_image"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:src="@drawable/ic_add_image" />
-            </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linear_glide_attendance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        app:cardCornerRadius="15dp">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/iv_glide_image"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
+                                android:background="@drawable/gv_background"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_add_image" />
+
+                            <ImageView
+                                android:id="@+id/delete_image"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/ic_delete" />
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -146,7 +181,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="8dp"
             android:background="@color/colorPrimaryBackground"
-            android:text="Save"
+            android:text="Check In"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

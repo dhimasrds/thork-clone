@@ -20,7 +20,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skydoves.whatif.whatIf
@@ -37,6 +36,7 @@ import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
+import id.thork.app.utils.IntentUtils
 import timber.log.Timber
 import java.util.*
 
@@ -50,11 +50,11 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private lateinit var customDialogUtils: CustomDialogUtils
     private var latitudey: Double? = null
     private var longitudex: Double? = null
-    private var currentTimeMillSec: Long? = null
-    private var isCheckIn: Boolean? = null
     private var uriImage: String? = null
     private var totalHours: String? = null
     private var attendanceId: Int = 0
+    private var isCheckIn: Boolean = true
+    private var dialogImage: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -76,10 +76,9 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             historyAttendanceIcon = true
         )
 
-        setupCurrentTimeMillSec()
         setupDialog()
         pickLocation()
-        isCheckin()
+        displayCheckin()
     }
 
     override fun setupListener() {
@@ -90,48 +89,43 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                 .start()
         }
 
+        binding.ivGlideImage.setOnClickListener {
+            IntentUtils.displayData(context, uriImage.toString())
+        }
+
         binding.btnSaveAttendance.setOnClickListener {
-            if (longitudex != null && latitudey != null && uriImage != null && currentTimeMillSec != null) {
-                setDialogSaveAttendance()
-            } else {
-                setDialogErrorAttendance()
-            }
+            validateSaveAttendance()
+        }
+
+        binding.deleteImage.setOnClickListener {
+            setDialogDeleteImage()
         }
     }
 
-    private fun isCheckin() {
+    private fun validateSaveAttendance() {
+        if (longitudex != null && latitudey != null && uriImage != null) {
+            setDialogSaveAttendance()
+        } else {
+            setDialogErrorAttendance()
+        }
+    }
+
+    private fun displayCheckin() {
+        binding.cardAttendance.tvDateAttendance.text =
+            DateUtils.getDateTimeHeaderAttendance()
         val attendanceEntity = viewModels.findCheckInAttendance()
-        currentTimeMillSec.whatIfNotNull {
-            if (attendanceEntity?.dateCheckIn == null || attendanceEntity.dateCheckOut != null) {
-                isCheckIn = true
-                binding.cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
-                binding.cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
-                binding.cardAttendance.tvDateAttendance.text = DateUtils.getDateTimeHeaderAttendance()
-            } else {
-                isCheckIn = false
-                attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
-                    val millSec = it - dateCheckInLocal
-                    val workHours = DateUtils.getWorkHours(millSec)
-                    totalHours = workHours
-                    attendanceEntity.attendanceId.whatIfNotNull { id ->
-                        attendanceId = id
-                    }
-                    Timber.d("isCheckin() %s", attendanceId)
-                    binding.cardAttendance.tvCheckInDate.text =
-                        DateUtils.getDateTimeCardView(dateCheckInLocal)
-                    binding.cardAttendance.tvCheckInTime.text =
-                        DateUtils.getCheckAttendance(dateCheckInLocal)
-                    binding.cardAttendance.tvWorkHour.text = workHours
-                    binding.cardAttendance.tvDateAttendance.text = attendanceEntity.dateTimeHeader
-                    binding.cardAttendance.tvCheckOutDate.text = DateUtils.getDateTimeCardView(it)
-                    binding.cardAttendance.tvCheckOutTime.text = DateUtils.getCheckAttendance(it)
+        attendanceEntity?.dateCheckInLocal.whatIfNotNull {
+            if (attendanceEntity?.dateCheckIn != null && attendanceEntity.dateCheckOut == null) {
+                binding.apply {
+                    cardAttendance.tvCheckInDate.text = DateUtils.getDateTimeCardView(it)
+                    cardAttendance.tvCheckInTime.text = DateUtils.getCheckAttendance(it)
+                    cardAttendance.tvDateAttendance.text =
+                        DateUtils.getDateTimeHeaderAttendance()
+                    btnSaveAttendance.text = getString(R.string.check_out_attendance)
                 }
+                isCheckIn = false
             }
         }
-    }
-
-    private fun setupCurrentTimeMillSec() {
-        currentTimeMillSec = DateUtils.getCurrentTimeMillisec()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -189,9 +183,10 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             if (fileName != null && fileName.isNotEmpty() &&
                 mimeType != null && mimeType.isNotEmpty()
             ) {
+                binding.linearGlideAttendance.visibility = View.VISIBLE
+                binding.ivCaptureImage.visibility = View.GONE
                 GlideApp.with(context).load(uri)
-                    .into(binding.ivCaptureImage)
-                binding.ivCaptureImage.isEnabled = false
+                    .into(binding.ivGlideImage)
                 uriImage = uri.toString()
             }
             dialogUtils.dismiss()
@@ -203,6 +198,16 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             .setRightButtonText(R.string.dialog_yes)
             .setTittle(R.string.attendance_title)
             .setDescription(R.string.attendance_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogDeleteImage() {
+        dialogImage = true
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.delete_image_attendance_title)
+            .setDescription(R.string.delete_image_attendance_qustion)
             .setListener(this)
         customDialogUtils.show()
     }
@@ -269,23 +274,33 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     }
 
     override fun onRightButton() {
-        currentTimeMillSec.whatIfNotNull {
-            viewModels.saveCache(
-                isCheckIn!!,
-                it,
-                DateUtils.getDateAttendanceMaximo(it)!!,
-                DateUtils.getTimeAttendanceMaximo(it)!!,
-                longitudex.toString(),
-                latitudey.toString(),
-                uriImage!!,
-                DateUtils.getDateTimeHeaderAttendance()!!, totalHours,
-                attendanceId
-            )
-            finish()
+        if (dialogImage) {
+            uriImage = null
+            binding.linearGlideAttendance.visibility = View.GONE
+            binding.ivCaptureImage.visibility = View.VISIBLE
+            dialogImage = false
+            customDialogUtils.dismiss()
+        } else {
+            val realTimeMillSec = DateUtils.getCurrentTimeMillisec()
+            realTimeMillSec.whatIfNotNull {
+                viewModels.saveCache(
+                    isCheckIn,
+                    it,
+                    DateUtils.getDateAttendanceMaximo(it),
+                    DateUtils.getTimeAttendanceMaximo(it),
+                    longitudex.toString(),
+                    latitudey.toString(),
+                    uriImage!!,
+                    DateUtils.getDateTimeHeaderAttendance(), totalHours,
+                    attendanceId
+                )
+                finish()
+            }
         }
     }
 
     override fun onLeftButton() {
+        dialogImage = false
         customDialogUtils.dismiss()
     }
 

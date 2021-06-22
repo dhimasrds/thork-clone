@@ -10,6 +10,7 @@ import id.thork.app.databinding.ActivityHistoryAttendanceDetailsBinding
 import id.thork.app.network.GlideApp
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.utils.DateUtils
+import id.thork.app.utils.IntentUtils
 import timber.log.Timber
 
 class HistoryAttendanceDetailsActivity : BaseActivity() {
@@ -70,10 +71,14 @@ class HistoryAttendanceDetailsActivity : BaseActivity() {
                         tvCheckOutLocation.text = "$latCheckOut, $longCheckOut"
                         GlideApp.with(BaseApplication.context).load(attendanceEntity?.uriImageCheckIn)
                             .into(ivCheckIn)
-                        binding.ivCheckIn.isEnabled = false
+                        ivCheckIn.setOnClickListener {
+                            IntentUtils.displayData(BaseApplication.context, attendanceEntity?.uriImageCheckIn.toString())
+                        }
                         GlideApp.with(BaseApplication.context).load(attendanceEntity?.uriImageCheckOut)
                             .into(ivCheckOut)
-                        binding.ivCheckOut.isEnabled = false
+                        ivCheckOut.setOnClickListener {
+                            IntentUtils.displayData(BaseApplication.context, attendanceEntity?.uriImageCheckOut.toString())
+                        }
                     }
                 }
             }

@@ -86,9 +86,21 @@
     <string name="attendance_title">Save</string>
     <string name="attendance_qustion">Are you sure you want to save attendance?</string>
 
+    <!-- Delete Image Attendance Dialog -->
+    <string name="delete_image_attendance_title">Delete</string>
+    <string name="delete_image_attendance_qustion">Are you sure you want to delete image?</string>
+
     <!-- Error Save Attendance Dialog -->
     <string name="error_attendance_title">Warning!</string>
     <string name="error_attendance_qustion">Image and your location cannot be empty</string>
+
+    <!-- Empty Check in Attendance Dialog -->
+    <string name="empty_attendance_checkin_title">Warning!</string>
+    <string name="empty_attendance_checkin_qustion">Click chek in first</string>
+
+    <!-- Empty Check out Attendance Dialog -->
+    <string name="empty_attendance_checkout_title">Warning!</string>
+    <string name="empty_attendance_checkout_qustion">Click check out first</string>
 
     <!-- Change Language Dialog -->
     <string name="change_language_dialog">Change Language</string>
@@ -477,6 +489,7 @@
     <string name="check_out_location">Check out Location</string>
     <string name="check_in_image">Check in Image</string>
     <string name="check_out_image">Check out Image</string>
+    <string name="check_out_attendance">Check out</string>
 
 
 </resources>
