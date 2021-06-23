@@ -17,6 +17,7 @@ buildscript {
         gsonVersion = "2.8.6"
         moshiAdapterVersion = "1.11.0"
         moshiVersion = "1.11.0"
+        signatureVersion = "1.3.1"
         glideVersion = "4.12.0"
         glideOkHttpVersion = "4.12.0"
         toastyVersion = "1.5.0"

@@ -284,10 +284,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         TODO("Not yet implemented")
     }
 
-//    override fun onLostConnection() {
-//
-//    }
-
     private fun addAttachment(
         woCacheEntity: WoCacheEntity,
         uriString: String,

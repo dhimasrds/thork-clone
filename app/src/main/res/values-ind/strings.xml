@@ -179,6 +179,7 @@
     <string name="estimatedwork">Perkiraan Waktu Kerja</string>
     <string name="hourminute">Jam : Menit</string>
     <string name="attachments">Lampiran</string>
+    <string name="digital_sign">Digital Sign</string>
     <string name="image">Gambar</string>
     <string name="reportDate">Tanggal Laporan</string>
     <string name="create">Buat</string>

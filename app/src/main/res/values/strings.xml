@@ -209,6 +209,7 @@
     <string name="estimatedwork">Estimated Work Duration</string>
     <string name="hourminute">Hours : Minutes</string>
     <string name="attachments">Attachments</string>
+    <string name="digital_sign">Digital Sign</string>
     <string name="image">Image</string>
     <string name="reportDate">Reported Date</string>
     <string name="service_address">Service Address</string>
