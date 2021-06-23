@@ -81,7 +81,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = true,
+            option = false,
             historyAttendanceIcon = false
         )
 

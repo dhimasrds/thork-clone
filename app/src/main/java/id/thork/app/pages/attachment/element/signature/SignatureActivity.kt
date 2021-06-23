@@ -14,8 +14,11 @@ package id.thork.app.pages.attachment.element.signature
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.skydoves.whatif.whatIfNotNull
@@ -24,6 +27,7 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySignatureBinding
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 
 class SignatureActivity : BaseActivity() {
@@ -72,43 +76,53 @@ class SignatureActivity : BaseActivity() {
         binding.btnSave.setOnClickListener {
             Timber.tag(TAG).d("btnSaveListener()")
             binding.signaturePad.whatIfNotNull {
-                val uri = getSignatureUri(this, it.signatureBitmap, "signatureReja ".plus(System.currentTimeMillis()))
+                val uri = saveSignatureAsBitmap(this, it.signatureBitmap, Bitmap.CompressFormat.JPEG,
+                    "image/jpg", "signatured-".plus(System.currentTimeMillis().toString().plus(".jpg")) )
                 uri.whatIfNotNull {
                     Timber.tag(TAG).d("btnSaveListener() uri: %s path: %s", it, it.path)
+                    val intent = Intent()
+                    intent.data = it
+                    setResult(RESULT_OK, intent)
+                    finish()
                 }
             }
         }
     }
 
-    fun getSignatureUri(context: Context, bitmap: Bitmap, title: String): Uri? {
-        Timber.tag(TAG).d("getSignatureUri() bitmap: %s title: %s", bitmap, title)
-        try {
-            val bytes = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            val values = ContentValues()
-            values.put(Images.Media.TITLE, title)
-            values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis())
-            values.put(Images.Media.BUCKET_DISPLAY_NAME, title)
-            values.put(Images.Media.MIME_TYPE, "image/jpeg");
-            val uri = context.contentResolver.insert(Images.Media.EXTERNAL_CONTENT_URI, values)
-            return uri
-        } catch (e: Exception) {
-            e.printStackTrace()
+    @Throws(IOException::class)
+    fun saveSignatureAsBitmap(
+        context: Context, bitmap: Bitmap, format: Bitmap.CompressFormat,
+        mimeType: String, displayName: String
+    ): Uri {
+
+        val values = ContentValues().apply {
+            put(Images.Media.DISPLAY_NAME, displayName)
+            put(Images.Media.MIME_TYPE, mimeType)
+            put(Images.Media.DATE_TAKEN, System.currentTimeMillis())
+            put(Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM)
         }
-        return null
-//
-//        val relativeLocation = Environment.DIRECTORY_PICTURES + File.pathSeparator + title
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.MediaColumns.DISPLAY_NAME, System.currentTimeMillis().toString())
-//            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                put(MediaStore.MediaColumns.RELATIVE_PATH, relativeLocation)
-//                put(MediaStore.MediaColumns.IS_PENDING, 1)
-//            }
-//        }
-//
-//        val resolver = SignatureActivity().contentResolver
-//        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-//        return uri
+
+        val resolver = context.contentResolver
+        var uri: Uri? = null
+
+        try {
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                ?: throw IOException("Failed to create new MediaStore record.")
+
+            resolver.openOutputStream(uri)?.use {
+                if (!bitmap.compress(format, 95, it))
+                    throw IOException("Failed to save bitmap.")
+            } ?: throw IOException("Failed to open output stream.")
+            return uri
+
+        } catch (e: IOException) {
+
+            uri?.let { orphanUri ->
+                // Don't leave an orphan entry in the MediaStore
+                resolver.delete(orphanUri, null, null)
+            }
+
+            throw e
+        }
     }
 }

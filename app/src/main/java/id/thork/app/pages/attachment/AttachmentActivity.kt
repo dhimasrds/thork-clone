@@ -152,6 +152,13 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     navigateToPreview(uri)
                 }
             }
+            SELECT_SIGNATURE_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val uri: Uri = data?.data!!
+                    navigateToPreview(uri)
+                    Timber.tag(TAG).d("onActivityResult() signature data: %s", uri.toString())
+                }
+            }
             else -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val uri: Uri = data?.data!!

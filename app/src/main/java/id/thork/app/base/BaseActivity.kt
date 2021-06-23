@@ -41,7 +41,9 @@ import id.thork.app.R
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.pages.attachment.element.signature.SignatureActivity
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
+import id.thork.app.pages.rfid_mutli_asset.RfidMultiAssetActivity
 import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
@@ -57,6 +59,7 @@ abstract class BaseActivity : AppCompatActivity() {
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
 
     protected val SELECT_DOCUMENT_REQUEST = 555
+    protected val SELECT_SIGNATURE_REQUEST = 556
 
     @Inject
     lateinit var connectionLiveData: ConnectionLiveData
@@ -188,6 +191,8 @@ abstract class BaseActivity : AppCompatActivity() {
         optionMenu?.findItem(R.id.action_capture_image)?.isVisible = optionIcon
         optionMenu?.findItem(R.id.action_attach_image)?.isVisible = optionIcon
         optionMenu?.findItem(R.id.action_attach_document)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_attach_signature)?.isVisible = optionIcon
+
         optionMenu?.findItem(R.id.action_create_followup)?.isVisible = followUpWoIcon
         optionMenu?.findItem(R.id.history_attendance)?.isVisible = historyAttendanceIcon
         return true
@@ -235,7 +240,11 @@ abstract class BaseActivity : AppCompatActivity() {
             openDocuments()
             return true
         }
-
+        if (id == R.id.action_attach_signature) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action attach signature")
+            openSignature()
+            return true
+        }
         if (id == R.id.action_create_followup) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action create follow up")
             createFollowUp()
@@ -249,7 +258,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun openGallery() {
         ImagePicker.with(this)
@@ -269,6 +277,11 @@ abstract class BaseActivity : AppCompatActivity() {
         intent.putExtra("return-data", true)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivityForResult(intent, SELECT_DOCUMENT_REQUEST)
+    }
+
+    private fun openSignature() {
+        val intent = Intent(this, SignatureActivity::class.java)
+        startActivityForResult(intent, SELECT_SIGNATURE_REQUEST)
     }
 
     private fun createFollowUp() {
