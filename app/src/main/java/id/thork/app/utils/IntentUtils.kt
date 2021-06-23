@@ -31,7 +31,15 @@ object IntentUtils {
                 Timber.tag(BaseApplication.TAG).d("displayData() error: %s", e)
             }
         } else {
-            val uri: Uri = Uri.parse(uriString)
+            var uri: Uri = Uri.parse(uriString)
+            if (uri.toString().contains("raw")) {
+                var newUriString = Uri.decode(uri.toString())
+                if (newUriString.contains("raw:")) {
+                    val index = newUriString.indexOf("raw:", 0, true) + ("raw:".length)
+                    newUriString = "file://".plus(newUriString.substring(index))
+                }
+                uri = Uri.parse(newUriString)
+            }
             val intent = Intent(Intent.ACTION_VIEW)
             val tmpUri = FileProvider.getUriForFile(
                 context,
