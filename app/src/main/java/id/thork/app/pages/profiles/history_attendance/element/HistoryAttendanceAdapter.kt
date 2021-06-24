@@ -15,6 +15,7 @@ import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceDetailsActivity
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.utils.DateUtils
+import timber.log.Timber
 
 /**
  * Created by Dhimas Saputra on 14/06/21
@@ -54,6 +55,14 @@ class HistoryAttendanceAdapter constructor(
                     attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
                         val millSec = dateCheckOutLocal - dateCheckInLocal
                         val workHours = DateUtils.getWorkHours(millSec)
+                        Timber.tag(TAG).d(
+                            "ViewHolder() dateCheckOutLocal: %s dateCheckInLocal: %s",
+                            dateCheckOutLocal, dateCheckInLocal
+                        )
+                        Timber.tag(TAG).d(
+                            "ViewHolder() millSec: %s workHours: %s",
+                            millSec, workHours
+                        )
                         tvCheckInDate.text = DateUtils.getDateTimeCardView(dateCheckInLocal)
                         tvCheckInTime.text = DateUtils.getCheckAttendance(dateCheckInLocal)
                         tvWorkHour.text = workHours
