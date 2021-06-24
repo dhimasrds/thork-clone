@@ -1,8 +1,10 @@
 package id.thork.app.persistence.entity
 
 import android.os.Parcelable
+import com.zebra.rfid.api3.UTCTime
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 /**
  * Created by Dhimas Saputra on 08/01/21
@@ -22,7 +24,9 @@ data class WoCacheEntity(
     var status : String? = null,
     var latitude : Double? = null,
     var longitude: Double? = null,
-    var changeDate: String? = null
+    var changeDate: String? = null,
+    var reportDateUTCTime: Date? = null,
+    var reportString: String? = null
 ) :BaseEntity(), Parcelable{
 
 }

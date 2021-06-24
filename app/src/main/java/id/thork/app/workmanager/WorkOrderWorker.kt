@@ -19,10 +19,14 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.example.Person
 import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
@@ -38,6 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
+import java.util.*
 
 class WorkOrderWorker @WorkerInject constructor(
     @Assisted context: Context,
@@ -95,7 +100,7 @@ class WorkOrderWorker @WorkerInject constructor(
 
     override fun doWork(): Result {
         try {
-            //Query Local WO Record is needed to sync with the server
+            Timber.tag(TAG).d("doWork() workOrderWorker")
             if (runAttemptCount > MAX_RUN_ATTEMPT) {
                 Result.failure()
             }
@@ -112,6 +117,7 @@ class WorkOrderWorker @WorkerInject constructor(
 
     //TODO http request
     private fun syncUpdateWo() {
+        Timber.tag(TAG).d("syncUpdateWo() syncUpdateWo")
         //TODO Query to local check wo cache offline
         val woCacheList =
             workOrderRepository.fetchWoListOffline(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
@@ -180,6 +186,15 @@ class WorkOrderWorker @WorkerInject constructor(
                 runBlocking {
                     launch(Dispatchers.IO) {
                         if (woId != null) {
+                            //TESTING
+                            val moshi = Moshi.Builder()
+                                .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe()).build()
+                            val jsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
+                            val jsonString = jsonAdapter.toJson(member)
+
+                            Timber.tag(TAG).d("updateStatusWoOffline() woId: %s", woId)
+                            Timber.tag(TAG).d("updateStatusWoOffline() jsonString: %s", jsonString)
+
                             workOrderRepository.updateStatus(cookie,
                                 xMethodeOverride,
                                 contentType,

@@ -38,7 +38,7 @@ class LogActivity : BaseActivity() {
             logsActivity = viewModel
         }
         setupToolbarWithHomeNavigation(
-            getString(R.string.action_settings), navigation = false,
+            getString(R.string.settings_logs), navigation = false,
             filter = false, scannerIcon = false,
             notification = false, option = false,
             historyAttendanceIcon = false
