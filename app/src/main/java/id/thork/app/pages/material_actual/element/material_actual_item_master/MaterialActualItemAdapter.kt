@@ -12,8 +12,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
-import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
-import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItemAdapter
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.utils.StringUtils
 

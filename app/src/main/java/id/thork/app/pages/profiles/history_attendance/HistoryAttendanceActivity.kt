@@ -2,23 +2,15 @@ package id.thork.app.pages.profiles.history_attendance
 
 
 import android.app.DatePickerDialog
-import android.view.Gravity
-import android.view.View
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.skydoves.whatif.whatIf
-import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.databinding.ActivityHistoryAttendanceBinding
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.pages.profiles.history_attendance.element.HistoryAttendanceAdapter
-import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.AttendanceEntity
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -89,32 +81,32 @@ class HistoryAttendanceActivity : BaseActivity() {
         }
     }
 
-    fun validationDate(){
+    fun validationDate() {
         val longStartDate = cal.timeInMillis
         val longEndDate = cal2.timeInMillis
 
-            binding.apply {
-                val etStartDate = startDate.text.toString().trim()
-                val etEndDate = endDate.text.toString().trim()
-                if (etStartDate.isNotBlank() || etEndDate.isNotBlank()) {
-                    if (longEndDate <= longStartDate){
-                        Toast.makeText(
-                            this@HistoryAttendanceActivity,
-                            "Your End date cannot be past than start date",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }else {
-                        Timber.d("button filter text :%s", startDate.text)
-                        viewModels.filterByDate(cal.timeInMillis.div(100000000), cal2.timeInMillis)
-                        setupViewFilter()
-                    }
-                } else {
+        binding.apply {
+            val etStartDate = startDate.text.toString().trim()
+            val etEndDate = endDate.text.toString().trim()
+            if (etStartDate.isNotBlank() || etEndDate.isNotBlank()) {
+                if (longEndDate < longStartDate) {
                     Toast.makeText(
                         this@HistoryAttendanceActivity,
-                        "Your Start date or End cannot be empty",
+                        "Your End date cannot be past than start date",
                         Toast.LENGTH_SHORT
                     ).show()
+                } else {
+                    Timber.d("validationDate() filter :%s", startDate.text)
+                    viewModels.filterByDate(cal.timeInMillis, cal2.timeInMillis)
+                    setupViewFilter()
                 }
+            } else {
+                Toast.makeText(
+                    this@HistoryAttendanceActivity,
+                    "Your Start date or End cannot be empty",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -124,6 +116,9 @@ class HistoryAttendanceActivity : BaseActivity() {
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
                 cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                cal.set(Calendar.HOUR, 0)
+                cal.set(Calendar.MINUTE, 0)
+                cal.set(Calendar.SECOND, 0)
                 updateDateInView(true)
             }
 
@@ -132,6 +127,9 @@ class HistoryAttendanceActivity : BaseActivity() {
                 cal2.set(Calendar.YEAR, year)
                 cal2.set(Calendar.MONTH, monthOfYear)
                 cal2.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                cal2.set(Calendar.HOUR, 23)
+                cal2.set(Calendar.MINUTE, 59)
+                cal2.set(Calendar.SECOND, 59)
                 updateDateInView(false)
             }
         binding.startDate.setOnClickListener {
@@ -157,15 +155,19 @@ class HistoryAttendanceActivity : BaseActivity() {
     }
 
     fun updateDateInView(date: Boolean) {
-        val dateFormat = "MM/dd/yyyy" // mention the format you need
+        val dateFormat = "MM/dd/yyyy"
         val sdf = SimpleDateFormat(dateFormat)
-        Timber.d("Datepicker :%s", date)
-        Timber.d("Datepicker :%s", cal.time.time)
+        Timber.d("updateDateInView :%s", date)
+        Timber.d("updateDateInView() cal1:%s", cal.time.time)
+        Timber.d("updateDateInView() cal2:%s", cal2.time.time)
+
         when (date) {
             true -> {
                 binding.startDate.setText(sdf.format(cal.time))
             }
-            false -> binding.endDate.setText(sdf.format(cal2.time))
+            false -> {
+                binding.endDate.setText(sdf.format(cal2.time))
+            }
         }
     }
 

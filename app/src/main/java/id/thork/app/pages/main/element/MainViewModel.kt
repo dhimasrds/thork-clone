@@ -15,7 +15,6 @@ package id.thork.app.pages.main.element
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.di.module.PreferenceManager
 import id.thork.app.workmanager.WorkerCoordinator
 
 class MainViewModel @ViewModelInject constructor(

@@ -19,7 +19,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import com.github.gcacace.signaturepad.views.SignaturePad
 import com.skydoves.whatif.whatIfNotNull
@@ -27,7 +26,6 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySignatureBinding
 import timber.log.Timber
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

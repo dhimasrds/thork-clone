@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
-import id.thork.app.databinding.CardviewAttendanceBinding
 import id.thork.app.databinding.HistoryCardviewAttendanceBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity

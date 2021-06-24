@@ -3,9 +3,7 @@ package id.thork.app.pages.profiles.setting.settings.element
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
-import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
@@ -14,9 +12,6 @@ import id.thork.app.repository.AttachmentRepository
 import id.thork.app.repository.LoginRepository
 import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorklogRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 /**
  * Created by Raka Putra on 1/14/21

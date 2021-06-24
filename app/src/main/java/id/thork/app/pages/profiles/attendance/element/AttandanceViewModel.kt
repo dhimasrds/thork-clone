@@ -47,6 +47,9 @@ class AttandanceViewModel @ViewModelInject constructor(
         Timber.d("filterByDate() start %s end:%s", startDate, endDate)
         val filterList = attendanceRepository.filterByDate(startDate, endDate)
         Timber.d("filterByDate() filterList %s", filterList?.size)
+//        filterList.whatIfNotNull {
+//            Timber.tag(TAG).d("filterByDate() filter date millisecond: %s", it[0].dateCheckInLocal)
+//        }
         _filterBydate.value = filterList
     }
 
