@@ -236,9 +236,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     @SuppressLint("SetTextI18n")
     var setEstimdur = View.OnClickListener {
-        dialogUtils.setInflater(R.layout.dialog_estdur, null, layoutInflater).create().setRounded(
-            true
-        )
+        dialogUtils.setInflater(R.layout.dialog_estdur, null, layoutInflater).create()
         dialogUtils.show()
         val esdurHours = dialogUtils.setViewId(R.id.esdur_hours) as EditText
         val esdurMinutes = dialogUtils.setViewId(R.id.esdur_minutes) as EditText

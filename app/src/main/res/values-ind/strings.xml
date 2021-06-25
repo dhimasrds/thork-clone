@@ -477,5 +477,13 @@
     <string name="check_in_image">Check in Image</string>
     <string name="check_out_image">Check out Image</string>
     <string name="check_out_attendance">Check out</string>
+    <string name="task_id">ID</string>
+    <string name="task_desc">Deskripsi</string>
+    <string name="task_status">Status</string>
+    <string name="task_schedule_start">Jadwal Mulai</string>
+    <string name="task_est_dur">Estimasi Durasi</string>
+    <string name="task_actual_start">Jam Mulai</string>
+    <string name="task_click_here">Click Here</string>
+    <string name="task_toolbar">Task</string>
 
 </resources>
