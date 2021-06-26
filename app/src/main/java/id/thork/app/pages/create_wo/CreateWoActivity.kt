@@ -479,8 +479,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun dialogExit() {
         validateDialogExit = true
-        customDialogUtils.setTitle(R.string.service_request_create)
-        customDialogUtils.setDescription(R.string.service_request_cancel)
+        customDialogUtils.setTitle(R.string.create_work_order)
+        customDialogUtils.setDescription(R.string.create_workorder_cancel)
         customDialogUtils.setRightButtonText(R.string.dialog_yes)
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
         customDialogUtils.setListener(this)

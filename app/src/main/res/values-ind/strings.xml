@@ -196,6 +196,10 @@
     <string name="workorder_create_failed">Service Request gagal disimpan</string>
     <string name="workorder_followup_create_success">Follow Up WO berhasil disimpan</string>
     <string name="workorder_followup_create_failed">Follow Up WO gagal disimpan</string>
+    <string name="create_workorder_cancel">Apakah kamu ingin membatalkan Work Order?</string>
+    <string name="followup_wo_cancel">Apakah kamu ingin membatalkan Follow Up Wo?</string>
+
+
 
     <!-- flash light  -->
     <string name="turn_off_flashlight">Matikan</string>

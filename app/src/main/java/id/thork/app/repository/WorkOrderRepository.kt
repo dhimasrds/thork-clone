@@ -284,110 +284,103 @@ class WorkOrderRepository @Inject constructor(
 
     fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            var assignment: Assignment
-            wo.assignment.whatIfNotNullOrEmpty(
-                whatIf = {
-                    assignment = it.get(0)
-                    val laborCode: String = assignment.laborcode!!
-                    val woCacheEntity = WoCacheEntity(
-                        syncBody = WoUtils.convertMemberToBody(wo),
-                        woId = wo.workorderid,
-                        wonum = wo.wonum,
-                        status = wo.status,
-                        isChanged = BaseParam.APP_FALSE,
-                        isLatest = BaseParam.APP_TRUE,
-                        syncStatus = BaseParam.APP_TRUE,
-                        laborCode = laborCode
-                    )
-                    woCacheEntity.changeDate = wo.changedate
-                    setupWoLocation(woCacheEntity, wo)
-                    multiAssetToObjectBox(wo)
-                    woCacheEntity.createdDate = Date()
-                    woCacheEntity.createdBy = appSession.userEntity.username
-                    woCacheEntity.updatedBy = appSession.userEntity.username
-                    saveWoList(woCacheEntity, appSession.userEntity.username)
+            Timber.d("addWoToObjectBox() wonum: %s", wo.wonum)
+            val laborCode: String = appSession.laborCode.toString()
+            val woCacheEntity = WoCacheEntity(
+                syncBody = WoUtils.convertMemberToBody(wo),
+                woId = wo.workorderid,
+                wonum = wo.wonum,
+                status = wo.status,
+                isChanged = BaseParam.APP_FALSE,
+                isLatest = BaseParam.APP_TRUE,
+                syncStatus = BaseParam.APP_TRUE,
+                laborCode = laborCode
+            )
+            woCacheEntity.changeDate = wo.changedate
+            setupWoLocation(woCacheEntity, wo)
+            multiAssetToObjectBox(wo)
+            woCacheEntity.createdDate = Date()
+            woCacheEntity.createdBy = appSession.userEntity.username
+            woCacheEntity.updatedBy = appSession.userEntity.username
+            saveWoList(woCacheEntity, appSession.userEntity.username)
 
-                    runBlocking {
-                        Timber.tag(TAG).d("addWoToObjectBox() doclinks")
-                        wo.doclinks.whatIfNotNull { doclinks ->
-                            Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
-                            appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
-                                doclinks.href.whatIfNotNullOrEmpty { href ->
-                                    Timber.tag(TAG).d(
-                                        "addWoToObjectBox() username: %s href: %s",
-                                        username, href
-                                    )
-                                    attachmentRepository.createAttachmentFromDocklinks(
-                                        href,
-                                        username
-                                    )
-                                }
-                            }
+            runBlocking {
+                Timber.tag(TAG).d("addWoToObjectBox() doclinks")
+                wo.doclinks.whatIfNotNull { doclinks ->
+                    Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
+                    appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
+                        doclinks.href.whatIfNotNullOrEmpty { href ->
+                            Timber.tag(TAG).d(
+                                "addWoToObjectBox() username: %s href: %s",
+                                username, href
+                            )
+                            attachmentRepository.createAttachmentFromDocklinks(
+                                href,
+                                username
+                            )
                         }
                     }
+                }
+            }
 
-                    wo.wpmaterial.whatIfNotNullOrEmpty {
-                        materialRepository.addListMaterialPlanToObjectBox(
-                            it,
-                            wo.wonum.toString(),
-                            wo.workorderid.toString()
-                        )
-                    }
-                })
+            wo.wpmaterial.whatIfNotNullOrEmpty {
+                materialRepository.addListMaterialPlanToObjectBox(
+                    it,
+                    wo.wonum.toString(),
+                    wo.workorderid.toString()
+                )
+            }
+
         }
     }
 
     fun addWoToObjectBox(member: Member) {
-        var assignment: Assignment
-        member.assignment.whatIfNotNullOrEmpty(
-            whatIf = {
-                assignment = it.get(0)
-                val laborCode: String = assignment.laborcode!!
-                val woCacheEntity = WoCacheEntity(
-                    syncBody = WoUtils.convertMemberToBody(member),
-                    woId = member.workorderid,
-                    wonum = member.wonum,
-                    status = member.status,
-                    isChanged = BaseParam.APP_FALSE,
-                    isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_TRUE,
-                    laborCode = laborCode
-                )
-                setupWoLocation(woCacheEntity, member)
-                woCacheEntity.changeDate = member.changedate
-                multiAssetToObjectBox(member)
-                woCacheEntity.createdDate = Date()
-                woCacheEntity.createdBy = appSession.userEntity.username
-                woCacheEntity.updatedBy = appSession.userEntity.username
-                saveWoList(woCacheEntity, appSession.userEntity.username)
+        val laborCode: String = appSession.laborCode.toString()
+        val woCacheEntity = WoCacheEntity(
+            syncBody = WoUtils.convertMemberToBody(member),
+            woId = member.workorderid,
+            wonum = member.wonum,
+            status = member.status,
+            isChanged = BaseParam.APP_FALSE,
+            isLatest = BaseParam.APP_TRUE,
+            syncStatus = BaseParam.APP_TRUE,
+            laborCode = laborCode
+        )
+        setupWoLocation(woCacheEntity, member)
+        woCacheEntity.changeDate = member.changedate
+        multiAssetToObjectBox(member)
+        woCacheEntity.createdDate = Date()
+        woCacheEntity.createdBy = appSession.userEntity.username
+        woCacheEntity.updatedBy = appSession.userEntity.username
+        saveWoList(woCacheEntity, appSession.userEntity.username)
 
-                runBlocking {
-                    Timber.tag(TAG).d("addWoToObjectBox() doclinks")
-                    member.doclinks.whatIfNotNull { doclinks ->
-                        Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
-                        appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
-                            doclinks.href.whatIfNotNullOrEmpty { href ->
-                                Timber.tag(TAG).d(
-                                    "addWoToObjectBox() username: %s href: %s",
-                                    username, href
-                                )
-                                attachmentRepository.createAttachmentFromDocklinks(
-                                    href,
-                                    username
-                                )
-                            }
-                        }
+        runBlocking {
+            Timber.tag(TAG).d("addWoToObjectBox() doclinks")
+            member.doclinks.whatIfNotNull { doclinks ->
+                Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
+                appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
+                    doclinks.href.whatIfNotNullOrEmpty { href ->
+                        Timber.tag(TAG).d(
+                            "addWoToObjectBox() username: %s href: %s",
+                            username, href
+                        )
+                        attachmentRepository.createAttachmentFromDocklinks(
+                            href,
+                            username
+                        )
                     }
                 }
+            }
+        }
 
-                member.wpmaterial.whatIfNotNullOrEmpty {
-                    materialRepository.addListMaterialPlanToObjectBox(
-                        it,
-                        member.wonum.toString(),
-                        member.workorderid.toString()
-                    )
-                }
-            })
+        member.wpmaterial.whatIfNotNullOrEmpty {
+            materialRepository.addListMaterialPlanToObjectBox(
+                it,
+                member.wonum.toString(),
+                member.workorderid.toString()
+            )
+        }
+
     }
 
     fun replaceWolocalChace(

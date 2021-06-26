@@ -97,7 +97,9 @@ class MapViewModel @ViewModelInject constructor(
     }
 
     fun setDataWo(wonum: String, tag: String) {
+        Timber.d("setDataWo() wonum : %s", wonum)
         val wocache = workOrderRepository.findWobyWonum(wonum)
+        Timber.d("setDataWo() : %s", wocache.toString())
         _woCache.value = wocache
         _resultTagMarker.value = tag
     }

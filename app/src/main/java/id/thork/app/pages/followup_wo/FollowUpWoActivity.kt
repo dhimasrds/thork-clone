@@ -467,8 +467,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private fun dialogExit() {
         validateDialogExit = true
-        customDialogUtils.setTitle(R.string.service_request_create)
-        customDialogUtils.setDescription(R.string.service_request_cancel)
+        customDialogUtils.setTitle(R.string.followup_wo)
+        customDialogUtils.setDescription(R.string.followup_wo_cancel)
         customDialogUtils.setRightButtonText(R.string.dialog_yes)
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
         customDialogUtils.setListener(this)
