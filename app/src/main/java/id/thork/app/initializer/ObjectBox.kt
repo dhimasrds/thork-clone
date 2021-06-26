@@ -26,6 +26,7 @@ object ObjectBox {
 
     fun init(context: Context) {
         boxStore = MyObjectBox.builder()
+            .name("thork-db")
             .androidContext(context.applicationContext)
             .build()
 

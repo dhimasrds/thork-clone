@@ -9,13 +9,13 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
-import id.thork.app.databinding.CardviewAttendanceBinding
 import id.thork.app.databinding.HistoryCardviewAttendanceBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
 import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceDetailsActivity
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.utils.DateUtils
+import timber.log.Timber
 
 /**
  * Created by Dhimas Saputra on 14/06/21
@@ -55,6 +55,14 @@ class HistoryAttendanceAdapter constructor(
                     attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
                         val millSec = dateCheckOutLocal - dateCheckInLocal
                         val workHours = DateUtils.getWorkHours(millSec)
+                        Timber.tag(TAG).d(
+                            "ViewHolder() dateCheckOutLocal: %s dateCheckInLocal: %s",
+                            dateCheckOutLocal, dateCheckInLocal
+                        )
+                        Timber.tag(TAG).d(
+                            "ViewHolder() millSec: %s workHours: %s",
+                            millSec, workHours
+                        )
                         tvCheckInDate.text = DateUtils.getDateTimeCardView(dateCheckInLocal)
                         tvCheckInTime.text = DateUtils.getCheckAttendance(dateCheckInLocal)
                         tvWorkHour.text = workHours

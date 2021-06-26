@@ -53,6 +53,7 @@
     <string name="action_capture_image">Capture Image</string>
     <string name="action_attach_image">Attach Image</string>
     <string name="action_attach_document">Attach Document</string>
+    <string name="action_attach_signature">Attach Signature</string>
     <string name="action_create_followup">Create Follow Up</string>
 
     <!-- Menu base bottom navigation bar-->
@@ -209,6 +210,7 @@
     <string name="estimatedwork">Estimated Work Duration</string>
     <string name="hourminute">Hours : Minutes</string>
     <string name="attachments">Attachments</string>
+    <string name="digital_sign">Digital Sign</string>
     <string name="image">Image</string>
     <string name="reportDate">Reported Date</string>
     <string name="service_address">Service Address</string>

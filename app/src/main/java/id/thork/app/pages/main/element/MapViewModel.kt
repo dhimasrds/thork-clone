@@ -1,6 +1,5 @@
 package id.thork.app.pages.main.element
 
-import android.annotation.SuppressLint
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

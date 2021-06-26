@@ -16,7 +16,6 @@ import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
@@ -30,7 +29,6 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
-import id.thork.app.pages.material_plan.element.form.MaterialPlanFormViewModel
 import id.thork.app.persistence.entity.WpmaterialEntity
 import timber.log.Timber
 import javax.inject.Inject

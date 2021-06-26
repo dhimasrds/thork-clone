@@ -19,7 +19,6 @@ import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.persistence.entity.MaterialEntity
-import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
 
 class MaterialPlanItemViewModel @ViewModelInject constructor(

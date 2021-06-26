@@ -36,7 +36,6 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
 import id.thork.app.pages.profiles.profile.ProfileActivity
-import id.thork.app.pages.profiles.setting.settings.SettingsActivity
 import timber.log.Timber
 
 

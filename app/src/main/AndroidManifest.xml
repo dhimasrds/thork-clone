@@ -27,7 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity"></activity>
+        <activity android:name=".pages.attachment.element.signature.SignatureActivity"></activity>
+        <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceActivity" />
         <activity android:name=".pages.profiles.attendance.AttendanceActivity" />
         <activity android:name=".pages.work_log.type.WorkLogTypeActivity" />

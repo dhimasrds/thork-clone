@@ -50,10 +50,6 @@ class AttachmentImagePreviewActivity : BaseActivity() {
         retrieveFromIntent()
     }
 
-//    override fun onLostConnection() {
-//
-//    }
-
     private fun retrieveFromIntent() {
         intentUri = intent.getStringExtra(BaseParam.ATTACHMENTURI)
         Timber.d("retrieveFromIntent() intentUri: %s", intentUri)

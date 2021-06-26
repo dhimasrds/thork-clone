@@ -161,4 +161,15 @@ object DateUtils {
         val date = SimpleDateFormat(DATE_FORMAT_MAXIMO).parse(dateString)
         return date
     }
+
+    fun convertMxDateStringToString(date: Date): String {
+        try {
+            val formatter = SimpleDateFormat(DATE_FORMAT_MAXIMO)
+            formatter.applyPattern(DEFAULT_DATE_FORMAT)
+            return formatter.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
 }

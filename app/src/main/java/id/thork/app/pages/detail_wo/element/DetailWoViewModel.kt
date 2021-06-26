@@ -12,9 +12,7 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.helper.MapsLocation
 import id.thork.app.network.response.google_maps.ResponseRoute
-import id.thork.app.network.response.work_order.Matusetran
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.network.response.work_order.Wpmaterial
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.WoCacheEntity

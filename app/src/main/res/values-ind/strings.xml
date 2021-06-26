@@ -54,6 +54,7 @@
     <string name="action_capture_image">Ambil Gambar</string>
     <string name="action_attach_image">Pilih Gambar</string>
     <string name="action_attach_document">Pilih Dokumen</string>
+    <string name="action_attach_signature">Tanda tangan</string>
     <string name="action_create_followup">Buat Follow Up</string>
 
     <!-- Menu base bottom navigation bar-->
@@ -179,6 +180,7 @@
     <string name="estimatedwork">Perkiraan Waktu Kerja</string>
     <string name="hourminute">Jam : Menit</string>
     <string name="attachments">Lampiran</string>
+    <string name="digital_sign">Digital Sign</string>
     <string name="image">Gambar</string>
     <string name="reportDate">Tanggal Laporan</string>
     <string name="create">Buat</string>

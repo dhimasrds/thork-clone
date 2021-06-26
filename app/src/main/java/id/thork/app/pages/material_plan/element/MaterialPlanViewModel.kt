@@ -18,7 +18,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
-import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
 

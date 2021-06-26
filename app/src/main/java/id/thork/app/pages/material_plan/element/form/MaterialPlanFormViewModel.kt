@@ -20,7 +20,6 @@ import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
-import id.thork.app.pages.rfid_create_wo_material.element.RfidMaterialActivityViewModel
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository

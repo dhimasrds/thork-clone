@@ -19,7 +19,7 @@ class AboutActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview_about)
         setupToolbarWithHomeNavigation(
-            getString(R.string.action_settings), navigation = false,
+            getString(R.string.settings_about), navigation = false,
             filter = false, scannerIcon = false,
             notification = false, option = false,
             historyAttendanceIcon = false

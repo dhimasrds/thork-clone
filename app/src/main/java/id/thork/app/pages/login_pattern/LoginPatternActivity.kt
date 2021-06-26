@@ -29,11 +29,9 @@ import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
 import id.thork.app.pages.server.ServerActivity
-import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     private val TAG = LoginPatternActivity::class.java.name

@@ -21,7 +21,6 @@ import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.material_response.MaterialResponse
-import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.network.response.worklogtype_response.WorklogtypeResponse
@@ -294,7 +293,11 @@ class WorkOrderRepository @Inject constructor(
                 isChanged = BaseParam.APP_FALSE,
                 isLatest = BaseParam.APP_TRUE,
                 syncStatus = BaseParam.APP_TRUE,
-                laborCode = laborCode
+                laborCode = laborCode,
+                reportDateUTCTime = DateUtils.convertStringToMaximoDate(wo.reportdate),
+                reportString = DateUtils.convertMxDateStringToString(
+                    DateUtils.convertStringToMaximoDate(wo.reportdate)
+                )
             )
             woCacheEntity.changeDate = wo.changedate
             setupWoLocation(woCacheEntity, wo)
@@ -344,7 +347,11 @@ class WorkOrderRepository @Inject constructor(
             isChanged = BaseParam.APP_FALSE,
             isLatest = BaseParam.APP_TRUE,
             syncStatus = BaseParam.APP_TRUE,
-            laborCode = laborCode
+            laborCode = laborCode,
+            reportDateUTCTime = DateUtils.convertStringToMaximoDate(member.reportdate),
+            reportString = DateUtils.convertMxDateStringToString(
+                DateUtils.convertStringToMaximoDate(member.reportdate)
+            )
         )
         setupWoLocation(woCacheEntity, member)
         woCacheEntity.changeDate = member.changedate
@@ -396,6 +403,10 @@ class WorkOrderRepository @Inject constructor(
         woCacheEntity.isLatest = BaseParam.APP_TRUE
         woCacheEntity.syncStatus = BaseParam.APP_FALSE
         woCacheEntity.updatedBy = appSession.userEntity.username
+        woCacheEntity.reportDateUTCTime = DateUtils.convertStringToMaximoDate(member.reportdate)
+        woCacheEntity.reportString = DateUtils.convertMxDateStringToString(
+            DateUtils.convertStringToMaximoDate(member.reportdate)
+        )
         saveWoList(woCacheEntity, appSession.userEntity.username)
     }
 
