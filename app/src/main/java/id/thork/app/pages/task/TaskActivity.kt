@@ -8,6 +8,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityTaskBinding
+import id.thork.app.pages.task.element.TaskAdapter
 import id.thork.app.pages.task.element.TaskViewModel
 import id.thork.app.persistence.entity.TaskEntity
 
