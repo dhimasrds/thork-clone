@@ -86,6 +86,10 @@
     <string name="attendance_title">Save</string>
     <string name="attendance_qustion">Are you sure you want to save attendance?</string>
 
+    <!-- Save Task Dialog -->
+    <string name="task_title">Save</string>
+    <string name="task_qustion">Are you sure you want to save task?</string>
+
     <!-- Delete Image Attendance Dialog -->
     <string name="delete_image_attendance_title">Delete</string>
     <string name="delete_image_attendance_qustion">Are you sure you want to delete image?</string>
@@ -93,6 +97,10 @@
     <!-- Error Save Attendance Dialog -->
     <string name="error_attendance_title">Warning!</string>
     <string name="error_attendance_qustion">Image and your location cannot be empty</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_task_title">Warning!</string>
+    <string name="error_task_qustion">Every field cannot be empty</string>
 
     <!-- Empty Check in Attendance Dialog -->
     <string name="empty_attendance_checkin_title">Warning!</string>

@@ -87,6 +87,10 @@
     <string name="attendance_title">Simpan</string>
     <string name="attendance_qustion">Anda yakin ingin simpan absensi ini?</string>
 
+    <!-- Save Task Dialog -->
+    <string name="task_title">Simpan</string>
+    <string name="task_qustion">Anda yakin ingin simpan task ini?</string>
+
     <!-- Delete Image Attendance Dialog -->
     <string name="delete_image_attendance_title">Hapus</string>
     <string name="delete_image_attendance_qustion">Apa kamu ingin menghapus foto?</string>
@@ -94,6 +98,10 @@
     <!-- Error Save Attendance Dialog -->
     <string name="error_attendance_title">Peringatan!</string>
     <string name="error_attendance_qustion">Gambar dan Lokasi tidak boleh kosong</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_task_title">Peringatan!</string>
+    <string name="error_task_qustion">Setiap form tidak boleh kosong</string>
 
     <!-- Empty Check in Attendance Dialog -->
     <string name="empty_attendance_checkin_title">Warning!</string>

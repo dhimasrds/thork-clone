@@ -1,12 +1,9 @@
 package id.thork.app.repository
 
-import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.dao.TaskDao
-import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.persistence.entity.TaskEntity
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -33,13 +30,9 @@ class TaskRepository @Inject constructor(
         return taskDao.findListTaskByWoid(woid)
     }
 
-    fun findListTaskByTaskId(woid: Int): List<TaskEntity> {
-        return taskDao.findListTaskByTaskId(woid)
-    }
-
     fun saveCache(
-        woid: Int, wonum: String, taskId: Int,
-        desc: String, scheduleStart: String, estDur: Double, actualStart: String,
+        woid: Int?, wonum: String?, taskId: Int?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
         status: String?,
     ) {
         val taskEntity = TaskEntity(
@@ -53,6 +46,10 @@ class TaskRepository @Inject constructor(
             status = status
         )
         saveTaskCache(taskEntity)
+    }
+
+    fun removeTaskByWonum(wonum: String): Long {
+        return taskDao.removeTaskByWonum(wonum)
     }
 
 }

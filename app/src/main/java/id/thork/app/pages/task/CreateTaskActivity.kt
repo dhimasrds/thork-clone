@@ -2,6 +2,7 @@ package id.thork.app.pages.task
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.text.InputFilter
 import android.view.View
 import android.widget.Button
@@ -12,6 +13,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateTaskBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.task.element.TaskViewModel
 import id.thork.app.utils.InputFilterMinMaxUtils
@@ -20,19 +22,26 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
+class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
+    CustomDialogUtils.DialogActionListener {
     val TAG = TaskActivity::class.java.name
     private val viewModels: TaskViewModel by viewModels()
     private val binding: ActivityCreateTaskBinding by binding(R.layout.activity_create_task)
 
-    private var estDur: Double? = null
     private lateinit var dialogUtils: DialogUtils
+    private lateinit var customDialogUtils: CustomDialogUtils
+    private var cal: Calendar = Calendar.getInstance()
+    private var cal2: Calendar = Calendar.getInstance()
+
     private var intentWonum: String? = null
     private var intentStatus: String? = null
     private var intentWoid: Int? = null
     private var intentTaskId: Int? = null
-    private var cal: Calendar = Calendar.getInstance()
-    private var cal2: Calendar = Calendar.getInstance()
+    private var estDur: Double? = null
+    private var desc: String? = null
+    private var scheduleStart: String? = null
+    private var actualStart: String? = null
+
 
     override fun setupView() {
         super.setupView()
@@ -50,6 +59,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             historyAttendanceIcon = false
         )
         dialogUtils = DialogUtils(this)
+        customDialogUtils = CustomDialogUtils(this)
 
         retrieveFromIntent()
         setupDatePicker()
@@ -60,7 +70,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         intentWoid = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         intentStatus = intent.getStringExtra(BaseParam.STATUS)
         intentTaskId = intent.getIntExtra(BaseParam.TASKID, 0)
-        Timber.d("raka %s ", intentTaskId)
         binding.tvStatusTask.text = intentStatus
         binding.tvIdTask.text = intentTaskId.toString()
     }
@@ -71,14 +80,13 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         binding.tvEstDur.setOnClickListener(setEstimdur)
 
         binding.btnSaveTask.setOnClickListener {
-            binding.apply {
-                val desc = tvDesc.text
-                val scheduleStart = tvScheduleStart.text
-                val actualStart = tvActualStart.text
-                viewModels.saveCache(intentWoid!!, intentWonum!!, intentTaskId!!,
-                    desc.toString(), scheduleStart.toString(), estDur!!,
-                    actualStart.toString(), intentStatus)
-                finish()
+            desc = binding.tvDesc.text.toString()
+            scheduleStart = binding.tvScheduleStart.text.toString()
+            actualStart = binding.tvActualStart.text.toString()
+            if (!desc.isNullOrEmpty() && !scheduleStart.isNullOrEmpty() && estDur != null && !actualStart.isNullOrEmpty()) {
+                setDialogSaveTask()
+            } else {
+                setDialogErrorTask()
             }
         }
     }
@@ -182,10 +190,62 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     override fun onPositiveButton() {
-        TODO("Not yet implemented")
+        Timber.d("onPositiveButton")
     }
 
     override fun onNegativeButton() {
-        TODO("Not yet implemented")
+        Timber.d("onNegativeButton")
+    }
+
+    private fun gotoTaskActivity() {
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, intentWoid)
+        intent.putExtra(BaseParam.WONUM, intentWonum)
+        intent.putExtra(BaseParam.STATUS, intentStatus)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+    }
+
+    private fun setDialogSaveTask() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.task_title)
+            .setDescription(R.string.task_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogErrorTask() {
+        customDialogUtils
+            .setMiddleButtonText(R.string.dialog_yes)
+            .setTittle(R.string.error_task_title)
+            .setDescription(R.string.error_task_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        viewModels.saveCache(intentWoid, intentWonum, intentTaskId,
+            desc, scheduleStart, estDur,
+            actualStart, intentStatus)
+        gotoTaskActivity()
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
     }
 }

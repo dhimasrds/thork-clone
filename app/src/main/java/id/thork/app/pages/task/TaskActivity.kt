@@ -10,7 +10,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityTaskBinding
 import id.thork.app.pages.task.element.TaskViewModel
 import id.thork.app.persistence.entity.TaskEntity
-import timber.log.Timber
 
 /**
  * Created by Raka Putra on 6/23/21
@@ -20,12 +19,14 @@ class TaskActivity : BaseActivity() {
     val TAG = TaskActivity::class.java.name
     private val viewModels: TaskViewModel by viewModels()
     private val binding: ActivityTaskBinding by binding(R.layout.activity_task)
+
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var taskEntity: MutableList<TaskEntity>
+
     private var intentWonum: String? = null
     private var intentStatus: String? = null
     private var intentWoid: Int? = null
-    private var idTask: Int = 20
+    private var idTask: Int = 10
 
     override fun setupView() {
         super.setupView()
@@ -48,19 +49,12 @@ class TaskActivity : BaseActivity() {
         taskAdapter = TaskAdapter(taskEntity)
         binding.rvTask.adapter = taskAdapter
         retrieveFromIntent()
-//        validateTaskId(intentWoid!!)
 
     }
 
-    private fun validateTaskId(woid: Int) {
-        var a = viewModels.findListTaskByTaskId(woid)
-        if (a != null){
-            idTask = a + 10
-            Timber.d("raka %s ", a)
-        } else {
-            a = 0
-            idTask = a + 10
-            Timber.d("raka %s ", a)
+    private fun validateTaskId(valueTaskId: Int) {
+        valueTaskId.whatIfNotNull {
+            idTask = valueTaskId + 10
         }
     }
 
@@ -70,6 +64,10 @@ class TaskActivity : BaseActivity() {
             taskEntity.clear()
             taskEntity.addAll(it)
             taskAdapter.notifyDataSetChanged()
+            val lattestTaskId = taskEntity[0].taskId
+            lattestTaskId.whatIfNotNull { taskid ->
+                validateTaskId(taskid)
+            }
         })
     }
 

@@ -3,7 +3,6 @@ package id.thork.app.pages.task.element
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
@@ -40,18 +39,17 @@ class TaskViewModel @ViewModelInject constructor(
     }
 
     fun saveCache(
-        woid: Int, wonum: String, taskId: Int,
-        desc: String, scheduleStart: String, estDur: Double, actualStart: String,
+        woid: Int?, wonum: String?, taskId: Int?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
         status: String?,
     ) {
-        taskRepository.saveCache(woid, wonum, taskId, desc, scheduleStart, estDur, actualStart, status)
-    }
-
-    fun findListTaskByTaskId(woid: Int): Int? {
-        val list = taskRepository.findListTaskByTaskId(woid)
-        list.whatIfNotNull {
-            return list[0].taskId
-        }
-        return null
+        taskRepository.saveCache(woid,
+            wonum,
+            taskId,
+            desc,
+            scheduleStart,
+            estDur,
+            actualStart,
+            status)
     }
 }

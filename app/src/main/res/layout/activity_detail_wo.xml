@@ -460,7 +460,7 @@
 
                     <include
                         android:id="@+id/include_task"
-                        layout="@layout/activity_create_wo_task"/>
+                        layout="@layout/activity_detail_wo_task"/>
 
 
                     <!--REPORT DATE-->

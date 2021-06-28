@@ -19,6 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+        android:layout_marginRight="16dp"
         android:clickable="true"
         android:elevation="30dp"
         android:foreground="?android:attr/selectableItemBackground">

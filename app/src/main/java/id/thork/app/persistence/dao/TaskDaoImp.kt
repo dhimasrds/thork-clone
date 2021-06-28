@@ -55,10 +55,8 @@ class TaskDaoImp : TaskDao {
             .build().find()
     }
 
-    override fun findListTaskByTaskId(woid: Int): List<TaskEntity> {
-        return taskEntityBox.query().equal(TaskEntity_.woId, woid)
-            .order(TaskEntity_.taskId, QueryBuilder.DESCENDING or QueryBuilder.CASE_SENSITIVE)
-            .build().find()
+    override fun removeTaskByWonum(wonum: String): Long {
+        return taskEntityBox.query().equal(TaskEntity_.wonum, wonum).build().remove()
     }
 
 }

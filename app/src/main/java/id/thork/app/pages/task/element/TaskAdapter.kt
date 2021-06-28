@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardviewListTaskBinding
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.utils.StringUtils
-import timber.log.Timber
 
 /**
  * Created by Raka Putra on 6/23/21
@@ -35,7 +34,6 @@ class TaskAdapter constructor(
                 tvIdTask.text = taskEntity.taskId.toString()
                 tvDescTask.text = StringUtils.truncate(taskEntity.desc, 115)
                 tvPriorityTask.text = taskEntity.status
-                Timber.d("raka %s ", taskEntity.taskId)
                 cardTask.setOnClickListener {
 
                 }
@@ -52,4 +50,5 @@ class TaskAdapter constructor(
     override fun getItemCount(): Int {
         return taskEntity.size
     }
+
 }

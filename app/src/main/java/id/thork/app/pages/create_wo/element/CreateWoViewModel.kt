@@ -36,6 +36,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val locationRepository: LocationRepository,
     private val workOrderRepository: WorkOrderRepository,
     private val attachmentRepository: AttachmentRepository,
+    private val taskRepository: TaskRepository,
     private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
@@ -92,7 +93,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         tempWonum: String,
         tempWoId: Int,
         assetnum: String,
-        location: String
+        location: String,
     ) {
 
 //        val wsa = Woserviceaddres()
@@ -105,11 +106,11 @@ class CreateWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
 
@@ -154,7 +155,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     fun createNewWoCache(
         deskWo: String,
         estDur: Double?, workPriority: Int, longdesc: String?, assetnum: String,
-        location: String
+        location: String,
     ) {
 
 //        val wsa = Woserviceaddres()
@@ -167,11 +168,11 @@ class CreateWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
         member.description = deskWo
@@ -208,6 +209,10 @@ class CreateWoViewModel @ViewModelInject constructor(
         return materialRepository.removeMaterialByWonum(wonum)
     }
 
+    fun removeTask(wonum: String): Long {
+        return taskRepository.removeTaskByWonum(wonum)
+    }
+
     fun checkResultAsset(assetnum: String) {
         val assetEntity = assetRepository.findbyAssetnum(assetnum)
         assetEntity.whatIfNotNull {
@@ -233,7 +238,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun prepareMaterialTrans(woid: String) : List<Wpmaterial> {
+    private fun prepareMaterialTrans(woid: String): List<Wpmaterial> {
         val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
         val listMaterialPlan = mutableListOf<Wpmaterial>()
         materialPlanCache.forEach {
