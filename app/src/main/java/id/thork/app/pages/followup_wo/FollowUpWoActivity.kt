@@ -34,6 +34,7 @@ import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
+import id.thork.app.pages.task.TaskActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -151,6 +152,10 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
         binding.includeMaterialPlan.materialPlan.setOnClickListener {
             goToMaterialPlan()
+        }
+
+        binding.includeTask.cardTask.setOnClickListener {
+            gotoTaskActivity()
         }
 
     }
@@ -344,6 +349,14 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
     }
 
+    private fun gotoTaskActivity() {
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        intent.putExtra(BaseParam.WONUM, tempWonum)
+        intent.putExtra(BaseParam.STATUS, BaseParam.WAPPR)
+        startActivity(intent)
+    }
+
     private fun pickLocation() {
         try {
             // Request location updates
@@ -506,7 +519,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private fun startQRScanner(requestCode: Int) {
         IntentIntegrator(this).apply {
-            setCaptureActivity(ScannerActivity::class.java)
+            captureActivity = ScannerActivity::class.java
             setRequestCode(requestCode)
             initiateScan()
         }

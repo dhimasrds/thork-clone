@@ -366,7 +366,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         val intent = Intent(this, TaskActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
         intent.putExtra(BaseParam.WONUM, tempWonum)
-        intent.putExtra(BaseParam.STATUS, "WAPPR")
+        intent.putExtra(BaseParam.STATUS, BaseParam.WAPPR)
         startActivity(intent)
     }
 
