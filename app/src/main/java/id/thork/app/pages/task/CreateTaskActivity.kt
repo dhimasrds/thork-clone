@@ -42,8 +42,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var desc: String? = null
     private var intentWonum: String? = null
     private var intentStatus: String? = null
-    private var valueScheduleStart: String? = null
-    private var valueActualStart: String? = null
     private var scheduleStartObjectBox: String? = null
     private var actualStartObjectBox: String? = null
     private var dateValidation: Boolean = true
