@@ -53,5 +53,7 @@ data class Labtran(
     @Json(name = "transtype")
     val transtype: String? = null,
     @Json(name = "transtype_description")
-    val transtypeDescription: String? = null
+    val transtypeDescription: String? = null,
+    @Json(name = "skilllevel")
+    val skilllevel: String? = null,
 )
