@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
@@ -16,6 +18,7 @@ import id.thork.app.databinding.ActivityCreateTaskBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.task.element.TaskViewModel
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
@@ -33,15 +36,18 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var cal: Calendar = Calendar.getInstance()
     private var cal2: Calendar = Calendar.getInstance()
 
-    private var intentWonum: String? = null
-    private var intentStatus: String? = null
+    private var estDur: Double? = null
     private var intentWoid: Int? = null
     private var intentTaskId: Int? = null
-    private var estDur: Double? = null
     private var desc: String? = null
-    private var scheduleStart: String? = null
-    private var actualStart: String? = null
-
+    private var intentWonum: String? = null
+    private var intentStatus: String? = null
+    private var valueScheduleStart: String? = null
+    private var valueActualStart: String? = null
+    private var scheduleStartObjectBox: Date? = null
+    private var actualStartObjectBox: Date? = null
+    private var dateValidation: Boolean = true
+    private var cancelTaskValidation: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -70,8 +76,60 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         intentWoid = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         intentStatus = intent.getStringExtra(BaseParam.STATUS)
         intentTaskId = intent.getIntExtra(BaseParam.TASKID, 0)
-        binding.tvStatusTask.text = intentStatus
+        intentStatus.whatIfNotNullOrEmpty {
+            setupStatus(it)
+        }
         binding.tvIdTask.text = intentTaskId.toString()
+    }
+
+    private fun setupStatus(status: String?) {
+        binding.apply {
+            when (status) {
+                BaseParam.APPROVED -> {
+                    tvStatusTask.text = BaseParam.APPROVED
+                    tvStatusTask.setTextColor(
+                        ContextCompat.getColor(
+                            tvStatusTask.context,
+                            R.color.blueTextStatus
+                        )
+                    )
+                    tvStatusTask.setBackgroundResource(R.drawable.bg_status)
+
+                }
+                BaseParam.INPROGRESS -> {
+                    tvStatusTask.text = BaseParam.INPROGRESS
+                    tvStatusTask.setTextColor(
+                        ContextCompat.getColor(
+                            tvStatusTask.context,
+                            R.color.colorYellow
+                        )
+                    )
+                    tvStatusTask.background =
+                        ContextCompat.getDrawable(tvStatusTask.context, R.drawable.bg_status_yellow)
+                }
+                BaseParam.COMPLETED -> {
+                    tvStatusTask.text = BaseParam.COMPLETED
+                    tvStatusTask.setTextColor(
+                        ContextCompat.getColor(
+                            tvStatusTask.context,
+                            R.color.colorGreen
+                        )
+                    )
+                    tvStatusTask.setBackgroundResource(R.drawable.bg_status_green)
+                }
+                BaseParam.WAPPR -> {
+                    tvStatusTask.text = BaseParam.WAPPR
+                    tvStatusTask.setTextColor(
+                        ContextCompat.getColor(
+                            tvStatusTask.context,
+                            R.color.blueTextStatus
+                        )
+                    )
+                    tvStatusTask.setBackgroundResource(R.drawable.bg_status)
+
+                }
+            }
+        }
     }
 
 
@@ -81,12 +139,28 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
 
         binding.btnSaveTask.setOnClickListener {
             desc = binding.tvDesc.text.toString()
-            scheduleStart = binding.tvScheduleStart.text.toString()
-            actualStart = binding.tvActualStart.text.toString()
-            if (!desc.isNullOrEmpty() && !scheduleStart.isNullOrEmpty() && estDur != null && !actualStart.isNullOrEmpty()) {
+            scheduleStartObjectBox = DateUtils.convertStringToMaximoDate(valueScheduleStart)
+            actualStartObjectBox = DateUtils.convertStringToMaximoDate(valueActualStart)
+            validationDate()
+            if (!desc.isNullOrEmpty() && scheduleStartObjectBox != null && estDur != null && actualStartObjectBox != null && dateValidation) {
                 setDialogSaveTask()
+            } else if (!dateValidation) {
+                setDialogErrorDateTask()
             } else {
                 setDialogErrorTask()
+            }
+        }
+    }
+
+    fun validationDate() {
+        val longStartDate = cal.timeInMillis
+        val longEndDate = cal2.timeInMillis
+
+        binding.apply {
+            val etScheduleStart = tvScheduleStart.text.toString().trim()
+            val etActualStart = tvActualStart.text.toString().trim()
+            if (etScheduleStart.isNotBlank() || etActualStart.isNotBlank()) {
+                dateValidation = longEndDate >= longStartDate
             }
         }
     }
@@ -130,15 +204,21 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     fun updateDateInView(date: Boolean) {
+        val dateFormatObjectBox = "yyyy-MM-dd'T'HH:mm:ss" // mention the format you need
         val dateFormat = "MM/dd/yyyy" // mention the format you need
+        val sdfObjectBox = SimpleDateFormat(dateFormatObjectBox)
         val sdf = SimpleDateFormat(dateFormat)
         Timber.d("Datepicker :%s", date)
         Timber.d("Datepicker :%s", cal.time.time)
         when (date) {
             true -> {
+                valueScheduleStart = sdfObjectBox.format(cal.time)
                 binding.tvScheduleStart.setText(sdf.format(cal.time))
             }
-            false -> binding.tvActualStart.setText(sdf.format(cal2.time))
+            false -> {
+                valueActualStart = sdfObjectBox.format(cal2.time)
+                binding.tvActualStart.setText(sdf.format(cal2.time))
+            }
         }
     }
 
@@ -177,7 +257,8 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 var estMinute = estM.toString()
                 estHour = StringUtils.convertTimeString(estHour)
                 estMinute = StringUtils.convertTimeString(estMinute)
-                binding.tvEstDur.text = "$estHour " + StringUtils.getStringResources(this,
+                binding.tvEstDur.text = "$estHour " + StringUtils.getStringResources(
+                    this,
                     R.string.estHour
                 ) + " : " + estMinute + " " + StringUtils.getStringResources(
                     this,
@@ -215,6 +296,16 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         customDialogUtils.show()
     }
 
+    private fun setDialogCancelTask() {
+        cancelTaskValidation = true
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.task_cancel_title)
+            .setDescription(R.string.task_cancel_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
     private fun setDialogErrorTask() {
         customDialogUtils
             .setMiddleButtonText(R.string.dialog_yes)
@@ -224,14 +315,30 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         customDialogUtils.show()
     }
 
+    private fun setDialogErrorDateTask() {
+        customDialogUtils
+            .setMiddleButtonText(R.string.dialog_yes)
+            .setTittle(R.string.error_date_task_title)
+            .setDescription(R.string.error_date_task_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
     override fun onRightButton() {
-        viewModels.saveCache(intentWoid, intentWonum, intentTaskId,
-            desc, scheduleStart, estDur,
-            actualStart, intentStatus)
-        gotoTaskActivity()
+        if (cancelTaskValidation) {
+            gotoTaskActivity()
+        } else {
+            viewModels.saveCache(
+                intentWoid, intentWonum, intentTaskId,
+                desc, scheduleStartObjectBox, estDur,
+                actualStartObjectBox, intentStatus
+            )
+            gotoTaskActivity()
+        }
     }
 
     override fun onLeftButton() {
+        cancelTaskValidation = false
         customDialogUtils.dismiss()
     }
 
@@ -247,5 +354,20 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     override fun onDestroy() {
         super.onDestroy()
         customDialogUtils.dismiss()
+    }
+
+    override fun onBackPressed() {
+        desc = binding.tvDesc.text.toString()
+        val tvscheduleStart: String = binding.tvScheduleStart.text.toString()
+        val tvactualStart: String = binding.tvActualStart.text.toString()
+        if (!desc.isNullOrEmpty() || tvscheduleStart.isNotEmpty() || estDur != null || tvactualStart.isNotEmpty()) {
+            setDialogCancelTask()
+        } else {
+            finish()
+        }
+    }
+
+    override fun goToPreviousActivity() {
+        onBackPressed()
     }
 }

@@ -6,7 +6,6 @@ import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.persistence.entity.TaskEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
-import io.objectbox.query.QueryBuilder
 import timber.log.Timber
 import java.util.*
 
@@ -44,14 +43,15 @@ class TaskDaoImp : TaskDao {
     override fun createTaskCache(taskEntity: TaskEntity, username: String?) {
         addUpdateInfo(taskEntity, username)
 
-        taskEntityBox.put(taskEntity
+        taskEntityBox.put(
+            taskEntity
         )
 
     }
 
     override fun findListTaskByWoid(woid: Int): List<TaskEntity> {
         return taskEntityBox.query().equal(TaskEntity_.woId, woid)
-            .order(TaskEntity_.taskId, QueryBuilder.DESCENDING or QueryBuilder.CASE_SENSITIVE)
+            .order(TaskEntity_.taskId)
             .build().find()
     }
 

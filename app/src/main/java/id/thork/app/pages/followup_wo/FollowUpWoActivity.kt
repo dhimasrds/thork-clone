@@ -383,6 +383,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     override fun onRightButton() {
         if (validateDialogExit) {
+            viewModel.removeTask(tempWonum)
             viewModel.removeScanner(tempWonum)
         } else {
             if (isConnected) {

@@ -65,7 +65,7 @@ class TaskActivity : BaseActivity() {
             taskEntity.clear()
             taskEntity.addAll(it)
             taskAdapter.notifyDataSetChanged()
-            val lattestTaskId = taskEntity[0].taskId
+            val lattestTaskId = taskEntity[it.size - 1].taskId
             lattestTaskId.whatIfNotNull { taskid ->
                 validateTaskId(taskid)
             }

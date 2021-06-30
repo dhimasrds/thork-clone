@@ -20,10 +20,7 @@ import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.repository.AssetRepository
-import id.thork.app.repository.LocationRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +39,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
     private val assetRepository: AssetRepository,
     private val locationRepository: LocationRepository,
     private val workOrderRepository: WorkOrderRepository,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val taskRepository: TaskRepository,
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
@@ -101,11 +99,11 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
         member.description = deskWo
@@ -171,11 +169,11 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
         member.description = deskWo
@@ -242,5 +240,9 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             listMaterialPlan.add(wpmaterial)
         }
         return listMaterialPlan
+    }
+
+    fun removeTask(wonum: String): Long {
+        return taskRepository.removeTaskByWonum(wonum)
     }
 }

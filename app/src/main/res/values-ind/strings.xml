@@ -91,6 +91,10 @@
     <string name="task_title">Simpan</string>
     <string name="task_qustion">Anda yakin ingin simpan task ini?</string>
 
+    <!-- Cancel Task Dialog -->
+    <string name="task_cancel_title">Save</string>
+    <string name="task_cancel_qustion">Anda yakin ingin membatalkan pembuatan tugas?</string>
+
     <!-- Delete Image Attendance Dialog -->
     <string name="delete_image_attendance_title">Hapus</string>
     <string name="delete_image_attendance_qustion">Apa kamu ingin menghapus foto?</string>
@@ -102,6 +106,10 @@
     <!-- Error Save Attendance Dialog -->
     <string name="error_task_title">Peringatan!</string>
     <string name="error_task_qustion">Setiap form tidak boleh kosong</string>
+
+    <!-- Error Date Attendance Dialog -->
+    <string name="error_date_task_title">Warning!</string>
+    <string name="error_date_task_qustion">Tanggal actual tidak boleh lebih kecil dari pada tanggal jadwal</string>
 
     <!-- Empty Check in Attendance Dialog -->
     <string name="empty_attendance_checkin_title">Warning!</string>

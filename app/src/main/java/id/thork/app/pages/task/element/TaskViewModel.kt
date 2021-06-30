@@ -8,6 +8,8 @@ import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.repository.TaskRepository
+import timber.log.Timber
+import java.util.*
 
 /**
  * Created by Raka Putra on 6/23/21
@@ -40,16 +42,18 @@ class TaskViewModel @ViewModelInject constructor(
 
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
-        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+        desc: String?, scheduleStart: Date?, estDur: Double?, actualStart: Date?,
         status: String?,
     ) {
-        taskRepository.saveCache(woid,
+        taskRepository.saveCache(
+            woid,
             wonum,
             taskId,
             desc,
             scheduleStart,
             estDur,
             actualStart,
-            status)
+            status
+        )
     }
 }

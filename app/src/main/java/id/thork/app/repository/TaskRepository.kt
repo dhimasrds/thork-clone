@@ -4,6 +4,7 @@ import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.entity.TaskEntity
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -22,7 +23,7 @@ class TaskRepository @Inject constructor(
         return taskDao.createTaskCache(taskEntity, username.toString())
     }
 
-    fun removeTask() {
+    fun removeAllTask() {
         return taskDao.removeTask()
     }
 
@@ -32,7 +33,7 @@ class TaskRepository @Inject constructor(
 
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
-        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+        desc: String?, scheduleStart: Date?, estDur: Double?, actualStart: Date?,
         status: String?,
     ) {
         val taskEntity = TaskEntity(
