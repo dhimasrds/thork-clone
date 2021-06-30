@@ -43,6 +43,7 @@ import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
+import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
@@ -160,6 +161,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.includeMaterialPlan.materialPlan.setOnClickListener {
             goToMaterialPlan()
+        }
+
+        binding.includeLaborplan.laborPlan.setOnClickListener {
+            goToLaborPlan()
         }
 
     }
@@ -356,6 +361,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun goToMaterialPlan() {
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        startActivity(intent)
+    }
+
+    private fun goToLaborPlan() {
+        val intent = Intent(this, LaborPlanActivity::class.java)
         startActivity(intent)
     }
 

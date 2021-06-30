@@ -558,6 +558,10 @@
                     <include android:id="@+id/include_assets"
                         layout="@layout/activity_create_wo_assets"/>
 
+                    <!--Labor plan-->
+                    <include android:id="@+id/include_laborplan"
+                        layout="@layout/activity_create_wo_laborplan"/>
+
                     <!--REPORT DATE-->
                     <TextView
                         android:layout_width="wrap_content"

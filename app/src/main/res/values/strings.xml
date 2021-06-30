@@ -495,6 +495,17 @@
     <string name="check_in_image">Check in Image</string>
     <string name="check_out_image">Check out Image</string>
     <string name="check_out_attendance">Check out</string>
+    <string name="task">Task</string>
+    <string name="select_task">Select Task</string>
+    <string name="labor">Labor</string>
+    <string name="select_labor">Select Labor</string>
+    <string name="craft">Craft</string>
+    <string name="select_craft">Select Craft</string>
+    <string name="skill_level">Skill Level</string>
+    <string name="vendor">Vendor</string>
+    <string name="create_labor_plan">Create Labor Plan</string>
+    <string name="labor_plan">Labor Plan</string>
+    <string name="select_skill_level">Select Skill Level</string>
 
 
 </resources>
