@@ -126,8 +126,6 @@ data class Member(
     val interruptible: Boolean? = null,
     @Json(name = "istask")
     val istask: Boolean? = null,
-    @Json(name = "labtrans")
-    val labtrans: List<Labtran>? = null,
     @Json(name = "labtrans_collectionref")
     val labtransCollectionref: String? = null,
     @Json(name = "lastcopylinkdate")
