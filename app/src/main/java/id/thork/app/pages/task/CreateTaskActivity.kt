@@ -44,8 +44,8 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var intentStatus: String? = null
     private var valueScheduleStart: String? = null
     private var valueActualStart: String? = null
-    private var scheduleStartObjectBox: Date? = null
-    private var actualStartObjectBox: Date? = null
+    private var scheduleStartObjectBox: String? = null
+    private var actualStartObjectBox: String? = null
     private var dateValidation: Boolean = true
     private var cancelTaskValidation: Boolean = false
 
@@ -139,8 +139,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
 
         binding.btnSaveTask.setOnClickListener {
             desc = binding.tvDesc.text.toString()
-            scheduleStartObjectBox = DateUtils.convertStringToMaximoDate(valueScheduleStart)
-            actualStartObjectBox = DateUtils.convertStringToMaximoDate(valueActualStart)
             validationDate()
             if (!desc.isNullOrEmpty() && scheduleStartObjectBox != null && estDur != null && actualStartObjectBox != null && dateValidation) {
                 setDialogSaveTask()
@@ -212,11 +210,11 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         Timber.d("Datepicker :%s", cal.time.time)
         when (date) {
             true -> {
-                valueScheduleStart = sdfObjectBox.format(cal.time)
+                scheduleStartObjectBox = sdfObjectBox.format(cal.time)
                 binding.tvScheduleStart.setText(sdf.format(cal.time))
             }
             false -> {
-                valueActualStart = sdfObjectBox.format(cal2.time)
+                actualStartObjectBox = sdfObjectBox.format(cal2.time)
                 binding.tvActualStart.setText(sdf.format(cal2.time))
             }
         }

@@ -42,7 +42,7 @@ class TaskViewModel @ViewModelInject constructor(
 
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
-        desc: String?, scheduleStart: Date?, estDur: Double?, actualStart: Date?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
         status: String?,
     ) {
         taskRepository.saveCache(

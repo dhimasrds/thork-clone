@@ -16,8 +16,8 @@ class TaskEntity(
     var wonum : String? = null,
     var taskId : Int? = null,
     var desc : String? = null,
-    var scheduleStart : Date? = null,
-    var actualStart : Date? = null,
+    var scheduleStart : String? = null,
+    var actualStart : String? = null,
     var estDuration : Double? = null,
     var status : String? = null
     ) : BaseEntity(), Parcelable {
