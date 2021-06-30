@@ -1,5 +1,6 @@
 package id.thork.app.repository
 
+import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.persistence.dao.TaskDao
@@ -34,7 +35,7 @@ class TaskRepository @Inject constructor(
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
-        status: String?,
+        status: String?
     ) {
         val taskEntity = TaskEntity(
             woId = woid,
@@ -44,7 +45,8 @@ class TaskRepository @Inject constructor(
             scheduleStart = scheduleStart,
             estDuration = estDur,
             actualStart = actualStart,
-            status = status
+            status = status,
+            syncStatus = BaseParam.APP_FALSE
         )
         saveTaskCache(taskEntity)
     }
