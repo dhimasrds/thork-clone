@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.ObjectBox.boxStore
 import id.thork.app.persistence.entity.AttendanceEntity_
@@ -143,9 +144,9 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build().find()
     }
 
-    override fun findListWoByStatus(status: String, offset: Int): List<WoCacheEntity> {
+    override fun findListWoByStatusOffset( offset: Int, vararg status: String): List<WoCacheEntity> {
         return woCacheEntityBox.query()
-            .equal(WoCacheEntity_.status, status)
+            .`in`(WoCacheEntity_.status, status)
             .order(WoCacheEntity_.reportDateUTCTime, QueryBuilder.DESCENDING or QueryBuilder.CASE_SENSITIVE)
             .build()
             .find(offset.toLong(), 10)
@@ -153,5 +154,9 @@ class WoCacheDaoImp : WoCacheDao {
 
     override fun remove() {
         woCacheEntityBox.removeAll()
+    }
+
+    override fun findListWoByStatusHistory(vararg status: String): List<WoCacheEntity> {
+        return woCacheEntityBox.query().`in`(WoCacheEntity_.status, status).build().find()
     }
 }
