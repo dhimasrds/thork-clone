@@ -29,7 +29,6 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".pages.attachment.element.signature.SignatureActivity"></activity>
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
-        <activity android:name=".pages.labor_plan.SelectSkillLevelActivity"></activity>
         <activity android:name=".pages.labor_plan.SelectLaborActivity" />
         <activity android:name=".pages.labor_plan.SelectCraftActivity" />
         <activity android:name=".pages.labor_plan.SelectTaskActivity" />
