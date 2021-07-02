@@ -53,19 +53,13 @@ class HistoryAttendanceAdapter constructor(
             binding.apply {
                 attendanceEntity.dateCheckOutLocal.whatIfNotNull { dateCheckOutLocal ->
                     attendanceEntity.dateCheckInLocal.whatIfNotNull { dateCheckInLocal ->
-                        val millSec = dateCheckOutLocal - dateCheckInLocal
-                        val workHours = DateUtils.getWorkHours(millSec)
                         Timber.tag(TAG).d(
                             "ViewHolder() dateCheckOutLocal: %s dateCheckInLocal: %s",
                             dateCheckOutLocal, dateCheckInLocal
                         )
-                        Timber.tag(TAG).d(
-                            "ViewHolder() millSec: %s workHours: %s",
-                            millSec, workHours
-                        )
                         tvCheckInDate.text = DateUtils.getDateTimeCardView(dateCheckInLocal)
                         tvCheckInTime.text = DateUtils.getCheckAttendance(dateCheckInLocal)
-                        tvWorkHour.text = workHours
+                        tvWorkHour.text = attendanceEntity.workHours
                         tvDateAttendance.text = attendanceEntity.dateTimeHeader
                         tvCheckOutDate.text = DateUtils.getDateTimeCardView(dateCheckOutLocal)
                         tvCheckOutTime.text = DateUtils.getCheckAttendance(dateCheckOutLocal)

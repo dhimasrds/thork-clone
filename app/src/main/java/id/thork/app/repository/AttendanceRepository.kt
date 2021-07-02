@@ -16,6 +16,7 @@ import id.thork.app.network.api.AttendanceClient
 import id.thork.app.network.response.attendance_response.Member
 import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.entity.AttendanceEntity
+import id.thork.app.utils.DateUtils
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 import java.util.*
@@ -68,27 +69,27 @@ class AttendanceRepository @Inject constructor(
         return attendanceDao.findAttendanceBySynUpdate(syncUpdate)
     }
 
-    fun findAttendanceById(attendanceId: Int) : AttendanceEntity? {
+    fun findAttendanceById(attendanceId: Int): AttendanceEntity? {
         return attendanceDao.findAttendanceByAttendanceId(attendanceId)
     }
 
-    fun findListAttendanceCacheOffline(offlinemode: Int, syncUpdate: Int) : List<AttendanceEntity> {
+    fun findListAttendanceCacheOffline(offlinemode: Int, syncUpdate: Int): List<AttendanceEntity> {
         return attendanceDao.findListAttendanceOfflineMode(offlinemode, syncUpdate)
     }
 
-    fun findlistAttendanceCacheLocal() : List<AttendanceEntity> {
+    fun findlistAttendanceCacheLocal(): List<AttendanceEntity> {
         return attendanceDao.findListAttendanceLocal()
     }
 
-    fun findAttendanceOfflineMode() : AttendanceEntity? {
+    fun findAttendanceOfflineMode(): AttendanceEntity? {
         return attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
     }
 
-    fun filterByDate(startDate : Long , endDate : Long) :List<AttendanceEntity>? {
-        return attendanceDao.filterByDate(startDate,endDate)
+    fun filterByDate(startDate: Long, endDate: Long): List<AttendanceEntity>? {
+        return attendanceDao.filterByDate(startDate, endDate)
     }
 
-    fun prepareBodyCheckIn() : Member{
+    fun prepareBodyCheckIn(): Member {
         val attendanceEntity = findAttendanceBySyncUpdate(BaseParam.APP_FALSE)
         val memberCheckIn = Member()
         attendanceEntity.whatIfNotNull {
@@ -102,7 +103,7 @@ class AttendanceRepository @Inject constructor(
         return memberCheckIn
     }
 
-    fun prepareBodyCheckOut(attendanceId: Int) : Member{
+    fun prepareBodyCheckOut(attendanceId: Int): Member {
         val attendanceEntity = findAttendanceById(attendanceId)
         val memberCheckOut = Member()
         attendanceEntity.whatIfNotNull {
@@ -148,7 +149,10 @@ class AttendanceRepository @Inject constructor(
         }
     }
 
-    fun handlingAttendanceCheckInOfflineMode(attendanceEntity: AttendanceEntity, attendanceId: Int) {
+    fun handlingAttendanceCheckInOfflineMode(
+        attendanceEntity: AttendanceEntity,
+        attendanceId: Int
+    ) {
         attendanceEntity.offlineMode = BaseParam.APP_FALSE
         attendanceEntity.attendanceId = attendanceId
         saveAttendanceCache(attendanceEntity)
@@ -160,7 +164,7 @@ class AttendanceRepository @Inject constructor(
         saveAttendanceCache(attendanceEntity)
     }
 
-    fun prepareBodyCheckInOfflineMode(attendanceEntity: AttendanceEntity) : Member {
+    fun prepareBodyCheckInOfflineMode(attendanceEntity: AttendanceEntity): Member {
         val memberCheckIn = Member()
         attendanceEntity.whatIfNotNull { cache ->
             memberCheckIn.startdate = cache.dateCheckIn
@@ -180,7 +184,7 @@ class AttendanceRepository @Inject constructor(
         return memberCheckIn
     }
 
-    fun prepareBodyCheckOutOfflineMode(attendanceEntity: AttendanceEntity) : Member {
+    fun prepareBodyCheckOutOfflineMode(attendanceEntity: AttendanceEntity): Member {
         val memberCheckOut = Member()
         attendanceEntity.whatIfNotNull {
             memberCheckOut.finishdate = it.dateCheckOut
@@ -279,16 +283,19 @@ class AttendanceRepository @Inject constructor(
         } else {
             attendanceEntity = findCheckInAttendance()
             attendanceEntity.whatIfNotNull {
-                it.dateCheckOutLocal = dateLocal
-                it.dateCheckOut = date
-                it.hoursCheckOut = hours
-                it.longCheckOut = longitudex
-                it.latCheckOut = latitudey
-                it.uriImageCheckOut = uriImage
+                it.dateCheckInLocal.whatIfNotNull { checkInLocal ->
+                    val totalHours = DateUtils.getWorkHours(dateLocal - checkInLocal)
+                    it.dateCheckOutLocal = dateLocal
+                    it.dateCheckOut = date
+                    it.hoursCheckOut = hours
+                    it.longCheckOut = longitudex
+                    it.latCheckOut = latitudey
+                    it.uriImageCheckOut = uriImage
 
-                it.workHours = workHours
-                it.offlineMode = BaseParam.APP_TRUE
-                saveAttendanceCache(it)
+                    it.workHours = totalHours
+                    it.offlineMode = BaseParam.APP_TRUE
+                    saveAttendanceCache(it)
+                }
             }
         }
     }
