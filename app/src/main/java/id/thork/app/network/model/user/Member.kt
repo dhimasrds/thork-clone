@@ -43,5 +43,9 @@ data class Member(
     @Json(name = "wms_extrole_user")
     val wmsExtroleUser: List<WmsExtroleUser>? = null,
     @Json(name = "wms_extrole_user_collectionref")
-    val wmsExtroleUserCollectionref: String? = null
+    val wmsExtroleUserCollectionref: String? = null,
+    @Json(name = "jobcode")
+    val jobcode: String,
+    @Json(name = "jobcode_description")
+    val jobcodeDescription: String
 )

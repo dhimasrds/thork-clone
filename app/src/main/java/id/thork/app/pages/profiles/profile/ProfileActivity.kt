@@ -35,6 +35,8 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
         }
         customDialogUtils = CustomDialogUtils(this)
 
+
+
         setupToolbarWithHomeNavigation(
             getString(R.string.action_profile),
             navigation = false,
@@ -59,6 +61,10 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
                 goToServerAcitivity()
             }
         })
+
+        viewModel.profileRole.observe(this, Observer {
+            binding.roleProfile.text = it
+        } )
     }
 
     private fun handlerOnclick() {

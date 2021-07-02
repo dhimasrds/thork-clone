@@ -233,6 +233,10 @@ class LoginViewModel @ViewModelInject constructor(
             userEntity.laborcode = member.labor[0].laborcode
         }
 
+        member.jobcodeDescription.whatIfNotNull {
+            userEntity.jobcodeDescription = it
+        }
+
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
         //userEntity!!.server_address
