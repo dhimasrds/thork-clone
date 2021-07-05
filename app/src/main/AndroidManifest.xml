@@ -36,7 +36,6 @@
         <activity android:name=".pages.labor_plan.LaborPlanActivity" />
         <activity android:name=".pages.task.CreateTaskActivity"></activity>
         <activity android:name=".pages.task.TaskActivity" />
-        <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceActivity" />
         <activity android:name=".pages.profiles.attendance.AttendanceActivity" />
         <activity android:name=".pages.work_log.type.WorkLogTypeActivity" />
