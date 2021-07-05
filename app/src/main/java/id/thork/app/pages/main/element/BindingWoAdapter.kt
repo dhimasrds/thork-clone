@@ -35,6 +35,12 @@ object BindingWoAdapter {
                 view.setTextColor(ContextCompat.getColor(view.context,R.color.colorGreen))
                 view.setBackgroundResource(R.drawable.bg_status_green)
             }
+
+            BaseParam.CLOSED -> {
+                view.text = BaseParam.CLOSED
+                view.setTextColor(ContextCompat.getColor(view.context,R.color.colorGray2))
+                view.setBackgroundResource(R.drawable.bg_status_grey)
+            }
         }
     }
 
@@ -47,8 +53,11 @@ object BindingWoAdapter {
             BaseParam.INPROGRESS -> {
                 view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorYellow))
             }
-            else -> {
+            BaseParam.COMPLETED -> {
                 view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorGreen))
+            }
+            BaseParam.CLOSED -> {
+                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorGray2))
 
             }
         }

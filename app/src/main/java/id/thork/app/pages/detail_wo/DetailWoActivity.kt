@@ -473,6 +473,25 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                     }
                 }
             }
+            BaseParam.CLOSED -> {
+                binding.apply {
+                    layoutStatus.visibility = GONE
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailWoActivity,
+                            R.color.colorGray2
+                        )
+                    )
+                    bgStatus.background = ContextCompat.getDrawable(
+                        this@DetailWoActivity,
+                        R.drawable.bg_status_label_close
+                    )
+                    btnStatusWo.setOnClickListener {
+                        dialogUpdateStatus()
+                    }
+                }
+            }
+
             else -> {
                 binding.layoutStatus.visibility = GONE
             }

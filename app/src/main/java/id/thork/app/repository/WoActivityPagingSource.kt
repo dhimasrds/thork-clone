@@ -88,7 +88,7 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun checkWoOnLocal(): List<WoCacheEntity> {
-        return woCacheDao.findListWoByStatus(BaseParam.COMPLETED)
+        return woCacheDao.findListWoByStatusHistory(BaseParam.COMPLETED, BaseParam.CLOSED)
     }
 
     private suspend fun fetchWo(position: Int): Boolean {
@@ -161,7 +161,7 @@ class WoActivityPagingSource @Inject constructor(
     }
 
     private fun checkingWoInObjectBox(list: List<Member>) {
-        val listwo: List<WoCacheEntity> = woCacheDao.findListWoByStatus(BaseParam.COMPLETED,offset)
+        val listwo: List<WoCacheEntity> = woCacheDao.findListWoByStatusOffset(offset,BaseParam.COMPLETED, BaseParam.CLOSED)
         Timber.d("checkingWoInObjectBox savelocal :%s", listwo.size)
         if (listwo.isEmpty()) {
             Timber.d("checkingWoInObjectBox savelocal :%s", list.size)
@@ -176,7 +176,7 @@ class WoActivityPagingSource @Inject constructor(
 
     private fun findWo(offset: Int): String {
         val cacheEntities: List<WoCacheEntity> =
-            woCacheDao.findListWoByStatus(BaseParam.COMPLETED, offset)
+            woCacheDao.findListWoByStatusOffset(offset, BaseParam.COMPLETED, BaseParam.CLOSED)
         val body = ArrayList<String>()
         for (i in cacheEntities.indices) {
             if (cacheEntities[i].status != null) {

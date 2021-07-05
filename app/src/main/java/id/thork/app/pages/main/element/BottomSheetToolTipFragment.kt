@@ -21,6 +21,7 @@ import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
+import java.sql.Time
 
 
 @AndroidEntryPoint
@@ -84,6 +85,7 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
 
         sharedViewModel.assetCache.observe(viewLifecycleOwner, Observer {
             Timber.d("BottomSheetToolTipFragment() observer etWoCache %s", it.assetnum)
+            val assetnum : String = it.assetnum.toString()
             binding.assetTooltipContent.assetTooltipAssetName.text =
                     StringUtils.NVL(it.assetnum, BaseParam.APP_DASH)
                 binding.assetTooltipContent.assetTooltipAssetDesc.text =
@@ -92,17 +94,22 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
                     StringUtils.NVL(it.formattedaddress, BaseParam.APP_DASH)
                 binding.assetTooltipContent.assetTooltipDesc.text =
                     StringUtils.NVL(it.assetLocation, BaseParam.APP_DASH)
+
                 binding.assetTooltipContent.assetTooltipButton.setOnClickListener {
-                    goToCreateWo()
+                    goToCreateWoAsset(assetnum)
                 }
         })
 
         sharedViewModel.locationCache.observe(viewLifecycleOwner, Observer {
             Timber.d("BottomSheetToolTipFragment() observer etWoCache %s", it.location)
+            val location: String = it.location.toString()
             binding.locationTooltipContent.locationTooltipServiceAddress.text =
                 StringUtils.NVL(it.formatAddress, BaseParam.APP_DASH)
             binding.locationTooltipContent.locationTooltipDesc.text =
                 StringUtils.NVL(it.description, BaseParam.APP_DASH)
+
+            binding.locationTooltipContent.locationTooltipButton.setOnClickListener {
+                goToCreateWoLocation(location)            }
         })
 
         sharedViewModel.crewName.observe(viewLifecycleOwner, Observer {
@@ -136,8 +143,15 @@ class BottomSheetToolTipFragment : RoundedBottomSheetDialogFragment() {
         startActivity(BaseApplication.context, intent, bundle)
     }
 
-    private fun goToCreateWo() {
+    private fun goToCreateWoLocation(location: String) {
         val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
+        intent.putExtra(BaseParam.LOCATIONS, location)
+        startActivity(intent)
+    }
+
+    private fun goToCreateWoAsset(asset: String) {
+        val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
+        intent.putExtra(BaseParam.ASSETNUM, asset)
         startActivity(intent)
     }
 }

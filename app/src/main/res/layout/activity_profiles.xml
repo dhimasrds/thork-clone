@@ -67,10 +67,10 @@
                     android:id="@+id/role_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_black"
                     android:text="-"
-                    android:textSize="17sp"
                     android:textColor="@color/white"
-                    android:fontFamily="@font/roboto_black"/>
+                    android:textSize="17sp" />
             </LinearLayout>
 
 

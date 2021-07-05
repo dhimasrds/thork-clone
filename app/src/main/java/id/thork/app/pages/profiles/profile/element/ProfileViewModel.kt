@@ -33,12 +33,15 @@ class ProfileViewModel @ViewModelInject constructor(
 
     private val _logout = MutableLiveData<Int>()
     private val _username = MutableLiveData<String>()
+    private val _profileRole = MutableLiveData<String>()
 
     val logout: LiveData<Int> get() = _logout
     val username: LiveData<String> get() = _username
+    val profileRole: LiveData<String> get() = _profileRole
 
     fun validateUsername() {
         _username.value = appSession.userEntity.laborcode
+        _profileRole.value = appSession.userEntity.jobcodeDescription
     }
 
     fun logout() {

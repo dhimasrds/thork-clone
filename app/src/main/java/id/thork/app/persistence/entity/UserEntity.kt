@@ -24,6 +24,7 @@ class UserEntity : BaseEntity {
     var server_address: String? = null
     var laborcode: String? = null
     var apiKey: String? = null
+    var jobcodeDescription: String? = null
 
     constructor()
 }

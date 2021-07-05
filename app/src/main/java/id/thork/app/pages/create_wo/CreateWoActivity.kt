@@ -86,7 +86,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             lifecycleOwner = this@CreateWoActivity
             vm = viewModel
         }
-
+        retrieveFromIntent()
         tempWonum = viewModel.getTempWonum()!!
         tempWorkOrderId = viewModel.getTempWoId()!!
         binding.complaintDate.setText(DateUtils.getDateTime())
@@ -104,6 +104,19 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             option = false,
             historyAttendanceIcon = false
         )
+
+    }
+
+    private fun retrieveFromIntent() {
+        val intentLocation = intent.getStringExtra(BaseParam.LOCATIONS)
+        intentLocation.whatIfNotNull {
+            binding.tvLocation.text = it
+        }
+
+        val intentAsset = intent.getStringExtra(BaseParam.ASSETNUM)
+        intentAsset.whatIfNotNull {
+            binding.asset.text = it
+        }
     }
 
     override fun setupListener() {
