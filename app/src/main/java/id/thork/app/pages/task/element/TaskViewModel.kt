@@ -3,13 +3,21 @@ package id.thork.app.pages.task.element
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.response.task_response.TaskResponse
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.repository.TaskRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 /**
  * Created by Raka Putra on 6/23/21
@@ -18,6 +26,7 @@ import java.util.*
 class TaskViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val taskRepository: TaskRepository,
+    private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     val TAG = TaskViewModel::class.java.name
 
@@ -43,7 +52,7 @@ class TaskViewModel @ViewModelInject constructor(
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
-        status: String?,
+        status: String?, syncStatus: Int?, offlineMode: Int?
     ) {
         taskRepository.saveCache(
             woid,
@@ -53,7 +62,52 @@ class TaskViewModel @ViewModelInject constructor(
             scheduleStart,
             estDur,
             actualStart,
-            status
+            status,
+            syncStatus,
+            offlineMode
         )
+        woid.whatIfNotNull {
+            taskId.whatIfNotNull { taskId ->
+                scheduleStart.whatIfNotNull { schedule ->
+                    updateToMaximo(it, taskId, schedule)
+                }
+            }
+        }
+    }
+
+    private fun updateToMaximo(woid: Int, taskId: Int, scheduleStart: String) {
+
+        val taskList = taskRepository.prepareTaskBody(woid, scheduleStart)
+        val taskResponse = TaskResponse()
+        taskList.whatIfNotNullOrEmpty {
+            taskResponse.woactivity = it
+        }
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter: JsonAdapter<TaskResponse> = moshi.adapter(TaskResponse::class.java)
+        Timber.tag(TAG).d("raka() results: %s", memberJsonAdapter.toJson(taskResponse))
+
+        val xmethodeOverride: String = BaseParam.APP_PATCH
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
+        viewModelScope.launch(Dispatchers.IO) {
+            taskRepository.createTaskToMx(
+                xmethodeOverride,
+                contentType,
+                cookie,
+                patchType,
+                woid,
+                taskResponse,
+                onSuccess = {
+                    Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                },
+                onError = {
+                    taskRepository.handlingTaskFailed(woid, taskId)
+                    Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
+
+                }
+            )
+        }
+
     }
 }

@@ -2,6 +2,8 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
+import id.thork.app.persistence.entity.AttendanceEntity
+import id.thork.app.persistence.entity.AttendanceEntity_
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.persistence.entity.TaskEntity_
 import io.objectbox.Box
@@ -57,6 +59,21 @@ class TaskDaoImp : TaskDao {
 
     override fun removeTaskByWonum(wonum: String): Long {
         return taskEntityBox.query().equal(TaskEntity_.wonum, wonum).build().remove()
+    }
+
+    override fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleDate: String): List<TaskEntity> {
+        return taskEntityBox.query().equal(TaskEntity_.woId, woid)
+            .equal(TaskEntity_.scheduleStart, scheduleDate).build().find()
+    }
+
+    override fun findTaskByWoidAndTaskId(woid: Int, taskId: Int): TaskEntity? {
+        val taskEntity =
+            taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.taskId, taskId).build()
+                .find()
+        taskEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
     }
 
 }

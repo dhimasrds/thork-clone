@@ -20,6 +20,7 @@ class TaskEntity(
     var actualStart : String? = null,
     var estDuration : Double? = null,
     var status : String? = null,
-    var syncStatus : Int? = null
-    ) : BaseEntity(), Parcelable {
+    var offlineMode: Int? = null,
+    var syncStatus: Int? = null
+) : BaseEntity(), Parcelable {
 }

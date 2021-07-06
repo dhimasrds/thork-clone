@@ -324,11 +324,19 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         if (cancelTaskValidation) {
             gotoTaskActivity()
         } else {
-            viewModels.saveCache(
-                intentWoid, intentWonum, intentTaskId,
-                desc, scheduleStartObjectBox, estDur,
-                actualStartObjectBox, intentStatus
-            )
+            if (isConnected) {
+                viewModels.saveCache(
+                    intentWoid, intentWonum, intentTaskId,
+                    desc, scheduleStartObjectBox, estDur,
+                    actualStartObjectBox, intentStatus, BaseParam.APP_TRUE, BaseParam.APP_FALSE
+                )
+            } else {
+                viewModels.saveCache(
+                    intentWoid, intentWonum, intentTaskId,
+                    desc, scheduleStartObjectBox, estDur,
+                    actualStartObjectBox, intentStatus, BaseParam.APP_FALSE, BaseParam.APP_TRUE
+                )
+            }
             gotoTaskActivity()
         }
     }

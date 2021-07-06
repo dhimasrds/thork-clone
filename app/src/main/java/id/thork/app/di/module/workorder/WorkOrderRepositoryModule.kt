@@ -93,11 +93,15 @@ object WorkOrderRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideTaskRepository(
-        appSession: AppSession
+        appSession: AppSession,
+        preferenceManager: PreferenceManager,
+        httpLoggingInterceptor: HttpLoggingInterceptor
     ): TaskRepository {
         return TaskRepository(
             appSession,
-            TaskDaoImp()
+            TaskDaoImp(),
+            httpLoggingInterceptor,
+            preferenceManager
         )
     }
 }

@@ -16,4 +16,8 @@ interface TaskDao {
     fun findListTaskByWoid(woid: Int): List<TaskEntity>
 
     fun removeTaskByWonum(wonum: String): Long
+
+    fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleDate: String): List<TaskEntity>
+
+    fun findTaskByWoidAndTaskId(woid: Int, taskid: Int): TaskEntity?
 }
