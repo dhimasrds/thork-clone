@@ -31,13 +31,22 @@ class TaskViewModel @ViewModelInject constructor(
     val TAG = TaskViewModel::class.java.name
 
     private val _listTask = MutableLiveData<List<TaskEntity>>()
+    private val _listTaskCreateWo = MutableLiveData<List<TaskEntity>>()
 
     val listTask: LiveData<List<TaskEntity>> get() = _listTask
+    val listTaskCreateWo: LiveData<List<TaskEntity>> get() = _listTaskCreateWo
 
     fun initTask(workoderid: Int) {
         val task = taskRepository.findListTaskByWoid(workoderid)
         task.whatIfNotNullOrEmpty {
             _listTask.value = it
+        }
+    }
+
+    fun initTaskCreateWo(wonum: String) {
+        val task = taskRepository.findListTaskByWonum(wonum)
+        task.whatIfNotNullOrEmpty {
+            _listTaskCreateWo.value = it
         }
     }
 
@@ -47,6 +56,25 @@ class TaskViewModel @ViewModelInject constructor(
         val hasilDetikDouble = hasilDetik.toDouble()
         hasil = hasilDetikDouble / 3600
         return hasil
+    }
+
+    fun saveCacheFromCreateWo(
+        woid: Int?, wonum: String?, taskId: Int?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+        status: String?, syncStatus: Int?, offlineMode: Int?
+    ) {
+        taskRepository.saveCache(
+            woid,
+            wonum,
+            taskId,
+            desc,
+            scheduleStart,
+            estDur,
+            actualStart,
+            status,
+            syncStatus,
+            offlineMode
+        )
     }
 
     fun saveCache(

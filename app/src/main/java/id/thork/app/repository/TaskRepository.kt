@@ -57,8 +57,16 @@ class TaskRepository @Inject constructor(
         return taskDao.findListTaskByWoid(woid)
     }
 
+    fun findListTaskByWonum(wonum: String): List<TaskEntity> {
+        return taskDao.findListTaskByWonum(wonum)
+    }
+
     fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleStart: String): List<TaskEntity> {
         return taskDao.findTaskByWoIdAndScheduleDate(woid, scheduleStart)
+    }
+
+    fun findTaskByWoIdAndSyncStatus(woid: Int, syncStatus: Int): List<TaskEntity> {
+        return taskDao.findTaskByWoIdAndSyncStatus(woid, syncStatus)
     }
 
     fun findTaskByWoIdAndTaskId(woid: Int, taskId: Int): TaskEntity? {
@@ -144,6 +152,43 @@ class TaskRepository @Inject constructor(
             it.syncStatus = BaseParam.APP_FALSE
             it.offlineMode = BaseParam.APP_TRUE
             saveTaskCache(it)
+        }
+    }
+
+    fun prepareTaskBodyFromCreateWo(woid: Int): List<id.thork.app.network.response.work_order.Woactivity> {
+        val taskEntity = findTaskByWoIdAndSyncStatus(woid, BaseParam.APP_FALSE)
+        val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
+        taskEntity.forEach {
+            val member = id.thork.app.network.response.work_order.Woactivity()
+            member.taskid = it.taskId
+            member.description = it.desc
+            member.estdur = it.estDuration
+            member.status = it.status
+            member.schedstart = it.scheduleStart
+            member.actstart = it.actualStart
+            memberTask.add(member)
+        }
+        return memberTask
+    }
+
+    fun handlingTaskFailedFromCreateWo(woid: Int) {
+        val taskEntity = findListTaskByWoid(woid)
+        taskEntity.forEach {
+            it.syncStatus = BaseParam.APP_FALSE
+            it.offlineMode = BaseParam.APP_TRUE
+            saveTaskCache(it)
+        }
+    }
+
+    fun handlingTaskSuccessFromCreateWo(woid: Int) {
+        Timber.d("raka %s ", "handlingSuccess")
+        val taskEntity = findListTaskByWoid(woid)
+        taskEntity.forEach {
+            it.syncStatus = BaseParam.APP_TRUE
+            it.offlineMode = BaseParam.APP_FALSE
+            saveTaskCache(it)
+            Timber.d("raka %s ", it.woId)
+            Timber.d("raka %s ", it.syncStatus)
         }
     }
 

@@ -103,6 +103,7 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        woserviceaddress.add(wsa)
 
         val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+        val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempWoId)
 
         val member = Member()
         member.siteid = appSession.siteId
@@ -124,6 +125,9 @@ class CreateWoViewModel @ViewModelInject constructor(
         materialPlanlist.whatIfNotNullOrEmpty {
             member.wpmaterial = it
         }
+        taskList.whatIfNotNullOrEmpty {
+            member.woactivity = it
+        }
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -134,8 +138,10 @@ class CreateWoViewModel @ViewModelInject constructor(
             workOrderRepository.createWo(
                 cookie, member,
                 onSuccess = {
+                    taskRepository.handlingTaskSuccessFromCreateWo(tempWoId)
 //                    uploadAttachments(tempWoId)
                 }, onError = {
+                    taskRepository.handlingTaskFailedFromCreateWo(tempWoId)
                     Timber.tag(TAG).i("createWo() error: %s", it)
                 }
             )
@@ -164,40 +170,45 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
 
-        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+        tempWoId.whatIfNotNull { tempwoid ->
+            val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val member = Member()
+            member.siteid = appSession.siteId
+            if (!location.equals(BaseParam.APP_DASH)) {
+                member.location = location
+            }
 
-        val member = Member()
-        member.siteid = appSession.siteId
-        if (!location.equals(BaseParam.APP_DASH)) {
-            member.location = location
-        }
-
-        if (!assetnum.equals(BaseParam.APP_DASH)) {
-            member.assetnum = assetnum
-        }
-        member.description = deskWo
-        member.status = BaseParam.WAPPR
-        member.reportdate = DateUtils.getDateTimeMaximo()
+            if (!assetnum.equals(BaseParam.APP_DASH)) {
+                member.assetnum = assetnum
+            }
+            member.description = deskWo
+            member.status = BaseParam.WAPPR
+            member.reportdate = DateUtils.getDateTimeMaximo()
 //        member.woserviceaddress = woserviceaddress
-        member.estdur = estDur
-        member.wopriority = workPriority
-        member.descriptionLongdescription = longdesc
-        materialPlanlist.whatIfNotNullOrEmpty {
-            member.wpmaterial = it
-        }
+            member.estdur = estDur
+            member.wopriority = workPriority
+            member.descriptionLongdescription = longdesc
+            materialPlanlist.whatIfNotNullOrEmpty {
+                member.wpmaterial = it
+            }
+            taskList.whatIfNotNullOrEmpty { tasklist ->
+                member.woactivity = tasklist
+            }
 
-        val tWoCacheEntity = WoCacheEntity()
-        tWoCacheEntity.syncBody = convertToJson(member)
-        tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
-        tWoCacheEntity.isChanged = BaseParam.APP_TRUE
-        tWoCacheEntity.createdBy = appSession.userEntity.username
-        tWoCacheEntity.updatedBy = appSession.userEntity.username
-        tWoCacheEntity.createdDate = Date()
-        tWoCacheEntity.updatedDate = Date()
-        tWoCacheEntity.wonum = tempWonum
-        tWoCacheEntity.status = BaseParam.WAPPR
-        workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
-        Timber.d("createwointeractor: %s", longdesc)
+            val tWoCacheEntity = WoCacheEntity()
+            tWoCacheEntity.syncBody = convertToJson(member)
+            tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
+            tWoCacheEntity.isChanged = BaseParam.APP_TRUE
+            tWoCacheEntity.createdBy = appSession.userEntity.username
+            tWoCacheEntity.updatedBy = appSession.userEntity.username
+            tWoCacheEntity.createdDate = Date()
+            tWoCacheEntity.updatedDate = Date()
+            tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.status = BaseParam.WAPPR
+            workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
+            Timber.d("createwointeractor: %s", longdesc)
+        }
     }
 
     private fun convertToJson(member: Member): String? {

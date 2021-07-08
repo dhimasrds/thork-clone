@@ -390,6 +390,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
         intent.putExtra(BaseParam.WONUM, tempWonum)
         intent.putExtra(BaseParam.STATUS, BaseParam.WAPPR)
+        intent.putExtra(BaseParam.TAG_TASK, "TAG_TASK")
         startActivity(intent)
     }
 

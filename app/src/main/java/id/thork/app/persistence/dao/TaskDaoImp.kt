@@ -57,6 +57,12 @@ class TaskDaoImp : TaskDao {
             .build().find()
     }
 
+    override fun findListTaskByWonum(wonum: String): List<TaskEntity> {
+        return taskEntityBox.query().equal(TaskEntity_.wonum, wonum)
+            .order(TaskEntity_.taskId)
+            .build().find()
+    }
+
     override fun removeTaskByWonum(wonum: String): Long {
         return taskEntityBox.query().equal(TaskEntity_.wonum, wonum).build().remove()
     }
@@ -64,6 +70,11 @@ class TaskDaoImp : TaskDao {
     override fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleDate: String): List<TaskEntity> {
         return taskEntityBox.query().equal(TaskEntity_.woId, woid)
             .equal(TaskEntity_.scheduleStart, scheduleDate).build().find()
+    }
+
+    override fun findTaskByWoIdAndSyncStatus(woid: Int, syncStatus: Int): List<TaskEntity> {
+        return taskEntityBox.query().equal(TaskEntity_.woId, woid)
+            .equal(TaskEntity_.syncStatus, syncStatus).build().find()
     }
 
     override fun findTaskByWoidAndTaskId(woid: Int, taskId: Int): TaskEntity? {

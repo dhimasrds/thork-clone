@@ -23,7 +23,7 @@ data class Woactivity(
     @Json(name = "actservcost")
     val actservcost: Double? = null,
     @Json(name = "actstart")
-    val actstart: String? = null,
+    var actstart: String? = null,
     @Json(name = "acttoolcost")
     val acttoolcost: Double? = null,
     @Json(name = "ams")
@@ -41,7 +41,7 @@ data class Woactivity(
     @Json(name = "chargestore")
     val chargestore: Boolean? = null,
     @Json(name = "description")
-    val description: String? = null,
+    var description: String? = null,
     @Json(name = "disabled")
     val disabled: Boolean? = null,
     @Json(name = "djpapplied")
@@ -67,7 +67,7 @@ data class Woactivity(
     @Json(name = "estatapprtoolcost")
     val estatapprtoolcost: Double? = null,
     @Json(name = "estdur")
-    val estdur: Double? = null,
+    var estdur: Double? = null,
     @Json(name = "estintlabcost")
     val estintlabcost: Double? = null,
     @Json(name = "estintlabhrs")
@@ -159,9 +159,9 @@ data class Woactivity(
     @Json(name = "schedfinish")
     val schedfinish: String? = null,
     @Json(name = "schedstart")
-    val schedstart: String? = null,
+    var schedstart: String? = null,
     @Json(name = "status")
-    val status: String? = null,
+    var status: String? = null,
     @Json(name = "status_description")
     val statusDescription: String? = null,
     @Json(name = "statusdate")
@@ -169,7 +169,7 @@ data class Woactivity(
     @Json(name = "suspendflow")
     val suspendflow: Boolean? = null,
     @Json(name = "taskid")
-    val taskid: Int? = null,
+    var taskid: Int? = null,
     @Json(name = "woacceptscharges")
     val woacceptscharges: Boolean? = null,
     @Json(name = "woclass")

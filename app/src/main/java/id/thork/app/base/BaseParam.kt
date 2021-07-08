@@ -71,6 +71,7 @@ object BaseParam {
     const val INTENT_PERSON_UID = "personUID"
     const val INTENT_VALIDATE_PATTERN = "validatePattern"
     const val TAG_SETTING = "TAG_SETTING"
+    const val TAG_TASK = "TAG_TASK"
 
     /**
      *  Workorder status Param

@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
@@ -18,7 +19,6 @@ import id.thork.app.databinding.ActivityCreateTaskBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.task.element.TaskViewModel
-import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
@@ -42,6 +42,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var desc: String? = null
     private var intentWonum: String? = null
     private var intentStatus: String? = null
+    private var intentTag: String? = null
     private var scheduleStartObjectBox: String? = null
     private var actualStartObjectBox: String? = null
     private var dateValidation: Boolean = true
@@ -73,6 +74,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentWoid = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         intentStatus = intent.getStringExtra(BaseParam.STATUS)
+        intentTag = intent.getStringExtra(BaseParam.TAG_TASK)
         intentTaskId = intent.getIntExtra(BaseParam.TASKID, 0)
         intentStatus.whatIfNotNullOrEmpty {
             setupStatus(it)
@@ -279,6 +281,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         intent.putExtra(BaseParam.WORKORDERID, intentWoid)
         intent.putExtra(BaseParam.WONUM, intentWonum)
         intent.putExtra(BaseParam.STATUS, intentStatus)
+        intentTag.whatIfNotNull {
+            intent.putExtra(BaseParam.TAG_TASK, intentTag)
+        }
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
     }
@@ -321,23 +326,63 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     override fun onRightButton() {
-        if (cancelTaskValidation) {
-            gotoTaskActivity()
-        } else {
-            if (isConnected) {
-                viewModels.saveCache(
-                    intentWoid, intentWonum, intentTaskId,
-                    desc, scheduleStartObjectBox, estDur,
-                    actualStartObjectBox, intentStatus, BaseParam.APP_TRUE, BaseParam.APP_FALSE
-                )
-            } else {
-                viewModels.saveCache(
-                    intentWoid, intentWonum, intentTaskId,
-                    desc, scheduleStartObjectBox, estDur,
-                    actualStartObjectBox, intentStatus, BaseParam.APP_FALSE, BaseParam.APP_TRUE
-                )
+        when {
+            intentTag != null -> {
+                saveTaskFromCreateWo()
             }
-            gotoTaskActivity()
+            cancelTaskValidation -> {
+                gotoTaskActivity()
+            }
+            else -> {
+                validateOnlineOrOffline()
+            }
+        }
+        gotoTaskActivity()
+    }
+
+    private fun updateTaskOfflineFromWoDetail() {
+        viewModels.saveCache(
+            intentWoid,
+            intentWonum,
+            intentTaskId,
+            desc,
+            scheduleStartObjectBox,
+            estDur,
+            actualStartObjectBox,
+            intentStatus,
+            BaseParam.APP_FALSE,
+            BaseParam.APP_TRUE
+        )
+    }
+
+    private fun updateTaskOnlineFromWoDetail() {
+        viewModels.saveCache(
+            intentWoid,
+            intentWonum,
+            intentTaskId,
+            desc,
+            scheduleStartObjectBox,
+            estDur,
+            actualStartObjectBox,
+            intentStatus,
+            BaseParam.APP_TRUE,
+            BaseParam.APP_FALSE
+        )
+    }
+
+    private fun saveTaskFromCreateWo() {
+        viewModels.saveCacheFromCreateWo(
+            intentWoid, intentWonum, intentTaskId,
+            desc, scheduleStartObjectBox, estDur,
+            actualStartObjectBox, intentStatus, BaseParam.APP_FALSE, BaseParam.APP_FALSE
+        )
+    }
+
+    private fun validateOnlineOrOffline() {
+        if (isConnected){
+            updateTaskOnlineFromWoDetail()
+        } else {
+            updateTaskOfflineFromWoDetail()
         }
     }
 

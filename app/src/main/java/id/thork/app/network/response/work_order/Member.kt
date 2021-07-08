@@ -259,5 +259,5 @@ data class Member(
     @Json(name = "worklog")
     var worklog: List<Worklog>? = null,
     @Json(name = "woactivity")
-    val woactivity: List<Woactivity>? = null,
+    var woactivity: List<Woactivity>? = null,
 )

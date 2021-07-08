@@ -94,48 +94,55 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+        tempWoId.whatIfNotNull { tempwoid ->
+            val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
 
-        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val member = Member()
+            member.siteid = appSession.siteId
+            if (!location.equals(BaseParam.APP_DASH)) {
+                member.location = location
+            }
 
-        val member = Member()
-        member.siteid = appSession.siteId
-        if (!location.equals(BaseParam.APP_DASH)) {
-            member.location = location
-        }
-
-        if (!assetnum.equals(BaseParam.APP_DASH)) {
-            member.assetnum = assetnum
-        }
-        member.description = deskWo
-        member.status = BaseParam.WAPPR
-        member.reportdate = DateUtils.getDateTimeMaximo()
+            if (!assetnum.equals(BaseParam.APP_DASH)) {
+                member.assetnum = assetnum
+            }
+            member.description = deskWo
+            member.status = BaseParam.WAPPR
+            member.reportdate = DateUtils.getDateTimeMaximo()
 //        member.woserviceaddress = woserviceaddress
-        member.estdur = estDur
-        member.wopriority = workPriority
-        member.descriptionLongdescription = longdesc
-        origwonum.whatIfNotNull {
-            member.origrecordid = it
-            member.origrecordclass = BaseParam.WORKORDER
-        }
+            member.estdur = estDur
+            member.wopriority = workPriority
+            member.descriptionLongdescription = longdesc
+            origwonum.whatIfNotNull {
+                member.origrecordid = it
+                member.origrecordclass = BaseParam.WORKORDER
+            }
 
-        materialPlanlist.whatIfNotNullOrEmpty {
-            member.wpmaterial = it
-        }
+            materialPlanlist.whatIfNotNullOrEmpty {
+                member.wpmaterial = it
+            }
+            taskList.whatIfNotNullOrEmpty {
+                member.woactivity = it
+            }
 
-        val moshi = Moshi.Builder().build()
-        val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
-        Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
+            val moshi = Moshi.Builder().build()
+            val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
+            Timber.tag(TAG)
+                .d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository.createWo(
-                cookie, member,
-                onSuccess = {
-
-                }, onError = {
-                    Timber.tag(TAG).i("createWo() error: %s", it)
-                }
-            )
+            val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+            viewModelScope.launch(Dispatchers.IO) {
+                workOrderRepository.createWo(
+                    cookie, member,
+                    onSuccess = {
+                        taskRepository.handlingTaskSuccessFromCreateWo(tempwoid)
+                    }, onError = {
+                        taskRepository.handlingTaskFailedFromCreateWo(tempwoid)
+                        Timber.tag(TAG).i("createWo() error: %s", it)
+                    }
+                )
+            }
         }
     }
 
@@ -164,45 +171,49 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+        tempWoId.whatIfNotNull { tempwoid ->
+            val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val member = Member()
+            member.siteid = appSession.siteId
+            if (!location.equals(BaseParam.APP_DASH)) {
+                member.location = location
+            }
 
-        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
-
-        val member = Member()
-        member.siteid = appSession.siteId
-        if (!location.equals(BaseParam.APP_DASH)) {
-            member.location = location
-        }
-
-        if (!assetnum.equals(BaseParam.APP_DASH)) {
-            member.assetnum = assetnum
-        }
-        member.description = deskWo
-        member.status = BaseParam.WAPPR
-        member.reportdate = DateUtils.getDateTimeMaximo()
+            if (!assetnum.equals(BaseParam.APP_DASH)) {
+                member.assetnum = assetnum
+            }
+            member.description = deskWo
+            member.status = BaseParam.WAPPR
+            member.reportdate = DateUtils.getDateTimeMaximo()
 //        member.woserviceaddress = woserviceaddress
-        member.estdur = estDur
-        member.wopriority = workPriority
-        member.descriptionLongdescription = longdesc
-        origwonum.whatIfNotNull {
-            member.origrecordid = it
-            member.origrecordclass = BaseParam.WORKORDER
-        }
-        materialPlanlist.whatIfNotNullOrEmpty {
-            member.wpmaterial = it
-        }
+            member.estdur = estDur
+            member.wopriority = workPriority
+            member.descriptionLongdescription = longdesc
+            origwonum.whatIfNotNull {
+                member.origrecordid = it
+                member.origrecordclass = BaseParam.WORKORDER
+            }
+            materialPlanlist.whatIfNotNullOrEmpty {
+                member.wpmaterial = it
+            }
+            taskList.whatIfNotNullOrEmpty { tasklist ->
+                member.woactivity = tasklist
+            }
 
-        val tWoCacheEntity = WoCacheEntity()
-        tWoCacheEntity.syncBody = convertToJson(member)
-        tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
-        tWoCacheEntity.isChanged = BaseParam.APP_TRUE
-        tWoCacheEntity.createdBy = appSession.userEntity.username
-        tWoCacheEntity.updatedBy = appSession.userEntity.username
-        tWoCacheEntity.createdDate = Date()
-        tWoCacheEntity.updatedDate = Date()
-        tWoCacheEntity.wonum = tempWonum
-        tWoCacheEntity.status = BaseParam.WAPPR
-        workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
-        Timber.d("createwointeractor: %s", longdesc)
+            val tWoCacheEntity = WoCacheEntity()
+            tWoCacheEntity.syncBody = convertToJson(member)
+            tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
+            tWoCacheEntity.isChanged = BaseParam.APP_TRUE
+            tWoCacheEntity.createdBy = appSession.userEntity.username
+            tWoCacheEntity.updatedBy = appSession.userEntity.username
+            tWoCacheEntity.createdDate = Date()
+            tWoCacheEntity.updatedDate = Date()
+            tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.status = BaseParam.WAPPR
+            workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
+            Timber.d("createwointeractor: %s", longdesc)
+        }
     }
 
     private fun convertToJson(member: Member): String? {

@@ -26,6 +26,7 @@ class TaskActivity : BaseActivity() {
 
     private var intentWonum: String? = null
     private var intentStatus: String? = null
+    private var intentTag: String? = null
     private var intentWoid: Int? = null
     private var idTask: Int = 10
 
@@ -61,15 +62,30 @@ class TaskActivity : BaseActivity() {
 
     override fun setupObserver() {
         super.setupObserver()
-        viewModels.listTask.observe(this, Observer {
-            taskEntity.clear()
-            taskEntity.addAll(it)
-            taskAdapter.notifyDataSetChanged()
-            val lattestTaskId = taskEntity[it.size - 1].taskId
-            lattestTaskId.whatIfNotNull { taskid ->
-                validateTaskId(taskid)
-            }
-        })
+        intentTag.whatIfNotNull(
+            whatIf = {
+                viewModels.listTaskCreateWo.observe(this, Observer {
+                    taskEntity.clear()
+                    taskEntity.addAll(it)
+                    taskAdapter.notifyDataSetChanged()
+                    val lattestTaskId = taskEntity[it.size - 1].taskId
+                    lattestTaskId.whatIfNotNull { taskid ->
+                        validateTaskId(taskid)
+                    }
+                })
+            },
+            whatIfNot = {
+                viewModels.listTask.observe(this, Observer {
+                    taskEntity.clear()
+                    taskEntity.addAll(it)
+                    taskAdapter.notifyDataSetChanged()
+                    val lattestTaskId = taskEntity[it.size - 1].taskId
+                    lattestTaskId.whatIfNotNull { taskid ->
+                        validateTaskId(taskid)
+                    }
+                }
+                )
+            })
     }
 
     override fun setupListener() {
@@ -80,6 +96,9 @@ class TaskActivity : BaseActivity() {
             intent.putExtra(BaseParam.WONUM, intentWonum)
             intent.putExtra(BaseParam.STATUS, intentStatus)
             intent.putExtra(BaseParam.TASKID, idTask)
+            intentTag.whatIfNotNull {
+                intent.putExtra(BaseParam.TAG_TASK, it)
+            }
             startActivity(intent)
         }
     }
@@ -88,8 +107,15 @@ class TaskActivity : BaseActivity() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentWoid = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         intentStatus = intent.getStringExtra(BaseParam.STATUS)
+        intentTag = intent.getStringExtra(BaseParam.TAG_TASK)
         intentWoid.whatIfNotNull {
-            viewModels.initTask(it)
+            intentWonum.whatIfNotNull { wonum ->
+                if (intentTag != null) {
+                    viewModels.initTaskCreateWo(wonum)
+                } else {
+                    viewModels.initTask(it)
+                }
+            }
         }
     }
 }
