@@ -112,7 +112,7 @@ class TaskViewModel @ViewModelInject constructor(
         }
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<TaskResponse> = moshi.adapter(TaskResponse::class.java)
-        Timber.tag(TAG).d("raka() results: %s", memberJsonAdapter.toJson(taskResponse))
+        Timber.tag(TAG).d("updateToMaximo() results: %s", memberJsonAdapter.toJson(taskResponse))
 
         val xmethodeOverride: String = BaseParam.APP_PATCH
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)

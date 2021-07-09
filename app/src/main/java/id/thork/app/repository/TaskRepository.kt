@@ -142,7 +142,7 @@ class TaskRepository @Inject constructor(
             member.actstart = it.actualStart
             memberTask.add(member)
         }
-        Timber.tag(TAG).d("raka() results: %s", memberTask)
+        Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
         return memberTask
     }
 
@@ -181,14 +181,11 @@ class TaskRepository @Inject constructor(
     }
 
     fun handlingTaskSuccessFromCreateWo(woid: Int) {
-        Timber.d("raka %s ", "handlingSuccess")
         val taskEntity = findListTaskByWoid(woid)
         taskEntity.forEach {
             it.syncStatus = BaseParam.APP_TRUE
             it.offlineMode = BaseParam.APP_FALSE
             saveTaskCache(it)
-            Timber.d("raka %s ", it.woId)
-            Timber.d("raka %s ", it.syncStatus)
         }
     }
 
