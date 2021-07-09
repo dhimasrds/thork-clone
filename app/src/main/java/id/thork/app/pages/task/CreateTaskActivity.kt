@@ -327,7 +327,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
 
     override fun onRightButton() {
         when {
-            intentTag != null -> {
+            intentTag != null && !cancelTaskValidation -> {
                 saveTaskFromCreateWo()
             }
             cancelTaskValidation -> {
