@@ -25,6 +25,7 @@ class UserEntity : BaseEntity {
     var laborcode: String? = null
     var apiKey: String? = null
     var jobcodeDescription: String? = null
+    var imageLibRef: String? = null
 
     constructor()
 }

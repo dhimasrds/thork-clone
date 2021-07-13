@@ -47,5 +47,7 @@ data class Member(
     @Json(name = "jobcode")
     val jobcode: String,
     @Json(name = "jobcode_description")
-    val jobcodeDescription: String
+    val jobcodeDescription: String,
+    @Json(name = "_imagelibref")
+    var imagelibref: String? = null,
 )

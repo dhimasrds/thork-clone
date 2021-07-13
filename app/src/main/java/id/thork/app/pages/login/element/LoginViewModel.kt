@@ -237,6 +237,10 @@ class LoginViewModel @ViewModelInject constructor(
             userEntity.jobcodeDescription = it
         }
 
+        member.imagelibref.whatIfNotNullOrEmpty {
+            userEntity.imageLibRef = it
+        }
+
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
         //userEntity!!.server_address

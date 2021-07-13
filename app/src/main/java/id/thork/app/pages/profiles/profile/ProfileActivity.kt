@@ -3,6 +3,7 @@ package id.thork.app.pages.profiles.profile
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
@@ -26,6 +27,8 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     private val binding: ActivityProfilesBinding by binding(R.layout.activity_profiles)
 
     private lateinit var customDialogUtils: CustomDialogUtils
+    private var imageUrl: String? = null
+    private var cookie: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -56,6 +59,7 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
         viewModel.username.observe(this, Observer {
             binding.usernameProfile.text = it
         })
+
         viewModel.logout.observe(this, {
             if (it == BaseParam.APP_TRUE) {
                 goToServerAcitivity()
@@ -64,7 +68,14 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
 
         viewModel.profileRole.observe(this, Observer {
             binding.roleProfile.text = it
-        } )
+        })
+
+        viewModel.profilePicture.observe(this, Observer {
+            it.whatIfNotNullOrEmpty { url ->
+                viewModel.setImageProfile(url, binding.profilePic)
+                imageUrl = url
+            }
+        })
     }
 
     private fun handlerOnclick() {
@@ -141,9 +152,7 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
 
     override fun goToPreviousActivity() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
-        //finish()
         super.goToPreviousActivity()
     }
 }
