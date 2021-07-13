@@ -113,7 +113,6 @@ class ProfileViewModel @ViewModelInject constructor(
                     .circleCrop()
                     .into(imageView)
             }
-
         }
     }
 }

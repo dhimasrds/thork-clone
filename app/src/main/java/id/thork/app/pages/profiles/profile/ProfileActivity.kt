@@ -28,7 +28,6 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
 
     private lateinit var customDialogUtils: CustomDialogUtils
     private var imageUrl: String? = null
-    private var cookie: String? = null
 
     override fun setupView() {
         super.setupView()
@@ -37,8 +36,6 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
             vm = viewModel
         }
         customDialogUtils = CustomDialogUtils(this)
-
-
 
         setupToolbarWithHomeNavigation(
             getString(R.string.action_profile),
@@ -154,5 +151,15 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         super.goToPreviousActivity()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
     }
 }

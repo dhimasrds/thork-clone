@@ -127,7 +127,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (navigation) {
             val profile: ImageView = findViewById(R.id.profile_image)
-            if (cookie != null && imageUrl != null){
+            if (cookie != null && imageUrl != null) {
                 setProfilePicture(imageUrl, cookie, profile)
             }
             profile.visibility = View.VISIBLE
