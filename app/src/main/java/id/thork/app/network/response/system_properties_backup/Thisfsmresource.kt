@@ -1,4 +1,4 @@
-package id.thork.app.network.response.system_properties
+package id.thork.app.network.response.system_properties_backup
 
 
 import com.squareup.moshi.Json

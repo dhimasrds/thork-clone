@@ -5,7 +5,7 @@ import id.thork.app.network.model.Todo
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
-import id.thork.app.network.response.system_properties.SystemProperties
+import id.thork.app.network.response.system_properties_backup.SystemProperties
 import retrofit2.http.*
 
 interface LoginApi {
@@ -38,5 +38,5 @@ interface LoginApi {
         @Header("maxauth") maxAuth: String?,
         @Query("lean") lean: Int = 1,
         @Query("oslc.select") select: String
-    ) : ApiResponse<SystemProperties>
+    ) : ApiResponse<id.thork.app.network.response.system_properties.SystemProperties>
 }

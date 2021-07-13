@@ -1,4 +1,4 @@
-package id.thork.app.network.response.system_properties
+package id.thork.app.network.response.system_properties_backup
 
 
 import com.squareup.moshi.Json
@@ -16,14 +16,8 @@ data class Thisfsmresvalue(
     val thisfsmblindcount: Boolean? = null,
     @Json(name = "thisfsmisdefault")
     val thisfsmisdefault: Boolean? = null,
-    @Json(name = "thisfsmobj")
-    val thisfsmobj: String? = null,
     @Json(name = "thisfsmqueryid")
     val thisfsmqueryid: String? = null,
-    @Json(name = "thisfsmresource")
-    val thisfsmresource: String? = null,
     @Json(name = "thisfsmresvalueid")
-    val thisfsmresvalueid: Int? = null,
-    @Json(name = "thisfsmtype")
-    val thisfsmtype: String? = null
+    val thisfsmresvalueid: Int? = null
 )
