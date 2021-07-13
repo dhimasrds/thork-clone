@@ -1,7 +1,6 @@
 package id.thork.app.persistence.entity
 
 import android.os.Parcelable
-import com.zebra.rfid.api3.UTCTime
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
 import java.util.*

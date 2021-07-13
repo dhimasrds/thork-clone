@@ -14,7 +14,6 @@ import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.repository.AttendanceRepository
 import id.thork.app.repository.WorkerAttendanceRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor

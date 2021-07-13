@@ -30,7 +30,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMainBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.extensions.setupWithNavController
@@ -60,8 +59,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     override fun setupView() {
         super.setupView()
         setupMainView(binding.mainLayout)
-
-        getCookie(preferenceManager.getString(BaseParam.APP_MX_COOKIE))
 
         setupToolbarWithHomeNavigation(
             getString(R.string.this_fsm), navigation = true,

@@ -6,12 +6,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.di.module.workorder.WorkOrderModule
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.AttendanceApi
-import id.thork.app.network.api.DoclinksApi
 import okhttp3.logging.HttpLoggingInterceptor
-import timber.log.Timber
 
 /**
  * Created by M.Reza Sulaiman on 16/06/2021

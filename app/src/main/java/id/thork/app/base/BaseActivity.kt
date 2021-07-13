@@ -44,6 +44,7 @@ import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.helper.CookieHelper
 import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.element.signature.SignatureActivity
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
@@ -51,6 +52,7 @@ import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -99,12 +101,24 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupCookie()
         setupView()
         setupListener()
         setupObserver()
 
         Timber.tag(BaseApplication.TAG).i("onCreate() coordinator instance: %s", workerCoordinator)
         workerCoordinator.ping()
+    }
+
+    fun setupCookie() {
+        runBlocking {
+            appSession.userEntity.whatIfNotNull { userEntity ->
+                userEntity.userHash.whatIfNotNull { userHash ->
+                    cookie =  CookieHelper(BaseApplication.context, userHash).generateCookieIfExpired()
+                    appSession.cookie = cookie
+                }
+            }
+        }
     }
 
     open fun setupToolbarWithHomeNavigation(
@@ -128,7 +142,7 @@ abstract class BaseActivity : AppCompatActivity() {
         if (navigation) {
             val profile: ImageView = findViewById(R.id.profile_image)
             if (cookie != null && imageUrl != null) {
-                setProfilePicture(imageUrl, cookie, profile)
+                setupProfilePicture(imageUrl, cookie, profile)
             }
             profile.visibility = View.VISIBLE
             profile.setOnClickListener {
@@ -173,29 +187,21 @@ abstract class BaseActivity : AppCompatActivity() {
         setupToolbarOverflowIcon()
     }
 
-    open fun getCookie(cookies: String) {
-        cookies.whatIfNotNull {
-            cookie = it
-        }
-    }
-
-    private fun setProfilePicture(
+    private fun setupProfilePicture(
         imageUri: String?,
         cookie: String?,
         imageView: ImageView
     ) {
         imageUri.whatIfNotNull {
             cookie.whatIfNotNullOrEmpty { cookie ->
-                if (it.startsWith("https")) {
-                    val glideUrl = GlideUrl(
-                        it, LazyHeaders.Builder()
-                            .addHeader("Cookie", cookie)
-                            .build()
-                    )
-                    GlideApp.with(BaseApplication.context).load(glideUrl)
-                        .circleCrop()
-                        .into(imageView)
-                }
+                val glideUrl = GlideUrl(
+                    it, LazyHeaders.Builder()
+                        .addHeader("Cookie", cookie)
+                        .build()
+                )
+                GlideApp.with(BaseApplication.context).load(glideUrl)
+                    .circleCrop()
+                    .into(imageView)
             }
         }
     }

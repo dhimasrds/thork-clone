@@ -1,10 +1,8 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
-import id.thork.app.base.BaseParam
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.ObjectBox.boxStore
-import id.thork.app.persistence.entity.AttendanceEntity_
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import io.objectbox.Box

@@ -4,8 +4,6 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogEntity_
-import id.thork.app.persistence.entity.WpmaterialEntity
-import id.thork.app.persistence.entity.WpmaterialEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
 import timber.log.Timber

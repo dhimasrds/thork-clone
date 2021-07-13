@@ -1,6 +1,5 @@
 package id.thork.app.repository
 
-import android.annotation.SuppressLint
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.message
