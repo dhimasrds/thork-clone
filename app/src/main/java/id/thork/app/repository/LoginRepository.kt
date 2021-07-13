@@ -17,7 +17,7 @@ import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.ErrorResponse.ErrorResponse
-import id.thork.app.network.response.system_properties.SystemProperties
+import id.thork.app.network.response.system_properties_backup.SystemProperties
 import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
@@ -205,7 +205,7 @@ class LoginRepository constructor(
     suspend fun fetchSystemproperties(
         headerParam: String,
         select: String,
-        onSuccess: (SystemProperties) -> Unit,
+        onSuccess: (id.thork.app.network.response.system_properties.SystemProperties) -> Unit,
         onError: (String) -> Unit,
         onException: (String) -> Unit
     ) {
