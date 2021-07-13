@@ -117,8 +117,6 @@ abstract class BaseActivity : AppCompatActivity() {
         historyAttendanceIcon: Boolean
     ) {
         val imageUrl: String? = appSession.userEntity.imageLibRef
-        Timber.d("raka %s ", imageUrl)
-        Timber.d("raka %s ", cookie)
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
         val editTextToolbar: EditText = findViewById(R.id.toolbartext)
@@ -131,7 +129,6 @@ abstract class BaseActivity : AppCompatActivity() {
             val profile: ImageView = findViewById(R.id.profile_image)
             if (cookie != null && imageUrl != null){
                 setProfilePicture(imageUrl, cookie, profile)
-                Timber.d("raka %s ", "masuk")
             }
             profile.visibility = View.VISIBLE
             profile.setOnClickListener {
