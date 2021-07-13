@@ -5,7 +5,6 @@ import id.thork.app.network.model.Todo
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
-import id.thork.app.network.response.system_properties_backup.SystemProperties
 import retrofit2.http.*
 
 interface LoginApi {
