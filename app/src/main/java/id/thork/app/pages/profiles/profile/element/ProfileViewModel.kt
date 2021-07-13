@@ -95,11 +95,11 @@ class ProfileViewModel @ViewModelInject constructor(
         imageUri.whatIfNotNull {
             val uri: Uri =
                 PathUtils.getDrawableUri(BaseApplication.context, R.drawable.ic_user_profile)
-            Timber.tag(TAG).d("classifyImageThumbnail() uristring: %s", it)
+            Timber.tag(TAG).d("setImageProfile() uristring: %s", it)
 
             if (it.startsWith("https")) {
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-                Timber.tag(TAG).d("classifyImageThumbnail() cookies: %s", cookie)
+                Timber.tag(TAG).d("setImageProfile() cookies: %s", cookie)
                 val glideUrl = GlideUrl(
                     it, LazyHeaders.Builder()
                         .addHeader("Cookie", cookie)
