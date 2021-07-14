@@ -299,9 +299,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         mimeType: String
     ) {
         var docType: String? = BaseParam.ATTACHMENT_FOLDER
-        if (FileUtils.isImageType(mimeType)) {
-            docType = BaseParam.IMAGES_FOLDER
-        }
 
         val attachmentEntity = AttachmentEntity(
             mimeType = mimeType, syncStatus = false,
