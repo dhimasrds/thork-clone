@@ -318,7 +318,7 @@ abstract class BaseActivity : AppCompatActivity() {
             Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI)
         }
         intent.type = "application/*"
-        intent.action = Intent.ACTION_GET_CONTENT
+        intent.action = Intent.ACTION_OPEN_DOCUMENT
         intent.putExtra("return-data", true)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivityForResult(intent, SELECT_DOCUMENT_REQUEST)
