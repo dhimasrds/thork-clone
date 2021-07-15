@@ -185,7 +185,7 @@
 
     <!-- MENU: Workorder -->
     <string name="workorder">Work Order</string>
-    <string name="desc">Description</string>
+    <string name="desc">Details</string>
     <string name="longdesc">Long Description</string>
     <string name="date">Date</string>
     <string name="period">Period</string>

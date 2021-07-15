@@ -1,11 +1,15 @@
 package id.thork.app.pages.work_log.element
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.databinding.CardviewListWorklogBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
+import id.thork.app.pages.work_log.detail_work_log.DetailWorkLogActivity
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.utils.StringUtils
 
@@ -14,6 +18,7 @@ import id.thork.app.utils.StringUtils
  * Jakarta, Indonesia.
  */
 class WorkLogAdapter constructor(
+    private val activity: Activity,
     private val worklogEntity: List<WorklogEntity>
 ) :
     RecyclerView.Adapter<WorkLogAdapter.ViewHolder>() {
@@ -40,7 +45,9 @@ class WorkLogAdapter constructor(
                 tvType.text = worklogEntity.type
                 tvDate.text = worklogEntity.date
                 cardWorklog.setOnClickListener {
-
+                    val intent = Intent(activity, DetailWorkLogActivity::class.java)
+                    intent.putExtra("", "")
+                    activity.startActivity(intent)
                 }
             }
         }
