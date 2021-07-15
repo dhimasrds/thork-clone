@@ -14,6 +14,7 @@ package id.thork.app.pages.attachment
 
 import android.Manifest
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -57,6 +58,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+
 
 @AndroidEntryPoint
 class AttachmentActivity : BaseActivity(), PickiTCallbacks {
@@ -178,10 +180,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
@@ -214,6 +212,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         dialogUtils =
             DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
+        dialogUtils.isCancelable = true
         dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li).create()
 
     }
@@ -249,6 +248,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         toolBarAttachment.setNavigationIcon(R.drawable.ic_arrow_back_white)
         toolBarAttachment.setNavigationOnClickListener {
             Timber.tag(TAG).d("navigateToPreview() toolbar event: true")
+            dialogUtils.dismiss()
         }
 
         val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
@@ -265,6 +265,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     fileName,
                     mimeType
                 )
+                viewModel.uploadAttachment()
             }
             dialogUtils.dismiss()
         }
@@ -317,4 +318,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         )
         viewModel.addItem(attachmentEntity)
     }
+
+
 }

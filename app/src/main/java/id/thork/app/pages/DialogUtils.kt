@@ -15,6 +15,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,8 @@ class DialogUtils {
     private lateinit var dialog: AlertDialog
     private var useTheme: Boolean = false
 
+    var isCancelable: Boolean = false
+    var isVisible: Boolean = false
     var positiveButtonLabel: Int? = null
     var negativeButtonLabel: Int? = null
 
@@ -79,12 +82,17 @@ class DialogUtils {
         }
         dialogView = inflater!!.inflate(resource!!, root)
         builder.setView(dialogView)
-        builder.setCancelable(false)
+        builder.setCancelable(isCancelable)
         return this
     }
 
     fun show() {
         dialog = builder.show()
+        isVisible = true
+        dialog.setOnCancelListener {
+            dialog.dismiss()
+            isVisible = false
+        }
     }
 
     fun setRounded(rounded: Boolean): DialogUtils {
@@ -167,6 +175,7 @@ class DialogUtils {
 
     fun dismiss(): DialogUtils {
         dialog.dismiss()
+        isVisible = false;
         return this
     }
 
