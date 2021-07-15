@@ -18,6 +18,7 @@ interface TaskApi {
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Header(BaseParam.APP_PATCHTYPE) patchType: String?,
+        @Header(BaseParam.APP_PROPERTIES) properties: String?,
         @Path("workorderid") workorderid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: TaskResponse

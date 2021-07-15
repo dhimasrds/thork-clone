@@ -108,13 +108,14 @@ class TaskRepository @Inject constructor(
         contentType: String,
         cookie: String,
         patchType: String,
+        properties: String,
         woid: Int,
         prepareBody: TaskResponse,
         onSuccess: (Member) -> Unit,
         onError: (String) -> Unit
     ) {
         val response = taskClient.createTask(
-            xMethodOverride, contentType, cookie, patchType, woid,
+            xMethodOverride, contentType, cookie, patchType, properties, woid,
             prepareBody
         )
 
@@ -153,13 +154,14 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
-    fun handlingTaskSucces(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int) {
+    fun handlingTaskSucces(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int, wonum: String) {
         removeTaskByWoidAndSyncStatus(woid, BaseParam.APP_TRUE)
         for (tasks in list) {
             val taskEntity = TaskEntity(
-                woId = tasks.workorderid,
-                wonum = tasks.wonum,
+                woId = woid,
+                wonum = wonum,
                 taskId = tasks.taskid,
+                refWonum = tasks.wonum,
                 desc = tasks.description,
                 scheduleStart = tasks.schedstart,
                 estDuration = tasks.estdur,
@@ -207,12 +209,25 @@ class TaskRepository @Inject constructor(
         }
     }
 
-    fun handlingTaskSuccessFromCreateWo(woid: Int) {
-        val taskEntity = findListTaskByWoid(woid)
-        taskEntity.forEach {
-            it.syncStatus = BaseParam.APP_TRUE
-            it.offlineMode = BaseParam.APP_FALSE
-            saveTaskCache(it)
+    fun handlingTaskSuccessFromCreateWo(member: Member, list: List<id.thork.app.network.response.work_order.Woactivity>, wonum: String) {
+        removeTaskByWonum(wonum)
+        val woid = member.workorderid
+        val wonumber = member.wonum
+        for (tasks in list) {
+            val taskEntity = TaskEntity(
+                woId = woid,
+                wonum = wonumber,
+                taskId = tasks.taskid,
+                refWonum = tasks.wonum,
+                desc = tasks.description,
+                scheduleStart = tasks.schedstart,
+                estDuration = tasks.estdur,
+                actualStart = tasks.actstart,
+                status = tasks.status,
+                syncStatus = BaseParam.APP_TRUE,
+                offlineMode = BaseParam.APP_FALSE,
+            )
+            saveTaskCache(taskEntity)
         }
     }
 

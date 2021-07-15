@@ -132,11 +132,15 @@ class FollowUpWoViewModel @ViewModelInject constructor(
                 .d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
             val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+            val properties = BaseParam.APP_ALL_PROPERTIES
             viewModelScope.launch(Dispatchers.IO) {
                 workOrderRepository.createWo(
-                    cookie, member,
-                    onSuccess = {
-                        taskRepository.handlingTaskSuccessFromCreateWo(tempwoid)
+                    cookie, properties, member,
+                    onSuccess = { woMember ->
+                        woMember.woactivity.whatIfNotNullOrEmpty {
+                            Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                            taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
+                        }
                     }, onError = {
                         taskRepository.handlingTaskFailedFromCreateWo(tempwoid)
                         Timber.tag(TAG).i("createWo() error: %s", it)

@@ -97,13 +97,15 @@ class TaskViewModel @ViewModelInject constructor(
         woid.whatIfNotNull {
             taskId.whatIfNotNull { taskId ->
                 scheduleStart.whatIfNotNull { schedule ->
-                    updateToMaximo(it, taskId, schedule)
+                    wonum.whatIfNotNull { wonum ->
+                        updateToMaximo(it, taskId, schedule, wonum)
+                    }
                 }
             }
         }
     }
 
-    private fun updateToMaximo(woid: Int, taskId: Int, scheduleStart: String) {
+    private fun updateToMaximo(woid: Int, taskId: Int, scheduleStart: String, wonum: String) {
 
         val taskList = taskRepository.prepareTaskBody(woid, scheduleStart)
         val taskResponse = TaskResponse()
@@ -118,18 +120,20 @@ class TaskViewModel @ViewModelInject constructor(
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val contentType: String = ("application/json")
         val patchType: String = BaseParam.APP_MERGE
+        val properties = BaseParam.APP_ALL_PROPERTIES
         viewModelScope.launch(Dispatchers.IO) {
             taskRepository.createTaskToMx(
                 xmethodeOverride,
                 contentType,
                 cookie,
                 patchType,
+                properties,
                 woid,
                 taskResponse,
                 onSuccess = { woMember ->
                     woMember.woactivity.whatIfNotNullOrEmpty {
                         Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
-                        taskRepository.handlingTaskSucces(it, woid)
+                        taskRepository.handlingTaskSucces(it, woid, wonum)
                     }
                 },
                 onError = {

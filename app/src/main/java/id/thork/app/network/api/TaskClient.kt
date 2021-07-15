@@ -15,9 +15,10 @@ class TaskClient @Inject constructor(
         contentType: String,
         cookie: String,
         patchType: String,
+        properties: String,
         woid: Int,
         body: TaskResponse
-    ) = taskApi.createTask(xMethodOverride, contentType, cookie, patchType, woid, LEAN, body)
+    ) = taskApi.createTask(xMethodOverride, contentType, cookie, patchType, properties,  woid, LEAN, body)
 
     companion object {
         private const val LEAN = 1
