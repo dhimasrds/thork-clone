@@ -14,6 +14,7 @@ package id.thork.app.pages.attachment.element.image_preview
 
 import android.net.Uri
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions

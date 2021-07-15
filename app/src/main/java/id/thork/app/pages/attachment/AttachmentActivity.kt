@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
@@ -214,6 +215,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         dialogUtils =
             DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
         dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li).create()
+
     }
 
     private fun navigateToPreview(uri: Uri) {
@@ -241,6 +243,12 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     val tvdocName = dialogUtils.setViewId(R.id.tv_doc_preview) as TextView
                     tvdocName.text = fileName
                 })
+        }
+
+        val toolBarAttachment: Toolbar = dialogUtils.setViewId(R.id.app_toolbar) as Toolbar
+        toolBarAttachment.setNavigationIcon(R.drawable.ic_arrow_back_white)
+        toolBarAttachment.setNavigationOnClickListener {
+            Timber.tag(TAG).d("navigateToPreview() toolbar event: true")
         }
 
         val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
