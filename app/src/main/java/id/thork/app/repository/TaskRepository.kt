@@ -13,6 +13,8 @@ import id.thork.app.network.api.TaskApi
 import id.thork.app.network.api.TaskClient
 import id.thork.app.network.response.task_response.TaskResponse
 import id.thork.app.network.response.task_response.Woactivity
+import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.entity.TaskEntity
 import okhttp3.logging.HttpLoggingInterceptor
@@ -97,6 +99,10 @@ class TaskRepository @Inject constructor(
         return taskDao.removeTaskByWonum(wonum)
     }
 
+    fun removeTaskByWoidAndSyncStatus(woid: Int, syncStatus: Int): Long {
+        return taskDao.removeTaskByWoidAndSyncStatus(woid, syncStatus)
+    }
+
     suspend fun createTaskToMx(
         xMethodOverride: String?,
         contentType: String,
@@ -104,7 +110,7 @@ class TaskRepository @Inject constructor(
         patchType: String,
         woid: Int,
         prepareBody: TaskResponse,
-        onSuccess: (Woactivity) -> Unit,
+        onSuccess: (Member) -> Unit,
         onError: (String) -> Unit
     ) {
         val response = taskClient.createTask(
@@ -134,6 +140,7 @@ class TaskRepository @Inject constructor(
         val memberTask = mutableListOf<Woactivity>()
         taskEntity.forEach {
             val member = Woactivity()
+            member.workorderid = 0
             member.taskid = it.taskId
             member.description = it.desc
             member.estdur = it.estDuration
@@ -144,6 +151,25 @@ class TaskRepository @Inject constructor(
         }
         Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
         return memberTask
+    }
+
+    fun handlingTaskSucces(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int) {
+        removeTaskByWoidAndSyncStatus(woid, BaseParam.APP_TRUE)
+        for (tasks in list) {
+            val taskEntity = TaskEntity(
+                woId = tasks.workorderid,
+                wonum = tasks.wonum,
+                taskId = tasks.taskid,
+                desc = tasks.description,
+                scheduleStart = tasks.schedstart,
+                estDuration = tasks.estdur,
+                actualStart = tasks.actstart,
+                status = tasks.status,
+                syncStatus = BaseParam.APP_TRUE,
+                offlineMode = BaseParam.APP_FALSE,
+            )
+            saveTaskCache(taskEntity)
+        }
     }
 
     fun handlingTaskFailed(woid: Int, taskId: Int) {
@@ -160,6 +186,7 @@ class TaskRepository @Inject constructor(
         val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
         taskEntity.forEach {
             val member = id.thork.app.network.response.work_order.Woactivity()
+            member.workorderid = 0
             member.taskid = it.taskId
             member.description = it.desc
             member.estdur = it.estDuration

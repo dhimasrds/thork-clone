@@ -3,7 +3,7 @@ package id.thork.app.network.api
 import com.skydoves.sandwich.ApiResponse
 import id.thork.app.base.BaseParam
 import id.thork.app.network.response.task_response.TaskResponse
-import id.thork.app.network.response.task_response.Woactivity
+import id.thork.app.network.response.work_order.Member
 import retrofit2.http.*
 
 /**
@@ -21,6 +21,6 @@ interface TaskApi {
         @Path("workorderid") workorderid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: TaskResponse
-    ): ApiResponse<Woactivity>
+    ): ApiResponse<Member>
 
 }

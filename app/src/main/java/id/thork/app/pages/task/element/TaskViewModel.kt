@@ -126,8 +126,11 @@ class TaskViewModel @ViewModelInject constructor(
                 patchType,
                 woid,
                 taskResponse,
-                onSuccess = {
-                    Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                onSuccess = { woMember ->
+                    woMember.woactivity.whatIfNotNullOrEmpty {
+                        Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                        taskRepository.handlingTaskSucces(it, woid)
+                    }
                 },
                 onError = {
                     taskRepository.handlingTaskFailed(woid, taskId)

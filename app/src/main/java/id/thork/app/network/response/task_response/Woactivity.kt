@@ -9,6 +9,9 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class Woactivity (
+    @Json(name = "workorderid")
+    var workorderid: Int? = null,
+
     @Json(name = "taskid")
     var taskid: Int? = null,
 

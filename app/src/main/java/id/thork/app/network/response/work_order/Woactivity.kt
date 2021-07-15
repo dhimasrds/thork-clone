@@ -180,10 +180,12 @@ data class Woactivity(
     val wogroup: String? = null,
     @Json(name = "woisswap")
     val woisswap: Boolean? = null,
+    @Json(name = "wonum")
+    val wonum: String? = null,
     @Json(name = "wopriority")
     val wopriority: Int? = null,
     @Json(name = "workorderid")
-    val workorderid: Int? = null,
+    var workorderid: Int? = null,
     @Json(name = "wplabor")
     val wplabor: List<Wplabor>? = null,
     @Json(name = "wplabor_collectionref")
