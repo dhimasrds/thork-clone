@@ -27,7 +27,6 @@ import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
-import id.thork.app.network.response.system_properties.SystemProperties
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
@@ -237,6 +236,10 @@ class LoginViewModel @ViewModelInject constructor(
             userEntity.jobcodeDescription = it
         }
 
+        member.imagelibref.whatIfNotNullOrEmpty {
+            userEntity.imageLibRef = it
+        }
+
         userEntity.language = BaseParam.APP_DEFAULT_LANG_DETAIL
         userEntity.userHash = userHash
         //userEntity!!.server_address
@@ -248,7 +251,7 @@ class LoginViewModel @ViewModelInject constructor(
         _fetchProgressVisible.postValue(true)
         _progressVisible.postValue(true)
         val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
-        var systemProperties = SystemProperties()
+        var systemProperties = id.thork.app.network.response.system_properties.SystemProperties()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch system properties
             loginRepository.fetchSystemproperties(userHash, selectQuery,
@@ -279,7 +282,7 @@ class LoginViewModel @ViewModelInject constructor(
         val sysPropEntitylist = mutableListOf<SysPropEntity>()
         if (username != null) {
             Timber.tag(TAG).i("saveSystemProperties() username: $username")
-            member.thisfsmsysprop?.forEach {
+            member.thisfsmsyspropvalue?.forEach {
                 val sysPropEntity = SysPropEntity()
                 sysPropEntity.createdDate = Date()
                 sysPropEntity.createdBy = username
@@ -291,13 +294,12 @@ class LoginViewModel @ViewModelInject constructor(
                 sysPropEntity.fsmappdescription = member.description
                 sysPropEntity.siteid = appSession.siteId
                 sysPropEntity.orgid = appSession.orgId
-                sysPropEntity.propertiesid =
-                    it.thisfsmsyspropvalue?.get(0)?.thisfsmsyspropvalueid.toString()
+                sysPropEntity.propertiesid = it.thisfsmsyspropvalueid.toString()
                 sysPropEntity.propertieskey = it.thisfsmpropid
                 val encodePropertiesValue =
-                    StringUtils.encodeToBase64(it.thisfsmsyspropvalue?.get(0)?.thisfsmpropvalue.toString())
+                    StringUtils.encodeToBase64(it.thisfsmpropvalue.toString())
                 sysPropEntity.propertiesvalue = encodePropertiesValue
-                sysPropEntity.fsmisglobal = it.thisfsmisglobal
+//                sysPropEntity.fsmisglobal = it.thisfsmisglobal
 //                loginRepository.createSystemProperties(sysPropEntity, username)
                 sysPropEntitylist.add(sysPropEntity)
                 Timber.tag(TAG).i("saveSystemProperties() add to object box")
@@ -312,8 +314,8 @@ class LoginViewModel @ViewModelInject constructor(
     private fun saveSystemResource(member: id.thork.app.network.response.system_properties.Member) {
         val username = appSession.userEntity.username
         val sysResEntityList = mutableListOf<SysResEntity>()
-        member.thisfsmresource.whatIfNotNullOrEmpty {
-            member.thisfsmresource?.forEach {
+        member.thisfsmresvalue.whatIfNotNullOrEmpty { listresvalue ->
+            listresvalue.forEach {
                 val sysResEntity = SysResEntity()
                 sysResEntity.createdDate = Date()
                 sysResEntity.createdBy = username
@@ -326,9 +328,9 @@ class LoginViewModel @ViewModelInject constructor(
                 sysResEntity.siteid = appSession.siteId
                 sysResEntity.orgid = appSession.orgId
 
-                sysResEntity.resourceid = it.thisfsmresourceid.toString()
+                sysResEntity.resourceid = it.thisfsmresvalueid.toString()
                 sysResEntity.resourcekey = it.thisfsmresource
-                sysResEntity.resourcevalue = it.thisfsmresvalue?.get(0)?.thisfsmqueryid
+                sysResEntity.resourcevalue = it.thisfsmqueryid
                 sysResEntity.type = it.thisfsmtype
 
                 sysResEntityList.add(sysResEntity)

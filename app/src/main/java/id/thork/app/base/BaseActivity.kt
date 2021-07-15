@@ -33,21 +33,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.helper.CookieHelper
+import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.element.signature.SignatureActivity
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
-import id.thork.app.pages.rfid_mutli_asset.RfidMultiAssetActivity
 import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -76,9 +81,13 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var attendanceDao: AttendanceDao
 
+    @Inject
+    lateinit var appSession: AppSession
+
     var isConnected = false
 
     var mainView: ViewGroup? = null
+
     lateinit var toolBar: Toolbar
     private var optionMenu: Menu? = null
     private var filterIcon: Boolean = false
@@ -88,15 +97,28 @@ abstract class BaseActivity : AppCompatActivity() {
     private var followUpWoIcon: Boolean = false
     private var historyAttendanceIcon: Boolean = false
     private var originWo: String? = null
+    private var cookie: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupCookie()
         setupView()
         setupListener()
         setupObserver()
 
         Timber.tag(BaseApplication.TAG).i("onCreate() coordinator instance: %s", workerCoordinator)
         workerCoordinator.ping()
+    }
+
+    fun setupCookie() {
+        runBlocking {
+            appSession.userEntity.whatIfNotNull { userEntity ->
+                userEntity.userHash.whatIfNotNull { userHash ->
+                    cookie =  CookieHelper(BaseApplication.context, userHash).generateCookieIfExpired()
+                    appSession.cookie = cookie
+                }
+            }
+        }
     }
 
     open fun setupToolbarWithHomeNavigation(
@@ -108,6 +130,7 @@ abstract class BaseActivity : AppCompatActivity() {
         option: Boolean,
         historyAttendanceIcon: Boolean
     ) {
+        val imageUrl: String? = appSession.userEntity.imageLibRef
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
         val editTextToolbar: EditText = findViewById(R.id.toolbartext)
@@ -118,6 +141,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (navigation) {
             val profile: ImageView = findViewById(R.id.profile_image)
+            if (cookie != null && imageUrl != null) {
+                setupProfilePicture(imageUrl, cookie, profile)
+            }
             profile.visibility = View.VISIBLE
             profile.setOnClickListener {
                 goToSettingsActivity()
@@ -159,6 +185,25 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         setupToolbarOverflowIcon()
+    }
+
+    private fun setupProfilePicture(
+        imageUri: String?,
+        cookie: String?,
+        imageView: ImageView
+    ) {
+        imageUri.whatIfNotNull {
+            cookie.whatIfNotNullOrEmpty { cookie ->
+                val glideUrl = GlideUrl(
+                    it, LazyHeaders.Builder()
+                        .addHeader("Cookie", cookie)
+                        .build()
+                )
+                GlideApp.with(BaseApplication.context).load(glideUrl)
+                    .circleCrop()
+                    .into(imageView)
+            }
+        }
     }
 
     open fun enableFollowUpWo(enable: Boolean, wonum: String) {

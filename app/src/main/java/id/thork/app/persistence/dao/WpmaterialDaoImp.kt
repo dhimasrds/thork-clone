@@ -2,7 +2,6 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity_
 import io.objectbox.Box

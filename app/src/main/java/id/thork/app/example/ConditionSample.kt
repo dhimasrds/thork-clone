@@ -12,8 +12,6 @@
 
 package id.thork.app.example
 
-import java.util.concurrent.ThreadLocalRandom
-
 fun main() {
 //    val current = System.currentTimeMillis()
 //    println(current)

@@ -31,12 +31,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
 import id.thork.app.pages.profiles.profile.ProfileActivity
 import timber.log.Timber
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -50,6 +52,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
     private lateinit var customDialogUtils: CustomDialogUtils
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
 
     override fun setupView() {
         super.setupView()

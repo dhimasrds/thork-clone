@@ -19,7 +19,6 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
-import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.LoginApi
@@ -29,7 +28,6 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 import java.util.*
-import kotlin.math.max
 
 class CookieHelper constructor(val context: Context, val userHash: String) {
     val TAG = CookieHelper::class.java.name

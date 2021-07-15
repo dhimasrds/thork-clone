@@ -2,7 +2,8 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
-import id.thork.app.persistence.entity.*
+import id.thork.app.persistence.entity.WorklogTypeEntity
+import id.thork.app.persistence.entity.WorklogTypeEntity_
 import io.objectbox.Box
 import timber.log.Timber
 import java.util.*

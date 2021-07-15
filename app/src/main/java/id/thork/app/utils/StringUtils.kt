@@ -15,7 +15,6 @@
  */
 package id.thork.app.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import com.skydoves.whatif.whatIfNotNull
