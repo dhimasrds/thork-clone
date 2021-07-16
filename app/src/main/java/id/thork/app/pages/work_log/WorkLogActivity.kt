@@ -29,7 +29,7 @@ class WorkLogActivity : BaseActivity() {
         super.setupView()
         binding.apply {
             lifecycleOwner = this@WorkLogActivity
-            vm =viewModels
+            vm = viewModels
 
             btnCreate.setOnClickListener {
                 val intent = Intent(this@WorkLogActivity, CreateWorkLogActivity::class.java)
@@ -64,8 +64,8 @@ class WorkLogActivity : BaseActivity() {
         }
     }
 
-    fun validationView(){
-        if (status.equals(BaseParam.CLOSED)){
+    fun validationView() {
+        if (status.equals(BaseParam.CLOSED)) {
             binding.btnCreate.visibility = View.GONE
         }
     }

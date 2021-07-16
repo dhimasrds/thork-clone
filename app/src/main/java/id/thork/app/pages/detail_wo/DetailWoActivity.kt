@@ -87,7 +87,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         )
         retrieveFromIntent()
 
-        Timber.d("status detail :%s",status)
+        Timber.d("status detail :%s", status)
     }
 
     @SuppressLint("ResourceAsColor", "SetTextI18n")

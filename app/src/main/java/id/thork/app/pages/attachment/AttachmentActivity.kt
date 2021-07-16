@@ -116,7 +116,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
     }
 
-    fun validationView(){
+    fun validationView() {
         if (status.equals(BaseParam.CLOSED)) {
             setupToolbarWithHomeNavigation(
                 getString(R.string.attachments),

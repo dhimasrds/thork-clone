@@ -45,7 +45,7 @@ class MaterialActualActivity : BaseActivity() {
     private lateinit var matusetranslist: MutableList<MatusetransEntity>
 
     private var intentWoId = 0
-    private var status : String? = null
+    private var status: String? = null
 
     @Inject
     @Named("svgRequestOption")
@@ -89,8 +89,8 @@ class MaterialActualActivity : BaseActivity() {
         validationView()
     }
 
-    fun validationView(){
-        if (status.equals(BaseParam.CLOSED)){
+    fun validationView() {
+        if (status.equals(BaseParam.CLOSED)) {
             binding.btnLayout.visibility = View.GONE
         }
     }
