@@ -17,6 +17,8 @@ import android.content.Intent
 import android.view.LayoutInflater.from
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
@@ -30,6 +32,7 @@ import id.thork.app.pages.material_actual.MaterialActualActivity
 import id.thork.app.pages.material_actual.element.detail_material_actual.MaterialActualDetail
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
 import java.util.*
 
 
@@ -40,13 +43,18 @@ class MaterialActualAdapter constructor(
     private val matusetransEntityList: List<MatusetransEntity>,
     private val activity: MaterialActualActivity
 ) : RecyclerView.Adapter<MaterialActualAdapter.MaterialPlanHolder>(),
-    CustomDialogUtils.DialogActionListener {
+    CustomDialogUtils.DialogActionListener, Filterable {
     val TAG = MaterialActualAdapter::class.java.name
 
+    var matusetransEntityListFilter = ArrayList<MatusetransEntity>()
     lateinit var matusetransEntity: MatusetransEntity
     private lateinit var customDialogUtils: CustomDialogUtils
-    var currentItemnum : String? = null
+    var currentItemnum: String? = null
 
+    init {
+        matusetransEntityListFilter = matusetransEntityList as ArrayList<MatusetransEntity>
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
         val binding = DataBindingUtil.inflate<MaterialPlanItemBinding>(
@@ -57,11 +65,11 @@ class MaterialActualAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: MaterialPlanHolder, position: Int) {
-        val matusetransEntity: MatusetransEntity = matusetransEntityList[position]
+        val matusetransEntity: MatusetransEntity = matusetransEntityListFilter[position]
         holder.bind(matusetransEntity, activity)
     }
 
-    override fun getItemCount(): Int = matusetransEntityList.size
+    override fun getItemCount(): Int = matusetransEntityListFilter.size
 
     inner class MaterialPlanHolder(val binding: MaterialPlanItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -94,7 +102,6 @@ class MaterialActualAdapter constructor(
                 }
             }
         }
-
     }
 
     override fun onRightButton() {
@@ -108,5 +115,41 @@ class MaterialActualAdapter constructor(
 
     override fun onMiddleButton() {
         TODO("Not yet implemented")
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    matusetransEntityListFilter =
+                        matusetransEntityList as ArrayList<MatusetransEntity>
+                } else {
+                    Timber.d("filter result :%s", matusetransEntityList.size)
+                    val resultList = ArrayList<MatusetransEntity>()
+                    for (entity in matusetransEntityList) {
+                        if (entity.itemNum?.toLowerCase()
+                                ?.contains(charSearch.toLowerCase()) == true || entity.description?.toLowerCase()
+                                ?.contains(charSearch.toLowerCase()) == true
+                        ) {
+
+                            Timber.d("filter result text:%s", entity.itemNum)
+                            resultList.add(entity)
+                        }
+                    }
+                    matusetransEntityListFilter = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = matusetransEntityListFilter
+                Timber.d("filter result :%s", filterResults)
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                matusetransEntityListFilter = results?.values as ArrayList<MatusetransEntity>
+                notifyDataSetChanged()
+            }
+        }
     }
 }

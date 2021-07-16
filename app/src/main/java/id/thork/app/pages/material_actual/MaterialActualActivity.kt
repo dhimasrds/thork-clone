@@ -13,6 +13,7 @@
 package id.thork.app.pages.material_actual
 
 import android.content.Intent
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -30,6 +31,7 @@ import id.thork.app.pages.material_actual.element.MaterialActualViewModel
 import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
 import id.thork.app.persistence.entity.MatusetransEntity
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -83,7 +85,7 @@ class MaterialActualActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
-
+        setUpFilterListener()
         retrieveFromIntent()
     }
 
@@ -119,6 +121,23 @@ class MaterialActualActivity : BaseActivity() {
     fun deleteMaterial(itemnum: String?) {
         itemnum.whatIfNotNull {
             viewModel.deleteMaterial(itemnum.toString(), intentWoId.toString())
+        }
+    }
+
+    private fun setUpFilterListener() {
+        binding.apply {
+            etFindMaterial.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    Timber.d("setUpFilterListener() TextChange : %s", newText)
+                    materialActualAdapter.filter.filter(newText)
+                    return false
+                }
+            })
         }
     }
 }
