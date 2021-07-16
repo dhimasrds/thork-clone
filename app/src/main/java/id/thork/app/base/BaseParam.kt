@@ -171,9 +171,7 @@ object BaseParam {
     const val ISSUE = "ISSUE"
     const val WORKLOGTYPE = "WORKLOGTYPE"
     const val ATTENDANCEID = "ATTENDANCEID"
-
-
-
+    const val PRIORITY = "PRIORITY"
 
     /**
      * Status Code
@@ -204,7 +202,6 @@ object BaseParam {
     const val REQUEST_CODE_MATERIAL_ACTUAL = 1179
 
 
-
     const val RFID_ASSETNUM = "assetnum"
     const val RFID_LOCATION = "location"
     const val RFID_MULTIASSET = "multiassset"
@@ -218,7 +215,6 @@ object BaseParam {
     const val SCAN_TYPE_RFID = "RFID"
     const val SCAN_TYPE_BARCODE = "BARCODE"
     const val IS_SCAN = "IS_SCAN"
-
 
 
     /**

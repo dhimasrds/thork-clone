@@ -77,6 +77,7 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
                 val bundle = Bundle()
                 intent.putExtra(BaseParam.APP_WONUM, woEntity.wonum)
                 intent.putExtra(BaseParam.STATUS, woEntity.status)
+                intent.putExtra(BaseParam.PRIORITY, woEntity.wopriority)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(context, intent, bundle)
             }

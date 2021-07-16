@@ -17,7 +17,8 @@ import timber.log.Timber
 
 object BindingWoAdapter {
     @BindingAdapter("setStatus")
-    @JvmStatic fun setStatus(view: TextView, status: String?) {
+    @JvmStatic
+    fun setStatus(view: TextView, status: String?) {
         Timber.d("setStatus :%s", status)
         when (status) {
             BaseParam.APPROVED -> {
@@ -29,27 +30,34 @@ object BindingWoAdapter {
             BaseParam.INPROGRESS -> {
                 view.text = BaseParam.INPROGRESS
                 view.setTextColor(ContextCompat.getColor(view.context, R.color.colorYellow))
-                view.background = ContextCompat.getDrawable(view.context,R.drawable.bg_status_yellow)
+                view.background =
+                    ContextCompat.getDrawable(view.context, R.drawable.bg_status_yellow)
             }
             BaseParam.COMPLETED -> {
                 view.text = BaseParam.COMPLETED
-                view.setTextColor(ContextCompat.getColor(view.context,R.color.colorGreen))
+                view.setTextColor(ContextCompat.getColor(view.context, R.color.colorGreen))
                 view.setBackgroundResource(R.drawable.bg_status_green)
             }
 
             BaseParam.CLOSED -> {
                 view.text = BaseParam.CLOSED
-                view.setTextColor(ContextCompat.getColor(view.context,R.color.colorGray2))
+                view.setTextColor(ContextCompat.getColor(view.context, R.color.colorGray2))
                 view.setBackgroundResource(R.drawable.bg_status_grey)
             }
         }
     }
 
     @BindingAdapter("setBgStatus")
-    @JvmStatic fun setBgStatus(view: View, status: String?) {
+    @JvmStatic
+    fun setBgStatus(view: View, status: String?) {
         when (status) {
             BaseParam.APPROVED -> {
-                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.blueTextStatus))
+                view.setBackgroundColor(
+                    ContextCompat.getColor(
+                        view.context,
+                        R.color.blueTextStatus
+                    )
+                )
             }
             BaseParam.INPROGRESS -> {
                 view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorYellow))
@@ -65,10 +73,12 @@ object BindingWoAdapter {
     }
 
     @BindingAdapter("setPriority")
-    @JvmStatic fun setPriority(view: TextView, priority: Int) {
-        Timber.d("setStatus :%s", priority)
+    @JvmStatic
+    fun setPriority(view: TextView, priority: Int) {
+        Timber.d("setPriority :%s", priority)
         priority.whatIfNotNull {
             val convertWopriority = StringUtils.createPriority(it)
+            Timber.d("setPriority convertWopriority :%s", convertWopriority)
             when (convertWopriority) {
                 BaseParam.NORMAL -> {
                     view.text = BaseParam.NORMAL
@@ -77,16 +87,21 @@ object BindingWoAdapter {
                 }
                 BaseParam.MEDIUM -> {
                     view.text = BaseParam.MEDIUM
-                    view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_normal))
-                    view.background = ContextCompat.getDrawable(view.context,R.drawable.bg_priority_medium)
+                    view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_medium))
+                    view.background =
+                        ContextCompat.getDrawable(view.context, R.drawable.bg_priority_medium)
                 }
                 BaseParam.HIGH -> {
                     view.text = BaseParam.HIGH
-                    view.setTextColor(ContextCompat.getColor(view.context,R.color.priority_high))
+                    view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_high))
                     view.setBackgroundResource(R.drawable.bg_priority_high)
+                }
+                BaseParam.APP_DASH -> {
+                    view.text = BaseParam.APP_DASH
+                    view.setTextColor(ContextCompat.getColor(view.context, R.color.priority_normal))
+                    view.setBackgroundResource(R.drawable.bg_priority_normal)
                 }
             }
         }
-
     }
 }

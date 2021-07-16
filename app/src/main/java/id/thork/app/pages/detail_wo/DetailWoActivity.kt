@@ -84,7 +84,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             option = false,
             historyAttendanceIcon = false
         )
-
         retrieveFromIntent()
     }
 
@@ -92,12 +91,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     override fun setupObserver() {
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
-            val woPriority = StringUtils.NVL(it.wopriority, 0)
             binding.apply {
                 wonum.text = it.wonum
                 description.text = it.description
                 status.text = it.status
-                priority.text = StringUtils.createPriority(woPriority)
+
                 asset.text = StringUtils.truncate(it.assetnum, 20)
                 location.text = StringUtils.truncate(it.location, 20)
                 it.woserviceaddress.whatIfNotNull { address ->
@@ -215,6 +213,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             detailWoViewModel.fetchWobyWonum(it)
             enableFollowUpWo(true, it)
         }
+        val intentPriority = intent.getIntExtra(BaseParam.PRIORITY, 0)
+        detailWoViewModel.setPriority(intentPriority)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
