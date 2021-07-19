@@ -37,7 +37,7 @@ class WorkLogActivity : BaseActivity() {
             }
         }
         worklogEntity = mutableListOf()
-        workLogAdapter = WorkLogAdapter(worklogEntity)
+        workLogAdapter = WorkLogAdapter(this, worklogEntity)
 
         binding.rvWorklog.adapter = workLogAdapter
 

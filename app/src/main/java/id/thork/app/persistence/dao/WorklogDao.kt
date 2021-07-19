@@ -12,4 +12,5 @@ interface WorklogDao {
     fun findListWorklogByWoid(woid: String): List<WorklogEntity>
     fun saveListWorklog(worklogList: List<WorklogEntity>): List<WorklogEntity>
     fun findListWorklogByWoidSyncStatus(woid: String, syncStatus: Int): List<WorklogEntity>
+    fun findWorklog(wonum: String, summary: String): WorklogEntity?
 }

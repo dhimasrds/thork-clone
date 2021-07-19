@@ -110,8 +110,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.iv_add -> {
-
+            R.id.iv_map -> {
+                val bottomNavigationView = binding.bottomNavigationMain
+                bottomNavigationView.setSelectedItemId(R.id.nav_graph_map);
             }
         }
     }
