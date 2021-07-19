@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
@@ -56,6 +57,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+
 
 @AndroidEntryPoint
 class AttachmentActivity : BaseActivity(), PickiTCallbacks {
@@ -177,10 +179,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
@@ -213,7 +211,9 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         dialogUtils =
             DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
+        dialogUtils.isCancelable = true
         dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li).create()
+
     }
 
     private fun navigateToPreview(uri: Uri) {
@@ -243,6 +243,13 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                 })
         }
 
+        val toolBarAttachment: Toolbar = dialogUtils.setViewId(R.id.app_toolbar) as Toolbar
+        toolBarAttachment.setNavigationIcon(R.drawable.ic_arrow_back_white)
+        toolBarAttachment.setNavigationOnClickListener {
+            Timber.tag(TAG).d("navigateToPreview() toolbar event: true")
+            dialogUtils.dismiss()
+        }
+
         val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
         setupFabButton(fabSave)
         fabSave.setOnClickListener {
@@ -257,6 +264,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     fileName,
                     mimeType
                 )
+                viewModel.uploadAttachment()
             }
             dialogUtils.dismiss()
         }
@@ -299,9 +307,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         mimeType: String
     ) {
         var docType: String? = BaseParam.ATTACHMENT_FOLDER
-        if (FileUtils.isImageType(mimeType)) {
-            docType = BaseParam.IMAGES_FOLDER
-        }
 
         val attachmentEntity = AttachmentEntity(
             mimeType = mimeType, syncStatus = false,
@@ -312,4 +317,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         )
         viewModel.addItem(attachmentEntity)
     }
+
+
 }

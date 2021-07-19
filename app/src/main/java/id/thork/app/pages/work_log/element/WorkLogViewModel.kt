@@ -4,6 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
@@ -33,10 +34,12 @@ class WorkLogViewModel @ViewModelInject constructor(
     private val _listWorklogType = MutableLiveData<List<WorklogTypeEntity>>()
     private val _listWorklog = MutableLiveData<List<WorklogEntity>>()
     private val _result = MutableLiveData<Int>()
+    private val _worklogEntity = MutableLiveData<WorklogEntity>()
 
     val listWorklogType: LiveData<List<WorklogTypeEntity>> get() = _listWorklogType
     val listWorklog: LiveData<List<WorklogEntity>> get() = _listWorklog
     val result: LiveData<Int> get() = _result
+    val worklogEntity: LiveData<WorklogEntity> get() = _worklogEntity
 
     fun initWorklogType() {
         val type = worklogRepository.fetchListWorklogtype()
@@ -49,6 +52,13 @@ class WorkLogViewModel @ViewModelInject constructor(
         val worklog = worklogRepository.fetchListWorklogByWoid(workoderid)
         worklog.whatIfNotNullOrEmpty {
             _listWorklog.value = it
+        }
+    }
+
+    fun findWorklog(wonum: String, summary: String) {
+        val worklogEntity = worklogRepository.findWorklog(wonum, summary)
+        worklogEntity.whatIfNotNull {
+            _worklogEntity.value = it
         }
     }
 
@@ -90,10 +100,6 @@ class WorkLogViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("updateWorklog() onError() onError: %s", it)
                 })
         }
-
-
         _result.value = BaseParam.APP_TRUE
     }
-
-
 }

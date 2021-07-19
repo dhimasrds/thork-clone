@@ -2,6 +2,8 @@ package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
+import id.thork.app.persistence.entity.WoCacheEntity
+import id.thork.app.persistence.entity.WoCacheEntity_
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogEntity_
 import io.objectbox.Box
@@ -59,6 +61,13 @@ class WorklogDaoImp : WorklogDao {
 
     override fun findListWorklogByWoidSyncStatus(woid: String, syncStatus: Int): List<WorklogEntity> {
         return worklogEntityBox.query().equal(WorklogEntity_.workorderid, woid).equal(WorklogEntity_.syncStatus, syncStatus).build().find()
+    }
+
+    override fun findWorklog(wonum: String, summary: String): WorklogEntity? {
+        val worklogEntityList: List<WorklogEntity> =
+            worklogEntityBox.query().equal(WorklogEntity_.wonum, wonum).equal(WorklogEntity_.summary, summary).build().find()
+        worklogEntityList.whatIfNotNullOrEmpty { return worklogEntityList[0] }
+        return null
     }
 
 }

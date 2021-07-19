@@ -41,6 +41,7 @@
         <activity android:name=".pages.work_log.type.WorkLogTypeActivity" />
         <activity android:name=".pages.work_log.create_work_log.CreateWorkLogActivity" />
         <activity android:name=".pages.work_log.WorkLogActivity" />
+        <activity android:name=".pages.work_log.detail_work_log.DetailWorkLogActivity" />
         <activity android:name=".pages.rfid_create_wo_material.RfidMaterialctivity" />
         <activity android:name=".pages.material_actual.element.detail_material_actual.MaterialActualDetail" />
         <activity android:name=".pages.material_actual.element.material_actual_item_master.MaterialActualItem" />

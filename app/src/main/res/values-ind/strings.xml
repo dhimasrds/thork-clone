@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ /**
   ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
   ~  * <BR>
@@ -171,7 +170,7 @@
 
     <!-- MENU: Workorder -->
     <string name="workorder">Perintah kerja</string>
-    <string name="desc">Deskripsi</string>
+    <string name="desc">Details</string>
     <string name="longdesc">Long Description</string>
     <string name="date">Tanggal</string>
     <string name="period">Periode</string>
@@ -216,7 +215,6 @@
     <string name="workorder_followup_create_failed">Follow Up WO gagal disimpan</string>
     <string name="create_workorder_cancel">Apakah kamu ingin membatalkan Work Order?</string>
     <string name="followup_wo_cancel">Apakah kamu ingin membatalkan Follow Up Wo?</string>
-
 
 
     <!-- flash light  -->
@@ -484,6 +482,7 @@
     <string name="summary">Summary</string>
     <string name="type">Type</string>
     <string name="create_work_log">Create Work Log</string>
+    <string name="detail_work_log">Detail Work Log</string>
     <string name="work_log">Work Log</string>
     <string name="type_here">Type here</string>
     <string name="find_work_type">Find work type</string>
