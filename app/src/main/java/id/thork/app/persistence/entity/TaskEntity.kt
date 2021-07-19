@@ -22,6 +22,7 @@ class TaskEntity(
     var estDuration : Double? = null,
     var status : String? = null,
     var offlineMode: Int? = null,
-    var syncStatus: Int? = null
+    var syncStatus: Int? = null,
+    var isFromWoDetail: Int? = null
 ) : BaseEntity(), Parcelable {
 }

@@ -14,7 +14,6 @@ import id.thork.app.network.api.TaskClient
 import id.thork.app.network.response.task_response.TaskResponse
 import id.thork.app.network.response.task_response.Woactivity
 import id.thork.app.network.response.work_order.Member
-import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.entity.TaskEntity
 import okhttp3.logging.HttpLoggingInterceptor
@@ -63,22 +62,26 @@ class TaskRepository @Inject constructor(
         return taskDao.findListTaskByWonum(wonum)
     }
 
-    fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleStart: String): List<TaskEntity> {
+    private fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleStart: String): List<TaskEntity> {
         return taskDao.findTaskByWoIdAndScheduleDate(woid, scheduleStart)
     }
 
-    fun findTaskByWoIdAndSyncStatus(woid: Int, syncStatus: Int): List<TaskEntity> {
+    private fun findTaskByWoIdAndSyncStatus(woid: Int, syncStatus: Int): List<TaskEntity> {
         return taskDao.findTaskByWoIdAndSyncStatus(woid, syncStatus)
     }
 
-    fun findTaskByWoIdAndTaskId(woid: Int, taskId: Int): TaskEntity? {
+    private fun findTaskByWoIdAndTaskId(woid: Int, taskId: Int): TaskEntity? {
         return taskDao.findTaskByWoidAndTaskId(woid, taskId)
+    }
+
+    fun findTaskListByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): List<TaskEntity> {
+        return taskDao.findTaskListByOfflineModeAndIsFromWoDetail(offlineMode, isFromWoDetail)
     }
 
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
-        status: String?, syncStatus: Int?, offlineMode: Int?
+        status: String?, syncStatus: Int?, offlineMode: Int?, isFromWoDetail: Int?
     ) {
         val taskEntity = TaskEntity(
             woId = woid,
@@ -90,7 +93,8 @@ class TaskRepository @Inject constructor(
             actualStart = actualStart,
             status = status,
             syncStatus = syncStatus,
-            offlineMode = offlineMode
+            offlineMode = offlineMode,
+            isFromWoDetail = isFromWoDetail
         )
         saveTaskCache(taskEntity)
     }
@@ -99,8 +103,12 @@ class TaskRepository @Inject constructor(
         return taskDao.removeTaskByWonum(wonum)
     }
 
-    fun removeTaskByWoidAndSyncStatus(woid: Int, syncStatus: Int): Long {
+    private fun removeTaskByWoidAndSyncStatus(woid: Int, syncStatus: Int): Long {
         return taskDao.removeTaskByWoidAndSyncStatus(woid, syncStatus)
+    }
+
+    private fun removeTaskByWoidAndOfflineMode(woid: Int, offlineMode: Int): Long {
+        return taskDao.removeTaskByWoidAndOfflineMode(woid, offlineMode)
     }
 
     suspend fun createTaskToMx(
@@ -136,7 +144,7 @@ class TaskRepository @Inject constructor(
             }
     }
 
-    fun prepareTaskBody(woid: Int, scheduleStart: String): List<Woactivity> {
+    fun prepareTaskBodyFromWoDetail(woid: Int, scheduleStart: String): List<Woactivity> {
         val taskEntity = findTaskByWoIdAndScheduleDate(woid, scheduleStart)
         val memberTask = mutableListOf<Woactivity>()
         taskEntity.forEach {
@@ -154,7 +162,7 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
-    fun handlingTaskSucces(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int, wonum: String) {
+    fun handlingTaskSuccesFromWoDetail(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int, wonum: String) {
         removeTaskByWoidAndSyncStatus(woid, BaseParam.APP_TRUE)
         for (tasks in list) {
             val taskEntity = TaskEntity(
@@ -169,12 +177,13 @@ class TaskRepository @Inject constructor(
                 status = tasks.status,
                 syncStatus = BaseParam.APP_TRUE,
                 offlineMode = BaseParam.APP_FALSE,
+                isFromWoDetail = BaseParam.APP_TRUE
             )
             saveTaskCache(taskEntity)
         }
     }
 
-    fun handlingTaskFailed(woid: Int, taskId: Int) {
+    fun handlingTaskFailedFromWoDetail(woid: Int, taskId: Int) {
         val taskEntity = findTaskByWoIdAndTaskId(woid, taskId)
         taskEntity.whatIfNotNull {
             it.syncStatus = BaseParam.APP_FALSE
@@ -226,6 +235,45 @@ class TaskRepository @Inject constructor(
                 status = tasks.status,
                 syncStatus = BaseParam.APP_TRUE,
                 offlineMode = BaseParam.APP_FALSE,
+                isFromWoDetail = BaseParam.APP_FALSE
+            )
+            saveTaskCache(taskEntity)
+        }
+    }
+
+    fun prepareTaskBodyInOfflineMode(listTask: List<TaskEntity>): List<Woactivity> {
+        val memberTask = mutableListOf<Woactivity>()
+        listTask.forEach {
+            val member = Woactivity()
+            member.workorderid = 0
+            member.taskid = it.taskId
+            member.description = it.desc
+            member.estdur = it.estDuration
+            member.status = it.status
+            member.schedstart = it.scheduleStart
+            member.actstart = it.actualStart
+            memberTask.add(member)
+        }
+        Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
+        return memberTask
+    }
+
+    fun handlingTaskSuccesInOfflineMode(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int, wonum: String) {
+        removeTaskByWoidAndOfflineMode(woid, BaseParam.APP_TRUE)
+        for (tasks in list) {
+            val taskEntity = TaskEntity(
+                woId = woid,
+                wonum = wonum,
+                taskId = tasks.taskid,
+                refWonum = tasks.wonum,
+                desc = tasks.description,
+                scheduleStart = tasks.schedstart,
+                estDuration = tasks.estdur,
+                actualStart = tasks.actstart,
+                status = tasks.status,
+                syncStatus = BaseParam.APP_TRUE,
+                offlineMode = BaseParam.APP_FALSE,
+                isFromWoDetail = BaseParam.APP_TRUE
             )
             saveTaskCache(taskEntity)
         }

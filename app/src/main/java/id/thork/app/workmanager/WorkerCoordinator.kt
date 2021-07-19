@@ -51,7 +51,8 @@ class WorkerCoordinator @Inject constructor(
     val wpmaterialDao: WpmaterialDao,
     val materialDao: MaterialDao,
     val worklogDao: WorklogDao,
-    val worklogTypeDao: WorklogTypeDao
+    val worklogTypeDao: WorklogTypeDao,
+    val taskDao: TaskDao
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
@@ -59,6 +60,7 @@ class WorkerCoordinator @Inject constructor(
     var attachmentRepository: AttachmentRepository
     var materialRepository: MaterialRepository
     var worklogRepository: WorklogRepository
+    var taskRepository: TaskRepository
     var response = WorkOrderResponse()
 
     //Work manager only execute when connected to internet
@@ -82,12 +84,14 @@ class WorkerCoordinator @Inject constructor(
                 wpmaterialDao,
                 materialDao,
                 worklogDao,
-                worklogTypeDao
+                worklogTypeDao,
+                taskDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
         worklogRepository = workerRepository.buildWorklogRepository()
+        taskRepository = workerRepository.buildTaskRepository()
 
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }
@@ -117,6 +121,23 @@ class WorkerCoordinator @Inject constructor(
 
 //        val outputWorkInfos: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData("")
 //        val workInfo = outputWorkInfos.value?.get(0)
+    }
+
+    fun addSyncTask() {
+        val SYNC_TASK = "SYNC_TASK"
+
+        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<TaskWorker>()
+            .addTag(SYNC_TASK)
+            .setConstraints(constraints)
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueue(workRequest)
     }
 
     fun addSyncAttendance() {

@@ -21,9 +21,14 @@ interface TaskDao {
 
     fun removeTaskByWoidAndSyncStatus(woid: Int, syncStatus: Int): Long
 
+    fun removeTaskByWoidAndOfflineMode(woid: Int, offlineMode: Int): Long
+
     fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleDate: String): List<TaskEntity>
 
     fun findTaskByWoIdAndSyncStatus(woid: Int, syncStatus: Int): List<TaskEntity>
 
     fun findTaskByWoidAndTaskId(woid: Int, taskid: Int): TaskEntity?
+
+    fun findTaskListByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): List<TaskEntity>
+
 }

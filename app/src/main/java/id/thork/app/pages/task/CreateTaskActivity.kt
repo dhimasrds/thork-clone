@@ -351,6 +351,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             actualStartObjectBox,
             intentStatus,
             BaseParam.APP_FALSE,
+            BaseParam.APP_TRUE,
             BaseParam.APP_TRUE
         )
     }
@@ -366,7 +367,8 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             actualStartObjectBox,
             intentStatus,
             BaseParam.APP_TRUE,
-            BaseParam.APP_FALSE
+            BaseParam.APP_FALSE,
+            BaseParam.APP_TRUE
         )
     }
 
@@ -374,7 +376,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         viewModels.saveCacheFromCreateWo(
             intentWoid, intentWonum, intentTaskId,
             desc, scheduleStartObjectBox, estDur,
-            actualStartObjectBox, intentStatus, BaseParam.APP_FALSE, BaseParam.APP_FALSE
+            actualStartObjectBox, intentStatus, BaseParam.APP_FALSE, BaseParam.APP_FALSE, BaseParam.APP_FALSE
         )
     }
 

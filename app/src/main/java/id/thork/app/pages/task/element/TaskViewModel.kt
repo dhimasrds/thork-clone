@@ -61,7 +61,7 @@ class TaskViewModel @ViewModelInject constructor(
     fun saveCacheFromCreateWo(
         woid: Int?, wonum: String?, taskId: Int?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
-        status: String?, syncStatus: Int?, offlineMode: Int?
+        status: String?, syncStatus: Int?, offlineMode: Int?, isFromWoDetail: Int?
     ) {
         taskRepository.saveCache(
             woid,
@@ -73,14 +73,15 @@ class TaskViewModel @ViewModelInject constructor(
             actualStart,
             status,
             syncStatus,
-            offlineMode
+            offlineMode,
+            isFromWoDetail
         )
     }
 
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
-        status: String?, syncStatus: Int?, offlineMode: Int?
+        status: String?, syncStatus: Int?, offlineMode: Int?, isFromWoDetail: Int?
     ) {
         taskRepository.saveCache(
             woid,
@@ -92,7 +93,8 @@ class TaskViewModel @ViewModelInject constructor(
             actualStart,
             status,
             syncStatus,
-            offlineMode
+            offlineMode,
+            isFromWoDetail
         )
         woid.whatIfNotNull {
             taskId.whatIfNotNull { taskId ->
@@ -107,7 +109,7 @@ class TaskViewModel @ViewModelInject constructor(
 
     private fun updateToMaximo(woid: Int, taskId: Int, scheduleStart: String, wonum: String) {
 
-        val taskList = taskRepository.prepareTaskBody(woid, scheduleStart)
+        val taskList = taskRepository.prepareTaskBodyFromWoDetail(woid, scheduleStart)
         val taskResponse = TaskResponse()
         taskList.whatIfNotNullOrEmpty {
             taskResponse.woactivity = it
@@ -133,11 +135,11 @@ class TaskViewModel @ViewModelInject constructor(
                 onSuccess = { woMember ->
                     woMember.woactivity.whatIfNotNullOrEmpty {
                         Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
-                        taskRepository.handlingTaskSucces(it, woid, wonum)
+                        taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
                     }
                 },
                 onError = {
-                    taskRepository.handlingTaskFailed(woid, taskId)
+                    taskRepository.handlingTaskFailedFromWoDetail(woid, taskId)
                     Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
 
                 }

@@ -71,6 +71,10 @@ class TaskDaoImp : TaskDao {
         return taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.syncStatus, syncStatus).build().remove()
     }
 
+    override fun removeTaskByWoidAndOfflineMode(woid: Int, offlineMode: Int): Long {
+        return taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.offlineMode, offlineMode).build().remove()
+    }
+
     override fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleDate: String): List<TaskEntity> {
         return taskEntityBox.query().equal(TaskEntity_.woId, woid)
             .equal(TaskEntity_.scheduleStart, scheduleDate).build().find()
@@ -89,6 +93,11 @@ class TaskDaoImp : TaskDao {
             return it[0]
         }
         return null
+    }
+
+    override fun findTaskListByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): List<TaskEntity> {
+        return taskEntityBox.query().equal(TaskEntity_.offlineMode, offlineMode)
+            .equal(TaskEntity_.isFromWoDetail, isFromWoDetail).build().find()
     }
 
 }

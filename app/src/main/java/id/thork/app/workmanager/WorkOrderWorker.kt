@@ -59,7 +59,8 @@ class WorkOrderWorker @WorkerInject constructor(
     val wpmaterialDao: WpmaterialDao,
     val materialDao: MaterialDao,
     val worklogDao: WorklogDao,
-    val worklogTypeDao: WorklogTypeDao
+    val worklogTypeDao: WorklogTypeDao,
+    val taskDao: TaskDao
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -69,6 +70,7 @@ class WorkOrderWorker @WorkerInject constructor(
     var attachmentRepository: AttachmentRepository
     var materialRepository: MaterialRepository
     var worklogRepository: WorklogRepository
+    var taskRepository: TaskRepository
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
@@ -84,12 +86,14 @@ class WorkOrderWorker @WorkerInject constructor(
                 attachmentDao,
                 doclinksClient,
                 materialBackupDao, matusetransDao, wpmaterialDao, materialDao, worklogDao,
-                worklogTypeDao
+                worklogTypeDao,
+                taskDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
         worklogRepository = workerRepository.buildWorklogRepository()
+        taskRepository = workerRepository.buildTaskRepository()
 
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)
     }
