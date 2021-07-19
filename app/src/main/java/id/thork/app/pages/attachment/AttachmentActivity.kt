@@ -73,6 +73,8 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     private lateinit var dialogUtils: DialogUtils
 
     private var intentWoId = 0
+    private var status: String? = null
+
 
     @Inject
     @Named("svgRequestOption")
@@ -102,24 +104,43 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                 adapter = attachmentAdapter
             }
         }
-
-        setupToolbarWithHomeNavigation(
-            getString(R.string.attachments),
-            navigation = false,
-            filter = false,
-            scannerIcon = false,
-            notification = false,
-            option = true,
-            historyAttendanceIcon = false
-        )
+        retrieveFromIntent()
+        validationView()
 
         pickiT = PickiT(this, this, this)
         requestPermission()
 
         setupDialog()
 
-        retrieveFromIntent()
         viewModel.fetchAttachments(intentWoId)
+
+        Timber.d("status detail :%s", status)
+
+    }
+
+    fun validationView() {
+        if (status.equals(BaseParam.CLOSED)) {
+            setupToolbarWithHomeNavigation(
+                getString(R.string.attachments),
+                navigation = false,
+                filter = false,
+                scannerIcon = false,
+                notification = false,
+                option = false,
+                historyAttendanceIcon = false
+            )
+            binding.btnUpload.visibility = View.GONE
+        } else {
+            setupToolbarWithHomeNavigation(
+                getString(R.string.attachments),
+                navigation = false,
+                filter = false,
+                scannerIcon = false,
+                notification = false,
+                option = true,
+                historyAttendanceIcon = false
+            )
+        }
     }
 
     override fun setupListener() {
@@ -181,6 +202,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
 
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        status = intent.getStringExtra(BaseParam.STATUS)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
     }
 

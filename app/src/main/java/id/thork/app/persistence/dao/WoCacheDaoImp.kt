@@ -7,6 +7,7 @@ import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
+import io.objectbox.query.OrderFlags
 import io.objectbox.query.QueryBuilder
 import java.util.*
 
@@ -144,9 +145,7 @@ class WoCacheDaoImp : WoCacheDao {
 
     override fun findListWoByStatusOffset( offset: Int, vararg status: String): List<WoCacheEntity> {
         return woCacheEntityBox.query()
-            .`in`(WoCacheEntity_.status, status)
-            .order(WoCacheEntity_.reportDateUTCTime, QueryBuilder.DESCENDING or QueryBuilder.CASE_SENSITIVE)
-            .build()
+            .`in`(WoCacheEntity_.status, status).build()
             .find(offset.toLong(), 10)
     }
 

@@ -106,7 +106,7 @@ class MaterialPlanActivity : BaseActivity() {
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
         viewModel.initListMaterialPlan(intentWoId.toString())
         intentAct.whatIfNotNull {
-            binding.btnAdd.visibility = View.GONE
+            binding.btnLayout.visibility = View.GONE
         }
     }
 

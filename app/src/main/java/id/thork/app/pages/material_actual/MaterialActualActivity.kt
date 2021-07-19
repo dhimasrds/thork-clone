@@ -13,6 +13,7 @@
 package id.thork.app.pages.material_actual
 
 import android.content.Intent
+import android.view.View
 import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -46,6 +47,7 @@ class MaterialActualActivity : BaseActivity() {
     private lateinit var matusetranslist: MutableList<MatusetransEntity>
 
     private var intentWoId = 0
+    private var status: String? = null
 
     @Inject
     @Named("svgRequestOption")
@@ -87,6 +89,13 @@ class MaterialActualActivity : BaseActivity() {
         )
         setUpFilterListener()
         retrieveFromIntent()
+        validationView()
+    }
+
+    fun validationView() {
+        if (status.equals(BaseParam.CLOSED)) {
+            binding.btnLayout.visibility = View.GONE
+        }
     }
 
     override fun setupListener() {
@@ -101,6 +110,7 @@ class MaterialActualActivity : BaseActivity() {
 
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        status = intent.getStringExtra(BaseParam.STATUS)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
         viewModel.initListMaterialActual(intentWoId.toString())
     }
