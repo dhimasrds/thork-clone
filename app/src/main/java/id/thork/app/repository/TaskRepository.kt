@@ -74,8 +74,20 @@ class TaskRepository @Inject constructor(
         return taskDao.findTaskByWoidAndTaskId(woid, taskId)
     }
 
-    fun findTaskListByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): List<TaskEntity> {
-        return taskDao.findTaskListByOfflineModeAndIsFromWoDetail(offlineMode, isFromWoDetail)
+    fun findTaskListByWoidAndOfflineModeAndIsFromWoDetail(
+        woid: Int,
+        offlineMode: Int,
+        isFromWoDetail: Int
+    ): List<TaskEntity> {
+        return taskDao.findTaskListByWoidAndOfflineModeAndIsFromWoDetail(
+            woid,
+            offlineMode,
+            isFromWoDetail
+        )
+    }
+
+    fun findTaskByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): TaskEntity? {
+        return taskDao.findTaskByOfflineModeAndIsFromWoDetail(offlineMode, isFromWoDetail)
     }
 
     fun saveCache(
@@ -107,8 +119,20 @@ class TaskRepository @Inject constructor(
         return taskDao.removeTaskByWoidAndSyncStatus(woid, syncStatus)
     }
 
-    private fun removeTaskByWoidAndOfflineMode(woid: Int, offlineMode: Int): Long {
-        return taskDao.removeTaskByWoidAndOfflineMode(woid, offlineMode)
+    private fun removeTaskByWoidAndTaskId(woid: Int, taskId: Int): Long {
+        return taskDao.removeTaskByWoidAndTaskId(woid, taskId)
+    }
+
+    private fun removeTaskByWonumAndOfflineModeAndTaskId(
+        wonum: String,
+        offlineMode: Int,
+        taskId: Int
+    ): Long {
+        return taskDao.removeTaskByWonumAndOfflineModeAndTaskId(wonum, offlineMode, taskId)
+    }
+
+    private fun removeTaskByWonumAndOfflineMode(wonum: String, offlineMode: Int): Long {
+        return taskDao.removeTaskByWonumAndOfflineMode(wonum, offlineMode)
     }
 
     suspend fun createTaskToMx(
@@ -162,7 +186,11 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
-    fun handlingTaskSuccesFromWoDetail(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int, wonum: String) {
+    fun handlingTaskSuccesFromWoDetail(
+        list: List<id.thork.app.network.response.work_order.Woactivity>,
+        woid: Int,
+        wonum: String
+    ) {
         removeTaskByWoidAndSyncStatus(woid, BaseParam.APP_TRUE)
         for (tasks in list) {
             val taskEntity = TaskEntity(
@@ -218,7 +246,11 @@ class TaskRepository @Inject constructor(
         }
     }
 
-    fun handlingTaskSuccessFromCreateWo(member: Member, list: List<id.thork.app.network.response.work_order.Woactivity>, wonum: String) {
+    fun handlingTaskSuccessFromCreateWo(
+        member: Member,
+        list: List<id.thork.app.network.response.work_order.Woactivity>,
+        wonum: String
+    ) {
         removeTaskByWonum(wonum)
         val woid = member.workorderid
         val wonumber = member.wonum
@@ -241,42 +273,31 @@ class TaskRepository @Inject constructor(
         }
     }
 
-    fun prepareTaskBodyInOfflineMode(listTask: List<TaskEntity>): List<Woactivity> {
+    fun prepareTaskBodyInOfflineMode(listTask: TaskEntity): List<Woactivity> {
         val memberTask = mutableListOf<Woactivity>()
-        listTask.forEach {
-            val member = Woactivity()
-            member.workorderid = 0
-            member.taskid = it.taskId
-            member.description = it.desc
-            member.estdur = it.estDuration
-            member.status = it.status
-            member.schedstart = it.scheduleStart
-            member.actstart = it.actualStart
-            memberTask.add(member)
-        }
-        Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
+        val member = Woactivity()
+        member.workorderid = 0
+        member.taskid = listTask.taskId
+        member.description = listTask.desc
+        member.estdur = listTask.estDuration
+        member.status = listTask.status
+        member.schedstart = listTask.scheduleStart
+        member.actstart = listTask.actualStart
+        memberTask.add(member)
+        Timber.tag(TAG).d("raka() results: %s", memberTask)
         return memberTask
     }
 
-    fun handlingTaskSuccesInOfflineMode(list: List<id.thork.app.network.response.work_order.Woactivity>, woid: Int, wonum: String) {
-        removeTaskByWoidAndOfflineMode(woid, BaseParam.APP_TRUE)
-        for (tasks in list) {
-            val taskEntity = TaskEntity(
-                woId = woid,
-                wonum = wonum,
-                taskId = tasks.taskid,
-                refWonum = tasks.wonum,
-                desc = tasks.description,
-                scheduleStart = tasks.schedstart,
-                estDuration = tasks.estdur,
-                actualStart = tasks.actstart,
-                status = tasks.status,
-                syncStatus = BaseParam.APP_TRUE,
-                offlineMode = BaseParam.APP_FALSE,
-                isFromWoDetail = BaseParam.APP_TRUE
-            )
-            saveTaskCache(taskEntity)
-        }
+    fun handlingTaskSuccesInOfflineMode(
+        list: List<id.thork.app.network.response.work_order.Woactivity>,
+        taskEntity: TaskEntity
+    ) {
+        Timber.tag(TAG).d("raka() List Hasil : %s", list)
+        val index = list.size - 1
+        taskEntity.refWonum = list[index].wonum
+        taskEntity.offlineMode = BaseParam.APP_FALSE
+        taskEntity.syncStatus = BaseParam.APP_TRUE
+        Timber.d("raka refWonum %s ", list[index].wonum)
+        saveTaskCache(taskEntity)
     }
-
 }

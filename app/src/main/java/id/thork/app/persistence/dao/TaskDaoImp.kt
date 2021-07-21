@@ -71,8 +71,16 @@ class TaskDaoImp : TaskDao {
         return taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.syncStatus, syncStatus).build().remove()
     }
 
-    override fun removeTaskByWoidAndOfflineMode(woid: Int, offlineMode: Int): Long {
-        return taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.offlineMode, offlineMode).build().remove()
+    override fun removeTaskByWoidAndTaskId(woid: Int, taskId: Int): Long {
+        return taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.taskId, taskId).build().remove()
+    }
+
+    override fun removeTaskByWonumAndOfflineModeAndTaskId(wonum: String, offlineMode: Int, taskId: Int): Long {
+        return taskEntityBox.query().equal(TaskEntity_.wonum, wonum).equal(TaskEntity_.offlineMode, offlineMode).equal(TaskEntity_.taskId, taskId).build().remove()
+    }
+
+    override fun removeTaskByWonumAndOfflineMode(wonum: String, offlineMode: Int): Long {
+        return taskEntityBox.query().equal(TaskEntity_.wonum, wonum).equal(TaskEntity_.offlineMode, offlineMode).build().remove()
     }
 
     override fun findTaskByWoIdAndScheduleDate(woid: Int, scheduleDate: String): List<TaskEntity> {
@@ -95,9 +103,19 @@ class TaskDaoImp : TaskDao {
         return null
     }
 
-    override fun findTaskListByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): List<TaskEntity> {
-        return taskEntityBox.query().equal(TaskEntity_.offlineMode, offlineMode)
+    override fun findTaskListByWoidAndOfflineModeAndIsFromWoDetail(woid: Int, offlineMode: Int, isFromWoDetail: Int): List<TaskEntity> {
+        return taskEntityBox.query().equal(TaskEntity_.woId, woid).equal(TaskEntity_.offlineMode, offlineMode)
             .equal(TaskEntity_.isFromWoDetail, isFromWoDetail).build().find()
+    }
+
+    override fun findTaskByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): TaskEntity? {
+        val taskEntity =
+            taskEntityBox.query().equal(TaskEntity_.offlineMode, offlineMode).equal(TaskEntity_.isFromWoDetail, isFromWoDetail).build()
+                .find()
+        taskEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
     }
 
 }
