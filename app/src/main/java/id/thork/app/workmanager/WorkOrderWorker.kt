@@ -124,6 +124,7 @@ class WorkOrderWorker @WorkerInject constructor(
         //TODO Query to local check wo cache offline
         val woCacheList =
             workOrderRepository.fetchWoListOffline(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+
         val index = 0
         val listWocache = mutableListOf<WoCacheEntity>()
         val listCreateWoOffline = mutableListOf<WoCacheEntity>()
@@ -246,12 +247,13 @@ class WorkOrderWorker @WorkerInject constructor(
     ) {
         val currentWo = listWo.get(currentIndex)
 
-        currentWo.whatIfNotNull {
-            val prepareBody = WoUtils.convertBodyToMember(it.syncBody.toString())
+        currentWo.whatIfNotNull { currentWo ->
+            val prepareBody = WoUtils.convertBodyToMember(currentWo.syncBody.toString())
 
             prepareBody.whatIfNotNull { prepareBody ->
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
+                val tempWonum = currentWo.wonum
 
                 val member = Member()
                 member.siteid = appSession.siteId
@@ -270,6 +272,9 @@ class WorkOrderWorker @WorkerInject constructor(
                 prepareBody.wpmaterial.whatIfNotNullOrEmpty {
                     member.wpmaterial = it
                 }
+                prepareBody.woactivity.whatIfNotNullOrEmpty {
+                    member.woactivity = it
+                }
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val properties = BaseParam.APP_ALL_PROPERTIES
@@ -278,13 +283,19 @@ class WorkOrderWorker @WorkerInject constructor(
                         cookie, properties, member,
                         onSuccess = {
                             //TODO handle create wo cache after update
-                            workOrderRepository.updateWoCacheAfterSync(
+                            workOrderRepository.updateCreateWoCacheOfflineMode(
                                 it.workorderid,
                                 it.wonum,
                                 longdesc,
-                                status.toString()
+                                status.toString(),
+                                currentWo
                             )
 
+                            it.woactivity.whatIfNotNullOrEmpty { woActivity ->
+                                if (tempWonum != null) {
+                                    taskRepository.handlingTaskSuccessFromCreateWo(it, woActivity, tempWonum)
+                                }
+                            }
                             val nextIndex = currentIndex + 1
                             if (nextIndex <= listWo.size - 1) {
                                 updateCreateWo(listWo, nextIndex)

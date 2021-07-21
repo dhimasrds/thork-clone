@@ -416,12 +416,12 @@ class WorkOrderRepository @Inject constructor(
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress!![0].latitudey
+            wo.woserviceaddress[0].latitudey
         } else {
             null
         }
         woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress!![0].longitudex
+            wo.woserviceaddress[0].longitudex
         } else {
             null
         }
@@ -653,7 +653,9 @@ class WorkOrderRepository @Inject constructor(
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
         currentMember?.status = nextStatus
-        currentMember?.descriptionLongdescription = longdesc
+        longdesc.whatIfNotNullOrEmpty {
+            currentMember?.descriptionLongdescription = longdesc
+        }
         listMatAct.whatIfNotNullOrEmpty {
             currentMember?.matusetrans = it
         }
@@ -663,6 +665,38 @@ class WorkOrderRepository @Inject constructor(
         currentWoCache?.isChanged = BaseParam.APP_FALSE
         currentWoCache?.isLatest = BaseParam.APP_TRUE
         updateWo(currentWoCache!!, appSession.userEntity.username)
+    }
+
+    fun updateCreateWoCacheOfflineMode(
+        woId: Int?,
+        wonum: String?,
+        longdesc: String?,
+        nextStatus: String,
+        currentWo: WoCacheEntity
+    ) {
+        Timber.d("updateCreateWoCacheOfflineMode() syncBody %s ", currentWo.syncBody)
+
+        val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter = moshi.adapter(Member::class.java)
+        val currentMember = memberJsonAdapter.fromJson(currentWo.syncBody)
+        currentMember?.status = nextStatus
+        longdesc.whatIfNotNullOrEmpty {
+            currentMember?.descriptionLongdescription = longdesc
+        }
+        listMatAct.whatIfNotNullOrEmpty {
+            currentMember?.matusetrans = it
+        }
+
+        currentWo.woId = woId
+        currentWo.wonum = wonum
+        currentWo.laborCode = appSession.laborCode
+        currentWo.syncBody = memberJsonAdapter.toJson(currentMember)
+        currentWo.syncStatus = BaseParam.APP_TRUE
+        currentWo.isChanged = BaseParam.APP_FALSE
+        currentWo.isLatest = BaseParam.APP_TRUE
+        updateWo(currentWo, appSession.userEntity.username)
+
     }
 
     fun addObjectBoxToHashMapActivity() {

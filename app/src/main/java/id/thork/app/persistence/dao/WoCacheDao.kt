@@ -40,4 +40,6 @@ interface WoCacheDao {
     fun findWoByWonumAndIslatest(wonum: String, isLatest: Int): WoCacheEntity?
     fun findWoListBySyncStatusAndisChange(syncStatus: Int, isChange: Int): List<WoCacheEntity>
     fun findListWoByStatusHistory(vararg status: String): List<WoCacheEntity>
+    fun findWoByWonumAndIsChange(wonum: String, isChange: Int): WoCacheEntity?
+
 }

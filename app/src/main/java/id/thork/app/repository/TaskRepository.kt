@@ -284,7 +284,6 @@ class TaskRepository @Inject constructor(
         member.schedstart = listTask.scheduleStart
         member.actstart = listTask.actualStart
         memberTask.add(member)
-        Timber.tag(TAG).d("raka() results: %s", memberTask)
         return memberTask
     }
 
@@ -292,12 +291,10 @@ class TaskRepository @Inject constructor(
         list: List<id.thork.app.network.response.work_order.Woactivity>,
         taskEntity: TaskEntity
     ) {
-        Timber.tag(TAG).d("raka() List Hasil : %s", list)
         val index = list.size - 1
         taskEntity.refWonum = list[index].wonum
         taskEntity.offlineMode = BaseParam.APP_FALSE
         taskEntity.syncStatus = BaseParam.APP_TRUE
-        Timber.d("raka refWonum %s ", list[index].wonum)
         saveTaskCache(taskEntity)
     }
 }

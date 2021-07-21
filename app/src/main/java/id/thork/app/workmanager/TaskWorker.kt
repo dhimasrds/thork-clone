@@ -69,14 +69,12 @@ class TaskWorker @WorkerInject constructor(
             BaseParam.APP_TRUE
         )
         taskCache.whatIfNotNull {
-            Timber.d("raka taskEntity %s ", it)
             updateTaskToMaximoInOfflineMode(it)
         }
     }
 
     private fun updateTaskToMaximoInOfflineMode(taskEntity: TaskEntity) {
         val woid = taskEntity.woId
-        val woNumber = taskEntity.wonum
         val taskId = taskEntity.taskId
         val xmethodeOverride: String = BaseParam.APP_PATCH
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
@@ -85,49 +83,43 @@ class TaskWorker @WorkerInject constructor(
         val properties = BaseParam.APP_ALL_PROPERTIES
 
         woid.whatIfNotNull { woId ->
-        val member = taskRepository.prepareTaskBodyInOfflineMode(taskEntity)
-            Timber.d("raka member %s ", member)
+            val member = taskRepository.prepareTaskBodyInOfflineMode(taskEntity)
             val taskResponse = TaskResponse()
-        member.whatIfNotNullOrEmpty {
-            taskResponse.woactivity = it
-        }
+            member.whatIfNotNullOrEmpty {
+                taskResponse.woactivity = it
+            }
 
-        runBlocking {
-            launch(Dispatchers.IO) {
-                    woNumber.whatIfNotNull { wonum ->
-                        taskId.whatIfNotNull { taskId ->
-                            taskRepository.createTaskToMx(
-                                xmethodeOverride,
-                                contentType,
-                                cookie,
-                                patchType,
-                                properties,
-                                woId,
-                                taskResponse,
-                                onSuccess = { woMember ->
-                                    woMember.woactivity.whatIfNotNullOrEmpty {
-                                        Timber.tag(TAG).i(
-                                            "updateTaskToMaximoInOfflineMode() onSuccess() onSuccess: %s",
-                                            it
-                                        )
-                                            taskRepository.handlingTaskSuccesInOfflineMode(
-                                                it,
-                                                taskEntity,
-                                                woId,
-                                                wonum,
-                                                taskId
-                                            )
-                                    }
-                                },
-                                onError = {
+            runBlocking {
+                launch(Dispatchers.IO) {
+                    taskId.whatIfNotNull { taskId ->
+                        taskRepository.createTaskToMx(
+                            xmethodeOverride,
+                            contentType,
+                            cookie,
+                            patchType,
+                            properties,
+                            woId,
+                            taskResponse,
+                            onSuccess = { woMember ->
+                                woMember.woactivity.whatIfNotNullOrEmpty {
                                     Timber.tag(TAG).i(
-                                        "updateTaskToMaximoInOfflineMode() onError() onError: %s",
+                                        "updateTaskToMaximoInOfflineMode() onSuccess() onSuccess: %s",
                                         it
                                     )
-                                    taskRepository.handlingTaskFailedFromWoDetail(woId, taskId)
+                                    taskRepository.handlingTaskSuccesInOfflineMode(
+                                        it,
+                                        taskEntity,
+                                    )
                                 }
-                            )
-                        }
+                            },
+                            onError = {
+                                Timber.tag(TAG).i(
+                                    "updateTaskToMaximoInOfflineMode() onError() onError: %s",
+                                    it
+                                )
+                                taskRepository.handlingTaskFailedFromWoDetail(woId, taskId)
+                            }
+                        )
                     }
                 }
             }

@@ -116,7 +116,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 }
 
                 workorderId = it.workorderid
-                workorderNumber = it.wonum
+                it.wonum.whatIfNotNull {
+                    workorderNumber = it
+                }
                 workorderStatus = it.status
                 workorderLongdesc = it.descriptionLongdescription
                 it.status?.let { status -> setButtonStatus(status) }
@@ -546,19 +548,19 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     }
 
     override fun onRightButton() {
-        if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
+        if (workorderStatus != null && workorderStatus == BaseParam.APPROVED && workorderNumber != null) {
             detailWoViewModel.updateWo(
                 workorderId,
                 workorderStatus,
-                workorderNumber,
+                workorderNumber!!,
                 workorderLongdesc,
                 BaseParam.INPROGRESS
             )
-        } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
+        } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS && workorderNumber != null) {
             detailWoViewModel.updateWo(
                 workorderId,
                 workorderStatus,
-                workorderNumber,
+                workorderNumber!!,
                 workorderLongdesc,
                 BaseParam.COMPLETED
             )
