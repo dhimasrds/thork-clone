@@ -671,7 +671,6 @@ class WorkOrderRepository @Inject constructor(
         woId: Int?,
         wonum: String?,
         longdesc: String?,
-        nextStatus: String,
         currentWo: WoCacheEntity
     ) {
         Timber.d("updateCreateWoCacheOfflineMode() syncBody %s ", currentWo.syncBody)
@@ -680,7 +679,6 @@ class WorkOrderRepository @Inject constructor(
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember = memberJsonAdapter.fromJson(currentWo.syncBody)
-        currentMember?.status = nextStatus
         longdesc.whatIfNotNullOrEmpty {
             currentMember?.descriptionLongdescription = longdesc
         }

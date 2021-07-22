@@ -287,7 +287,6 @@ class WorkOrderWorker @WorkerInject constructor(
                                 it.workorderid,
                                 it.wonum,
                                 longdesc,
-                                status.toString(),
                                 currentWo
                             )
 
