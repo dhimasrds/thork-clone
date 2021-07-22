@@ -51,6 +51,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private lateinit var map: GoogleMap
     private var lastKnownLocation: Location? = null
     private var intentWonum: String? = null
+    private var status: String? = null
     private var destinationString: String? = null
     private var destinationLatLng: LatLng? = null
     private var isRoute: Int = BaseParam.APP_FALSE
@@ -85,20 +86,20 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             option = false,
             historyAttendanceIcon = false
         )
-
         retrieveFromIntent()
+
+        Timber.d("status detail :%s", status)
     }
 
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun setupObserver() {
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
-            val woPriority = StringUtils.NVL(it.wopriority, 0)
             binding.apply {
                 wonum.text = it.wonum
                 description.text = it.description
                 status.text = it.status
-                priority.text = StringUtils.createPriority(woPriority)
+
                 asset.text = StringUtils.truncate(it.assetnum, 20)
                 location.text = StringUtils.truncate(it.location, 20)
                 it.woserviceaddress.whatIfNotNull { address ->
@@ -214,10 +215,13 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.APP_WONUM)
+        status = intent.getStringExtra(BaseParam.STATUS)
         intentWonum.whatIfNotNull {
             detailWoViewModel.fetchWobyWonum(it)
             enableFollowUpWo(true, it)
         }
+        val intentPriority = intent.getIntExtra(BaseParam.PRIORITY, 0)
+        detailWoViewModel.setPriority(intentPriority)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -318,6 +322,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private fun goToAttachments() {
         val intent = Intent(this, AttachmentActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        intent.putExtra(BaseParam.STATUS, status)
         startActivity(intent)
     }
 
@@ -332,6 +337,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         val intent = Intent(this, WorkLogActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId.toString())
         intent.putExtra(BaseParam.WONUM, workorderNumber.toString())
+        intent.putExtra(BaseParam.STATUS, status)
         startActivity(intent)
     }
 
@@ -346,6 +352,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private fun goToMaterialActual() {
         val intent = Intent(this, MaterialActualActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        intent.putExtra(BaseParam.STATUS, status)
         startActivity(intent)
     }
 

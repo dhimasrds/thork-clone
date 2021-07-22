@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
 
     <data>
 
@@ -122,15 +124,15 @@
                         android:fontFamily="@font/poppins"
                         android:text="Priority" />
 
-<!--                    <TextView-->
-<!--                        android:id="@+id/priority"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/margin_left_wo_detail"-->
-<!--                        android:layout_marginBottom="20dp"-->
-<!--                        android:fontFamily="@font/poppins"-->
-<!--                        android:textColor="@color/colorBlack"-->
-<!--                        android:textSize="@dimen/text_size_wo_detail_16" />-->
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/priority"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginLeft="@dimen/margin_left_wo_detail"-->
+                    <!--                        android:layout_marginBottom="20dp"-->
+                    <!--                        android:fontFamily="@font/poppins"-->
+                    <!--                        android:textColor="@color/colorBlack"-->
+                    <!--                        android:textSize="@dimen/text_size_wo_detail_16" />-->
 
                     <TextView
                         android:id="@+id/priority"
@@ -138,13 +140,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_left_wo_detail"
                         android:layout_marginBottom="20dp"
-                        android:gravity="center"
                         android:background="@drawable/bg_priority_normal"
                         android:fontFamily="@font/roboto_regular"
+                        android:gravity="center"
                         android:padding="@dimen/general_padding_8dp"
                         android:singleLine="false"
-                        android:text="@string/normal"
-                        android:textColor="@color/priority_normal"/>
+                        android:text="@string/strip"
+                        android:textColor="@color/priority_normal"
+                        app:setPriority="@{vm.priority}" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -438,9 +441,9 @@
                         layout="@layout/activity_detail_wo_worklog" />
 
                     <include
-                        android:visibility="gone"
                         android:id="@+id/include_longdesc"
-                        layout="@layout/activity_detail_wo_longdesc" />
+                        layout="@layout/activity_detail_wo_longdesc"
+                        android:visibility="gone" />
 
                     <include
                         android:id="@+id/include_attachments"

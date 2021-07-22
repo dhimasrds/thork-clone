@@ -47,6 +47,7 @@
         <activity android:name=".pages.material_actual.element.material_actual_item_master.MaterialActualItem" />
         <activity android:name=".pages.material_plan.element.form.MaterialPlanFormActivity" />
         <activity android:name=".pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem" />
+        <activity android:name=".pages.material_plan.element.detail_material_plan.MaterialPlanDetail" />
         <activity android:name=".pages.material_actual.element.form.MaterialActualFormActivity" />
         <activity android:name=".pages.material_actual.MaterialActualActivity" />
         <activity android:name=".pages.followup_wo.FollowUpWoActivity" />

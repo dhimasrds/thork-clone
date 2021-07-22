@@ -155,7 +155,6 @@ class WorkerCoordinator @Inject constructor(
 
         val workManager = WorkManager.getInstance(context)
         workManager.enqueue(workRequest)
-
     }
 
     fun addCrewPositionQueue(remoteMessageMap: MutableMap<String, String>) {

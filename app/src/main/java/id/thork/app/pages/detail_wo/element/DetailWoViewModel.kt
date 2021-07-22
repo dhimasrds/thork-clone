@@ -47,6 +47,8 @@ class DetailWoViewModel @ViewModelInject constructor(
     private val _Result = MutableLiveData<Int>()
     private val _LocationRfid = MutableLiveData<String>()
     private val _ResultLocation = MutableLiveData<Int>()
+    private val _Priority = MutableLiveData<Int>()
+
 
     val CurrentMember: LiveData<Member> get() = _CurrentMember
     val RequestRoute: LiveData<ResponseRoute> get() = _RequestRoute
@@ -55,6 +57,7 @@ class DetailWoViewModel @ViewModelInject constructor(
     val Result: LiveData<Int> get() = _Result
     val LocationRfid: LiveData<String> get() = _LocationRfid
     val ResultLocation: LiveData<Int> get() = _ResultLocation
+    val Priority: LiveData<Int> get() = _Priority
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
     private var username: String? = null
@@ -127,7 +130,12 @@ class DetailWoViewModel @ViewModelInject constructor(
                     woId,
                     member,
                     onSuccess = {
-                        workOrderRepository.updateWoCacheAfterSync(woId,wonum, longdesc, nextStatus)
+                        workOrderRepository.updateWoCacheAfterSync(
+                            woId,
+                            wonum,
+                            longdesc,
+                            nextStatus
+                        )
                         materialRepository.checkMatActAfterUpdate(woId)
                         saveScannerMaterial(woId)
                         uploadAttachments(woId)
@@ -152,7 +160,8 @@ class DetailWoViewModel @ViewModelInject constructor(
 
     fun uploadAttachments(woId: Int) {
         attachmentEntities = attachmentRepository.getAttachmentByWoId(woId)
-        Timber.tag(TAG).d("uploadAttachments() woId: %s attachmentEntities: %s", woId, attachmentEntities)
+        Timber.tag(TAG)
+            .d("uploadAttachments() woId: %s attachmentEntities: %s", woId, attachmentEntities)
         viewModelScope.launch(Dispatchers.IO) {
             username.whatIfNotNullOrEmpty { username ->
                 attachmentRepository.uploadAttachment(attachmentEntities, username)
@@ -215,6 +224,10 @@ class DetailWoViewModel @ViewModelInject constructor(
 
     fun compareResultScanner(originText: String, comapareText: String): Boolean {
         return originText.equals(comapareText)
+    }
+
+    fun setPriority(priority: Int) {
+        _Priority.value = priority
     }
 
 }
