@@ -25,7 +25,8 @@ data class WoCacheEntity(
     var longitude: Double? = null,
     var changeDate: String? = null,
     var reportDateUTCTime: Date? = null,
-    var reportString: String? = null
+    var reportString: String? = null,
+    var externalREFID: String? = null
 ) :BaseEntity(), Parcelable{
 
 }
