@@ -96,4 +96,10 @@ object CacheModule {
         return AttendanceDaoImp()
     }
 
+    @Singleton
+    @Provides
+    fun provideTaskDao(): TaskDao{
+        return TaskDaoImp()
+    }
+
 }

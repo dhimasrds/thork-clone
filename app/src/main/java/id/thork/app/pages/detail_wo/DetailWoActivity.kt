@@ -32,6 +32,7 @@ import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.multi_asset.ListAssetActivity
 import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.pages.rfid_location.RfidLocationActivity
+import id.thork.app.pages.task.TaskActivity
 import id.thork.app.pages.work_log.WorkLogActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
@@ -116,7 +117,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 }
 
                 workorderId = it.workorderid
-                workorderNumber = it.wonum
+                it.wonum.whatIfNotNull {
+                    workorderNumber = it
+                }
                 workorderStatus = it.status
                 workorderLongdesc = it.descriptionLongdescription
                 it.status?.let { status -> setButtonStatus(status) }
@@ -289,7 +292,9 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
         }
 
-
+        binding.includeTask.cardTask.setOnClickListener {
+            gotoTaskActivity()
+        }
     }
 
     private fun gotoListMaterial() {
@@ -333,6 +338,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         intent.putExtra(BaseParam.WORKORDERID, workorderId.toString())
         intent.putExtra(BaseParam.WONUM, workorderNumber.toString())
         intent.putExtra(BaseParam.STATUS, status)
+        startActivity(intent)
+    }
+
+    private fun gotoTaskActivity() {
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        intent.putExtra(BaseParam.WONUM, workorderNumber)
+        intent.putExtra(BaseParam.STATUS, workorderStatus)
         startActivity(intent)
     }
 
@@ -542,19 +555,19 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     }
 
     override fun onRightButton() {
-        if (workorderStatus != null && workorderStatus == BaseParam.APPROVED) {
+        if (workorderStatus != null && workorderStatus == BaseParam.APPROVED && workorderNumber != null) {
             detailWoViewModel.updateWo(
                 workorderId,
                 workorderStatus,
-                workorderNumber,
+                workorderNumber!!,
                 workorderLongdesc,
                 BaseParam.INPROGRESS
             )
-        } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS) {
+        } else if (workorderStatus != null && workorderStatus == BaseParam.INPROGRESS && workorderNumber != null) {
             detailWoViewModel.updateWo(
                 workorderId,
                 workorderStatus,
-                workorderNumber,
+                workorderNumber!!,
                 workorderLongdesc,
                 BaseParam.COMPLETED
             )

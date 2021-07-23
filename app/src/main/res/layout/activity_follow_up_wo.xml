@@ -553,6 +553,15 @@
                     <include
                         android:id="@+id/include_assets"
                         layout="@layout/activity_create_wo_assets" />
+
+                    <include
+                        android:id="@+id/include_task"
+                        layout="@layout/activity_create_wo_task"/>
+
+                    <!--Labor plan-->
+                    <include android:id="@+id/include_laborplan"
+                        layout="@layout/activity_create_wo_laborplan"/>
+
                     <!--Scan QR-->
 <!--                    <androidx.cardview.widget.CardView-->
 <!--                        android:visibility="gone"-->

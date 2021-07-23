@@ -87,6 +87,14 @@
     <string name="attendance_title">Save</string>
     <string name="attendance_qustion">Are you sure you want to save attendance?</string>
 
+    <!-- Save Task Dialog -->
+    <string name="task_title">Save</string>
+    <string name="task_qustion">Are you sure you want to save task?</string>
+
+    <!-- Cancel Task Dialog -->
+    <string name="task_cancel_title">Save</string>
+    <string name="task_cancel_qustion">Are you sure you want to cancel task?</string>
+
     <!-- Delete Image Attendance Dialog -->
     <string name="delete_image_attendance_title">Delete</string>
     <string name="delete_image_attendance_qustion">Are you sure you want to delete image?</string>
@@ -94,6 +102,14 @@
     <!-- Error Save Attendance Dialog -->
     <string name="error_attendance_title">Warning!</string>
     <string name="error_attendance_qustion">Image and your location cannot be empty</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_task_title">Warning!</string>
+    <string name="error_task_qustion">Every field cannot be empty</string>
+
+    <!-- Error Date Attendance Dialog -->
+    <string name="error_date_task_title">Warning!</string>
+    <string name="error_date_task_qustion">Your Actual date cannot be past than Schedule date</string>
 
     <!-- Empty Check in Attendance Dialog -->
     <string name="empty_attendance_checkin_title">Warning!</string>
@@ -496,6 +512,25 @@
     <string name="check_in_image">Check in Image</string>
     <string name="check_out_image">Check out Image</string>
     <string name="check_out_attendance">Check out</string>
+    <string name="task">Task</string>
+    <string name="select_task">Select Task</string>
+    <string name="labor">Labor</string>
+    <string name="select_labor">Select Labor</string>
+    <string name="craft">Craft</string>
+    <string name="select_craft">Select Craft</string>
+    <string name="skill_level">Skill Level</string>
+    <string name="vendor">Vendor</string>
+    <string name="create_labor_plan">Create Labor Plan</string>
+    <string name="labor_plan">Labor Plan</string>
+    <string name="select_skill_level">Select Skill Level</string>
 
+    <string name="task_id">ID</string>
+    <string name="task_desc">Description</string>
+    <string name="task_status">Status</string>
+    <string name="task_schedule_start">Schedule Start</string>
+    <string name="task_est_dur">Estimate Duration</string>
+    <string name="task_actual_start">Actual Start</string>
+    <string name="task_click_here">Click Here</string>
+    <string name="task_toolbar">Task</string>
 
 </resources>

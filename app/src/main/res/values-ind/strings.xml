@@ -87,6 +87,14 @@
     <string name="attendance_title">Simpan</string>
     <string name="attendance_qustion">Anda yakin ingin simpan absensi ini?</string>
 
+    <!-- Save Task Dialog -->
+    <string name="task_title">Simpan</string>
+    <string name="task_qustion">Anda yakin ingin simpan task ini?</string>
+
+    <!-- Cancel Task Dialog -->
+    <string name="task_cancel_title">Save</string>
+    <string name="task_cancel_qustion">Anda yakin ingin membatalkan pembuatan tugas?</string>
+
     <!-- Delete Image Attendance Dialog -->
     <string name="delete_image_attendance_title">Hapus</string>
     <string name="delete_image_attendance_qustion">Apa kamu ingin menghapus foto?</string>
@@ -94,6 +102,14 @@
     <!-- Error Save Attendance Dialog -->
     <string name="error_attendance_title">Peringatan!</string>
     <string name="error_attendance_qustion">Gambar dan Lokasi tidak boleh kosong</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_task_title">Peringatan!</string>
+    <string name="error_task_qustion">Setiap form tidak boleh kosong</string>
+
+    <!-- Error Date Attendance Dialog -->
+    <string name="error_date_task_title">Warning!</string>
+    <string name="error_date_task_qustion">Tanggal actual tidak boleh lebih kecil dari pada tanggal jadwal</string>
 
     <!-- Empty Check in Attendance Dialog -->
     <string name="empty_attendance_checkin_title">Warning!</string>
@@ -482,5 +498,24 @@
     <string name="check_in_image">Check in Image</string>
     <string name="check_out_image">Check out Image</string>
     <string name="check_out_attendance">Check out</string>
+    <string name="task">Task</string>
+    <string name="select_task">Select Task</string>
+    <string name="labor">Labor</string>
+    <string name="select_labor">Select Labor</string>
+    <string name="craft">Craft</string>
+    <string name="select_craft">Select Craft</string>
+    <string name="skill_level">Skill Level</string>
+    <string name="vendor">Vendor</string>
+    <string name="create_labor_plan">Create Labor Plan</string>
+    <string name="labor_plan">Labor Plan</string>
+    <string name="select_skill_level">Select Skill Level</string>
+    <string name="task_id">ID</string>
+    <string name="task_desc">Deskripsi</string>
+    <string name="task_status">Status</string>
+    <string name="task_schedule_start">Jadwal Mulai</string>
+    <string name="task_est_dur">Estimasi Durasi</string>
+    <string name="task_actual_start">Jam Mulai</string>
+    <string name="task_click_here">Click Here</string>
+    <string name="task_toolbar">Task</string>
 
 </resources>

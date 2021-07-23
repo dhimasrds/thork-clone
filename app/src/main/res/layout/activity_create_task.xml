@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="id.thork.app.pages.task.element.TaskViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/general_margin_10dp"
+        android:orientation="vertical"
+        tools:context=".pages.task.CreateTaskActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/btn_save_task"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_margin_10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:text="@string/task_id"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/general_margin_5dp"
+                        android:background="@drawable/ic_line" />
+
+                    <TextView
+                        android:id="@+id/tv_id_task"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/general_margin_5dp"
+                        android:background="@color/transparant"
+                        android:fontFamily="@font/roboto_regular"
+                        android:hint="ID"
+                        android:inputType="textMultiLine|textVisiblePassword"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/base_text_size_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:text="@string/desc"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/general_margin_5dp"
+                        android:background="@drawable/ic_line" />
+
+                    <EditText
+                        android:id="@+id/tv_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/general_margin_5dp"
+                        android:background="@color/transparant"
+                        android:backgroundTint="@color/transparant"
+                        android:fontFamily="@font/roboto_regular"
+                        android:hint="@string/type_here"
+                        android:inputType="textMultiLine"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/base_text_size_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:text="@string/task_status"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/general_margin_5dp"
+                        android:background="@drawable/ic_line" />
+
+                    <TextView
+                        android:id="@+id/tv_status_task"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_status"
+                        android:backgroundTintMode="multiply"
+                        android:fontFamily="@font/roboto_bold"
+                        android:gravity="center"
+                        android:text="@string/approve"
+                        android:textColor="@color/blueTextStatus"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:text="@string/task_schedule_start"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/general_margin_5dp"
+                        android:background="@drawable/ic_line" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/tv_schedule_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/general_margin_5dp"
+                        android:background="@color/transparant"
+                        android:drawableStart="@drawable/ic_date_black"
+                        android:drawablePadding="@dimen/general_margin_5dp"
+                        android:focusable="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:hint="@string/task_click_here"
+                        android:inputType="textMultiLine|textVisiblePassword"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/base_text_size_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:text="@string/task_est_dur"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/general_margin_5dp"
+                        android:background="@drawable/ic_line" />
+
+                    <TextView
+                        android:id="@+id/tv_est_dur"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:hint="@string/hourminute"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:text="@string/task_actual_start"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textFontWeight="700"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/general_margin_5dp"
+                        android:background="@drawable/ic_line" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/tv_actual_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/general_margin_5dp"
+                        android:background="@color/transparant"
+                        android:drawableStart="@drawable/ic_date_black"
+                        android:drawablePadding="@dimen/general_margin_5dp"
+                        android:focusable="false"
+                        android:fontFamily="@font/roboto_regular"
+                        android:hint="@string/task_click_here"
+                        android:inputType="textMultiLine|textVisiblePassword"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/base_text_size_16" />
+                </LinearLayout>
+                <!--MARGIN-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"></LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_save_task"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/general_margin_20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/colorPrimaryBackground"
+                    android:text="Save"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content"
+                    app:layout_constraintVertical_bias="0.997" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

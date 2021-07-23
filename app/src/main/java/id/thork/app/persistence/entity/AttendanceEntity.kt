@@ -11,7 +11,8 @@ import java.util.*
  */
 @Parcelize
 @Entity
-class AttendanceEntity(
+class
+AttendanceEntity(
     var dateCheckInLocal: Long? = null,
     var dateCheckIn : String? = null,
     var hoursCheckIn : String? = null,

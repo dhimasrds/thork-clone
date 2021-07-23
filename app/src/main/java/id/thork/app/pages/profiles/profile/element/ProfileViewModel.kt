@@ -1,6 +1,5 @@
 package id.thork.app.pages.profiles.profile.element
 
-import android.net.Uri
 import android.widget.ImageView
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -9,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.skydoves.whatif.whatIfNotNull
-import id.thork.app.R
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
@@ -18,7 +16,6 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.GlideApp
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.*
-import id.thork.app.utils.PathUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -34,7 +31,8 @@ class ProfileViewModel @ViewModelInject constructor(
     private val attachmentRepository: AttachmentRepository,
     private val materialRepository: MaterialRepository,
     private val worklogRepository: WorklogRepository,
-    private val attendanceRepository: AttendanceRepository
+    private val attendanceRepository: AttendanceRepository,
+    private val taskRepository: TaskRepository,
 ) : LiveCoroutinesViewModel() {
     val TAG = ProfileViewModel::class.java.name
 
@@ -85,6 +83,7 @@ class ProfileViewModel @ViewModelInject constructor(
         worklogRepository.removeWorklogType()
         worklogRepository.removeWorklog()
         attendanceRepository.removeAttendance()
+        taskRepository.removeAllTask()
         _logout.postValue(BaseParam.APP_TRUE)
     }
 
@@ -93,10 +92,6 @@ class ProfileViewModel @ViewModelInject constructor(
         imageView: ImageView
     ) {
         imageUri.whatIfNotNull {
-            val uri: Uri =
-                PathUtils.getDrawableUri(BaseApplication.context, R.drawable.ic_user_profile)
-            Timber.tag(TAG).d("setImageProfile() uristring: %s", it)
-
             if (it.startsWith("https")) {
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 Timber.tag(TAG).d("setImageProfile() cookies: %s", cookie)
@@ -106,10 +101,6 @@ class ProfileViewModel @ViewModelInject constructor(
                         .build()
                 )
                 GlideApp.with(BaseApplication.context).load(glideUrl)
-                    .circleCrop()
-                    .into(imageView)
-            } else {
-                GlideApp.with(BaseApplication.context).load(uri)
                     .circleCrop()
                     .into(imageView)
             }

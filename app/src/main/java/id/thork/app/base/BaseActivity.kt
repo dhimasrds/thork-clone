@@ -49,6 +49,7 @@ import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.element.signature.SignatureActivity
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
 import id.thork.app.persistence.dao.AttendanceDao
+import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
@@ -80,6 +81,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var attendanceDao: AttendanceDao
+
+    @Inject
+    lateinit var taskDao: TaskDao
 
     @Inject
     lateinit var appSession: AppSession
@@ -367,7 +371,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun onGoodConnection() {
-        Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
+//        Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
         //TODO sync update status Workorder when online
         val woCacheList =
@@ -381,6 +385,11 @@ abstract class BaseActivity : AppCompatActivity() {
         val attendance = attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
         attendance.whatIfNotNull {
             workerCoordinator.addSyncAttendance()
+        }
+
+        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        task.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncTask()
         }
     }
 
@@ -399,6 +408,11 @@ abstract class BaseActivity : AppCompatActivity() {
         val attendance = attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
         attendance.whatIfNotNull {
             workerCoordinator.addSyncAttendance()
+        }
+
+        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        task.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncTask()
         }
     }
 

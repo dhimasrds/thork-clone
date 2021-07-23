@@ -156,4 +156,11 @@ class WoCacheDaoImp : WoCacheDao {
     override fun findListWoByStatusHistory(vararg status: String): List<WoCacheEntity> {
         return woCacheEntityBox.query().`in`(WoCacheEntity_.status, status).build().find()
     }
+
+    override fun findWoByWonumAndIsChange(wonum: String, isChange: Int): WoCacheEntity? {
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum).equal(WoCacheEntity_.isChanged, isChange).build().find()
+        woCacheEntity.whatIfNotNullOrEmpty { return woCacheEntity[0] }
+        return null
+    }
 }

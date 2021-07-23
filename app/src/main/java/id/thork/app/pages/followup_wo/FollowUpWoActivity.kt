@@ -29,11 +29,13 @@ import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
 import id.thork.app.pages.followup_wo.element.FollowUpWoViewModel
+import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
+import id.thork.app.pages.task.TaskActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -153,6 +155,14 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             goToMaterialPlan()
         }
 
+        binding.includeLaborplan.laborPlan.setOnClickListener {
+            goToLaborPlan()
+        }
+
+        binding.includeTask.cardTask.setOnClickListener {
+            gotoTaskActivity()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -227,9 +237,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     @SuppressLint("SetTextI18n")
     var setEstimdur = View.OnClickListener {
-        dialogUtils.setInflater(R.layout.dialog_estdur, null, layoutInflater).create().setRounded(
-            true
-        )
+        dialogUtils.setInflater(R.layout.dialog_estdur, null, layoutInflater).create()
         dialogUtils.show()
         val esdurHours = dialogUtils.setViewId(R.id.esdur_hours) as EditText
         val esdurMinutes = dialogUtils.setViewId(R.id.esdur_minutes) as EditText
@@ -344,6 +352,15 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         startQRScanner(BaseParam.BARCODE_REQUEST_CODE_LOCATION)
     }
 
+    private fun gotoTaskActivity() {
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        intent.putExtra(BaseParam.WONUM, tempWonum)
+        intent.putExtra(BaseParam.STATUS, BaseParam.WAPPR)
+        intent.putExtra(BaseParam.TAG_TASK, "TAG_TASK")
+        startActivity(intent)
+    }
+
     private fun pickLocation() {
         try {
             // Request location updates
@@ -372,6 +389,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     override fun onRightButton() {
         if (validateDialogExit) {
+            viewModel.removeTask(tempWonum)
             viewModel.removeScanner(tempWonum)
         } else {
             if (isConnected) {
@@ -506,7 +524,7 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private fun startQRScanner(requestCode: Int) {
         IntentIntegrator(this).apply {
-            setCaptureActivity(ScannerActivity::class.java)
+            captureActivity = ScannerActivity::class.java
             setRequestCode(requestCode)
             initiateScan()
         }
@@ -537,6 +555,11 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private fun goToMaterialPlan() {
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        startActivity(intent)
+    }
+
+    private fun goToLaborPlan() {
+        val intent = Intent(this, LaborPlanActivity::class.java)
         startActivity(intent)
     }
 }
