@@ -67,7 +67,7 @@ class TaskWorker @WorkerInject constructor(
         val listTask = taskRepository.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
         Timber.d("syncTask() listSize %s ", listTask.size)
         val index = 0
-        listTask.whatIfNotNull {
+        listTask.whatIfNotNullOrEmpty {
             updateTaskToMaximoInOfflineMode(it, index)
         }
     }

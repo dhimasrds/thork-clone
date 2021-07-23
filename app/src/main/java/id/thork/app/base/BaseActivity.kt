@@ -388,7 +388,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
-        task.whatIfNotNull {
+        task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
     }
@@ -411,7 +411,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
-        task.whatIfNotNull {
+        task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
     }
