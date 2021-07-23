@@ -270,13 +270,14 @@ class WorkOrderWorker @WorkerInject constructor(
                 }
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+                val properties = BaseParam.APP_ALL_PROPERTIES
                 GlobalScope.launch(Dispatchers.IO) {
                     workOrderRepository.createWo(
-                        cookie, member,
+                        cookie, properties, member,
                         onSuccess = {
                             //TODO handle create wo cache after update
                             workOrderRepository.updateWoCacheAfterSync(
-                                it.woId,
+                                it.workorderid,
                                 it.wonum,
                                 longdesc,
                                 status.toString()

@@ -141,10 +141,12 @@ class CreateWoViewModel @ViewModelInject constructor(
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val properties = BaseParam.APP_ALL_PROPERTIES
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.createWo(
-                cookie, member,
-                onSuccess = {
+                cookie, properties, member,
+                onSuccess = { woMember ->
+
 //                    uploadAttachments(tempWoId)
                 }, onError = {
                     Timber.tag(TAG).i("createWo() error: %s", it)

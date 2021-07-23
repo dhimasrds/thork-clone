@@ -143,18 +143,19 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository.createWo(
-                cookie, member,
-                onSuccess = {
+            val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+            val properties = BaseParam.APP_ALL_PROPERTIES
+            viewModelScope.launch(Dispatchers.IO) {
+                workOrderRepository.createWo(
+                    cookie, properties, member,
+                    onSuccess = { woMember ->
 
-                }, onError = {
-                    Timber.tag(TAG).i("createWo() error: %s", it)
-                }
-            )
+                    }, onError = {
+                        Timber.tag(TAG).i("createWo() error: %s", it)
+                    }
+                )
+            }
         }
-    }
 
     private fun saveScannerMaterial(tempWonum: String, woId: Int) {
         val materialBackupList: List<MaterialBackupEntity?>? =
