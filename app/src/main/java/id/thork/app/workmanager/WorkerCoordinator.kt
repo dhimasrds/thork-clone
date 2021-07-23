@@ -129,7 +129,7 @@ class WorkerCoordinator @Inject constructor(
         val workRequest: WorkRequest = OneTimeWorkRequestBuilder<TaskWorker>()
             .addTag(SYNC_TASK)
             .setConstraints(constraints)
-            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setInitialDelay(18, TimeUnit.SECONDS)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
                 OneTimeWorkRequest.MIN_BACKOFF_MILLIS,

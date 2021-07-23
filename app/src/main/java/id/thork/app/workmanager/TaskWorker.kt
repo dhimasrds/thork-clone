@@ -64,18 +64,19 @@ class TaskWorker @WorkerInject constructor(
     }
 
     private fun syncTask() {
-        val taskCache = taskRepository.findTaskByOfflineModeAndIsFromWoDetail(
-            BaseParam.APP_TRUE,
-            BaseParam.APP_TRUE
-        )
-        taskCache.whatIfNotNull {
-            updateTaskToMaximoInOfflineMode(it)
+        val listTask = taskRepository.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        Timber.d("syncTask() listSize %s ", listTask.size)
+        val index = 0
+        listTask.whatIfNotNull {
+            updateTaskToMaximoInOfflineMode(it, index)
         }
     }
 
-    private fun updateTaskToMaximoInOfflineMode(taskEntity: TaskEntity) {
-        val woid = taskEntity.woId
-        val taskId = taskEntity.taskId
+    private fun updateTaskToMaximoInOfflineMode(listTask: List<TaskEntity>, currentIndex: Int) {
+
+        val currentList = listTask[currentIndex]
+        val woid = listTask[currentIndex].woId
+
         val xmethodeOverride: String = BaseParam.APP_PATCH
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val contentType: String = ("application/json")
@@ -83,7 +84,7 @@ class TaskWorker @WorkerInject constructor(
         val properties = BaseParam.APP_ALL_PROPERTIES
 
         woid.whatIfNotNull { woId ->
-            val member = taskRepository.prepareTaskBodyInOfflineMode(taskEntity)
+            val member = taskRepository.prepareTaskBodyInOfflineMode(currentList)
             val taskResponse = TaskResponse()
             member.whatIfNotNullOrEmpty {
                 taskResponse.woactivity = it
@@ -91,7 +92,6 @@ class TaskWorker @WorkerInject constructor(
 
             runBlocking {
                 launch(Dispatchers.IO) {
-                    taskId.whatIfNotNull { taskId ->
                         taskRepository.createTaskToMx(
                             xmethodeOverride,
                             contentType,
@@ -101,26 +101,29 @@ class TaskWorker @WorkerInject constructor(
                             woId,
                             taskResponse,
                             onSuccess = { woMember ->
-                                woMember.woactivity.whatIfNotNullOrEmpty {
-                                    Timber.tag(TAG).i(
-                                        "updateTaskToMaximoInOfflineMode() onSuccess() onSuccess: %s",
-                                        it
-                                    )
-                                    taskRepository.handlingTaskSuccesInOfflineMode(
-                                        it,
-                                        taskEntity,
-                                    )
+                                    woMember.woactivity.whatIfNotNullOrEmpty {
+                                        Timber.tag(TAG).i(
+                                            "updateTaskToMaximoInOfflineMode() onSuccess() onSuccess: %s",
+                                            it
+                                        )
+                                        taskRepository.handlingTaskSuccesInOfflineMode(
+                                            it,
+                                            currentList,
+                                            woId
+                                        )
+                                }
+                                val nextIndex = currentIndex + 1
+                                if (nextIndex <= listTask.size - 1) {
+                                    Timber.d("updateTaskToMaximoInOfflineMode() nextIndex %s ", nextIndex)
+                                    updateTaskToMaximoInOfflineMode(listTask, nextIndex)
                                 }
                             },
                             onError = {
                                 Timber.tag(TAG).i(
-                                    "updateTaskToMaximoInOfflineMode() onError() onError: %s",
-                                    it
+                                    "updateTaskToMaximoInOfflineMode() onError() onError: %s", it
                                 )
-                                taskRepository.handlingTaskFailedFromWoDetail(woId, taskId)
                             }
                         )
-                    }
                 }
             }
         }

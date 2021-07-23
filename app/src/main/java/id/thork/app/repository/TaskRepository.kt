@@ -90,6 +90,13 @@ class TaskRepository @Inject constructor(
         return taskDao.findTaskByOfflineModeAndIsFromWoDetail(offlineMode, isFromWoDetail)
     }
 
+    fun findTaskListByOfflineModeAndIsFromWoDetail(
+        offlineMode: Int,
+        isFromWoDetail: Int
+    ): List<TaskEntity> {
+        return taskDao.findTaskListByOfflineModeAndIsFromWoDetail(offlineMode, isFromWoDetail)
+    }
+
     fun saveCache(
         woid: Int?, wonum: String?, taskId: Int?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
@@ -289,12 +296,16 @@ class TaskRepository @Inject constructor(
 
     fun handlingTaskSuccesInOfflineMode(
         list: List<id.thork.app.network.response.work_order.Woactivity>,
-        taskEntity: TaskEntity
+        taskEntity: TaskEntity,
+        woid: Int
     ) {
-        val index = list.size - 1
-        taskEntity.refWonum = list[index].wonum
-        taskEntity.offlineMode = BaseParam.APP_FALSE
-        taskEntity.syncStatus = BaseParam.APP_TRUE
-        saveTaskCache(taskEntity)
+        for (listTask in list) {
+            if (taskEntity.woId == woid && taskEntity.taskId == listTask.taskid) {
+                taskEntity.refWonum = listTask.wonum
+                taskEntity.offlineMode = BaseParam.APP_FALSE
+                taskEntity.syncStatus = BaseParam.APP_TRUE
+                saveTaskCache(taskEntity)
+            }
+        }
     }
 }

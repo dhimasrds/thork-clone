@@ -36,4 +36,8 @@ interface TaskDao {
     fun findTaskListByWoidAndOfflineModeAndIsFromWoDetail(woid: Int, offlineMode: Int, isFromWoDetail: Int): List<TaskEntity>
 
     fun findTaskByOfflineModeAndIsFromWoDetail(offlineMode: Int, isFromWoDetail: Int): TaskEntity?
+    fun findTaskListByOfflineModeAndIsFromWoDetail(
+        offlineMode: Int,
+        isFromWoDetail: Int
+    ): List<TaskEntity>
 }
