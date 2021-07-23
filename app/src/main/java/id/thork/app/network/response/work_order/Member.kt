@@ -260,4 +260,6 @@ data class Member(
     val multiassetlocci: List<Multiassetlocci>? = null,
     @Json(name = "worklog")
     var worklog: List<Worklog>? = null,
+    @Json(name = "externalrefid")
+    var externalrefid: String? = null,
 )

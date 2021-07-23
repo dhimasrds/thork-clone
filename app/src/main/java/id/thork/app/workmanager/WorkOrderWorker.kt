@@ -156,7 +156,8 @@ class WorkOrderWorker @WorkerInject constructor(
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
                 val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
-                val listWorklog = worklogRepository.prepareBodyListWorklog(woId.toString(), BaseParam.APP_FALSE)
+                val listWorklog =
+                    worklogRepository.prepareBodyListWorklog(woId.toString(), BaseParam.APP_FALSE)
                 val member = Member()
                 member.status = status
                 member.descriptionLongdescription = longdesc
@@ -259,6 +260,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 member.estdur = prepareBody.estdur
                 member.wopriority = prepareBody.wopriority
                 member.descriptionLongdescription = prepareBody.descriptionLongdescription
+                member.externalrefid = it.externalREFID
                 prepareBody.origrecordid.whatIfNotNull {
                     member.origrecordid = it
                     member.origrecordclass = prepareBody.origrecordclass

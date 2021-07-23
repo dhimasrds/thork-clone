@@ -780,5 +780,25 @@ class WorkOrderRepository @Inject constructor(
         return locationDao.findByLocation(location)
     }
 
+    fun saveCreatedWoLocally(
+        member: Member,
+        tempWonum: String,
+        externalrefid: String,
+        syncStatus: Int
+    ) {
+        val tWoCacheEntity = WoCacheEntity()
+        tWoCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
+        tWoCacheEntity.syncStatus = syncStatus
+        tWoCacheEntity.isChanged = BaseParam.APP_TRUE
+        tWoCacheEntity.createdBy = appSession.userEntity.username
+        tWoCacheEntity.updatedBy = appSession.userEntity.username
+        tWoCacheEntity.createdDate = Date()
+        tWoCacheEntity.updatedDate = Date()
+        tWoCacheEntity.wonum = tempWonum
+        tWoCacheEntity.status = BaseParam.WAPPR
+        tWoCacheEntity.externalREFID = externalrefid
+        saveWoList(tWoCacheEntity, appSession.userEntity.username)
+    }
+
 
 }

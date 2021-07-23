@@ -26,6 +26,7 @@ import id.thork.app.repository.MaterialRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
+import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -97,15 +98,17 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
 
+        val externalrefid = WoUtils.getExternalRefid()
+
         val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
         member.description = deskWo
@@ -123,6 +126,18 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         materialPlanlist.whatIfNotNullOrEmpty {
             member.wpmaterial = it
         }
+
+        externalrefid.whatIfNotNull {
+            member.externalrefid = it
+        }
+
+        //save create Wo to local
+        workOrderRepository.saveCreatedWoLocally(
+            member,
+            tempWonum,
+            externalrefid,
+            BaseParam.APP_TRUE
+        )
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -171,11 +186,11 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
         member.description = deskWo
@@ -203,6 +218,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         tWoCacheEntity.updatedDate = Date()
         tWoCacheEntity.wonum = tempWonum
         tWoCacheEntity.status = BaseParam.WAPPR
+        tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
         workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
         Timber.d("createwointeractor: %s", longdesc)
     }

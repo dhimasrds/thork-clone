@@ -1,4 +1,4 @@
-    package id.thork.app.pages.create_wo.element
+package id.thork.app.pages.create_wo.element
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -19,6 +19,7 @@ import id.thork.app.persistence.entity.*
 import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
+import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -100,16 +101,17 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+        val externalrefid = WoUtils.getExternalRefid()
 
         val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
 
@@ -123,6 +125,16 @@ class CreateWoViewModel @ViewModelInject constructor(
         materialPlanlist.whatIfNotNullOrEmpty {
             member.wpmaterial = it
         }
+
+        externalrefid.whatIfNotNull {
+            member.externalrefid = it
+        }
+
+        //save create Wo to local when online
+        workOrderRepository.saveCreatedWoLocally(
+            member, tempWonum, externalrefid,
+            BaseParam.APP_TRUE
+        )
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -167,11 +179,11 @@ class CreateWoViewModel @ViewModelInject constructor(
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
         member.description = deskWo
@@ -195,6 +207,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         tWoCacheEntity.updatedDate = Date()
         tWoCacheEntity.wonum = tempWonum
         tWoCacheEntity.status = BaseParam.WAPPR
+        tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
         workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
         Timber.d("createwointeractor: %s", longdesc)
     }
@@ -233,7 +246,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun prepareMaterialTrans(woid: String) : List<Wpmaterial> {
+    private fun prepareMaterialTrans(woid: String): List<Wpmaterial> {
         val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
         val listMaterialPlan = mutableListOf<Wpmaterial>()
         materialPlanCache.forEach {

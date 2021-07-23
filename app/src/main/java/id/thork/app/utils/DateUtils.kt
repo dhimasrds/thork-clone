@@ -24,8 +24,6 @@ object DateUtils {
     private val DATE_CARD_ATTENDANCE = "dd/MMM/yyyy"
     private val DATE_FORMAT_BODYMX = "yyyy-MM-dd"
     private val DATE_TIME_FORMAT_BODYMX = "HH:mm:ss"
-    private val DATE_TIME_FORMAT_REFID = "HHmmssSSS"
-
 
     /**
      * Get Time Interval from start date and end date
@@ -110,7 +108,7 @@ object DateUtils {
         return sdf.format(c.time)
     }
 
-    fun getTimeAttendanceMaximo(millisec: Long) : String {
+    fun getTimeAttendanceMaximo(millisec: Long): String {
         val c = Date(millisec)
         val sdf = SimpleDateFormat(DATE_TIME_FORMAT_BODYMX)
         return sdf.format(c.time)
@@ -173,15 +171,4 @@ object DateUtils {
         }
         return BaseParam.APP_EMPTY_STRING
     }
-
-    /**
-     * Generate user external REFID
-     */
-
-    fun getExternalRefid(): String {
-        val c = Calendar.getInstance()
-        val sdf = SimpleDateFormat(DATE_TIME_FORMAT_REFID)
-        return sdf.format(c.time)
-    }
-
 }

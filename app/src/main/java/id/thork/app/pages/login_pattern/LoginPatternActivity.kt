@@ -29,7 +29,6 @@ import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
 import id.thork.app.pages.server.ServerActivity
-import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import java.util.*
@@ -71,7 +70,6 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         binding.btnSwitchUser.setOnClickListener {
             loginPatternViewModel.switchUser()
         }
-        Timber.d("setupListener() generate external refid: %s", DateUtils.getExternalRefid())
     }
 
     override fun setupObserver() {
