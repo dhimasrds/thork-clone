@@ -136,10 +136,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             workOrderRepository.saveCreatedWoLocally(
                 member,
                 tempWonum,
-                externalrefid,
-                BaseParam.APP_TRUE
+                externalrefid
             )
-
 
             val moshi = Moshi.Builder().build()
             val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
@@ -152,6 +150,13 @@ class FollowUpWoViewModel @ViewModelInject constructor(
                 workOrderRepository.createWo(
                     cookie, properties, member,
                     onSuccess = { woMember ->
+                        val workorderid = woMember.workorderid
+                        val wonum = woMember.wonum
+                        workOrderRepository.updateCreateWoCacheOnlineMode(
+                            workorderid,
+                            wonum,
+                            tempWonum
+                        )
                         woMember.woactivity.whatIfNotNullOrEmpty {
                             Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
                             taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)

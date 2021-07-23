@@ -137,8 +137,7 @@ class CreateWoViewModel @ViewModelInject constructor(
 
         //save create Wo to local when online
         workOrderRepository.saveCreatedWoLocally(
-            member, tempWonum, externalrefid,
-            BaseParam.APP_TRUE
+            member, tempWonum, externalrefid
         )
 
         val moshi = Moshi.Builder().build()
@@ -151,11 +150,16 @@ class CreateWoViewModel @ViewModelInject constructor(
             workOrderRepository.createWo(
                 cookie, properties, member,
                 onSuccess = { woMember ->
+                    val workorderid = woMember.workorderid
+                    val wonum = woMember.wonum
+                    workOrderRepository.updateCreateWoCacheOnlineMode(workorderid, wonum, tempWonum)
                     woMember.woactivity.whatIfNotNullOrEmpty {
                         Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
                         taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
                     }
-//                    uploadAttachments(tempWoId)
+//                    workorderid.whatIfNotNull {
+//                        uploadAttachments(it)
+//                    }
                 }, onError = {
                     taskRepository.handlingTaskFailedFromCreateWo(tempWoId)
                     Timber.tag(TAG).i("createWo() error: %s", it)

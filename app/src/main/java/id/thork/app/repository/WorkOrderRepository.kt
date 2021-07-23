@@ -697,6 +697,23 @@ class WorkOrderRepository @Inject constructor(
 
     }
 
+    fun updateCreateWoCacheOnlineMode(
+        woId: Int?,
+        wonum: String?,
+        tempWonum: String
+    ) {
+        val woCache = woCacheDao.findWoByWonum(tempWonum)
+        woCache.whatIfNotNull {
+            it.woId = woId
+            it.wonum = wonum
+            it.laborCode = appSession.laborCode
+            it.syncStatus = BaseParam.APP_TRUE
+            it.isChanged = BaseParam.APP_FALSE
+            it.isLatest = BaseParam.APP_TRUE
+            updateWo(it, appSession.userEntity.username)
+        }
+    }
+
     fun addObjectBoxToHashMapActivity() {
         Timber.d("queryObjectBoxToHashMap()")
         if (woCacheDao.findAllWo().isNotEmpty()) {
@@ -818,12 +835,11 @@ class WorkOrderRepository @Inject constructor(
     fun saveCreatedWoLocally(
         member: Member,
         tempWonum: String,
-        externalrefid: String,
-        syncStatus: Int
+        externalrefid: String
     ) {
         val tWoCacheEntity = WoCacheEntity()
         tWoCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
-        tWoCacheEntity.syncStatus = syncStatus
+        tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
         tWoCacheEntity.isChanged = BaseParam.APP_TRUE
         tWoCacheEntity.createdBy = appSession.userEntity.username
         tWoCacheEntity.updatedBy = appSession.userEntity.username

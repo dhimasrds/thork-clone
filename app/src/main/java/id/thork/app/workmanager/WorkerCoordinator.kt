@@ -110,7 +110,7 @@ class WorkerCoordinator @Inject constructor(
             .addTag(SYNC_WO)
 //            .setInputData(inputData)
             .setConstraints(constraints)
-            .setInitialDelay(13, TimeUnit.SECONDS)
+            .setInitialDelay(15, TimeUnit.SECONDS)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
                 OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
