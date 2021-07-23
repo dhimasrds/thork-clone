@@ -266,7 +266,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 member.estdur = prepareBody.estdur
                 member.wopriority = prepareBody.wopriority
                 member.descriptionLongdescription = prepareBody.descriptionLongdescription
-                member.externalrefid = it.externalREFID
+                member.externalrefid = currentWo.externalREFID
                 prepareBody.origrecordid.whatIfNotNull {
                     member.origrecordid = it
                     member.origrecordclass = prepareBody.origrecordclass
