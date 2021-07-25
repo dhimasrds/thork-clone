@@ -7,8 +7,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.work.WorkInfo
 import com.baoyz.widget.PullRefreshLayout
+import com.skydoves.whatif.whatIfNotNull
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.databinding.FragmentWorkOrderListBinding
@@ -26,8 +31,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
+
 @AndroidEntryPoint
-class WorkOrderListFragment : Fragment() {
+class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val viewModel: WorkOrderListViewModel by viewModels()
     private lateinit var binding: FragmentWorkOrderListBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
@@ -44,6 +50,18 @@ class WorkOrderListFragment : Fragment() {
         pullRefreshLayout = binding.swipeRefreshLayout
         workOrderAdapter = WorkOrderAdapter()
         viewModel.pruneWork()
+
+        binding.dropdownMenu.onItemSelectedListener = this
+
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.wo_type,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.dropdownMenu.adapter = adapter
+        }
+
 
         return binding.root
     }
@@ -203,6 +221,14 @@ class WorkOrderListFragment : Fragment() {
             viewModel.pruneWork()
 
         }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        Toast.makeText(requireContext(), parent!!.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        TODO("Not yet implemented")
     }
 
 }
