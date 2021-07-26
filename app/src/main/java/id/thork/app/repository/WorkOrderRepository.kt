@@ -399,6 +399,14 @@ class WorkOrderRepository @Inject constructor(
             )
         }
 
+        member.woactivity.whatIfNotNullOrEmpty {
+            member.workorderid.whatIfNotNull { woid ->
+                member.wonum.whatIfNotNull { wonum ->
+                    taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
+                }
+            }
+        }
+
     }
 
     fun replaceWolocalChace(
