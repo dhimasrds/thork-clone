@@ -30,12 +30,13 @@ object WorkOrderRepositoryModule {
         appSession: AppSession,
         attachmentRepository: AttachmentRepository,
         materialRepository: MaterialRepository,
-        worklogRepository: WorklogRepository
+        worklogRepository: WorklogRepository,
+        taskRepository: TaskRepository
     ): WorkOrderRepository {
         return WorkOrderRepository(
             context,
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
-            attachmentRepository, materialRepository, worklogRepository
+            attachmentRepository, materialRepository, worklogRepository, taskRepository
         )
     }
 

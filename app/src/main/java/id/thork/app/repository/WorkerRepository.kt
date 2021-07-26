@@ -74,7 +74,8 @@ class WorkerRepository constructor(
             assetDao,
             attachmentRepository,
             materialRepository,
-            worklogRepository
+            worklogRepository,
+            taskRepository
         )
     }
 

@@ -46,7 +46,8 @@ class WorkOrderRepository @Inject constructor(
     private val assetDao: AssetDao,
     private val attachmentRepository: AttachmentRepository,
     private val materialRepository: MaterialRepository,
-    private val worklogRepository: WorklogRepository
+    private val worklogRepository: WorklogRepository,
+    private val taskRepository: TaskRepository
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
@@ -337,6 +338,13 @@ class WorkOrderRepository @Inject constructor(
                 )
             }
 
+            wo.woactivity.whatIfNotNullOrEmpty {
+                wo.workorderid.whatIfNotNull { woid ->
+                    wo.wonum.whatIfNotNull { wonum ->
+                        taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
+                    }
+                }
+            }
         }
     }
 
