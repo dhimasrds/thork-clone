@@ -8,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.ApiParam
 import id.thork.app.network.GlideApp
 import id.thork.app.persistence.entity.UserEntity
 import id.thork.app.repository.*
@@ -33,6 +36,7 @@ class ProfileViewModel @ViewModelInject constructor(
     private val worklogRepository: WorklogRepository,
     private val attendanceRepository: AttendanceRepository,
     private val taskRepository: TaskRepository,
+    private val appResourceMx: AppResourceMx
 ) : LiveCoroutinesViewModel() {
     val TAG = ProfileViewModel::class.java.name
 
@@ -63,6 +67,34 @@ class ProfileViewModel @ViewModelInject constructor(
                     }, onError = {
                         Timber.tag(TAG).i("logoutCookie() error: %s", it)
                     })
+            }
+        }
+    }
+
+    fun fetchAttendance() {
+        //TODO appSession.cookie still null
+//        val cookie = appSession.cookie
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val savedQuery = appResourceMx.fsmResAttendace
+        val select = ApiParam.LOGIN_SELECT_ENDPOINT
+        viewModelScope.launch(Dispatchers.IO) {
+            cookie.whatIfNotNull { cookie ->
+                savedQuery.whatIfNotNull { savedQuery ->
+                    attendanceRepository.fetchAttendance(cookie, savedQuery, select,
+                        onSuccess = {
+                            it.whatIfNotNull { response ->
+                                response.member.whatIfNotNullOrEmpty { list ->
+                                    list[0].whatIfNotNull { member ->
+                                        Timber.tag(TAG).i("fetchAttendance() member: %s", member)
+                                        attendanceRepository.handlingFetchAttendance(member)
+                                    }
+                                }
+                            }
+                        },
+                        onError = {
+                            Timber.tag(TAG).i("fetchAttendance() error: %s", it)
+                        })
+                }
             }
         }
     }

@@ -18,7 +18,7 @@ interface AttendanceApi {
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,
         @Query(value = "oslc.where") where: String?
-        ) : ApiResponse<AttendanceResponse>
+    ): ApiResponse<AttendanceResponse>
 
     @POST("maximo/oslc/os/THISFSMATTENDANCE")
     suspend fun createAttendance(
@@ -27,7 +27,7 @@ interface AttendanceApi {
         @Header(BaseParam.APP_PROPERTIES) properties: String?,
         @Query(value = "lean") lean: Int,
         @Body body: Member
-        ) : ApiResponse<Member>
+    ): ApiResponse<Member>
 
 
     @POST("maximo/oslc/os/THISFSMATTENDANCE/{attendanceid}")
@@ -39,5 +39,13 @@ interface AttendanceApi {
         @Path("attendanceid") attendanceid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: Member
-    ) : ApiResponse<Void>
+    ): ApiResponse<Void>
+
+    @GET("maximo/oslc/os/THISFSMATTENDANCE")
+    suspend fun fetchAttendance(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Query("savedQuery") savedQuery: String?,
+        @Query(value = "lean") lean: Int,
+        @Query(value = "oslc.select") select: String?,
+        ) : ApiResponse<AttendanceResponse>
 }

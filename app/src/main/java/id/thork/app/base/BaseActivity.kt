@@ -122,6 +122,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     appSession.cookie = cookie
                 }
             }
+            Timber.d("setupCookie() cookie :%s ", appSession.cookie)
         }
     }
 

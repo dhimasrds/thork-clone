@@ -70,6 +70,11 @@ object DateUtils {
         return c.time
     }
 
+    fun convertMaximoDateToMillisec(dateString: String?): Long {
+        val date = SimpleDateFormat(DATE_FORMAT_MAXIMO).parse(dateString)
+        return date.time
+    }
+
     /**
      * HEADER ATTENDANCE
      * For Display Header Attendance
@@ -78,6 +83,12 @@ object DateUtils {
         val c = Calendar.getInstance()
         val sdf = SimpleDateFormat(DATE_ATTENDANCE)
         return sdf.format(c.time)
+    }
+
+    fun convertMaximoDateToHeaderAttendance(dateString: String?): String {
+        val date = SimpleDateFormat(DATE_FORMAT_MAXIMO).parse(dateString)
+        val sdf = SimpleDateFormat(DATE_ATTENDANCE)
+        return sdf.format(date)
     }
 
     /**
@@ -113,7 +124,6 @@ object DateUtils {
         val sdf = SimpleDateFormat(DATE_TIME_FORMAT_BODYMX)
         return sdf.format(c.time)
     }
-
 
     /**
      * Please Read before u use this utils
