@@ -228,7 +228,8 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     null,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    null
                 )
             }
         ).liveData
@@ -252,7 +253,33 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     query,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    null
+                )
+            }
+        ).liveData
+
+    fun getWoWappr(
+        appSession: AppSession,
+        workOrderRepository: WorkOrderRepository,
+        preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx,
+        wappr: String
+    ) =
+        Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                WoPagingSource(
+                    appSession = appSession,
+                    repository = workOrderRepository,
+                    woCacheDao,
+                    null,
+                    preferenceManager,
+                    appResourceMx,
+                    wappr
                 )
             }
         ).liveData

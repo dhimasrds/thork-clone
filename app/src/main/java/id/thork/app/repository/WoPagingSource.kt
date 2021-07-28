@@ -40,6 +40,7 @@ class WoPagingSource @Inject constructor(
     private val query: String?,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
+    private val wappr : String?
 ) : PagingSource<Int, Member>() {
 
     val TAG = WoPagingSource::class.java.name
@@ -53,26 +54,40 @@ class WoPagingSource @Inject constructor(
         val position = params.key ?: 1
         Timber.d("position :%s", position)
         return try {
+            if (query == null) {
                 fetchWo(position)
                 checkWoOnLocal()
-
-            if(error){
-                Timber.d("paging source error:%s", error)
-                return LoadResult.Error(Exception())
-
+                if (error && checkWoOnLocal().isEmpty()) {
+                    return LoadResult.Error(Exception())
+                }else if(error && checkWoOnLocal().isNotEmpty() && position > 1){
+                    return LoadResult.Error(Exception())
+                }
             }
-                val wo = loadWoCache(offset)
-            Timber.d("filter paging source wo size:%s", wo?.size)
+            val wo = if (wappr !=null) {
+                getWoAppr(offset)
+//                when {
+//                    emptyList -> {
+//                        Timber.d("emptylist paging source :%s", emptyList)
+//                        searchWoFromServer()
+//                        searchLoadWoCache(offset, query.toString())
+//                    }
+//                    else -> searchLoadWoCache(offset, query)
+//                }
+            } else {
+                loadWoCache(offset)
+            }
+            Timber.d("filter paging source :%s", query)
+            Timber.d("filter paging wappr :%s", wappr)
+            Timber.d("filter paging source wo size:%s", wo)
             loadResultPage(wo!!, position)
-
         } catch (exception: IOException) {
-            Timber.d("exception source :%s", exception)
-
+            Timber.d("exception :%s", exception)
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)
         }
     }
+
 
 
     private suspend fun fetchWo(position: Int): Boolean {
@@ -215,6 +230,38 @@ class WoPagingSource @Inject constructor(
         val adapter = moshi.adapter<List<Member>>(listMyData)
         val memberList: List<Member>? = adapter.fromJson(findWo(offset))
         Timber.d("memberlist : %s", memberList?.size)
+        return memberList
+    }
+
+    private fun queryWoWappr(offset: Int): String {
+        val list: List<WoCacheEntity> = woCacheDao.findListWoByStatusOffsetAndRfid(offset, BaseParam.WAPPR)
+        Timber.d("queryWoWappr list :%s", list.size)
+        val body = ArrayList<String>()
+        for (i in list.indices) {
+            if (list[i].status != null) {
+                list[i].syncBody.whatIfNotNull {
+                    body.add(it)
+                }
+
+            }
+        }
+        Timber.d(" searchFindWo json : %s", body.toString())
+        return body.toString()
+    }
+
+    private fun getWoAppr(offset: Int): List<Member>? {
+        val moshi = Moshi.Builder().build()
+        val listMyData: Type = Types.newParameterizedType(
+            MutableList::class.java,
+            Member::class.java
+        )
+        val adapter = moshi.adapter<List<Member>>(listMyData)
+        val memberList: List<Member>? = adapter.fromJson(queryWoWappr(offset))
+        Timber.d("memberlist search: %s", memberList?.size)
+        Timber.d("memberlist search: %s", memberList)
+        if (memberList.isNullOrEmpty()) {
+            emptyList = true
+        }
         return memberList
     }
 }

@@ -23,6 +23,7 @@ import com.baoyz.widget.PullRefreshLayout
 import com.skydoves.whatif.whatIfNotNull
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentWorkOrderListBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
@@ -69,7 +70,8 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
-        setupObserver()
+//        setupObserver()
+        setupObserver2()
         setUpFilterListener()
         swipeRefresh()
 //        progressBarOnFirstLoad()
@@ -96,6 +98,17 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+    }
+
+    private fun setupObserver2() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.woListwappr.observe(viewLifecycleOwner) {
+                workOrderAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+                Timber.d("onCreateView :%s", it)
+            }
+        }
+
+//        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
     }
 
     private fun swipeRefresh() {
@@ -225,6 +238,14 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         Toast.makeText(requireContext(), parent!!.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
+        val local = parent?.getItemIdAtPosition(position).toInt()
+        if (local == 1) {
+            Timber.d("onItemSelected :%s", local)
+            viewModel.getWoLocalAppr(BaseParam.WAPPR)
+        }
+        else{
+            viewModel.getWoLocalAppr("")
+        }
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {

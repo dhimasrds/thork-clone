@@ -51,11 +51,12 @@
                 android:id="@+id/dropdown_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:dropDownVerticalOffset="55dp"
+                android:dropDownVerticalOffset="45dp"
                 android:dropDownWidth="250dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:spinnerMode="dropdown"
-                android:padding="@dimen/general_padding_15dp"
+                android:padding="@dimen/general_padding_10dp"
                 android:popupBackground="@color/white"
                 />
         </FrameLayout>

@@ -45,6 +45,8 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     companion object {
         private const val CURRENT_QUERY = "current_query"
         private const val EMPTY_QUERY = ""
+        private const val WO_LOCAL = "wo_local"
+        private const val WO_ASSIGNED = ""
     }
 
     private val woCacheDao: WoCacheDao
@@ -88,6 +90,35 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     fun searchWo(query: String) {
         currentQuery.value = query
     }
+
+    private val wapprList = state.getLiveData(WO_LOCAL, WO_ASSIGNED)
+    val woListwappr = wapprList.switchMap { status ->
+        if (status.isNotEmpty()) {
+            Timber.d("filter on  viewmodel :%s", status)
+            workOrderRepository.getWoWappr(
+                appSession,
+                workOrderRepository,
+                preferenceManager,
+                appResourceMx,
+                status
+            ).cachedIn(viewModelScope)
+        } else {
+            Timber.d("filter off viewmodel :%s", status)
+            workOrderRepository.getWoList(
+                appSession,
+                workOrderRepository,
+                preferenceManager,
+                appResourceMx
+            )
+        }
+    }
+
+    fun getWoLocalAppr(wappr: String){
+        Timber.d("getWoLocalAppr :%s", wappr)
+        wapprList.value = wappr
+    }
+
+
 
     fun checkingListWo(): List<WoCacheEntity> {
         return woCacheDao.findAllWo()
