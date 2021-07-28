@@ -123,6 +123,10 @@ object BaseParam {
     const val PRIORITY_MEDIUM_DESC = "MEDIUM"
     const val PRIORITY_HIGH_DESC = "HIGH"
 
+    const val PRIORITY_NORMAL_DESC_CREATE = "Normal"
+    const val PRIORITY_MEDIUM_DESC_CREATE = "Medium"
+    const val PRIORITY_HIGH_DESC_CREATE = "High"
+
 
     /**
      * Base Parameter Google Maps Direction Route

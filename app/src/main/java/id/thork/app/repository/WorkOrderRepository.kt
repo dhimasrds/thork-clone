@@ -727,12 +727,15 @@ class WorkOrderRepository @Inject constructor(
     fun updateCreateWoCacheOnlineMode(
         woId: Int?,
         wonum: String?,
-        tempWonum: String
+        tempWonum: String,
+        member: Member
     ) {
+        val syncBody = WoUtils.convertMemberToBody(member)
         val woCache = woCacheDao.findWoByWonum(tempWonum)
         woCache.whatIfNotNull {
             it.woId = woId
             it.wonum = wonum
+            it.syncBody = syncBody
             it.laborCode = appSession.laborCode
             it.syncStatus = BaseParam.APP_TRUE
             it.isChanged = BaseParam.APP_FALSE
