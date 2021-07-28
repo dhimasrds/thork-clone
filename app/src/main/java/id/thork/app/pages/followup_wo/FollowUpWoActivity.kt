@@ -155,10 +155,6 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             goToMaterialPlan()
         }
 
-        binding.includeLaborplan.laborPlan.setOnClickListener {
-            goToLaborPlan()
-        }
-
         binding.includeTask.cardTask.setOnClickListener {
             gotoTaskActivity()
         }
@@ -555,11 +551,6 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private fun goToMaterialPlan() {
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
-        startActivity(intent)
-    }
-
-    private fun goToLaborPlan() {
-        val intent = Intent(this, LaborPlanActivity::class.java)
         startActivity(intent)
     }
 }
