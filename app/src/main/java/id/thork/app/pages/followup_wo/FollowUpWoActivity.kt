@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.text.InputFilter
+import android.text.InputType
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -98,7 +99,9 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private fun retriveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         Timber.d("retrieveFromIntent() %s", intentWonum)
-
+        binding.wonum.setText(intentWonum)
+        binding.wonum.isEnabled = false
+        binding.wonum.inputType = InputType.TYPE_NULL
     }
 
     override fun setupListener() {

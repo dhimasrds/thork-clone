@@ -32,12 +32,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#f1f1f1">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/general_margin_10dp">
 
                 <include
                     android:id="@+id/toolbar"
@@ -53,17 +55,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="@dimen/menu_wo_padding">
+                    android:orientation="vertical">
 
-                    <!--STATUS-->
-                    <!--                <TextView-->
-                    <!--                    android:layout_width="wrap_content"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:fontFamily="@font/poppins"-->
-                    <!--                    android:text="@string/stat"-->
-                    <!--                    android:textColor="@color/colorBlueNew"/>-->
                     <Spinner
                         android:id="@+id/status_wo"
                         android:layout_width="match_parent"
@@ -76,40 +69,48 @@
                         android:textSize="@dimen/text_size_wo_detail_16"
                         android:visibility="gone" />
 
-                    <!--WONUM-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/workorder"
-                        android:visibility="gone" />
-
-                    <EditText
-                        android:id="@+id/wonum"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16"
-                        android:visibility="gone" />
-
                     <!--DESCRIPTION-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/desc"
-                        android:textColor="@color/colorBlueNew" />
-
-                    <EditText
-                        android:id="@+id/desk_wo"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:text="@string/desc"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:textSize="18sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="@dimen/general_margin_5dp"
+                            android:background="@drawable/ic_line" />
+
+                        <EditText
+                            android:id="@+id/desk_wo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:layout_marginRight="@dimen/general_margin_10dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:background="@color/transparant"
+                            android:backgroundTint="@color/transparant"
+                            android:fontFamily="@font/roboto_medium"
+                            android:hint="@string/type_here"
+                            android:inputType="textMultiLine"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+                    </LinearLayout>
 
                     <!--WORK TYPE-->
                     <TextView
@@ -141,74 +142,122 @@
                         android:visibility="gone" />
 
                     <!--Priority-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/priority"
-                        android:textColor="@color/colorBlueNew" />
-
-                    <RadioGroup
-                        android:id="@+id/radioGroupPriority"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:fontFamily="@font/poppins"
-                        android:orientation="horizontal"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16"
-                        android:weightSum="3">
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                        <RadioButton
-                            android:id="@+id/low_priority"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/colorBlueRadioBt"
-                            android:text="@string/normal" />
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:text="@string/priority"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:textSize="18sp" />
 
-                        <RadioButton
-                            android:id="@+id/normal_priority"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/colorBlueRadioBt"
-                            android:text="@string/medium" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="@dimen/general_margin_5dp"
+                            android:background="@drawable/ic_line" />
 
-                        <RadioButton
-                            android:id="@+id/hight_priority"
-                            android:layout_width="0dp"
+                        <RadioGroup
+                            android:id="@+id/radioGroupPriority"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/colorBlueRadioBt"
-                            android:checked="true"
-                            android:text="@string/high" />
-                    </RadioGroup>
+                            android:layout_marginLeft="@dimen/general_margin_5dp"
+                            android:layout_marginRight="@dimen/general_margin_5dp"
+                            android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+                            android:fontFamily="@font/roboto_medium"
+                            android:orientation="horizontal"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16"
+                            android:weightSum="3">
+
+                            <RadioButton
+                                android:id="@+id/low_priority"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/colorBlueRadioBt"
+                                android:text="@string/normal" />
+
+                            <RadioButton
+                                android:id="@+id/normal_priority"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/colorBlueRadioBt"
+                                android:text="@string/medium" />
+
+                            <RadioButton
+                                android:id="@+id/hight_priority"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/colorBlueRadioBt"
+                                android:checked="true"
+                                android:text="@string/high" />
+                        </RadioGroup>
+                    </LinearLayout>
 
                     <!--Priority-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/dialog_estdur"
-                        android:textColor="@color/colorBlueNew" />
-
-                    <TextView
-                        android:id="@+id/edit_estimdur"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:fontFamily="@font/poppins"
-                        android:hint="@string/hourminute"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:text="@string/dialog_estdur"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:textSize="18sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="@dimen/general_margin_5dp"
+                            android:background="@drawable/ic_line" />
+
+                        <TextView
+                            android:id="@+id/edit_estimdur"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+                            android:fontFamily="@font/roboto_medium"
+                            android:hint="@string/hourminute"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+                    </LinearLayout>
 
                     <!--ASSET-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
                         android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
 
                         <!-- Text View Asset 1-->
                         <LinearLayout
@@ -220,14 +269,21 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
-                                android:text="@string/Asset" />
+                                android:layout_marginLeft="@dimen/general_margin_10dp"
+                                android:fontFamily="@font/roboto_medium"
+                                android:padding="@dimen/general_margin_5dp"
+                                android:text="@string/Asset"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorBlack"
+                                android:textFontWeight="700"
+                                android:textSize="18sp" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="right"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:padding="@dimen/general_margin_5dp">
 
                                 <TextView
                                     android:id="@+id/find_asset"
@@ -239,13 +295,19 @@
                                     android:drawableStart="@drawable/ic_search_blue"
                                     android:drawablePadding="@dimen/general_margin_5dp"
                                     android:focusable="true"
-                                    android:fontFamily="@font/roboto_regular"
+                                    android:fontFamily="@font/roboto_medium"
                                     android:gravity="right"
                                     android:text="@string/find_asset"
                                     android:textColor="@color/blue_nav"
                                     android:textSize="@dimen/base_text_size_14" />
                             </LinearLayout>
+                        </LinearLayout>
 
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
 
                         </LinearLayout>
 
@@ -268,8 +330,10 @@
                                     android:id="@+id/asset"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/poppins"
-                                    android:text="@string/line"
+                                    android:layout_marginLeft="@dimen/general_margin_10dp"
+                                    android:fontFamily="@font/roboto_medium"
+                                    android:hint="Asset Name"
+                                    android:padding="@dimen/general_margin_5dp"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/base_text_size_16" />
                             </LinearLayout>
@@ -298,6 +362,7 @@
                                     android:background="@drawable/ic_qrcode_detail_wo" />
                             </LinearLayout>
                         </LinearLayout>
+
                         <!-- Text View Asset 3 -->
                         <LinearLayout
                             android:id="@+id/layout_scan_result_asset"
@@ -338,45 +403,64 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/white"
                         android:orientation="vertical">
 
-                        <!-- Text View Asset 1-->
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/general_margin_10dp"
-                            android:orientation="horizontal">
-                            <!--Asset-->
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/roboto_regular"
-                                android:text="@string/location" />
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
 
+                            <!-- Text View Asset 1-->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="right"
+                                android:layout_marginBottom="@dimen/general_margin_10dp"
                                 android:orientation="horizontal">
-
+                                <!--Location-->
                                 <TextView
-                                    android:id="@+id/find_location"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                                    android:background="@drawable/ripple_effect"
-                                    android:clickable="true"
-                                    android:drawableStart="@drawable/ic_search_blue"
-                                    android:drawablePadding="@dimen/general_margin_5dp"
-                                    android:focusable="true"
-                                    android:fontFamily="@font/roboto_regular"
+                                    android:layout_marginLeft="@dimen/general_margin_10dp"
+                                    android:fontFamily="@font/roboto_medium"
+                                    android:padding="@dimen/general_margin_5dp"
+                                    android:text="@string/location"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="18sp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/general_margin_5dp"
                                     android:gravity="right"
-                                    android:text="@string/find_location"
-                                    android:textColor="@color/blue_nav"
-                                    android:textSize="@dimen/base_text_size_14" />
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/find_location"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                                        android:background="@drawable/ripple_effect"
+                                        android:clickable="true"
+                                        android:drawableStart="@drawable/ic_search_blue"
+                                        android:drawablePadding="@dimen/general_margin_5dp"
+                                        android:focusable="true"
+                                        android:fontFamily="@font/roboto_medium"
+                                        android:gravity="right"
+                                        android:text="@string/find_location"
+                                        android:textColor="@color/blue_nav"
+                                        android:textSize="@dimen/base_text_size_14" />
+                                </LinearLayout>
                             </LinearLayout>
 
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
 
                         </LinearLayout>
 
@@ -399,9 +483,10 @@
                                     android:id="@+id/tv_location"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/poppins"
-                                    android:maxLines="2"
-                                    android:text="@string/line"
+                                    android:layout_marginLeft="@dimen/general_margin_10dp"
+                                    android:fontFamily="@font/roboto_medium"
+                                    android:hint="Location Name"
+                                    android:padding="@dimen/general_margin_5dp"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/base_text_size_16" />
                             </LinearLayout>
@@ -431,6 +516,19 @@
                             </LinearLayout>
                         </LinearLayout>
 
+                        <!-- Margin -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/general_margin_5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -478,21 +576,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
-                    <!--FOTO-->
-                    <ImageView
-                        android:id="@+id/fotoView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/caption_foto_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
                     <!--LongDesc-->
                     <include
                         android:id="@+id/include_longdesc"
@@ -501,107 +584,62 @@
                     <include
                         android:id="@+id/include_attachments"
                         layout="@layout/activity_create_wo_attachments" />
+
                     <include
                         android:id="@+id/include_material_plan"
                         layout="@layout/activity_create_wo_material_plan" />
 
-                    <!--Scan QR-->
-<!--                    <androidx.cardview.widget.CardView-->
-<!--                        android:id="@+id/scan_qr"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="72dp"-->
-<!--                        android:layout_marginBottom="@dimen/general_margin_20dp"-->
-<!--                        android:clickable="true"-->
-<!--                        android:foreground="?android:attr/selectableItemBackground">-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:gravity="center_vertical"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:weightSum="10">-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="1"-->
-<!--                                android:gravity="center_vertical">-->
-
-<!--                                <ImageView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:background="@drawable/ic_scan_qr" />-->
-<!--                            </LinearLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginLeft="@dimen/general_margin_5dp"-->
-<!--                                android:layout_weight="7"-->
-<!--                                android:text="@string/wo_scan_material" />-->
-
-<!--                            <TextView-->
-<!--                                android:id="@+id/total_qr"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_weight="1" />-->
-
-<!--                            <ImageView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_weight="1"-->
-<!--                                android:src="@drawable/ic_arrow_next" />-->
-<!--                        </LinearLayout>-->
-<!--                    </androidx.cardview.widget.CardView>-->
-
                     <!--Asset-->
-                    <include android:id="@+id/include_assets"
-                        layout="@layout/activity_create_wo_assets"/>
+                    <include
+                        android:id="@+id/include_assets"
+                        layout="@layout/activity_create_wo_assets" />
 
                     <include
                         android:id="@+id/include_task"
-                        layout="@layout/activity_create_wo_task"/>
+                        layout="@layout/activity_create_wo_task" />
 
                     <!--Labor plan-->
-                    <include android:id="@+id/include_laborplan"
-                        layout="@layout/activity_create_wo_laborplan"/>
+                    <include
+                        android:id="@+id/include_laborplan"
+                        layout="@layout/activity_create_wo_laborplan" />
 
                     <!--REPORT DATE-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/reportDate" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/complaint_date"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:fontFamily="@font/roboto_medium"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:text="@string/reportDate"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textFontWeight="700"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/complaint_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/general_margin_10dp"
                             android:layout_weight="1"
                             android:enabled="false"
-                            android:fontFamily="@font/poppins"
-                            android:textColor="@color/colorBlack"
+                            android:fontFamily="@font/roboto_medium"
+                            android:padding="@dimen/general_margin_5dp"
+                            android:textColor="@color/grey_nav"
                             android:textSize="@dimen/text_size_wo_detail_16" />
-
-                        <Button
-                            android:id="@+id/pick_date"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:background="@drawable/ic_date_black"
-                            android:visibility="gone" />
                     </LinearLayout>
 
                     <!--MARGIN-->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="90dp"></LinearLayout>
+                        android:layout_height="60dp"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -617,10 +655,11 @@
 
                             <Button
                                 android:id="@+id/create_wo"
-                                android:layout_width="match_parent"
+                                android:layout_width="350dp"
                                 android:layout_height="40dp"
                                 android:background="@drawable/ic_rectangle_528"
                                 android:clickable="true"
+                                android:fontFamily="@font/roboto_medium"
                                 android:foreground="?android:attr/selectableItemBackground"
                                 android:text="@string/create"
                                 android:textColor="@color/white" />
