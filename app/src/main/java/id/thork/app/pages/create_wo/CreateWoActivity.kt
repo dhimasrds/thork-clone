@@ -43,6 +43,7 @@ import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
+import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
@@ -179,6 +180,10 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.includeLaborplan.laborPlan.setOnClickListener {
             goToLaborPlan()
+        }
+
+        binding.includeLaboractual.laborActual.setOnClickListener {
+            goToLaborActual()
         }
 
         binding.includeTask.cardTask.setOnClickListener {
@@ -369,6 +374,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun goToLaborPlan() {
         val intent = Intent(this, LaborPlanActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToLaborActual() {
+        val intent = Intent(this, LaborActualActivity::class.java)
         startActivity(intent)
     }
 

@@ -508,6 +508,7 @@
     <string name="vendor">Vendor</string>
     <string name="create_labor_plan">Create Labor Plan</string>
     <string name="labor_plan">Labor Plan</string>
+    <string name="labor_actual">Labor Actual</string>
     <string name="select_skill_level">Select Skill Level</string>
     <string name="task_id">ID</string>
     <string name="task_desc">Deskripsi</string>
@@ -517,6 +518,10 @@
     <string name="task_actual_start">Jam Mulai</string>
     <string name="task_click_here">Click Here</string>
     <string name="task_toolbar">Task</string>
+    <string name="start_date">Start Date</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_date">End Date</string>
+    <string name="end_time">End Time</string>
 
 
     <string-array name="wo_type">
