@@ -33,6 +33,7 @@ interface WoCacheDao {
     fun findWoByWonum(offset: Int, wonum: String, status: String): List<WoCacheEntity>
     fun findListWoByStatus(status: String): List<WoCacheEntity>
     fun findListWoByStatusOffset( offset: Int, vararg status: String): List<WoCacheEntity>
+    fun findListWoByStatusOffsetAndRfid( offset: Int, vararg status: String): List<WoCacheEntity>
     fun findWoByWonumComp(offset: Int, wonum: String, status: String): List<WoCacheEntity>
     fun remove()
 

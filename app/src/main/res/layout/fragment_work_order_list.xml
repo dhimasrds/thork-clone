@@ -37,16 +37,43 @@
             />
 
 
+        <FrameLayout
+            android:id="@+id/framelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_dropdown"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/general_margin_8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Spinner
+                android:id="@+id/dropdown_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:dropDownVerticalOffset="45dp"
+                android:dropDownWidth="250dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown"
+                android:padding="@dimen/general_padding_10dp"
+                android:popupBackground="@color/white"
+                />
+        </FrameLayout>
+
+
+
+
 
         <com.baoyz.widget.PullRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
+            app:layout_constraintTop_toBottomOf="@+id/framelayout"
             app:layout_constraintVertical_bias="0.0">
 
 

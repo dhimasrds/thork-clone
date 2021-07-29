@@ -229,7 +229,8 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     null,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    null
                 )
             }
         ).liveData
@@ -253,7 +254,33 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     query,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    null
+                )
+            }
+        ).liveData
+
+    fun getWoWappr(
+        appSession: AppSession,
+        workOrderRepository: WorkOrderRepository,
+        preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx,
+        wappr: String
+    ) =
+        Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                WoPagingSource(
+                    appSession = appSession,
+                    repository = workOrderRepository,
+                    woCacheDao,
+                    null,
+                    preferenceManager,
+                    appResourceMx,
+                    wappr
                 )
             }
         ).liveData
@@ -716,12 +743,15 @@ class WorkOrderRepository @Inject constructor(
     fun updateCreateWoCacheOnlineMode(
         woId: Int?,
         wonum: String?,
-        tempWonum: String
+        tempWonum: String,
+        member: Member
     ) {
+        val syncBody = WoUtils.convertMemberToBody(member)
         val woCache = woCacheDao.findWoByWonum(tempWonum)
         woCache.whatIfNotNull {
             it.woId = woId
             it.wonum = wonum
+            it.syncBody = syncBody
             it.laborCode = appSession.laborCode
             it.syncStatus = BaseParam.APP_TRUE
             it.isChanged = BaseParam.APP_FALSE
