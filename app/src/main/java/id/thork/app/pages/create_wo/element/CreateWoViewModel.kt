@@ -96,7 +96,6 @@ class CreateWoViewModel @ViewModelInject constructor(
         assetnum: String,
         location: String,
     ) {
-
 //        val wsa = Woserviceaddres()
 //        wsa.longitudex = longitudex
 //        wsa.latitudey = latitudey
@@ -152,7 +151,12 @@ class CreateWoViewModel @ViewModelInject constructor(
                 onSuccess = { woMember ->
                     val workorderid = woMember.workorderid
                     val wonum = woMember.wonum
-                    workOrderRepository.updateCreateWoCacheOnlineMode(workorderid, wonum, tempWonum)
+                    workOrderRepository.updateCreateWoCacheOnlineMode(
+                        workorderid,
+                        wonum,
+                        tempWonum,
+                        woMember
+                    )
                     woMember.woactivity.whatIfNotNullOrEmpty {
                         Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
                         taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)

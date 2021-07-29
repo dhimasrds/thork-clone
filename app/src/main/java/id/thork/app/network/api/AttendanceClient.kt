@@ -41,6 +41,9 @@ class AttendanceClient @Inject constructor(
         body
     )
 
+    suspend fun fetchAttendance(cookie: String, savedQuery: String, select: String) =
+        attendanceApi.fetchAttendance(cookie, savedQuery, LEAN, select)
+
     companion object {
         private const val LEAN = 1
     }

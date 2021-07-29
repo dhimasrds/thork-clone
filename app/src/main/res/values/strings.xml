@@ -533,4 +533,8 @@
     <string name="task_click_here">Click Here</string>
     <string name="task_toolbar">Task</string>
 
+    <string-array name="wo_type">
+        <item>Assigned Work Order</item>
+        <item>Local Work Order</item>
+    </string-array>
 </resources>

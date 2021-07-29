@@ -99,6 +99,21 @@ object StringUtils {
         }
         return BaseParam.APP_DASH
     }
+
+    fun createPriorityToMx(priority: String): Int {
+        when (priority) {
+            BaseParam.PRIORITY_NORMAL_DESC_CREATE -> {
+                return 1
+            }
+            BaseParam.PRIORITY_MEDIUM_DESC_CREATE -> {
+                return 2
+            }
+            BaseParam.PRIORITY_HIGH_DESC_CREATE -> {
+                return 3
+            }
+        }
+        return 0
+    }
     //TODO
 //    fun getBundleString(bundle: Bundle?, key: String?, replacementValue: String): String {
 //        return if (bundle != null && bundle.getString(key) != null && !bundle.getString(key)
@@ -175,9 +190,10 @@ object StringUtils {
         return string
     }
 
-    fun checkingString(string: String) : String {
+    fun checkingString(string: String): String {
         val currentText = string
-        val convertText = currentText.replace("'", BaseParam.APP_EMPTY_STRING).replace("\"", BaseParam.APP_EMPTY_STRING)
+        val convertText = currentText.replace("'", BaseParam.APP_EMPTY_STRING)
+            .replace("\"", BaseParam.APP_EMPTY_STRING)
         return convertText
     }
 }

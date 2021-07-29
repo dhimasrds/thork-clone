@@ -155,7 +155,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
                         workOrderRepository.updateCreateWoCacheOnlineMode(
                             workorderid,
                             wonum,
-                            tempWonum
+                            tempWonum,
+                            woMember
                         )
                         woMember.woactivity.whatIfNotNullOrEmpty {
                             Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)

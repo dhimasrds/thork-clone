@@ -13,6 +13,7 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.AttendanceApi
 import id.thork.app.network.api.AttendanceClient
+import id.thork.app.network.response.attendance_response.AttendanceResponse
 import id.thork.app.network.response.attendance_response.Member
 import id.thork.app.persistence.dao.AttendanceDao
 import id.thork.app.persistence.entity.AttendanceEntity
@@ -226,6 +227,30 @@ class AttendanceRepository @Inject constructor(
             }
     }
 
+    suspend fun fetchAttendance(
+        cookie: String,
+        savedQuery: String,
+        select: String,
+        onSuccess: (AttendanceResponse) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = attendanceClient.fetchAttendance(cookie, savedQuery, select)
+
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("getLatestAttendance() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "getLatestAttendance() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+    }
 
     suspend fun updateAttendanceToMx(
         cookie: String,
@@ -298,5 +323,37 @@ class AttendanceRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    fun handlingFetchAttendance(member: Member) {
+        val attendanceid = member.attendanceid
+        attendanceid.whatIfNotNull {
+            val attendanceEntity = attendanceDao.findAttendanceByAttendanceId(it)
+            attendanceEntity.whatIfNotNull(
+                whatIf = {
+                    Timber.tag(TAG).d("handlingFetchAttendance() available")
+                },
+                whatIfNot = {
+                    addAttendance(member)
+                }
+            )
+        }
+    }
+
+    fun addAttendance(member: Member) {
+        val currentTimeMx = DateUtils.convertMaximoDateToMillisec(member.enterdate)
+        val dateTimeHeader = DateUtils.convertMaximoDateToHeaderAttendance(member.enterdate)
+        val attendanceEntity = AttendanceEntity()
+        attendanceEntity.attendanceId = member.attendanceid
+        attendanceEntity.dateTimeHeader = dateTimeHeader
+        attendanceEntity.dateCheckInLocal = currentTimeMx
+        attendanceEntity.dateCheckIn = DateUtils.getDateAttendanceMaximo(currentTimeMx)
+        attendanceEntity.hoursCheckIn = DateUtils.getTimeAttendanceMaximo(currentTimeMx)
+        attendanceEntity.longCheckIn = member.thisfsmlongitudex.toString()
+        attendanceEntity.latCheckIn = member.thisfsmlatitudey.toString()
+        attendanceEntity.username = member.laborcode
+        attendanceEntity.syncUpdate = BaseParam.APP_TRUE
+        attendanceEntity.offlineMode = BaseParam.APP_TRUE
+        saveAttendanceCache(attendanceEntity)
     }
 }

@@ -501,6 +501,25 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 }
             }
 
+            BaseParam.WAPPR -> {
+                binding.apply {
+                    layoutStatus.visibility = GONE
+                    status.setTextColor(
+                        ContextCompat.getColor(
+                            this@DetailWoActivity,
+                            R.color.brown
+                        )
+                    )
+                    bgStatus.background = ContextCompat.getDrawable(
+                        this@DetailWoActivity,
+                        R.drawable.bg_status_label_wappr
+                    )
+                    btnStatusWo.setOnClickListener {
+                        dialogUpdateStatus()
+                    }
+                }
+            }
+
             else -> {
                 binding.layoutStatus.visibility = GONE
             }

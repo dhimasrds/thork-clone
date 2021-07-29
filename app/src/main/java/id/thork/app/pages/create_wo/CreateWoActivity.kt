@@ -308,21 +308,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun getWorkPriority(): Int {
         selectedId = binding.radioGroupPriority.checkedRadioButtonId
         radioButtonPriority = findViewById(selectedId)
-        if (radioButtonPriority.text != null) {
-            when (radioButtonPriority.text) {
-                BaseParam.PRIORITY_NORMAL_DESC -> {
-                    1.also { workPriority = it }
-                }
-                BaseParam.PRIORITY_MEDIUM_DESC -> {
-                    2.also { workPriority = it }
-                }
-                BaseParam.PRIORITY_HIGH_DESC -> {
-                    3.also { workPriority = it }
-                }
-                else -> {
-                    return workPriority
-                }
-            }
+        radioButtonPriority.text.whatIfNotNull {
+            return StringUtils.createPriorityToMx(it.toString())
         }
         return workPriority
     }

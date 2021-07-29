@@ -149,6 +149,13 @@ class WoCacheDaoImp : WoCacheDao {
             .find(offset.toLong(), 10)
     }
 
+    override fun findListWoByStatusOffsetAndRfid( offset: Int, vararg status: String): List<WoCacheEntity> {
+        return woCacheEntityBox.query()
+            .`in`(WoCacheEntity_.status, status).notNull(WoCacheEntity_.externalREFID).build()
+            .find(offset.toLong(), 10)
+    }
+
+
     override fun remove() {
         woCacheEntityBox.removeAll()
     }

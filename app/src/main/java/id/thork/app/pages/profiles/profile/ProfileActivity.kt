@@ -17,6 +17,7 @@ import id.thork.app.pages.profiles.profile.element.ProfileViewModel
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
 import id.thork.app.pages.server.ServerActivity
 import id.thork.app.utils.LocaleHelper
+import timber.log.Timber
 
 /**
  * Created by Raka Putra on 6/11/21
@@ -46,7 +47,7 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
             option = false,
             historyAttendanceIcon = false
         )
-
+        viewModel.fetchAttendance()
         handlerOnclick()
     }
 
