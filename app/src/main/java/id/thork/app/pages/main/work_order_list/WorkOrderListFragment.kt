@@ -237,8 +237,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        Toast.makeText(requireContext(), parent!!.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
-        val local = parent?.getItemIdAtPosition(position).toInt()
+        val local = parent?.getItemIdAtPosition(position)?.toInt()
         if (local == 1) {
             Timber.d("onItemSelected :%s", local)
             viewModel.getWoLocalAppr(BaseParam.WAPPR)

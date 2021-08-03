@@ -201,7 +201,7 @@
 
     <!-- MENU: Workorder -->
     <string name="workorder">Work Order</string>
-    <string name="desc">Details</string>
+    <string name="desc">Description</string>
     <string name="longdesc">Long Description</string>
     <string name="date">Date</string>
     <string name="period">Period</string>
@@ -241,8 +241,8 @@
     <string name="workorder_upload_failed">Workorder Attachment failed to upload</string>
     <string name="service_request_create">Create Service Request</string>
     <string name="service_request_cancel">Do you want to cancel Service Request?</string>
-    <string name="workorder_create_success">New Service Request have been created</string>
-    <string name="workorder_create_failed">New Service Request failed to created</string>
+    <string name="workorder_create_success">New Work Order has been created</string>
+    <string name="workorder_create_failed">New Work Order failed to created</string>
     <string name="workorder_followup_create_success">New Follow Up WO have been created</string>
     <string name="workorder_followup_create_failed">New Follow Up WO failed to created</string>
     <string name="create_workorder_cancel">Do you want to cancel Work Order?</string>

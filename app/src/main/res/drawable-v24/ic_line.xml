@@ -31,8 +31,8 @@
 
     <path
         android:pathData="M0.25 0.25H243.25H0.25Z"
-        android:strokeWidth="0.5"
-        android:strokeColor="#AEAEAE"
+        android:strokeWidth="0.3"
+        android:strokeColor="#BDBBBB"
         />
 
 </vector>

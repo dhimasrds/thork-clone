@@ -57,18 +57,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <Spinner
-                        android:id="@+id/status_wo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:entries="@array/status_wo"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/line"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16"
-                        android:visibility="gone" />
-
                     <!--DESCRIPTION-->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -251,6 +239,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:paddingRight="@dimen/general_padding_10dp"
                         android:background="@color/white"
                         android:orientation="vertical">
 
@@ -404,6 +393,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:paddingRight="@dimen/general_padding_10dp"
                         android:background="@color/white"
                         android:orientation="vertical">
 
@@ -532,54 +522,6 @@
 
                     </LinearLayout>
 
-                    <!--LOCATION-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/location"
-                        android:textColor="@color/colorBlueNew"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:visibility="gone"
-                        android:weightSum="10">
-
-                        <EditText
-                            android:id="@+id/location_wo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="9"
-                            android:enabled="false"
-                            android:fontFamily="@font/poppins"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_wo_detail_16" />
-
-                        <LinearLayout
-                            android:layout_width="27dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center">
-
-                            <Button
-                                android:id="@+id/pick_map"
-                                android:layout_width="20dp"
-                                android:layout_height="21dp"
-                                android:background="@drawable/ic_location"
-                                android:clickable="true"
-                                android:foreground="?android:attr/selectableItemBackground" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!--LongDesc-->
-                    <include
-                        android:id="@+id/include_longdesc"
-                        layout="@layout/activity_create_wo_longdesc" />
                     <!--Attachment-->
                     <include
                         android:id="@+id/include_attachments"
@@ -622,12 +564,17 @@
                             android:textColor="@color/colorBlack"
                             android:textFontWeight="700"
                             android:textSize="18sp" />
-
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="@dimen/general_margin_5dp"
+                            android:background="@drawable/ic_line" />
                         <TextView
                             android:id="@+id/complaint_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/general_margin_10dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
                             android:layout_weight="1"
                             android:enabled="false"
                             android:fontFamily="@font/roboto_medium"

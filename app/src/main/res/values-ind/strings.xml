@@ -170,7 +170,7 @@
 
     <!-- MENU: Workorder -->
     <string name="workorder">Perintah kerja</string>
-    <string name="desc">Details</string>
+    <string name="desc">Description</string>
     <string name="longdesc">Long Description</string>
     <string name="date">Tanggal</string>
     <string name="period">Periode</string>
@@ -209,8 +209,8 @@
     <string name="workorder_upload_failed">Lampiran Workorder berhasil diupload</string>
     <string name="service_request_create">Create Service Request</string>
     <string name="service_request_cancel">Apakah kamu ingin membatalkan Service Request?</string>
-    <string name="workorder_create_success">Service Request berhasil disimpan</string>
-    <string name="workorder_create_failed">Service Request gagal disimpan</string>
+    <string name="workorder_create_success">Work Order berhasil disimpan</string>
+    <string name="workorder_create_failed">Work Order gagal disimpan</string>
     <string name="workorder_followup_create_success">Follow Up WO berhasil disimpan</string>
     <string name="workorder_followup_create_failed">Follow Up WO gagal disimpan</string>
     <string name="create_workorder_cancel">Apakah kamu ingin membatalkan Work Order?</string>
