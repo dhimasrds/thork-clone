@@ -595,20 +595,20 @@
                         android:background="@color/white"
                         android:gravity="bottom">
 
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:id="@+id/create_wo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/general_margin_20dp"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="20dp"
-                                android:clickable="true"
-                                android:background="@drawable/ic_rectangle_528"
-                                android:fontFamily="@font/roboto_medium"
-                                android:text="@string/create"
-                                android:textSize="@dimen/base_text_size_18"
-                                android:textColor="@color/white"/>
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/create_wo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/general_margin_20dp"
+                            android:layout_marginTop="@dimen/general_margin_20dp"
+                            android:layout_marginEnd="@dimen/general_margin_20dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:background="@drawable/ic_rectangle_528"
+                            android:clickable="true"
+                            android:fontFamily="@font/roboto_medium"
+                            android:text="@string/create"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/base_text_size_18" />
                     </RelativeLayout>
                 </LinearLayout>
             </ScrollView>
