@@ -37,7 +37,7 @@
             android:textColor="@color/black"
             android:textColorHint="@color/grey_nav"
             android:drawablePadding="@dimen/general_padding_10dp"
-            android:background="@drawable/bg_edit_text"
+            android:background="@drawable/bg_rounded_edit_text"
             style="@style/MyEditTextStyle"
             android:drawableStart="@drawable/ic_search"
             android:layout_marginLeft="@dimen/general_margin_2dp"  />

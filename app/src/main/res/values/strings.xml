@@ -34,6 +34,9 @@
     <string name="connection_switch_offline_message">Application switch to OFFLINE</string>
     <string name="dismiss">DISMISS</string>
 
+    <string name="general_search">Search here</string>
+    <string name="general_save">Save</string>
+
     <!-- Intro Slider -->
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
@@ -411,6 +414,10 @@
     <string name="next_step">Do you want to update this wo?</string>
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
+
+    <!-- Material Plan -->
+    <string name="material_plan_search">Enter Material Code</string>
+    <string name="material_plan_create">Create Material Plan</string>
 
     <string name="note">Notes</string>
     <string name="list_material">List of Material</string>
