@@ -48,7 +48,9 @@
                     android:id="@+id/tv_item_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"/>
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/colorBlack"
+                    android:textFontWeight="60"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
