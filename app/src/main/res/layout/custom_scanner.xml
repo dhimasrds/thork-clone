@@ -43,7 +43,7 @@
     <!--Help Text-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:padding="@dimen/general_padding_15dp"
         android:orientation="vertical"

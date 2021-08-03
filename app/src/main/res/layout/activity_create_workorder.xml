@@ -110,7 +110,7 @@
                         android:visibility="gone" />
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:orientation="vertical">
@@ -534,7 +534,8 @@
                     <!--Asset-->
                     <include
                         android:id="@+id/include_assets"
-                        layout="@layout/activity_create_wo_assets" />
+                        layout="@layout/activity_create_wo_assets"
+                        android:visibility="gone"/>
 
                     <include
                         android:id="@+id/include_task"
@@ -590,27 +591,24 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
                         android:gravity="bottom">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:background="@color/white"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <Button
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/create_wo"
-                                android:layout_width="350dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/ic_rectangle_528"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/general_margin_20dp"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginEnd="20dp"
                                 android:clickable="true"
+                                android:background="@drawable/ic_rectangle_528"
                                 android:fontFamily="@font/roboto_medium"
-                                android:foreground="?android:attr/selectableItemBackground"
                                 android:text="@string/create"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
+                                android:textAllCaps="false"
+                                android:textColor="@color/white"/>
                     </RelativeLayout>
 
 

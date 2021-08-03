@@ -162,7 +162,7 @@
                         android:visibility="gone" />
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:orientation="vertical">
@@ -724,7 +724,7 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
+                        android:layout_height="match_parent"
                         android:gravity="bottom">
 
                         <LinearLayout
