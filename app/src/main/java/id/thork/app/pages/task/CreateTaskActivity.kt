@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.text.InputFilter
+import android.text.InputType
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -43,6 +44,12 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var intentWonum: String? = null
     private var intentStatus: String? = null
     private var intentTag: String? = null
+    private var intentDetailTag: String? = null
+    private var intentDesc: String? = null
+    private var intentSchdule: String? = null
+    private var intentActual: String? = null
+    private var intentEstDur: Double? = null
+
     private var scheduleStartObjectBox: String? = null
     private var actualStartObjectBox: String? = null
     private var dateValidation: Boolean = true
@@ -76,10 +83,42 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         intentStatus = intent.getStringExtra(BaseParam.STATUS)
         intentTag = intent.getStringExtra(BaseParam.TAG_TASK)
         intentTaskId = intent.getIntExtra(BaseParam.TASKID, 0)
+        intentDesc = intent.getStringExtra(BaseParam.DESCRIPTION)
+        intentSchdule = intent.getStringExtra(BaseParam.SHEDULE_START)
+        intentActual = intent.getStringExtra(BaseParam.ACTUAL_START)
+        intentEstDur = intent.getDoubleExtra(BaseParam.ESTDUR, 0.0)
+        binding.tvIdTask.text = intentTaskId.toString()
         intentStatus.whatIfNotNullOrEmpty {
             setupStatus(it)
         }
-        binding.tvIdTask.text = intentTaskId.toString()
+        intentDetailTag = intent.getStringExtra(BaseParam.DETAIL_TASK)
+        intentDetailTag.whatIfNotNull {
+            setupDetailTask(intentDesc, intentSchdule, intentActual, intentEstDur)
+        }
+    }
+
+    private fun setupDetailTask(intentDesc: String?, intentSchdule: String?, intentActual: String?, intentEstDur: Double?) {
+        binding.apply {
+            intentDesc.whatIfNotNull { description ->
+                intentSchdule.whatIfNotNull { schedule ->
+                    intentActual.whatIfNotNull { actual ->
+                        intentEstDur.whatIfNotNull { estDur ->
+                            tvDesc.setText(description)
+                            tvScheduleStart.setText(schedule)
+                            tvActualStart.setText(actual)
+                            tvEstDur.text = estDur.toString()
+
+                            btnSaveTask.visibility = View.GONE
+                            tvDesc.isEnabled = false
+                            tvScheduleStart.isEnabled =false
+                            tvActualStart.isEnabled = false
+                            tvEstDur.isEnabled = false
+                            tvDesc.inputType = InputType.TYPE_NULL
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setupStatus(status: String?) {
@@ -411,7 +450,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         desc = binding.tvDesc.text.toString()
         val tvscheduleStart: String = binding.tvScheduleStart.text.toString()
         val tvactualStart: String = binding.tvActualStart.text.toString()
-        if (!desc.isNullOrEmpty() || tvscheduleStart.isNotEmpty() || estDur != null || tvactualStart.isNotEmpty()) {
+        if (intentDetailTag != null){
+            finish()
+        } else if (!desc.isNullOrEmpty() || tvscheduleStart.isNotEmpty() || estDur != null || tvactualStart.isNotEmpty()) {
             setDialogCancelTask()
         } else {
             finish()

@@ -121,10 +121,13 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save"
-            android:layout_margin="@dimen/general_margin_20dp"
-            android:background="@color/colorPrimaryBackground"
+            android:layout_marginStart="@dimen/general_margin_12dp"
+            android:layout_marginTop="@dimen/general_margin_12dp"
+            android:layout_marginEnd="@dimen/general_margin_12dp"
+            android:layout_marginBottom="@dimen/general_margin_12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/ic_rectangle_528"
             android:textColor="@color/white"
             android:text="Save"/>
     </LinearLayout>

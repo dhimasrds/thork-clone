@@ -1,21 +1,29 @@
 package id.thork.app.pages.task.element
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewListTaskBinding
+import id.thork.app.pages.task.CreateTaskActivity
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
 
 /**
  * Created by Raka Putra on 6/23/21
  * Jakarta, Indonesia.
  */
 class TaskAdapter constructor(
+    private val context: Context,
     private val taskEntity: List<TaskEntity>,
 ) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
@@ -85,7 +93,17 @@ class TaskAdapter constructor(
                     }
                 }
                 cardTask.setOnClickListener {
-
+                    val intent = Intent(context, CreateTaskActivity::class.java)
+                    val bundle = Bundle()
+                    intent.putExtra(BaseParam.WORKORDERID, taskEntity.woId)
+                    intent.putExtra(BaseParam.DESCRIPTION, taskEntity.desc)
+                    intent.putExtra(BaseParam.STATUS, taskEntity.status)
+                    intent.putExtra(BaseParam.SHEDULE_START, taskEntity.scheduleStart)
+                    intent.putExtra(BaseParam.ACTUAL_START, taskEntity.actualStart)
+                    intent.putExtra(BaseParam.TASKID, taskEntity.taskId)
+                    intent.putExtra(BaseParam.ESTDUR, taskEntity.estDuration)
+                    intent.putExtra(BaseParam.DETAIL_TASK, BaseParam.DETAIL_TASK)
+                    startActivity(context, intent, bundle)
                 }
             }
         }

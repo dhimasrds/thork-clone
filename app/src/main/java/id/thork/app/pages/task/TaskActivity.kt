@@ -48,7 +48,7 @@ class TaskActivity : BaseActivity() {
         )
 
         taskEntity = mutableListOf()
-        taskAdapter = TaskAdapter(taskEntity)
+        taskAdapter = TaskAdapter(this, taskEntity)
         binding.rvTask.adapter = taskAdapter
         retrieveFromIntent()
 

@@ -49,37 +49,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_margin_10dp"
             android:orientation="horizontal"
-            android:weightSum="4"
             app:layout_constraintTop_toBottomOf="@+id/app_bar"
             tools:layout_editor_absoluteX="0dp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/et_find_material"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:background="@drawable/bg_edit_text"
+                android:background="@drawable/bg_rounded_edit_text"
                 android:textCursorDrawable="@null"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@null"
-                app:queryHint="@string/search_asset"
+                app:queryHint="@string/material_plan_search"
                 app:searchIcon="@drawable/ic_search" />
-
-            <LinearLayout
-                android:id="@+id/btn_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <Button
-                    android:id="@+id/btn_add"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="top"
-                    android:paddingLeft="@dimen/general_padding_20dp"
-                    android:text="Add"
-                    android:textAllCaps="false" />
-            </LinearLayout>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -98,6 +80,29 @@
             app:layout_constraintTop_toBottomOf="@+id/layout_search"
             app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/cardview_findmaterial" />
+
+        <LinearLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin_12dp"
+                android:layout_marginTop="@dimen/general_margin_12dp"
+                android:layout_marginEnd="@dimen/general_margin_12dp"
+                android:layout_marginBottom="@dimen/general_margin_12dp"
+                android:background="@drawable/ic_rectangle_528"
+                android:text="@string/material_plan_create"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

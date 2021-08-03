@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.1" />
         <entry key="app/src/main/res/layout/wo_tooltip_layout.xml" value="0.22404371584699453" />
       </map>
     </option>

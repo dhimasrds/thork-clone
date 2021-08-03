@@ -34,6 +34,9 @@
     <string name="connection_switch_offline_message">Aplikasi diganti ke mode OFLINE</string>
     <string name="dismiss">ABAIKAN</string>
 
+    <string name="general_search">Masukkan pencarian</string>
+    <string name="general_save">Save</string>
+
     <!-- Intro Slider -->
     <string name="next">BERIKUTNYA</string>
     <string name="skip">LEWATKAN</string>
@@ -170,7 +173,7 @@
 
     <!-- MENU: Workorder -->
     <string name="workorder">Perintah kerja</string>
-    <string name="desc">Details</string>
+    <string name="desc">Description</string>
     <string name="longdesc">Long Description</string>
     <string name="date">Tanggal</string>
     <string name="period">Periode</string>
@@ -209,8 +212,8 @@
     <string name="workorder_upload_failed">Lampiran Workorder berhasil diupload</string>
     <string name="service_request_create">Create Service Request</string>
     <string name="service_request_cancel">Apakah kamu ingin membatalkan Service Request?</string>
-    <string name="workorder_create_success">Service Request berhasil disimpan</string>
-    <string name="workorder_create_failed">Service Request gagal disimpan</string>
+    <string name="workorder_create_success">Work Order berhasil disimpan</string>
+    <string name="workorder_create_failed">Work Order gagal disimpan</string>
     <string name="workorder_followup_create_success">Follow Up WO berhasil disimpan</string>
     <string name="workorder_followup_create_failed">Follow Up WO gagal disimpan</string>
     <string name="create_workorder_cancel">Apakah kamu ingin membatalkan Work Order?</string>
@@ -386,6 +389,10 @@
     <string name="list_work_order">List Work Order</string>
     <string name="activity">Activity</string>
     <string name="search_work_order">Search work order</string>
+
+    <!-- Material Plan -->
+    <string name="material_plan_search">Masukkan Material Code</string>
+    <string name="material_plan_create">Tambah Material Plan</string>
 
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>

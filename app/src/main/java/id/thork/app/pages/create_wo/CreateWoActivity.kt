@@ -125,18 +125,6 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.editEstimdur.setOnClickListener(setEstimdur)
 
-        binding.pickMap.setOnClickListener {
-            vibrateAndPickLocation()
-        }
-
-//        binding.scanQr.setOnClickListener {
-//            gotoListMaterial()
-//        }
-
-        binding.includeLongdesc.longdesc.setOnClickListener {
-            gotoLongDescActivity()
-        }
-
         binding.includeAttachments.attachment.setOnClickListener {
             goToAttachments()
         }
@@ -391,32 +379,6 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         startActivity(intent)
     }
 
-    private fun pickLocation() {
-        try {
-            // Request location updates
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                0L,
-                0f,
-                locationListener
-            )
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        }
-    }
-
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            latitudey = location.latitude
-            longitudex = location.longitude
-            binding.locationWo.setText("$latitudey , $longitudex")
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
-
     override fun onRightButton() {
         if (validateDialogExit) {
             viewModel.removeScanner(tempWonum)
@@ -526,22 +488,6 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         customDialogUtils.setMiddleButtonText(R.string.dialog_yes)
         customDialogUtils.setListener(this)
         customDialogUtils.show()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun vibrateAndPickLocation() {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            vibrator.vibrate(
-                VibrationEffect.createOneShot(
-                    100,
-                    VibrationEffect.DEFAULT_AMPLITUDE
-                )
-            )
-        } else {
-            vibrator.vibrate(100)
-        }
-        pickLocation()
     }
 
     private fun gotoHome() {
