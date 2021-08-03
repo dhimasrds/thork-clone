@@ -31,12 +31,14 @@ object WorkOrderRepositoryModule {
         attachmentRepository: AttachmentRepository,
         materialRepository: MaterialRepository,
         worklogRepository: WorklogRepository,
-        taskRepository: TaskRepository
+        taskRepository: TaskRepository,
+        laborRepository: LaborRepository
     ): WorkOrderRepository {
         return WorkOrderRepository(
             context,
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
-            attachmentRepository, materialRepository, worklogRepository, taskRepository
+            attachmentRepository, materialRepository, worklogRepository, taskRepository,
+            laborRepository
         )
     }
 
@@ -104,5 +106,18 @@ object WorkOrderRepositoryModule {
             httpLoggingInterceptor,
             preferenceManager
         )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideLaborRepository(
+        appSession: AppSession,
+    ): LaborRepository {
+        return LaborRepository(
+            appSession,
+            LaborPlanDaoImp(),
+            LaborActualDaoImp(),
+            LaborMasterDaoImp(),
+        CraftMasterDaoImp())
     }
 }

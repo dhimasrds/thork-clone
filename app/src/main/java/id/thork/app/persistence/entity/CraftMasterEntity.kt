@@ -7,5 +7,8 @@ import io.objectbox.annotation.Entity
  * Jakarta, Indonesia.
  */
 @Entity
-class CrarfMasterEntity :  BaseEntity() {
+class CraftMasterEntity :  BaseEntity() {
+    var craft: String? = null
+    var skillLevel: String? = null
+    var laborcode: String? = null
 }

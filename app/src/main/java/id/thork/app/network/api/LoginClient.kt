@@ -28,6 +28,9 @@ class LoginClient @Inject constructor(
     suspend fun getSystemProperties(headerParam: String, select: String) =
         loginApi.getSystemProperties(headerParam, LEAN, select)
 
+    suspend fun getMasterDataLabor(headerParam: String, select: String) =
+        loginApi.getMasterDataLabor(headerParam, LEAN, select)
+
     companion object {
         private const val LEAN = 1
     }

@@ -189,5 +189,6 @@ data class Woactivity(
     @Json(name = "wplabor")
     val wplabor: List<Wplabor>? = null,
     @Json(name = "wplabor_collectionref")
-    val wplaborCollectionref: String? = null
-)
+    val wplaborCollectionref: String? = null,
+
+    )

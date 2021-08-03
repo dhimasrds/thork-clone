@@ -5,6 +5,7 @@ import id.thork.app.network.model.Todo
 import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
+import id.thork.app.network.response.labor_response.LaborResponse
 import retrofit2.http.*
 
 interface LoginApi {
@@ -38,4 +39,11 @@ interface LoginApi {
         @Query("lean") lean: Int = 1,
         @Query("oslc.select") select: String
     ) : ApiResponse<id.thork.app.network.response.system_properties.SystemProperties>
+
+    @GET("maximo/oslc/os/THISFSMLABOR")
+    suspend fun getMasterDataLabor(
+        @Header("maxauth") maxAuth: String?,
+        @Query("lean") lean: Int = 1,
+        @Query("oslc.select") select: String
+    ) : ApiResponse<LaborResponse>
 }

@@ -17,6 +17,7 @@ import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.ErrorResponse.ErrorResponse
+import id.thork.app.network.response.labor_response.LaborResponse
 import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
@@ -221,5 +222,27 @@ class LoginRepository constructor(
             .onException {
                 onException(message())
             }
+    }
+
+    suspend fun fetchMasterDataLabor(
+        headerParam: String,
+        select: String,
+        onSuccess: (LaborResponse) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = loginClient.getMasterDataLabor(headerParam, select)
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+        }
+            .onError {
+                onError(message())
+            }
+            .onException {
+                onException(message())
+            }
+
     }
 }

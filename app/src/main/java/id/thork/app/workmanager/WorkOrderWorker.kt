@@ -60,7 +60,11 @@ class WorkOrderWorker @WorkerInject constructor(
     val materialDao: MaterialDao,
     val worklogDao: WorklogDao,
     val worklogTypeDao: WorklogTypeDao,
-    val taskDao: TaskDao
+    val taskDao: TaskDao,
+    val laborPlanDao: LaborPlanDao,
+    val laborActualDao: LaborActualDao,
+    val laborMasterDao: LaborMasterDao,
+    val craftMasterDao: CraftMasterDao
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -71,6 +75,7 @@ class WorkOrderWorker @WorkerInject constructor(
     var materialRepository: MaterialRepository
     var worklogRepository: WorklogRepository
     var taskRepository: TaskRepository
+    var laborRepository: LaborRepository
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
@@ -87,13 +92,14 @@ class WorkOrderWorker @WorkerInject constructor(
                 doclinksClient,
                 materialBackupDao, matusetransDao, wpmaterialDao, materialDao, worklogDao,
                 worklogTypeDao,
-                taskDao
+                taskDao, laborPlanDao, laborActualDao, laborMasterDao, craftMasterDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
         worklogRepository = workerRepository.buildWorklogRepository()
         taskRepository = workerRepository.buildTaskRepository()
+        laborRepository = workerRepository.buildLaborRepository()
 
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)
     }
@@ -294,7 +300,11 @@ class WorkOrderWorker @WorkerInject constructor(
 
                             it.woactivity.whatIfNotNullOrEmpty { woActivity ->
                                 if (tempWonum != null) {
-                                    taskRepository.handlingTaskSuccessFromCreateWo(it, woActivity, tempWonum)
+                                    taskRepository.handlingTaskSuccessFromCreateWo(
+                                        it,
+                                        woActivity,
+                                        tempWonum
+                                    )
                                 }
                             }
                             val nextIndex = currentIndex + 1

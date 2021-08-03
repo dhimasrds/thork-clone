@@ -29,6 +29,7 @@ class LoginPatternViewModel @ViewModelInject constructor(
     private val worklogRepository: WorklogRepository,
     private val attendanceRepository: AttendanceRepository,
     private val taskRepository: TaskRepository,
+    private val laborRepository: LaborRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginPatternViewModel::class.java.name
 
@@ -98,6 +99,7 @@ class LoginPatternViewModel @ViewModelInject constructor(
         worklogRepository.removeWorklog()
         attendanceRepository.removeAttendance()
         taskRepository.removeAllTask()
+        laborRepository.removeCacheLabor()
         _switchUser.postValue(BaseParam.APP_TRUE)
     }
 

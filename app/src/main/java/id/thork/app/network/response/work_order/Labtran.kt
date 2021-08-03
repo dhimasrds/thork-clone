@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Labtran(
+data class  Labtran(
     @Json(name = "assetnum")
     val assetnum: String? = null,
     @Json(name = "craft")
@@ -56,4 +56,10 @@ data class Labtran(
     val transtypeDescription: String? = null,
     @Json(name = "skilllevel")
     val skilllevel: String? = null,
+    @Json(name = "startdatetime")
+    val startdatetime: String? = null,
+    @Json(name = "finishdatetime")
+    val finishdatetime: String? = null,
+    @Json(name = "vendor")
+    var vendor: String? = null,
 )

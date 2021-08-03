@@ -29,5 +29,11 @@ data class Wplabor(
     @Json(name = "wplaborid")
     val wplaborid: String? = null,
     @Json(name = "wplaboruid")
-    val wplaboruid: Int? = null
+    val wplaboruid: Int? = null,
+    @Json(name = "craft")
+    var craft: String? = null,
+    @Json(name = "skilllevel")
+    var skilllevel: String? = null,
+    @Json(name = "vendor")
+    var vendor: String? = null,
 )
