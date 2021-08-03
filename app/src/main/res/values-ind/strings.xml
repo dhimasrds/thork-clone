@@ -36,6 +36,7 @@
 
     <string name="general_search">Masukkan pencarian</string>
     <string name="general_save">Save</string>
+    <string name="general_required_fields">Periksa terlebih dahulu untuk data yang wajib</string>
 
     <!-- Intro Slider -->
     <string name="next">BERIKUTNYA</string>
@@ -522,9 +523,14 @@
     <string name="task_schedule_start">Jadwal Mulai</string>
     <string name="task_est_dur">Estimasi Durasi</string>
     <string name="task_actual_start">Jam Mulai</string>
-    <string name="task_click_here">Click Here</string>
+    <string name="task_desc_start_hint">Masukkan Deskripsi</string>
+    <string name="task_sche_start_hint">Masukkan Schedule Start</string>
+    <string name="task_sche_start_time_hint">Masukkan  Sche. Start Time</string>
+    <string name="task_actual_start_hint">Masukkan Actual Start</string>
+    <string name="task_actual_start_time_hint">Masukkan Actual Time</string>
     <string name="task_toolbar">Task</string>
-
+    <string name="task_desc_required">Description tidaka boleh kosong</string>
+    <string name="task_estdur_required">Estimate Duration tidak boleh kosong</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>

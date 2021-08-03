@@ -15,8 +15,10 @@ package id.thork.app.example
 import id.thork.app.utils.DateUtils
 
 fun main () {
-    val dateString = "2020-11-23T23:05:59+07:00"
-    val date = DateUtils.convertStringToMaximoDate(dateString)
-    println(dateString)
-    println(date)
+    val name: String? = null
+    print(name.isNullOrBlank())
+//    val dateString = "2020-11-23T23:05:59+07:00"
+//    val date = DateUtils.convertStringToMaximoDate(dateString)
+//    println(dateString)
+//    println(date)
 }

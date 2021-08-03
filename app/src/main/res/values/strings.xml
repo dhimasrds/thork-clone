@@ -36,6 +36,7 @@
 
     <string name="general_search">Search here</string>
     <string name="general_save">Save</string>
+    <string name="general_required_fields">Please fill in a valid value for required fields</string>
 
     <!-- Intro Slider -->
     <string name="next">NEXT</string>
@@ -537,8 +538,14 @@
     <string name="task_schedule_start">Schedule Start</string>
     <string name="task_est_dur">Estimate Duration</string>
     <string name="task_actual_start">Actual Start</string>
-    <string name="task_click_here">Click Here</string>
+    <string name="task_desc_start_hint">Enter Description</string>
+    <string name="task_sche_start_hint">Enter Schedule Start</string>
+    <string name="task_sche_start_time_hint">Enter Schedule Time</string>
+    <string name="task_actual_start_hint">Enter Actual Start</string>
+    <string name="task_actual_start_time_hint">Enter Actual Time</string>
     <string name="task_toolbar">Task</string>
+    <string name="task_desc_required">Description can\'t empty</string>
+    <string name="task_estdur_required">Estimate Duration can\'t empty</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>

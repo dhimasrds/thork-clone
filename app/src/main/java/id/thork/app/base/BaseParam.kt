@@ -179,7 +179,9 @@ object BaseParam {
     const val TASKID = "TASKID"
     const val DETAIL_TASK = "DETAIL_TASK"
     const val SHEDULE_START = "SHEDULE_START"
+    const val SHEDULE_START_TIME = "SHEDULE_START_TIME"
     const val ACTUAL_START = "ACTUAL_START"
+    const val ACTUAL_START_TIME = "ACTUAL_START_TIME"
 
     const val PRIORITY = "PRIORITY"
 
