@@ -607,11 +607,9 @@
                                 android:background="@drawable/ic_rectangle_528"
                                 android:fontFamily="@font/roboto_medium"
                                 android:text="@string/create"
-                                android:textAllCaps="false"
+                                android:textSize="@dimen/base_text_size_18"
                                 android:textColor="@color/white"/>
                     </RelativeLayout>
-
-
                 </LinearLayout>
             </ScrollView>
 
