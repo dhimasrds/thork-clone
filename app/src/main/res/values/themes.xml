@@ -17,6 +17,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:elevation">0dp</item>
+        <item name="android:timePickerDialogTheme">@style/SpinnerTimePickerDialog</item>
         <item name="android:datePickerDialogTheme">@style/DialogTheme</item>
         <item name="android:actionButtonStyle">@style/ThorkMenuItemStyle</item>
     </style>
@@ -45,5 +46,30 @@
         <item name="colorAccent">@color/blue</item>
         <item name="colorOnPrimary">@color/blue</item>
         <item name="colorOnSecondary">@color/blue</item>
+    </style>
+
+
+    <style name="SpinnerTimePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="colorOnPrimary">@color/blue</item>
+        <item name="colorOnSecondary">@color/blue</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:timePickerMode">clock</item>
+    </style>
+
+    <style name="SpinnerTimePickerDialogSpinner" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:timePickerMode">spinner</item>
     </style>
 </resources>
