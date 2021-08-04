@@ -549,6 +549,7 @@
     <string name="start_time">Start Time</string>
     <string name="end_date">End Date</string>
     <string name="end_time">End Time</string>
+    <string name="create_labor_actual">Create Labor Actual</string>
     <string name="task_desc_required">Description can\'t empty</string>
     <string name="task_estdur_required">Estimate Duration can\'t empty</string>
 

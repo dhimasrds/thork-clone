@@ -15,6 +15,7 @@ import id.thork.app.databinding.ActivityCreateLaborActualBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.labor_actual.element.LaborActualViewModel
+import id.thork.app.pages.labor_actual.element.TimePickerHelper
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -31,6 +32,8 @@ class CreateLaborActualActivity: BaseActivity(), DialogUtils.DialogUtilsListener
     private var cal: Calendar = Calendar.getInstance()
     private var cal2: Calendar = Calendar.getInstance()
 
+    lateinit var timePicker: TimePickerHelper
+
     private lateinit var dialogUtils: DialogUtils
     private lateinit var customDialogUtils: CustomDialogUtils
 
@@ -41,8 +44,9 @@ class CreateLaborActualActivity: BaseActivity(), DialogUtils.DialogUtilsListener
             lifecycleOwner = this@CreateLaborActualActivity
             vm = viewModels
         }
-
+        timePicker = TimePickerHelper(this, is24HourView = true, isSpinnerType = false)
         setupDatePicker()
+
 
         dialogUtils = DialogUtils(this)
         customDialogUtils = CustomDialogUtils(this)
@@ -125,9 +129,24 @@ class CreateLaborActualActivity: BaseActivity(), DialogUtils.DialogUtilsListener
 
     override fun setupListener() {
         super.setupListener()
-        binding.tvStartTime.setOnClickListener(setEstimdur)
-        binding.tvEndTime.setOnClickListener(setEstimdur2)
+        binding.tvStartTime.setOnClickListener {showTimePickerDialog() }
+//        binding.tvStartTime.setOnClickListener(setEstimdur)
+//        binding.tvEndTime.setOnClickListener(setEstimdur2)
 
+    }
+
+    private fun showTimePickerDialog() {
+        val cal = Calendar.getInstance()
+        val h = cal.get(Calendar.HOUR_OF_DAY)
+        val m = cal.get(Calendar.MINUTE)
+        timePicker.showDialog(h, m, object : TimePickerHelper.Callback {
+            @SuppressLint("SetTextI18n")
+            override fun onTimeSelected(hourOfDay: Int, minute: Int) {
+                val hourStr = if (hourOfDay < 10) "0$hourOfDay" else "$hourOfDay"
+                val minuteStr = if (minute < 10) "0$minute" else "$minute"
+               binding.tvStartTime.text = "$hourStr : $minuteStr"
+            }
+        })
     }
 
     @SuppressLint("SetTextI18n")
