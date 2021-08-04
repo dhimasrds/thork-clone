@@ -11,6 +11,9 @@ import id.thork.app.databinding.ActivityTaskBinding
 import id.thork.app.pages.task.element.TaskAdapter
 import id.thork.app.pages.task.element.TaskViewModel
 import id.thork.app.persistence.entity.TaskEntity
+import id.thork.app.utils.DateUtils
+import timber.log.Timber
+import java.util.*
 
 /**
  * Created by Raka Putra on 6/23/21
@@ -96,6 +99,12 @@ class TaskActivity : BaseActivity() {
             intent.putExtra(BaseParam.WONUM, intentWonum)
             intent.putExtra(BaseParam.STATUS, intentStatus)
             intent.putExtra(BaseParam.TASKID, idTask)
+            val currentDate = Date()
+            val currentDateString = DateUtils.getAppDateFormat(currentDate)
+            val currentTimeString = DateUtils.getAppTimeFormat(currentDate)
+            Timber.tag(TAG).d("setupListener() date String: %s", currentDateString)
+            intent.putExtra(BaseParam.SHEDULE_START, currentDateString)
+            intent.putExtra(BaseParam.SHEDULE_START_TIME, currentTimeString)
             intentTag.whatIfNotNull {
                 intent.putExtra(BaseParam.TAG_TASK, it)
             }

@@ -3,8 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/wo_tooltip_layout.xml" value="0.22404371584699453" />
+        <entry key="app/src/main/res/drawable-v24/ic_line.xml" value="0.14583333333333334" />
+        <entry key="app/src/main/res/drawable/bg_edit_text.xml" value="0.15104166666666666" />
+        <entry key="app/src/main/res/drawable/ic_line.xml" value="0.14583333333333334" />
+        <entry key="app/src/main/res/drawable/ic_rectangle_528.xml" value="0.15104166666666666" />
+        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/activity_create_task.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.2431924882629108" />
+        <entry key="app/src/main/res/layout/activity_create_workorder_menu.xml" value="0.1296875" />
+        <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/activity_material_actual_detail.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/activity_material_plan.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/activity_material_plan_detail.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/material_plan_item.xml" value="0.5" />
       </map>
     </option>
   </component>

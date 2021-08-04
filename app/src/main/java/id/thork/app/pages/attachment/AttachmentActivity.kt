@@ -233,7 +233,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         dialogUtils =
             DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
-        dialogUtils.isCancelable = true
+        dialogUtils.setCancelable(true)
         dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li).create()
 
     }

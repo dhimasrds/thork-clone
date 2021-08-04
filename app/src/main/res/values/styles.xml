@@ -101,4 +101,21 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="ThorTimePickerDialog"
+        parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorOnPrimary">@color/blue</item>
+        <item name="android:dialogTheme">@style/ThorDateTimeTheme</item>
+        <item name="android:timePickerStyle">@style/ThorTimePicker</item>
+    </style>
+
+    <style name="ThorDateTimeTheme"
+        parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:timePickerStyle">@style/ThorTimePicker</item>
+    </style>
+
+    <style name="ThorTimePicker"
+        parent="@android:style/Widget.Material.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
+    </style>
+
 </resources>

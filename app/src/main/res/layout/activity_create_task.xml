@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="7dp"
+        android:background="#f1f1f1"
         android:orientation="vertical"
-        tools:context=".pages.task.CreateTaskActivity"
-        android:background="#f1f1f1">
+        tools:context=".pages.task.CreateTaskActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -53,9 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/general_margin_10dp"
-                    android:orientation="vertical"
                     android:background="@color/white"
-                    >
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -79,6 +78,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/general_margin_5dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:background="@color/transparant"
                         android:fontFamily="@font/roboto_regular"
                         android:hint="ID"
@@ -93,8 +93,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/general_margin_10dp"
-                    android:orientation="vertical"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -118,10 +118,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/general_margin_5dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:background="@color/transparant"
                         android:backgroundTint="@color/transparant"
                         android:fontFamily="@font/roboto_regular"
-                        android:hint="@string/type_here"
+                        android:hint="@string/task_desc_start_hint"
                         android:inputType="textMultiLine"
                         android:padding="@dimen/general_padding_5dp"
                         android:textAllCaps="false"
@@ -133,8 +134,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/general_margin_10dp"
-                    android:orientation="vertical"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -158,6 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:background="@drawable/bg_status"
                         android:backgroundTintMode="multiply"
                         android:fontFamily="@font/roboto_bold"
@@ -172,8 +174,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/general_margin_10dp"
-                    android:orientation="vertical"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -192,30 +194,57 @@
                         android:layout_marginBottom="@dimen/general_margin_5dp"
                         android:background="@drawable/ic_line" />
 
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/tv_schedule_start"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/general_margin_5dp"
-                        android:background="@color/transparant"
-                        android:drawableStart="@drawable/ic_date_black"
-                        android:drawablePadding="@dimen/general_margin_5dp"
-                        android:focusable="false"
-                        android:fontFamily="@font/roboto_regular"
-                        android:hint="@string/task_click_here"
-                        android:inputType="textMultiLine|textVisiblePassword"
-                        android:padding="@dimen/general_padding_5dp"
-                        android:textAllCaps="false"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/base_text_size_16" />
+                        android:weightSum="2"
+                        android:orientation="horizontal">
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tv_schedule_start"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="@dimen/general_margin_5dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:background="@color/transparant"
+                            android:drawableStart="@drawable/ic_date_black"
+                            android:drawablePadding="@dimen/general_margin_5dp"
+                            android:focusable="false"
+                            android:fontFamily="@font/roboto_regular"
+                            android:hint="@string/task_sche_start_hint"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:padding="@dimen/general_padding_5dp"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/base_text_size_16" />
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tv_time_schedule_start"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="@dimen/general_margin_5dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:background="@color/transparant"
+                            android:drawableStart="@drawable/ic_time_black"
+                            android:drawablePadding="@dimen/general_margin_5dp"
+                            android:focusable="false"
+                            android:fontFamily="@font/roboto_regular"
+                            android:hint="@string/task_sche_start_time_hint"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:padding="@dimen/general_padding_5dp"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/base_text_size_16" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/general_margin_10dp"
-                    android:orientation="vertical"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -238,6 +267,8 @@
                         android:id="@+id/tv_est_dur"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/general_padding_5dp"
+                        android:layout_marginBottom="@dimen/general_margin_20dp"
                         android:focusable="false"
                         android:fontFamily="@font/roboto_regular"
                         android:hint="@string/hourminute"
@@ -249,8 +280,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/general_margin_10dp"
-                    android:orientation="vertical"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -269,53 +300,80 @@
                         android:layout_marginBottom="@dimen/general_margin_5dp"
                         android:background="@drawable/ic_line" />
 
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/tv_actual_start"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/general_margin_5dp"
-                        android:background="@color/transparant"
-                        android:drawableStart="@drawable/ic_date_black"
-                        android:drawablePadding="@dimen/general_margin_5dp"
-                        android:focusable="false"
-                        android:fontFamily="@font/roboto_regular"
-                        android:hint="@string/task_click_here"
-                        android:inputType="textMultiLine|textVisiblePassword"
-                        android:padding="@dimen/general_padding_5dp"
-                        android:textAllCaps="false"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/base_text_size_16" />
+                        android:weightSum="2"
+                        android:orientation="horizontal">
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tv_actual_start"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="@dimen/general_margin_5dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:background="@color/transparant"
+                            android:drawableStart="@drawable/ic_date_black"
+                            android:drawablePadding="@dimen/general_margin_5dp"
+                            android:focusable="false"
+                            android:fontFamily="@font/roboto_regular"
+                            android:hint="@string/task_actual_start_hint"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:padding="@dimen/general_padding_5dp"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/base_text_size_16" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/tv_time_actual_start"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="@dimen/general_margin_5dp"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:background="@color/transparant"
+                            android:drawableStart="@drawable/ic_time_black"
+                            android:drawablePadding="@dimen/general_margin_5dp"
+                            android:focusable="false"
+                            android:fontFamily="@font/roboto_regular"
+                            android:hint="@string/task_actual_start_time_hint"
+                            android:inputType="textMultiLine|textVisiblePassword"
+                            android:padding="@dimen/general_padding_5dp"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/base_text_size_16" />
+                    </LinearLayout>
+
                 </LinearLayout>
                 <!--MARGIN-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"></LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_save_task"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_margin_12dp"
-                    android:layout_marginTop="@dimen/general_margin_12dp"
-                    android:layout_marginEnd="@dimen/general_margin_12dp"
-                    android:layout_marginBottom="@dimen/general_margin_12dp"
-                    android:background="@drawable/ic_rectangle_528"
-                    android:text="Save"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/content"
-                    app:layout_constraintVertical_bias="0.997" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_save_task"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/general_margin_12dp"
+                        android:layout_marginTop="@dimen/general_margin_12dp"
+                        android:layout_marginEnd="@dimen/general_margin_12dp"
+                        android:layout_marginBottom="@dimen/general_margin_12dp"
+                        android:background="@drawable/ic_rectangle_528"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/content"
+                        app:layout_constraintVertical_bias="0.997" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

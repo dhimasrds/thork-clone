@@ -15,9 +15,14 @@ import java.util.*
  */
 object DateUtils {
     private val DEFAULT_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss"
+    const val APP_DATE_FORMAT = "dd/MM/yyyy"
+    const val APP_TIME_FORMAT = "HH:mm"
+    const val APP_DATETIME_FORMAT = "dd/MM/yyyy HH:mm"
+    const val APP_DATETIME_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ssZ"
+
     private val DATE_FORMAT = "dd-MMM-yyyy HH:mm"
-    private val DATE_FORMAT_MAXIMO = "yyyy-MM-dd'T'HH:mm:ss"
-    private val DATE_FORMAT_OBJECTBOX = "EEE MMM dd yyyy HH:mm:ss 'GMT'Z"
+    const val DATE_FORMAT_MAXIMO = "yyyy-MM-dd'T'HH:mm:ss"
+    const val DATE_FORMAT_OBJECTBOX = "EEE MMM dd yyyy HH:mm:ss 'GMT'Z"
     private val DATE_ATTENDANCE = "EEEE, dd MMM yyyy"
     private val DATE_TIME_ATTENDANCE = "HH:mm"
     private val HOURS_ATTENDANCE = "hh:mm"
@@ -176,6 +181,39 @@ object DateUtils {
             val formatter = SimpleDateFormat(DATE_FORMAT_MAXIMO)
             formatter.applyPattern(DEFAULT_DATE_FORMAT)
             return formatter.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun getAppDateFormat(date: Date): String {
+        try {
+            val format = SimpleDateFormat(APP_DATE_FORMAT)
+            return format.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun getAppTimeFormat(date: Date): String {
+        try {
+            val format = SimpleDateFormat(APP_TIME_FORMAT)
+            return format.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun getAppDateTimeOBFormat(date: Date): String {
+        try {
+            val format = SimpleDateFormat(APP_DATETIME_FORMAT_OBJECTBOX)
+            var dateFormated = format.format(date)
+            dateFormated = dateFormated.substring(0, dateFormated.length-2)
+                .plus(":").plus(dateFormated.substring(dateFormated.length-2))
+            return dateFormated
         } catch (e: Exception) {
             e.printStackTrace()
         }
