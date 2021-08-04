@@ -88,6 +88,22 @@
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
 
+                                <TextView
+                                    android:id="@+id/select_labor"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_10dp"
+                                    android:text="@string/select_labor"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/blue_nav"
+                                    android:drawablePadding="@dimen/general_padding_10dp"
+                                    android:drawableEnd="@drawable/ic_search_blue"
+                                    android:textFontWeight="500"
+                                    android:textSize="15sp" />
+
                             </LinearLayout>
 
                             <View
@@ -137,6 +153,22 @@
                                     android:textColor="@color/colorBlack"
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
+
+                                <TextView
+                                    android:id="@+id/select_task"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_10dp"
+                                    android:text="@string/select_task"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/blue_nav"
+                                    android:drawablePadding="@dimen/general_padding_10dp"
+                                    android:drawableEnd="@drawable/ic_search_blue"
+                                    android:textFontWeight="500"
+                                    android:textSize="15sp" />
 
                             </LinearLayout>
 
@@ -188,6 +220,22 @@
                                     android:textColor="@color/colorBlack"
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
+
+                                <TextView
+                                    android:id="@+id/select_craft"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_10dp"
+                                    android:text="@string/select_craft"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/blue_nav"
+                                    android:drawablePadding="@dimen/general_padding_10dp"
+                                    android:drawableEnd="@drawable/ic_search_blue"
+                                    android:textFontWeight="500"
+                                    android:textSize="15sp" />
 
                             </LinearLayout>
 

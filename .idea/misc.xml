@@ -8,6 +8,8 @@
         <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_select_labor.xml" value="0.10733695652173914" />
+        <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
       </map>
     </option>
   </component>
