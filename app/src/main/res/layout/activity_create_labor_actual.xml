@@ -514,7 +514,7 @@
                                 android:textSize="@dimen/base_text_size_16" />
 
                             <androidx.appcompat.widget.AppCompatButton
-                                android:id="@+id/btn_save_attendance"
+                                android:id="@+id/btn_save_labor_actual"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/general_margin_20dp"

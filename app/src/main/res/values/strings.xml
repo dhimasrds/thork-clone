@@ -537,6 +537,7 @@
     <string name="start_time">Start Time</string>
     <string name="end_date">End Date</string>
     <string name="end_time">End Time</string>
+    <string name="create_labor_actual">Create Labor Actual</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>
