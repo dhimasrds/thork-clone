@@ -205,7 +205,7 @@
                                 android:layout_marginRight="@dimen/general_margin_5dp"
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
-                                android:hint="@string/task_click_here"
+                                android:hint="@string/date"
                                 android:textAllCaps="false"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/base_text_size_16" />
@@ -255,7 +255,7 @@
                                 android:layout_marginRight="@dimen/general_margin_5dp"
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
-                                android:hint="@string/task_click_here"
+                                android:hint="@string/time"
                                 android:textAllCaps="false"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/base_text_size_16" />
@@ -306,7 +306,7 @@
                                 android:layout_marginRight="@dimen/general_margin_5dp"
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
-                                android:hint="@string/task_click_here"
+                                android:hint="@string/date"
                                 android:textAllCaps="false"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/base_text_size_16" />
@@ -355,7 +355,7 @@
                                 android:layout_marginRight="@dimen/general_margin_5dp"
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
-                                android:hint="@string/task_click_here"
+                                android:hint="@string/time"
                                 android:textAllCaps="false"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/base_text_size_16" />
