@@ -197,6 +197,11 @@ object DateUtils {
         return BaseParam.APP_EMPTY_STRING
     }
 
+    fun getAppDateFormat(dateString: String?): Date {
+        val date = SimpleDateFormat(APP_DATE_FORMAT).parse(dateString)
+        return date
+    }
+
     fun getAppTimeFormat(date: Date): String {
         try {
             val format = SimpleDateFormat(APP_TIME_FORMAT)

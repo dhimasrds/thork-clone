@@ -13,7 +13,10 @@
 package id.thork.app.pages.example
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.R
@@ -49,6 +52,7 @@ class FormActivity : AppCompatActivity() {
         rootView.addView(locomotifBuilder?.build())
 
         locomotifBuilder?.setFieldReadOnlyByTag("name")
+        getWidgetListener()
     }
 
     private fun getGenderItems(): List<LocomotifAttribute> {
@@ -60,6 +64,19 @@ class FormActivity : AppCompatActivity() {
         return mutableList.toList()
     }
 
+    fun getWidgetListener() {
+        val address = locomotifBuilder?.getWidgetByTag("address") as EditText
+        val phone = locomotifBuilder?.getWidgetByTag("phone") as EditText
+        address.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                phone.setText("Inject "  + s.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+    }
+
     fun getData(view: View) {
         val data = locomotifBuilder?.getData()
         println("Get Data $data")
@@ -69,7 +86,7 @@ class FormActivity : AppCompatActivity() {
             }
         }
 
-        println(locomotifBuilder?.getDataAsJson())
+//        println(locomotifBuilder?.getDataAsJson())
 
         val pDuplicate: Person? = locomotifBuilder?.getDataAsEntity()
         println("RETURN AS ENTITY")

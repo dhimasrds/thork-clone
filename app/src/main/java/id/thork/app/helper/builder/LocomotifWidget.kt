@@ -98,7 +98,7 @@ class LocomotifWidget constructor(val context: Context) {
             val radioButton = AppCompatRadioButton(context)
             radioButton.text = attrib.value
             radioButton.id = index
-            radioButton.buttonTintList = LocomotifHelper().fetchDefaultColorStateList()
+            radioButton.buttonTintList = LocomotifHelper().fetchDefaultColorStateList(context)
 
             radioGroup.addView(radioButton)
             if (widgetValue.equals(attrib.value)) {
@@ -120,7 +120,7 @@ class LocomotifWidget constructor(val context: Context) {
             tag = LOCOMOTIF.plus(fieldName)
             setBackgroundColor(Color.TRANSPARENT)
             setTextColor(Color.BLACK)
-            buttonTintList = LocomotifHelper().fetchDefaultColorStateList()
+            buttonTintList = LocomotifHelper().fetchDefaultColorStateList(context)
 
             val typeface = ResourcesCompat.getFont(context, R.font.roboto_regular)
             setTypeface(typeface)

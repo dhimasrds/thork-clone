@@ -165,7 +165,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = createFieldLabel(fieldName, index)
 
         val separator = View(context)
-        separator.setBackgroundColor(Color.GRAY)
+        separator.setBackgroundColor(Color.LTGRAY)
         separator.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             getRealDp(1)
@@ -206,7 +206,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = createFieldLabel(fieldName, index)
 
         val separator = View(context)
-        separator.setBackgroundColor(Color.GRAY)
+        separator.setBackgroundColor(Color.LTGRAY)
         separator.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             getRealDp(1)
@@ -243,7 +243,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = createFieldLabel(fieldName, index)
 
         val separator = View(context)
-        separator.setBackgroundColor(Color.GRAY)
+        separator.setBackgroundColor(Color.LTGRAY)
         separator.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             getRealDp(1)
@@ -272,7 +272,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = createFieldLabel(fieldName, index)
 
         val separator = View(context)
-        separator.setBackgroundColor(Color.GRAY)
+        separator.setBackgroundColor(Color.LTGRAY)
         separator.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             getRealDp(1)
@@ -298,7 +298,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = createFieldLabel(fieldName, index)
 
         val separator = View(context)
-        separator.setBackgroundColor(Color.GRAY)
+        separator.setBackgroundColor(Color.LTGRAY)
         separator.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             getRealDp(1)
@@ -335,7 +335,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = createFieldLabel(fieldName, index)
 
         val separator = View(context)
-        separator.setBackgroundColor(Color.GRAY)
+        separator.setBackgroundColor(Color.LTGRAY)
         separator.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             getRealDp(1)
@@ -357,7 +357,13 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 fieldValueMap.put(fieldName, s)
-                item?.setAndReturnPrivateProperty(fieldName, s.toString())
+
+                val typeName = getFieldTypeByFieldName(fieldName)
+                if (typeName.equals("java.util.Date")) {
+                    item?.setAndReturnPrivateProperty(fieldName, LocomotifHelper().getAppDateFormat(s.toString()))
+                } else {
+                    item?.setAndReturnPrivateProperty(fieldName, s.toString())
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -466,11 +472,16 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return realDp
     }
 
+    private fun getFieldTypeByFieldName(fieldName: String): String {
+        val field = item!!::class.java.getDeclaredField(fieldName)
+        val type = field.type
+        val typeName = type.name
+        return typeName
+    }
+
     fun setFieldReadOnlyByTag(tag: String) {
         val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(tag))
-        val fieldName = item!!::class.java.getDeclaredField(tag)
-        val type = fieldName.type
-        val typeName = type.name
+        val typeName = getFieldTypeByFieldName(tag)
         if (typeName.equals("java.util.Date")) {
             editText.setOnClickListener(null)
         } else {
@@ -490,15 +501,17 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return editText
     }
 
-
     fun getData(): HashMap<String, Any> {
         return fieldValueMap
     }
 
-    fun getDataAsJson(): String {
-        val rootJson = JSONObject(fieldValueMap.toImmutableMap()).toString()
-        return rootJson
-    }
+    /**
+     * Convert to JSON have bugs issue after update field
+     */
+//    fun getDataAsJson(): String {
+//        val rootJson = JSONObject(fieldValueMap.toImmutableMap()).toString()
+//        return rootJson
+//    }
 
     fun getDataAsEntity(): T {
         return item

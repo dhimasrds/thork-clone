@@ -10,9 +10,14 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 
 import android.os.Build
+import androidx.core.content.ContextCompat
+import id.thork.app.utils.DateUtils
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class LocomotifHelper {
+
     fun fetchAccentColor(context: Context): Int {
         val typedValue = TypedValue()
         val a: TypedArray =
@@ -31,15 +36,26 @@ class LocomotifHelper {
         return color
     }
 
-    fun fetchDefaultColorStateList(): ColorStateList {
+    fun fetchDefaultColorStateList(context: Context): ColorStateList {
         val colorStateList = ColorStateList(
             arrayOf(intArrayOf(-R.attr.state_enabled), intArrayOf(R.attr.state_enabled)),
             intArrayOf(
                 Color.BLACK, // disabled
-                Color.BLUE
+                getPrimaryColor(context)
             )
         )
         return colorStateList
     }
 
+    private fun getPrimaryColor(context: Context): Int {
+        val value = TypedValue()
+        context.getTheme().resolveAttribute(R.attr.colorPrimary, value, true)
+        return value.data
+    }
+
+    fun getAppDateFormat(dateString: String?): Date {
+        val APP_DATE_FORMAT = "dd/MM/yyyy"
+        val date = SimpleDateFormat(APP_DATE_FORMAT).parse(dateString)
+        return date
+    }
 }
