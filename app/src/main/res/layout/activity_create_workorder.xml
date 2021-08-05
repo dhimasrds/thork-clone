@@ -546,9 +546,6 @@
                         android:id="@+id/include_laborplan"
                         layout="@layout/activity_create_wo_laborplan" />
 
-                    <!--Labor actual-->
-                    <include android:id="@+id/include_laboractual"
-                        layout="@layout/activity_create_wo_laboractual"/>
 
                     <!--REPORT DATE-->
                     <LinearLayout

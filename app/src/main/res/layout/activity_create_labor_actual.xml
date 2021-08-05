@@ -253,7 +253,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/general_margin_5dp"
-                                android:drawableStart=""
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
                                 android:hint="@string/time"

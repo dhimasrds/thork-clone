@@ -33,7 +33,7 @@ class LaborActualActivity  : BaseActivity() {
                 startActivity(intent)
             }
         }
-        laborPlanAdapter = LaborPlanAdapter()
+//        laborPlanAdapter = LaborPlanAdapter(thi)
 
         binding.rvLaborActual.adapter = laborPlanAdapter
 

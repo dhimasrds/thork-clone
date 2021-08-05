@@ -170,10 +170,6 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             goToLaborPlan()
         }
 
-        binding.includeLaboractual.laborActual.setOnClickListener {
-            goToLaborActual()
-        }
-
         binding.includeTask.cardTask.setOnClickListener {
             gotoTaskActivity()
         }

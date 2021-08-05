@@ -182,6 +182,7 @@ object BaseParam {
     const val SHEDULE_START_TIME = "SHEDULE_START_TIME"
     const val ACTUAL_START = "ACTUAL_START"
     const val ACTUAL_START_TIME = "ACTUAL_START_TIME"
+    const val LABORCODE = "LABORCODE"
 
     const val PRIORITY = "PRIORITY"
 

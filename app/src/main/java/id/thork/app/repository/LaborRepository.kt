@@ -14,6 +14,7 @@ import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborMasterEntity
 import id.thork.app.persistence.entity.LaborPlanEntity
+import id.thork.app.utils.DateUtils
 import javax.inject.Inject
 
 /**
@@ -132,6 +133,7 @@ class LaborRepository @Inject constructor(
                         laborActual.wonumTask = task.wonum
 
                         //TODO Adjustment time
+//                        val finishdatetime = DateUtils.convertMaximoDateToMillisec(member.date)
 
                     }
                 }

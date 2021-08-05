@@ -8,6 +8,7 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySelectCraftBinding
 import id.thork.app.databinding.ActivitySelectLaborBinding
 import id.thork.app.pages.labor_plan.element.CraftAdapter
+import id.thork.app.pages.labor_plan.element.LaborAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
 
@@ -15,7 +16,7 @@ class SelectLaborActivity : BaseActivity() {
     val TAG = SelectLaborActivity::class.java.name
     private val viewModels: LaborPlanViewModel by viewModels()
     private val binding: ActivitySelectLaborBinding by binding(R.layout.activity_select_labor)
-    private lateinit var laborPlanAdapter: LaborPlanAdapter
+    private lateinit var laborAdapter: LaborAdapter
 
 
     override fun setupView() {
@@ -25,9 +26,9 @@ class SelectLaborActivity : BaseActivity() {
             vm =viewModels
 
         }
-        laborPlanAdapter = LaborPlanAdapter()
+        laborAdapter = LaborAdapter()
 
-        binding.rvSelectLabor.adapter = laborPlanAdapter
+        binding.rvSelectLabor.adapter = laborAdapter
 
 
         setupToolbarWithHomeNavigation(
