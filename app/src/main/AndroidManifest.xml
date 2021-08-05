@@ -80,6 +80,13 @@
         <activity android:name=".pages.list_material.ListMaterialActivity" />
         <activity android:name=".pages.ScannerActivity" />
         <activity android:name=".pages.long_description.LongDescActivity" />
+        <activity android:name=".pages.example.FormActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".pages.login.LoginActivity"
             android:screenOrientation="portrait" />
@@ -94,11 +101,11 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".pages.main.MainActivity" />
 

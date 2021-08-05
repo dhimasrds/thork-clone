@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.R
+import id.thork.app.helper.builder.LocomotifAttribute
 import id.thork.app.helper.builder.LocomotifBuilder
 import java.util.*
 
@@ -41,12 +42,22 @@ class FormActivity : AppCompatActivity() {
         person.gender = "Male"
 
         locomotifBuilder = LocomotifBuilder(person, this)
-        locomotifBuilder?.setupFields(arrayOf("birthDate","name", "address", "email", "gender"))
-        locomotifBuilder?.setupFieldsCaption(arrayOf("Tanggal Lahir","Nama Lengkap", "Alamat", "NIK", "Email", "Jenis Kelamin"))
+        locomotifBuilder?.setupFields(arrayOf("birthDate","name", "address", "nik","email", "gender", "phone", "country", "city" , "zipcode", "married"))
+        locomotifBuilder?.setupFieldsCaption(arrayOf("Tanggal Lahir","Nama Lengkap", "Alamat", "NIK", "Email", "Jenis Kelamin", "Phone", "Negara", "Kota", "Kode POS", "Menikah"))
         val rootView: LinearLayout = findViewById(R.id.root_view)
+        locomotifBuilder?.forFieldItems("gender", getGenderItems())
         rootView.addView(locomotifBuilder?.build())
 
         locomotifBuilder?.setFieldReadOnlyByTag("name")
+    }
+
+    private fun getGenderItems(): List<LocomotifAttribute> {
+        val mutableList = mutableListOf<LocomotifAttribute>()
+        val male = LocomotifAttribute("Male", "Male")
+        val female = LocomotifAttribute("Female", "Female")
+        mutableList.add(male)
+        mutableList.add(female)
+        return mutableList.toList()
     }
 
     fun getData(view: View) {
@@ -59,5 +70,13 @@ class FormActivity : AppCompatActivity() {
         }
 
         println(locomotifBuilder?.getDataAsJson())
+
+        val pDuplicate: Person? = locomotifBuilder?.getDataAsEntity()
+        println("RETURN AS ENTITY")
+        pDuplicate.let {
+            println(it?.name)
+            println(it?.birthDate)
+            println(it?.address)
+        }
     }
 }

@@ -12,7 +12,9 @@
 
 package id.thork.app.pages.example
 
-import id.thork.app.helper.builder.Lov
+import id.thork.app.helper.builder.LocoCheckBox
+import id.thork.app.helper.builder.LocoLov
+import id.thork.app.helper.builder.LocoRadioButton
 import java.util.*
 
 class Person {
@@ -21,11 +23,19 @@ class Person {
     var address: String? = null
     var nik: String? = null
     var email: String? = null
+    var phone: String? = null
     var birthDate: Date? = null
     var age: Int? = null
+    @LocoLov
+    var country: String? = null
+    var city: String? = null
+    var state: String? = null
+    var zipcode: String? = null
 
-    @Lov
+    @LocoRadioButton
     var gender: String? = null
 
+    @LocoCheckBox
+    var married: Boolean = false
     constructor()
 }

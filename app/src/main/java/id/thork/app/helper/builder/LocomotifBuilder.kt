@@ -24,10 +24,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatEditText
@@ -41,14 +38,14 @@ import org.json.JSONObject
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.*
+import android.widget.RadioButton
+import androidx.appcompat.widget.AppCompatCheckBox
 
 
-class LocomotifBuilder<T> constructor(val item: T, val context: Context){
-
-
+class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     private val TAG = LocomotifBuilder::class.java.name
     private val LOCOMOTIF = "LOCOMOTIF"
-    private val LOCOMOTIF_DATEFORMAT = "dd/MM/yy"
+    private val LOCOMOTIF_DATEFORMAT = "dd/MM/yyyy"
     private val locomotifDateFormat = SimpleDateFormat(LOCOMOTIF_DATEFORMAT, Locale.UK)
 
     private val TITLE_SIZE = 16F
@@ -57,10 +54,15 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
     val scrollLayout = ScrollView(context)
     val formLayout = LinearLayout(context)
     var fieldValueMap = hashMapOf<String, Any>()
+    var fieldItems = hashMapOf<String, List<LocomotifAttribute>>()
     var fields: Array<String> = arrayOf()
     var fieldsCaption: Array<String> = arrayOf()
 
     val locomotifWidget = LocomotifWidget(context)
+
+    fun forFieldItems(fieldName: String, items: List<LocomotifAttribute>) {
+        fieldItems.put(fieldName, items)
+    }
 
     fun setupFields(fields: Array<String>) {
         this.fields = fields
@@ -108,13 +110,30 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
         var view: View? = null
         fields.forEachIndexed { index, field ->
             val fieldName = item!!::class.java.getDeclaredField(field)
+
             val isLovField = locomotifValidator.isListOfValues(field) as Boolean
+            val isRadioButtonField = locomotifValidator.isRadioButton(field) as Boolean
+            val isCheckBoxField = locomotifValidator.isCheckBox(field) as Boolean
+
             val type = fieldName.type
             val typeName = type.name
 
-            Log.d(TAG, "buildField() $field type $type isLovField $isLovField")
+            Log.d(
+                TAG,
+                "buildField() $field type $type isLovField $isLovField isRadioButton $isRadioButtonField"
+            )
             if (isLovField) {
                 view = createLovWidget(context, field, index)
+            } else if (isRadioButtonField) {
+                view =
+                    fieldItems.get(field)?.let {
+                        createRadioButtonWidget(
+                            context, field,
+                            it, index
+                        )
+                    }
+            } else if (isCheckBoxField) {
+                view = createCheckBoxWidget(context, field, index)
             } else if (typeName.equals("java.lang.String")) {
                 view = createTextWidget(context, field, index)
             } else if (typeName.equals("java.lang.Integer")) {
@@ -134,6 +153,9 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
         return scrollLayout
     }
 
+    /**
+     * Lov Builder
+     */
     private fun createLovWidget(context: Context, fieldName: String, index: Int): LinearLayout {
         val widgetValue = item?.getPrivateProperty(fieldName)
         widgetValue.whatIfNotNull {
@@ -167,6 +189,80 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
         return fieldWrapper
     }
 
+    /**
+     * RadioButton Builder
+     */
+    private fun createRadioButtonWidget(
+        context: Context,
+        fieldName: String,
+        items: List<LocomotifAttribute>,
+        index: Int
+    ): LinearLayout {
+        val widgetValue = item?.getPrivateProperty(fieldName)
+        widgetValue.whatIfNotNull {
+            fieldValueMap.put(fieldName, it)
+        }
+
+        val title = createFieldLabel(fieldName, index)
+
+        val separator = View(context)
+        separator.setBackgroundColor(Color.GRAY)
+        separator.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            getRealDp(1)
+        )
+        setMargins(separator, 0, 0, 0, getRealDp(0))
+
+        val radioGroup =
+            locomotifWidget.createRadioButtonWidget(fieldName, widgetValue.toString(), items)
+        setupRadioGroupListener(radioGroup, fieldName)
+
+        val lovWrapper = LinearLayout(context)
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+        lovWrapper.setBackgroundResource(outValue.resourceId)
+        lovWrapper.isClickable = true
+        lovWrapper.addView(radioGroup)
+
+        val fieldWrapper = createFieldWrapper()
+        fieldWrapper.addView(title)
+        fieldWrapper.addView(separator)
+        fieldWrapper.addView(lovWrapper)
+        return fieldWrapper
+    }
+
+    /**
+     * CheckBox Widget
+     */
+    private fun createCheckBoxWidget(context: Context, fieldName: String, index: Int): LinearLayout {
+        val widgetValue = item?.getPrivateProperty(fieldName)
+        widgetValue.whatIfNotNull {
+            fieldValueMap.put(fieldName, it)
+        }
+
+        val title = createFieldLabel(fieldName, index)
+
+        val separator = View(context)
+        separator.setBackgroundColor(Color.GRAY)
+        separator.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            getRealDp(1)
+        )
+        setMargins(separator, 0, 0, 0, getRealDp(0))
+
+        val editText = locomotifWidget.createCheckBoxWidget(fieldName, widgetValue.toString())
+        setupCheckBoxListener(editText, fieldName)
+
+        val fieldWrapper = createFieldWrapper()
+        fieldWrapper.addView(title)
+        fieldWrapper.addView(separator)
+        fieldWrapper.addView(editText)
+        return fieldWrapper
+    }
+
+    /**
+     * Text Widget
+     */
     private fun createTextWidget(context: Context, fieldName: String, index: Int): LinearLayout {
         val widgetValue = item?.getPrivateProperty(fieldName)
         widgetValue.whatIfNotNull {
@@ -261,11 +357,27 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 fieldValueMap.put(fieldName, s)
+                item?.setAndReturnPrivateProperty(fieldName, s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
+    }
+
+    private fun setupRadioGroupListener(radioGroup: RadioGroup, fieldName: String) {
+        radioGroup.setOnCheckedChangeListener({ radioGroup, checkedId ->
+            val checkedRadioButton: RadioButton = radioGroup.findViewById(checkedId)
+            fieldValueMap.put(fieldName, checkedRadioButton.text.toString())
+            item?.setAndReturnPrivateProperty(fieldName, checkedRadioButton.text.toString())
+        })
+    }
+
+    private fun setupCheckBoxListener(checkBox: AppCompatCheckBox, fieldName: String) {
+        checkBox.setOnCheckedChangeListener { compoundButton, checked ->
+            fieldValueMap.put(fieldName, checked)
+            item?.setAndReturnPrivateProperty(fieldName, checked)
+        }
     }
 
     private fun setupDateWidgetListener(editText: EditText) {
@@ -386,5 +498,9 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context){
     fun getDataAsJson(): String {
         val rootJson = JSONObject(fieldValueMap.toImmutableMap()).toString()
         return rootJson
+    }
+
+    fun getDataAsEntity(): T {
+        return item
     }
 }

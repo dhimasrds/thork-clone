@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/layout/activity_material_actual_detail.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_material_plan.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_material_plan_detail.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_material_plan_form_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/material_plan_item.xml" value="0.5" />
       </map>
