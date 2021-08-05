@@ -99,12 +99,12 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             setupStatus(it)
         }
         intentDetailTag = intent.getStringExtra(BaseParam.DETAIL_TASK)
-//        intentSchdule.whatIfNotNullOrEmpty {
-//            binding.tvScheduleStart.setText(it)
-//        }
-//        intentSchduleTime.whatIfNotNull {
-//            binding.tvTimeScheduleStart.setText(it)
-//        }
+        intentSchdule.whatIfNotNullOrEmpty {
+            binding.tvScheduleStart.setText(it)
+        }
+        intentSchduleTime.whatIfNotNull {
+            binding.tvTimeScheduleStart.setText(it)
+        }
         initDateInView()
         intentDetailTag.whatIfNotNull {
             setupDetailTask(intentDesc, intentSchdule, intentActual, intentEstDur)
@@ -124,8 +124,8 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                     intentActual.whatIfNotNull { actual ->
                         intentEstDur.whatIfNotNull { estDur ->
                             tvDesc.setText(description)
-                            tvScheduleStart.setText(schedule)
-                            tvActualStart.setText(actual)
+//                            tvScheduleStart.setText(schedule)
+//                            tvActualStart.setText(actual)
                             tvEstDur.text = estDur.toString()
 
 //                            btnSaveTask.visibility = View.GONE
@@ -271,6 +271,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 cal2.set(Calendar.MINUTE, minute)
                 updateTimeInView(false)
             }
+
         binding.tvScheduleStart.setOnClickListener {
             DatePickerDialog(
                 this@CreateTaskActivity,
@@ -308,20 +309,25 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     private fun initDateInView() {
-        scheduleStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal.time)
-        binding.tvScheduleStart.setText(DateUtils.getAppDateFormat(cal.time))
+//        scheduleStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal.time)
+//        binding.tvScheduleStart.setText(DateUtils.getAppDateFormat(cal.time))
         binding.tvTimeScheduleStart.setText(DateUtils.getAppTimeFormat(cal.time))
+        binding.tvTimeActualStart.setText(DateUtils.getAppTimeFormat(cal.time))
     }
 
     private fun updateDateInView(isSchedule: Boolean) {
+        val dateFormatObjectBox = "yyyy-MM-dd'T'HH:mm:ss" // mention the format you need
+        val dateFormat = "MM/dd/yyyy" // mention the format you need
+        val sdfObjectBox = SimpleDateFormat(dateFormatObjectBox)
+        val sdf = SimpleDateFormat(dateFormat)
         when (isSchedule) {
             true -> {
-                scheduleStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal.time)
-                binding.tvScheduleStart.setText(DateUtils.getAppDateFormat(cal.time))
+                scheduleStartObjectBox = sdfObjectBox.format(cal.time)
+                binding.tvScheduleStart.setText(sdf.format(cal.time))
             }
             false -> {
-                actualStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal2.time)
-                binding.tvActualStart.setText(DateUtils.getAppDateFormat(cal2.time))
+                actualStartObjectBox = sdfObjectBox.format(cal2.time)
+                binding.tvActualStart.setText(sdf.format(cal2.time))
             }
         }
         Timber.tag(TAG).d("updateDateInView() isSchedule: %s " +

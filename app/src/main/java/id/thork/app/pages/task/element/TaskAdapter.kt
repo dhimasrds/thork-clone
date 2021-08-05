@@ -96,6 +96,7 @@ class TaskAdapter constructor(
                     val intent = Intent(context, CreateTaskActivity::class.java)
                     val bundle = Bundle()
                     intent.putExtra(BaseParam.WORKORDERID, taskEntity.woId)
+                    intent.putExtra(BaseParam.WONUM, taskEntity.wonum)
                     intent.putExtra(BaseParam.DESCRIPTION, taskEntity.desc)
                     intent.putExtra(BaseParam.STATUS, taskEntity.status)
                     intent.putExtra(BaseParam.SHEDULE_START, taskEntity.scheduleStart)
