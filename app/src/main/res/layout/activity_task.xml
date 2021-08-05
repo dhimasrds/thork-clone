@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="id.thork.app.pages.task.element.TaskViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/general_margin_8dp"
+        android:layout_marginRight="@dimen/general_margin_8dp"
+        tools:context=".pages.task.TaskActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_task"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:clipToPadding="true"
+            android:paddingBottom="@dimen/general_padding_8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/btn_create_task"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/cardview_list_task" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_create_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_margin_12dp"
+            android:layout_marginTop="@dimen/general_margin_12dp"
+            android:layout_marginEnd="@dimen/general_margin_12dp"
+            android:layout_marginBottom="@dimen/general_margin_12dp"
+            android:background="@drawable/ic_rectangle_528"
+            android:text="Create Task"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

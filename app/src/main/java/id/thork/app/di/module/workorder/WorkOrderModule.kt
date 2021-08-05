@@ -8,6 +8,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.DoclinksApi
+import id.thork.app.network.api.TaskApi
 import id.thork.app.network.api.WorkOrderApi
 import id.thork.app.network.api.WorkOrderClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,6 +38,14 @@ object WorkOrderModule {
         Timber.tag(TAG).i("provideLoginApi() init")
         val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
         return retrofit.create(DoclinksApi::class.java)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideTaskApi(preferenceManager: PreferenceManager, httpLoggingInterceptor: HttpLoggingInterceptor): TaskApi {
+        Timber.tag(TAG).i("provideLoginApi() init")
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        return retrofit.create(TaskApi::class.java)
     }
 
     @Provides

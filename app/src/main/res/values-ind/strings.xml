@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ /**
   ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
   ~  * <BR>
@@ -35,6 +34,10 @@
     <string name="connection_switch_offline_message">Aplikasi diganti ke mode OFLINE</string>
     <string name="dismiss">ABAIKAN</string>
 
+    <string name="general_search">Masukkan pencarian</string>
+    <string name="general_save">Save</string>
+    <string name="general_required_fields">Periksa terlebih dahulu untuk data yang wajib</string>
+
     <!-- Intro Slider -->
     <string name="next">BERIKUTNYA</string>
     <string name="skip">LEWATKAN</string>
@@ -47,12 +50,14 @@
     <!-- Action menu bar -->
     <string name="action_notifications">Notifikasi</string>
     <string name="action_settings">Pengaturan</string>
+    <string name="action_profile">Profile</string>
     <string name="action_detail">Detail</string>
     <string name="action_scan">Memindai Kode</string>
     <string name="action_report">Melaporkan</string>
     <string name="action_capture_image">Ambil Gambar</string>
     <string name="action_attach_image">Pilih Gambar</string>
     <string name="action_attach_document">Pilih Dokumen</string>
+    <string name="action_attach_signature">Tanda tangan</string>
     <string name="action_create_followup">Buat Follow Up</string>
 
     <!-- Menu base bottom navigation bar-->
@@ -81,6 +86,42 @@
     <!-- Logout Dialog -->
     <string name="logout_title">Keluar</string>
     <string name="logout_qustion">Anda yakin ingin keluar?</string>
+
+    <!-- Save Attendance Dialog -->
+    <string name="attendance_title">Simpan</string>
+    <string name="attendance_qustion">Anda yakin ingin simpan absensi ini?</string>
+
+    <!-- Save Task Dialog -->
+    <string name="task_title">Simpan</string>
+    <string name="task_qustion">Anda yakin ingin simpan task ini?</string>
+
+    <!-- Cancel Task Dialog -->
+    <string name="task_cancel_title">Save</string>
+    <string name="task_cancel_qustion">Anda yakin ingin membatalkan pembuatan tugas?</string>
+
+    <!-- Delete Image Attendance Dialog -->
+    <string name="delete_image_attendance_title">Hapus</string>
+    <string name="delete_image_attendance_qustion">Apa kamu ingin menghapus foto?</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_attendance_title">Peringatan!</string>
+    <string name="error_attendance_qustion">Gambar dan Lokasi tidak boleh kosong</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_task_title">Peringatan!</string>
+    <string name="error_task_qustion">Setiap form tidak boleh kosong</string>
+
+    <!-- Error Date Attendance Dialog -->
+    <string name="error_date_task_title">Warning!</string>
+    <string name="error_date_task_qustion">Tanggal actual tidak boleh lebih kecil dari pada tanggal jadwal</string>
+
+    <!-- Empty Check in Attendance Dialog -->
+    <string name="empty_attendance_checkin_title">Warning!</string>
+    <string name="empty_attendance_checkin_qustion">Klik chek in dulu</string>
+
+    <!-- Empty Check out Attendance Dialog -->
+    <string name="empty_attendance_checkout_title">Warning!</string>
+    <string name="empty_attendance_checkout_qustion">Klik check out dulu</string>
 
     <!-- Change Language Dialog -->
     <string name="change_language_dialog">Ubah Bahasa</string>
@@ -133,7 +174,7 @@
 
     <!-- MENU: Workorder -->
     <string name="workorder">Perintah kerja</string>
-    <string name="desc">Deskripsi</string>
+    <string name="desc">Description</string>
     <string name="longdesc">Long Description</string>
     <string name="date">Tanggal</string>
     <string name="period">Periode</string>
@@ -158,6 +199,7 @@
     <string name="estimatedwork">Perkiraan Waktu Kerja</string>
     <string name="hourminute">Jam : Menit</string>
     <string name="attachments">Lampiran</string>
+    <string name="digital_sign">Digital Sign</string>
     <string name="image">Gambar</string>
     <string name="reportDate">Tanggal Laporan</string>
     <string name="create">Buat</string>
@@ -171,10 +213,13 @@
     <string name="workorder_upload_failed">Lampiran Workorder berhasil diupload</string>
     <string name="service_request_create">Create Service Request</string>
     <string name="service_request_cancel">Apakah kamu ingin membatalkan Service Request?</string>
-    <string name="workorder_create_success">Service Request berhasil disimpan</string>
-    <string name="workorder_create_failed">Service Request gagal disimpan</string>
+    <string name="workorder_create_success">Work Order berhasil disimpan</string>
+    <string name="workorder_create_failed">Work Order gagal disimpan</string>
     <string name="workorder_followup_create_success">Follow Up WO berhasil disimpan</string>
     <string name="workorder_followup_create_failed">Follow Up WO gagal disimpan</string>
+    <string name="create_workorder_cancel">Apakah kamu ingin membatalkan Work Order?</string>
+    <string name="followup_wo_cancel">Apakah kamu ingin membatalkan Follow Up Wo?</string>
+
 
     <!-- flash light  -->
     <string name="turn_off_flashlight">Matikan</string>
@@ -346,6 +391,10 @@
     <string name="activity">Activity</string>
     <string name="search_work_order">Search work order</string>
 
+    <!-- Material Plan -->
+    <string name="material_plan_search">Masukkan Material Code</string>
+    <string name="material_plan_create">Tambah Material Plan</string>
+
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>
 
@@ -360,8 +409,10 @@
     <string name="settings_cache">Cache</string>
     <string name="settings_logs_detail">Tampilkan Logs</string>
     <string name="settings_cache_detail">Hapus Cache</string>
-    <string name="settings_about">Tentang</string>
+    <string name="settings_about">Tentang Kita</string>
     <string name="settings_about_this">Tentang This</string>
+    <string name="settings_attendance">Absensi</string>
+    <string name="settings_help_center">Pusat Pertolongan</string>
     <string name="settings_language">Bahasa</string>
     <string name="settings_logout">Keluar</string>
     <string name="settings_user">Pengguna</string>
@@ -439,7 +490,51 @@
     <string name="summary">Summary</string>
     <string name="type">Type</string>
     <string name="create_work_log">Create Work Log</string>
+    <string name="detail_work_log">Detail Work Log</string>
     <string name="work_log">Work Log</string>
     <string name="type_here">Type here</string>
     <string name="find_work_type">Find work type</string>
+    <string name="check_in">Check in</string>
+    <string name="check_out">Check out</string>
+    <string name="work_hours">Work Hours</string>
+    <string name="your_location">Your Location</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="attendance">Attendance</string>
+    <string name="history_attendance">History Attendance</string>
+    <string name="check_in_location">Check in Location</string>
+    <string name="check_out_location">Check out Location</string>
+    <string name="check_in_image">Check in Image</string>
+    <string name="check_out_image">Check out Image</string>
+    <string name="check_out_attendance">Check out</string>
+    <string name="task">Task</string>
+    <string name="select_task">Select Task</string>
+    <string name="labor">Labor</string>
+    <string name="select_labor">Select Labor</string>
+    <string name="craft">Craft</string>
+    <string name="select_craft">Select Craft</string>
+    <string name="skill_level">Skill Level</string>
+    <string name="vendor">Vendor</string>
+    <string name="create_labor_plan">Create Labor Plan</string>
+    <string name="labor_plan">Labor Plan</string>
+    <string name="select_skill_level">Select Skill Level</string>
+    <string name="task_id">ID</string>
+    <string name="task_desc">Deskripsi</string>
+    <string name="task_status">Status</string>
+    <string name="task_schedule_start">Jadwal Mulai</string>
+    <string name="task_est_dur">Estimasi Durasi</string>
+    <string name="task_actual_start">Jam Mulai</string>
+    <string name="task_desc_start_hint">Masukkan Deskripsi</string>
+    <string name="task_sche_start_hint">Masukkan Schedule Start</string>
+    <string name="task_sche_start_time_hint">Masukkan  Sche. Start Time</string>
+    <string name="task_actual_start_hint">Masukkan Actual Start</string>
+    <string name="task_actual_start_time_hint">Masukkan Actual Time</string>
+    <string name="task_toolbar">Task</string>
+    <string name="task_desc_required">Description tidaka boleh kosong</string>
+    <string name="task_estdur_required">Estimate Duration tidak boleh kosong</string>
+
+    <string-array name="wo_type">
+        <item>Assigned Work Order</item>
+        <item>Local Work Order</item>
+    </string-array>
+
 </resources>

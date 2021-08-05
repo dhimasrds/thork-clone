@@ -1,8 +1,6 @@
 package id.thork.app.pages.work_log.create_work_log
 
 import android.content.Intent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNull
@@ -23,10 +21,6 @@ class CreateWorkLogActivity : BaseActivity() {
     private var intentWonum: String? = null
     private var intentWoid: String? = null
 
-    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-        onActivityResult(result)
-    }
-
     override fun setupView() {
         super.setupView()
         binding.apply {
@@ -39,7 +33,8 @@ class CreateWorkLogActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         retrieveFromIntent()
@@ -48,13 +43,14 @@ class CreateWorkLogActivity : BaseActivity() {
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentWoid = intent.getStringExtra(BaseParam.WORKORDERID)
+        binding.tvType.text = BaseParam.WORK
     }
 
 
     override fun setupObserver() {
         super.setupObserver()
         viewModels.result.observe(this, Observer {
-            when(it) {
+            when (it) {
                 BaseParam.APP_TRUE -> {
                     navigateToWorklog()
                 }
@@ -67,36 +63,43 @@ class CreateWorkLogActivity : BaseActivity() {
         super.setupListener()
         binding.tvType.setOnClickListener {
             val intent = Intent(this, WorkLogTypeActivity::class.java)
-            startForResult.launch(intent)
+            startActivityForResult(intent, 99)
         }
 
         binding.btnCreate.setOnClickListener {
-            val summary =StringUtils.checkingString(binding.tvSummary.text.toString())
+            val summary = StringUtils.checkingString(binding.tvSummary.text.toString())
             val desc = StringUtils.checkingString(binding.tvDesc.text.toString())
             val type = binding.tvType.text.toString()
-            viewModels.saveWorklog(summary, desc, type, intentWonum.toString(), intentWoid.toString())
+            viewModels.saveWorklog(
+                summary,
+                desc,
+                type,
+                intentWonum.toString(),
+                intentWoid.toString()
+            )
         }
 
     }
 
-    private fun onActivityResult(result: ActivityResult) {
-        if(result.resultCode == RESULT_OK) {
-            val intent = result.data
-            intent.whatIfNotNull {
+
+    private fun navigateToWorklog() {
+        val intent = Intent(this, WorkLogActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, intentWoid)
+        intent.putExtra(BaseParam.WONUM, intentWonum)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            data.whatIfNotNull {
                 val worklogtype = it.getStringExtra(BaseParam.WORKLOGTYPE)
                 Timber.d("onActivityResult() worklog: %s", worklogtype)
                 binding.tvType.text = worklogtype
 
             }
         }
-    }
-
-    private fun navigateToWorklog(){
-        val intent = Intent(this, WorkLogActivity::class.java)
-        intent.putExtra(BaseParam.WORKORDERID, intentWoid)
-        intent.putExtra(BaseParam.WONUM, intentWonum)
-        startActivity(intent)
-        finish()
     }
 
 

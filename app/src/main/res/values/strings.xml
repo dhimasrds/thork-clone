@@ -34,6 +34,10 @@
     <string name="connection_switch_offline_message">Application switch to OFFLINE</string>
     <string name="dismiss">DISMISS</string>
 
+    <string name="general_search">Search here</string>
+    <string name="general_save">Save</string>
+    <string name="general_required_fields">Please fill in a valid value for required fields</string>
+
     <!-- Intro Slider -->
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
@@ -46,12 +50,14 @@
     <!-- Action menu bar -->
     <string name="action_notifications">Notifications</string>
     <string name="action_settings">Settings</string>
+    <string name="action_profile">Profile</string>
     <string name="action_detail">Detail</string>
     <string name="action_scan">Scan Barcode</string>
     <string name="action_report">Report</string>
     <string name="action_capture_image">Capture Image</string>
     <string name="action_attach_image">Attach Image</string>
     <string name="action_attach_document">Attach Document</string>
+    <string name="action_attach_signature">Attach Signature</string>
     <string name="action_create_followup">Create Follow Up</string>
 
     <!-- Menu base bottom navigation bar-->
@@ -80,6 +86,42 @@
     <!-- Logout Dialog -->
     <string name="logout_title">Logout</string>
     <string name="logout_qustion">Are you sure you want to logout?</string>
+
+    <!-- Save Attendance Dialog -->
+    <string name="attendance_title">Save</string>
+    <string name="attendance_qustion">Are you sure you want to save attendance?</string>
+
+    <!-- Save Task Dialog -->
+    <string name="task_title">Save</string>
+    <string name="task_qustion">Are you sure you want to save task?</string>
+
+    <!-- Cancel Task Dialog -->
+    <string name="task_cancel_title">Save</string>
+    <string name="task_cancel_qustion">Are you sure you want to cancel task?</string>
+
+    <!-- Delete Image Attendance Dialog -->
+    <string name="delete_image_attendance_title">Delete</string>
+    <string name="delete_image_attendance_qustion">Are you sure you want to delete image?</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_attendance_title">Warning!</string>
+    <string name="error_attendance_qustion">Image and your location cannot be empty</string>
+
+    <!-- Error Save Attendance Dialog -->
+    <string name="error_task_title">Warning!</string>
+    <string name="error_task_qustion">Every field cannot be empty</string>
+
+    <!-- Error Date Attendance Dialog -->
+    <string name="error_date_task_title">Warning!</string>
+    <string name="error_date_task_qustion">Your Actual date cannot be past than Schedule date</string>
+
+    <!-- Empty Check in Attendance Dialog -->
+    <string name="empty_attendance_checkin_title">Warning!</string>
+    <string name="empty_attendance_checkin_qustion">Click chek in first</string>
+
+    <!-- Empty Check out Attendance Dialog -->
+    <string name="empty_attendance_checkout_title">Warning!</string>
+    <string name="empty_attendance_checkout_qustion">Click check out first</string>
 
     <!-- Change Language Dialog -->
     <string name="change_language_dialog">Change Language</string>
@@ -127,8 +169,10 @@
     <string name="settings_cache">Cache</string>
     <string name="settings_logs_detail">Show Logs</string>
     <string name="settings_cache_detail">Delete Cache</string>
-    <string name="settings_about">About</string>
+    <string name="settings_about">About Us</string>
+    <string name="settings_help_center">Help Center</string>
     <string name="settings_about_this">About This</string>
+    <string name="settings_attendance">Attendance</string>
     <string name="settings_language">Language</string>
     <string name="settings_logout">Logout</string>
     <string name="settings_user">User</string>
@@ -186,6 +230,7 @@
     <string name="estimatedwork">Estimated Work Duration</string>
     <string name="hourminute">Hours : Minutes</string>
     <string name="attachments">Attachments</string>
+    <string name="digital_sign">Digital Sign</string>
     <string name="image">Image</string>
     <string name="reportDate">Reported Date</string>
     <string name="service_address">Service Address</string>
@@ -200,10 +245,13 @@
     <string name="workorder_upload_failed">Workorder Attachment failed to upload</string>
     <string name="service_request_create">Create Service Request</string>
     <string name="service_request_cancel">Do you want to cancel Service Request?</string>
-    <string name="workorder_create_success">New Service Request have been created</string>
-    <string name="workorder_create_failed">New Service Request failed to created</string>
+    <string name="workorder_create_success">New Work Order has been created</string>
+    <string name="workorder_create_failed">New Work Order failed to created</string>
     <string name="workorder_followup_create_success">New Follow Up WO have been created</string>
     <string name="workorder_followup_create_failed">New Follow Up WO failed to created</string>
+    <string name="create_workorder_cancel">Do you want to cancel Work Order?</string>
+    <string name="followup_wo_cancel">Do you want to cancel Follow Up Wo?</string>
+
 
     <!-- flash light  -->
     <string name="turn_off_flashlight">Turn Off</string>
@@ -368,6 +416,10 @@
     <string name="ip_config_Server">Server Address</string>
     <string name="ip_config_next">Next</string>
 
+    <!-- Material Plan -->
+    <string name="material_plan_search">Enter Material Code</string>
+    <string name="material_plan_create">Create Material Plan</string>
+
     <string name="note">Notes</string>
     <string name="list_material">List of Material</string>
 
@@ -395,7 +447,7 @@
     <string name="wo_history">WO History</string>
     <string name="wo_number">WO.Number</string>
     <string name="see_detail">See Detail</string>
-    <string name="create_work_order">Create WO</string>
+    <string name="create_work_order">Create Work Order</string>
     <string name="scan_qr">Scan QR</string>
     <string name="scan_rfid">Scan RFID</string>
     <string name="list_of_assets">List of Assets</string>
@@ -452,9 +504,51 @@
     <string name="summary">Summary</string>
     <string name="type">Type</string>
     <string name="create_work_log">Create Work Log</string>
+    <string name="detail_work_log">Detail Work Log</string>
     <string name="work_log">Work Log</string>
     <string name="type_here">Type here</string>
     <string name="find_work_type">Find work type</string>
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+    <string name="work_hours">Work Hours</string>
+    <string name="your_location">Your Location</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="attendance">Attendance</string>
+    <string name="history_attendance">History Attendance</string>
+    <string name="check_in_location">Check in Location</string>
+    <string name="check_out_location">Check out Location</string>
+    <string name="check_in_image">Check in Image</string>
+    <string name="check_out_image">Check out Image</string>
+    <string name="check_out_attendance">Check out</string>
+    <string name="task">Task</string>
+    <string name="select_task">Select Task</string>
+    <string name="labor">Labor</string>
+    <string name="select_labor">Select Labor</string>
+    <string name="craft">Craft</string>
+    <string name="select_craft">Select Craft</string>
+    <string name="skill_level">Skill Level</string>
+    <string name="vendor">Vendor</string>
+    <string name="create_labor_plan">Create Labor Plan</string>
+    <string name="labor_plan">Labor Plan</string>
+    <string name="select_skill_level">Select Skill Level</string>
 
+    <string name="task_id">ID</string>
+    <string name="task_desc">Description</string>
+    <string name="task_status">Status</string>
+    <string name="task_schedule_start">Schedule Start</string>
+    <string name="task_est_dur">Estimate Duration</string>
+    <string name="task_actual_start">Actual Start</string>
+    <string name="task_desc_start_hint">Enter Description</string>
+    <string name="task_sche_start_hint">Enter Schedule Start</string>
+    <string name="task_sche_start_time_hint">Enter Schedule Time</string>
+    <string name="task_actual_start_hint">Enter Actual Start</string>
+    <string name="task_actual_start_time_hint">Enter Actual Time</string>
+    <string name="task_toolbar">Task</string>
+    <string name="task_desc_required">Description can\'t empty</string>
+    <string name="task_estdur_required">Estimate Duration can\'t empty</string>
 
+    <string-array name="wo_type">
+        <item>Assigned Work Order</item>
+        <item>Local Work Order</item>
+    </string-array>
 </resources>

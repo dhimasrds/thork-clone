@@ -14,9 +14,9 @@ package id.thork.app.pages.material_plan
 
 import android.content.Intent
 import android.view.View
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
@@ -30,7 +30,6 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_plan.element.MaterialPlanAdapter
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
-import id.thork.app.pages.material_plan.element.form.MaterialPlanFormViewModel
 import id.thork.app.persistence.entity.WpmaterialEntity
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,7 +58,7 @@ class MaterialPlanActivity : BaseActivity() {
         super.setupView()
         wpmaterialList = mutableListOf()
         materialPlanAdapter =
-            MaterialPlanAdapter(this, preferenceManager, svgRequestOptions, wpmaterialList)
+            MaterialPlanAdapter(this, preferenceManager, svgRequestOptions, wpmaterialList, this)
 
         binding.apply {
             lifecycleOwner = this@MaterialPlanActivity
@@ -74,6 +73,7 @@ class MaterialPlanActivity : BaseActivity() {
                     )
                 )
                 adapter = materialPlanAdapter
+                setUpFilterListener()
             }
         }
 
@@ -83,7 +83,8 @@ class MaterialPlanActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         retrieveFromIntent()
@@ -105,7 +106,7 @@ class MaterialPlanActivity : BaseActivity() {
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
         viewModel.initListMaterialPlan(intentWoId.toString())
         intentAct.whatIfNotNull {
-            binding.btnAdd.visibility = View.GONE
+            binding.btnLayout.visibility = View.GONE
         }
     }
 
@@ -116,5 +117,22 @@ class MaterialPlanActivity : BaseActivity() {
             wpmaterialList.addAll(it)
             materialPlanAdapter.notifyDataSetChanged()
         })
+    }
+
+    private fun setUpFilterListener() {
+        binding.apply {
+            etFindMaterial.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    Timber.d("setUpFilterListener() TextChange : %s", newText)
+                    materialPlanAdapter.filter.filter(newText)
+                    return false
+                }
+            })
+        }
     }
 }

@@ -33,17 +33,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
+import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.ConnectionLiveData
 import id.thork.app.di.module.ResourceProvider
 import id.thork.app.helper.ConnectionState
+import id.thork.app.helper.CookieHelper
+import id.thork.app.network.GlideApp
+import id.thork.app.pages.attachment.element.signature.SignatureActivity
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
+import id.thork.app.persistence.dao.AttendanceDao
+import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -51,10 +61,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
     protected inline fun <reified T : ViewDataBinding> binding(
-        @LayoutRes resId: Int
+        @LayoutRes resId: Int,
     ): Lazy<T> = lazy { DataBindingUtil.setContentView<T>(this, resId) }
 
     protected val SELECT_DOCUMENT_REQUEST = 555
+    protected val SELECT_SIGNATURE_REQUEST = 556
 
     @Inject
     lateinit var connectionLiveData: ConnectionLiveData
@@ -68,9 +79,19 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var woCacheDao: WoCacheDao
 
+    @Inject
+    lateinit var attendanceDao: AttendanceDao
+
+    @Inject
+    lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var appSession: AppSession
+
     var isConnected = false
 
     var mainView: ViewGroup? = null
+
     lateinit var toolBar: Toolbar
     private var optionMenu: Menu? = null
     private var filterIcon: Boolean = false
@@ -78,10 +99,13 @@ abstract class BaseActivity : AppCompatActivity() {
     private var notificationIcon: Boolean = false
     private var optionIcon: Boolean = false
     private var followUpWoIcon: Boolean = false
+    private var historyAttendanceIcon: Boolean = false
     private var originWo: String? = null
+    private var cookie: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupCookie()
         setupView()
         setupListener()
         setupObserver()
@@ -90,14 +114,28 @@ abstract class BaseActivity : AppCompatActivity() {
         workerCoordinator.ping()
     }
 
+    fun setupCookie() {
+        runBlocking {
+            appSession.userEntity.whatIfNotNull { userEntity ->
+                userEntity.userHash.whatIfNotNull { userHash ->
+                    cookie =  CookieHelper(BaseApplication.context, userHash).generateCookieIfExpired()
+                    appSession.cookie = cookie
+                }
+            }
+            Timber.d("setupCookie() cookie :%s ", appSession.cookie)
+        }
+    }
+
     open fun setupToolbarWithHomeNavigation(
         title: String,
         navigation: Boolean,
         filter: Boolean,
         scannerIcon: Boolean,
         notification: Boolean,
-        option: Boolean
+        option: Boolean,
+        historyAttendanceIcon: Boolean
     ) {
+        val imageUrl: String? = appSession.userEntity.imageLibRef
         toolBar = findViewById(R.id.app_toolbar)
         val toolBarTitle: TextView = findViewById(R.id.toolbar_title)
         val editTextToolbar: EditText = findViewById(R.id.toolbartext)
@@ -108,6 +146,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
         if (navigation) {
             val profile: ImageView = findViewById(R.id.profile_image)
+            if (cookie != null && imageUrl != null) {
+                setupProfilePicture(imageUrl, cookie, profile)
+            }
             profile.visibility = View.VISIBLE
             profile.setOnClickListener {
                 goToSettingsActivity()
@@ -118,7 +159,11 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             editTextToolbar.visibility = View.GONE
             toolBarTitle.visibility = View.VISIBLE
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            if (toolBarTitle.text == getString(R.string.action_profile)) {
+                toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white)
+            } else {
+                toolBar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            }
             toolBar.setNavigationOnClickListener {
                 goToPreviousActivity()
             }
@@ -135,11 +180,35 @@ abstract class BaseActivity : AppCompatActivity() {
         if (notification) {
             this.notificationIcon = notification
         }
+
         if (option) {
             this.optionIcon = option
         }
 
+        if (historyAttendanceIcon) {
+            this.historyAttendanceIcon = historyAttendanceIcon
+        }
+
         setupToolbarOverflowIcon()
+    }
+
+    private fun setupProfilePicture(
+        imageUri: String?,
+        cookie: String?,
+        imageView: ImageView
+    ) {
+        imageUri.whatIfNotNull {
+            cookie.whatIfNotNullOrEmpty { cookie ->
+                val glideUrl = GlideUrl(
+                    it, LazyHeaders.Builder()
+                        .addHeader("Cookie", cookie)
+                        .build()
+                )
+                GlideApp.with(BaseApplication.context).load(glideUrl)
+                    .circleCrop()
+                    .into(imageView)
+            }
+        }
     }
 
     open fun enableFollowUpWo(enable: Boolean, wonum: String) {
@@ -158,21 +227,24 @@ abstract class BaseActivity : AppCompatActivity() {
             toolBar.overflowIcon?.setColorFilter(
                 Color.parseColor("#AEAEAE"),
                 PorterDuff.Mode.SRC_ATOP
-            );
+            )
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         optionMenu = menu
         menuInflater.inflate(R.menu.actionbar_menu, optionMenu)
-        optionMenu?.findItem(R.id.action_filter)?.setVisible(filterIcon)
-        optionMenu?.findItem(R.id.scan_menu)?.setVisible(scannerIcon)
-        optionMenu?.findItem(R.id.action_notif)?.setVisible(notificationIcon)
+        optionMenu?.findItem(R.id.action_filter)?.isVisible = filterIcon
+        optionMenu?.findItem(R.id.scan_menu)?.isVisible = scannerIcon
+        optionMenu?.findItem(R.id.action_notif)?.isVisible = notificationIcon
 
-        optionMenu?.findItem(R.id.action_capture_image)?.setVisible(optionIcon)
-        optionMenu?.findItem(R.id.action_attach_image)?.setVisible(optionIcon)
-        optionMenu?.findItem(R.id.action_attach_document)?.setVisible(optionIcon)
-        optionMenu?.findItem(R.id.action_create_followup)?.setVisible(followUpWoIcon)
+        optionMenu?.findItem(R.id.action_capture_image)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_attach_image)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_attach_document)?.isVisible = optionIcon
+        optionMenu?.findItem(R.id.action_attach_signature)?.isVisible = optionIcon
+
+        optionMenu?.findItem(R.id.action_create_followup)?.isVisible = followUpWoIcon
+        optionMenu?.findItem(R.id.history_attendance)?.isVisible = historyAttendanceIcon
         return true
     }
 
@@ -218,15 +290,24 @@ abstract class BaseActivity : AppCompatActivity() {
             openDocuments()
             return true
         }
-
+        if (id == R.id.action_attach_signature) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action attach signature")
+            openSignature()
+            return true
+        }
         if (id == R.id.action_create_followup) {
             Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() action create follow up")
             createFollowUp()
             return true
         }
+
+        if (id == R.id.history_attendance) {
+            Timber.tag(BaseApplication.TAG).i("onOptionsItemSelected() history attendance")
+            gotoHistoryAttendanceActivity()
+            return true
+        }
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun openGallery() {
         ImagePicker.with(this)
@@ -241,11 +322,16 @@ abstract class BaseActivity : AppCompatActivity() {
         } else {
             Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI)
         }
-        intent.setType("application/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivityForResult(intent, SELECT_DOCUMENT_REQUEST);
+        intent.type = "application/*"
+        intent.action = Intent.ACTION_OPEN_DOCUMENT
+        intent.putExtra("return-data", true)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivityForResult(intent, SELECT_DOCUMENT_REQUEST)
+    }
+
+    private fun openSignature() {
+        val intent = Intent(this, SignatureActivity::class.java)
+        startActivityForResult(intent, SELECT_SIGNATURE_REQUEST)
     }
 
     private fun createFollowUp() {
@@ -286,7 +372,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun onGoodConnection() {
-        Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
+//        Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
         optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
         //TODO sync update status Workorder when online
         val woCacheList =
@@ -295,6 +381,16 @@ abstract class BaseActivity : AppCompatActivity() {
             .i("onGoodConnection() size local cache %s", woCacheList.size)
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
+        }
+
+        val attendance = attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
+        attendance.whatIfNotNull {
+            workerCoordinator.addSyncAttendance()
+        }
+
+        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        task.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncTask()
         }
     }
 
@@ -308,6 +404,16 @@ abstract class BaseActivity : AppCompatActivity() {
             .i("onSlowConnection() size local cache %s", woCacheList.size)
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
+        }
+
+        val attendance = attendanceDao.findAttendanceByOfflinemode(BaseParam.APP_TRUE)
+        attendance.whatIfNotNull {
+            workerCoordinator.addSyncAttendance()
+        }
+
+        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        task.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncTask()
         }
     }
 
@@ -344,6 +450,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun gotoScannerActivity() {
+
+    }
+
+    open fun gotoHistoryAttendanceActivity() {
 
     }
 

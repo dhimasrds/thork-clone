@@ -2,6 +2,7 @@ package id.thork.app.pages.work_log
 
 
 import android.content.Intent
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNull
@@ -22,12 +23,13 @@ class WorkLogActivity : BaseActivity() {
     private lateinit var worklogEntity: MutableList<WorklogEntity>
     private var intentWonum: String? = null
     private var intentWoid: String? = null
+    private var status: String? = null
 
     override fun setupView() {
         super.setupView()
         binding.apply {
             lifecycleOwner = this@WorkLogActivity
-            vm =viewModels
+            vm = viewModels
 
             btnCreate.setOnClickListener {
                 val intent = Intent(this@WorkLogActivity, CreateWorkLogActivity::class.java)
@@ -35,7 +37,7 @@ class WorkLogActivity : BaseActivity() {
             }
         }
         worklogEntity = mutableListOf()
-        workLogAdapter = WorkLogAdapter(worklogEntity)
+        workLogAdapter = WorkLogAdapter(this, worklogEntity)
 
         binding.rvWorklog.adapter = workLogAdapter
 
@@ -46,19 +48,27 @@ class WorkLogActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
         retrieveFromIntent()
+        validationView()
     }
 
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentWoid = intent.getStringExtra(BaseParam.WORKORDERID)
+        status = intent.getStringExtra(BaseParam.STATUS)
         intentWoid.whatIfNotNull {
             viewModels.initWorklog(it)
         }
     }
 
+    fun validationView() {
+        if (status.equals(BaseParam.CLOSED)) {
+            binding.btnCreate.visibility = View.GONE
+        }
+    }
 
     override fun setupObserver() {
         super.setupObserver()

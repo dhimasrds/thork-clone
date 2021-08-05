@@ -44,6 +44,10 @@
         android:title="@string/action_attach_document"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_attach_signature"
+        android:title="@string/action_attach_signature"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_create_followup"
         android:title="@string/action_create_followup"
         app:showAsAction="never"/>
@@ -53,4 +57,10 @@
         android:icon="@drawable/ic_add_black"
         android:title="add"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/history_attendance"
+        android:icon="@drawable/ic_history_attendance"
+        android:title="History Attendance"
+        app:showAsAction="always" />
 </menu>

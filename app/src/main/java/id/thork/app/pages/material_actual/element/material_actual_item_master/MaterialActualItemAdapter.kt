@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
@@ -12,10 +14,10 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
-import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
-import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItemAdapter
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
+import java.util.*
 
 /**
  * Created by M.Reza Sulaiman on 30/05/2021
@@ -27,10 +29,16 @@ class MaterialActualItemAdapter constructor(
     private val requestOptions: RequestOptions,
     private val materialEntities: List<MaterialEntity>,
     private val activity: MaterialActualItem
-) : RecyclerView.Adapter<MaterialActualItemAdapter.MaterialPlanHolder>() {
+) : RecyclerView.Adapter<MaterialActualItemAdapter.MaterialPlanHolder>(), Filterable {
     val TAG = MaterialActualItemAdapter::class.java.name
+    var materialEntityListFilter = ArrayList<MaterialEntity>()
 
     lateinit var materialEntity: MaterialEntity
+
+    init {
+        materialEntityListFilter = materialEntities as ArrayList<MaterialEntity>
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialPlanHolder {
 
@@ -42,11 +50,11 @@ class MaterialActualItemAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: MaterialPlanHolder, position: Int) {
-        val materialEntity: MaterialEntity = materialEntities[position]
+        val materialEntity: MaterialEntity = materialEntityListFilter[position]
         holder.bind(materialEntity, activity)
     }
 
-    override fun getItemCount(): Int = materialEntities.size
+    override fun getItemCount(): Int = materialEntityListFilter.size
 
     inner class MaterialPlanHolder(val binding: MaterialPlanItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -66,6 +74,41 @@ class MaterialActualItemAdapter constructor(
                 }
             }
         }
+    }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    materialEntityListFilter =
+                        materialEntities as ArrayList<MaterialEntity>
+                } else {
+                    Timber.d("filter result :%s", materialEntities.size)
+                    val resultList = ArrayList<MaterialEntity>()
+                    for (entity in materialEntities) {
+                        if (entity.itemNum?.toLowerCase()
+                                ?.contains(charSearch.toLowerCase()) == true || entity.description?.toLowerCase()
+                                ?.contains(charSearch.toLowerCase()) == true
+                        ) {
+
+                            Timber.d("filter result text:%s", entity.itemNum)
+                            resultList.add(entity)
+                        }
+                    }
+                    materialEntityListFilter = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = materialEntityListFilter
+                Timber.d("filter result :%s", filterResults)
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                materialEntityListFilter = results?.values as ArrayList<MaterialEntity>
+                notifyDataSetChanged()
+            }
+        }
     }
 }

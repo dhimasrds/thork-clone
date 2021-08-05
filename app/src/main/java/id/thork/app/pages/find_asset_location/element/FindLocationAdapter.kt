@@ -62,10 +62,10 @@ class FindLocationAdapter  constructor(
         fun bind(locationEntity : LocationEntity, activity: FindLocationActivity) {
             with(binding) {
                 classifyImageThumbnail(locationEntity,ivAsset)
-                assetnum.text = StringUtils.NVL(locationEntity.formatAddress,BaseParam.APP_DASH)
+                assetnum.text = StringUtils.NVL(locationEntity.location,BaseParam.APP_DASH)
                 cardAsset.setOnClickListener {
                     val intent = Intent(BaseApplication.context, CreateWoActivity::class.java)
-                    intent.putExtra(BaseParam.LOCATIONS, locationEntity.formatAddress)
+                    intent.putExtra(BaseParam.LOCATIONS, locationEntity.location)
                     activity.setResult(AppCompatActivity.RESULT_OK, intent)
                     activity.finish()
                 }

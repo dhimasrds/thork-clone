@@ -12,7 +12,6 @@
 
 package id.thork.app.example
 
-import id.thork.app.helper.CookieHelper
 import kotlinx.coroutines.*
 
 fun main() {

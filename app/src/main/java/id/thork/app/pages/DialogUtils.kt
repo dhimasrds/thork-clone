@@ -42,13 +42,14 @@ class DialogUtils {
     private var listener: DialogUtilsListener? = null
     private var isPositiveButton = false
     private var isNegativeButton = false
-    private var isCanceable = false
+    private var isCancelable = false
     private var builder: AlertDialog.Builder
     private lateinit var dialogView: View
     private var inflater: LayoutInflater? = null
     private lateinit var dialog: AlertDialog
     private var useTheme: Boolean = false
 
+    var isVisible: Boolean = false
     var positiveButtonLabel: Int? = null
     var negativeButtonLabel: Int? = null
 
@@ -79,12 +80,17 @@ class DialogUtils {
         }
         dialogView = inflater!!.inflate(resource!!, root)
         builder.setView(dialogView)
-        builder.setCancelable(false)
+        builder.setCancelable(isCancelable)
         return this
     }
 
     fun show() {
         dialog = builder.show()
+        isVisible = true
+        dialog.setOnCancelListener {
+            dialog.dismiss()
+            isVisible = false
+        }
     }
 
     fun setRounded(rounded: Boolean): DialogUtils {
@@ -160,13 +166,14 @@ class DialogUtils {
         return this
     }
 
-    fun setCanceable(canceable: Boolean): DialogUtils {
-        isCanceable = canceable
+    fun setCancelable(cancelable: Boolean): DialogUtils {
+        isCancelable = cancelable
         return this
     }
 
     fun dismiss(): DialogUtils {
         dialog.dismiss()
+        isVisible = false;
         return this
     }
 

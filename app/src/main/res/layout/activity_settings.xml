@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="id.thork.app.pages.settings.element.SettingsViewModel" />
+            type="id.thork.app.pages.profiles.setting.settings.element.SettingsViewModel" />
     </data>
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
-        tools:context=".pages.settings.SettingsActivity">
+        tools:context=".pages.profiles.setting.settings.SettingsActivity">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -276,7 +276,6 @@
 
                 <!-- Cache -->
                 <TextView
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/settings_start_margin"
@@ -285,13 +284,14 @@
                     android:paddingRight="@dimen/settings_right_padding"
                     android:paddingBottom="@dimen/settings_title_bottom_padding"
                     android:text="@string/settings_cache"
-                    android:theme="@style/PrimaryCaption" />
+                    android:theme="@style/PrimaryCaption"
+                    android:visibility="gone" />
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/settings_button_min_height"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/settings_cache"
@@ -315,61 +315,6 @@
                             android:textColor="@color/colorBlack" />
                     </LinearLayout>
                 </LinearLayout>
-
-                <!-- About -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/settings_start_margin"
-                    android:paddingLeft="@dimen/settings_left_padding"
-                    android:paddingTop="@dimen/settings_title_top_padding"
-                    android:paddingRight="@dimen/settings_right_padding"
-                    android:paddingBottom="@dimen/settings_title_bottom_padding"
-                    android:text="@string/settings_about"
-                    android:theme="@style/PrimaryCaption" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/settings_button_min_height"
-                    android:background="@color/white">
-
-                    <LinearLayout
-                        android:id="@+id/settings_about"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/settings_button_min_height"
-                        android:background="@drawable/ripple_effect"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingRight="@dimen/settings_right_padding"
-                        android:weightSum="10">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawableRight="@drawable/ic_keyboard_arrow_right"
-                            android:paddingLeft="@dimen/settings_left_padding"
-                            android:paddingRight="@dimen/settings_right_padding"
-                            android:text="@string/settings_about_this"
-                            android:textColor="@color/colorBlack" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/button_logout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/settings_left_margin"
-                    android:layout_marginTop="@dimen/settings_start_logout"
-                    android:layout_marginEnd="@dimen/settings_right_margin"
-                    android:layout_marginBottom="@dimen/settings_start_logout"
-                    android:background="@drawable/btn_rounded"
-                    android:minHeight="@dimen/settings_button_min_height"
-                    android:text="@string/settings_logout"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
         </ScrollView>
 

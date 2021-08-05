@@ -31,12 +31,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMainBinding
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.extensions.setupWithNavController
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
-import id.thork.app.pages.settings.SettingsActivity
+import id.thork.app.pages.profiles.profile.ProfileActivity
 import timber.log.Timber
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -51,6 +53,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
     override fun setupView() {
         super.setupView()
         setupMainView(binding.mainLayout)
@@ -58,7 +63,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         setupToolbarWithHomeNavigation(
             getString(R.string.this_fsm), navigation = true,
             filter = true, scannerIcon = false,
-            notification = true, option = false
+            notification = true, option = false,
+            historyAttendanceIcon = false
         )
         setupBottomNavigationBar()
 
@@ -104,15 +110,15 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.iv_add -> {
-
+            R.id.iv_map -> {
+                val bottomNavigationView = binding.bottomNavigationMain
+                bottomNavigationView.setSelectedItemId(R.id.nav_graph_map);
             }
         }
     }
 
     override fun goToSettingsActivity() {
-        finish()
-        startActivity(Intent(this, SettingsActivity::class.java))
+        startActivity(Intent(this, ProfileActivity::class.java))
     }
 
     /**

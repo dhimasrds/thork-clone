@@ -3,6 +3,7 @@ package id.thork.app.persistence.entity
 import android.os.Parcelable
 import io.objectbox.annotation.Entity
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 /**
  * Created by Dhimas Saputra on 08/01/21
@@ -22,7 +23,10 @@ data class WoCacheEntity(
     var status : String? = null,
     var latitude : Double? = null,
     var longitude: Double? = null,
-    var changeDate: String? = null
+    var changeDate: String? = null,
+    var reportDateUTCTime: Date? = null,
+    var reportString: String? = null,
+    var externalREFID: String? = null
 ) :BaseEntity(), Parcelable{
 
 }

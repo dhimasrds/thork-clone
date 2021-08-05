@@ -12,4 +12,5 @@ interface WpmaterialDao {
     fun findByWoid(workorderid: String): WpmaterialEntity?
     fun findListMaterialActualByWoid(woid: String): List<WpmaterialEntity>
     fun saveListMaterialPlan(materialList: List<WpmaterialEntity>): List<WpmaterialEntity>
+    fun findByWoidAndItemnum(workorderid: String, itemnum: String): WpmaterialEntity?
 }

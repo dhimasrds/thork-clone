@@ -20,12 +20,10 @@ import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.LocationEntity
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.WoCacheEntity
-import id.thork.app.repository.AssetRepository
-import id.thork.app.repository.LocationRepository
-import id.thork.app.repository.MaterialRepository
-import id.thork.app.repository.WorkOrderRepository
+import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
+import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -42,7 +40,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
     private val assetRepository: AssetRepository,
     private val locationRepository: LocationRepository,
     private val workOrderRepository: WorkOrderRepository,
-    private val preferenceManager: PreferenceManager
+    private val preferenceManager: PreferenceManager,
+    private val taskRepository: TaskRepository,
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
@@ -96,48 +95,79 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+        tempWoId.whatIfNotNull { tempwoid ->
+            val externalrefid = WoUtils.getExternalRefid()
+            val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
 
-        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val member = Member()
+            member.siteid = appSession.siteId
+            if (!location.equals(BaseParam.APP_DASH)) {
+                member.location = location
+            }
 
-        val member = Member()
-        member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
-            member.location = location
-        }
-
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
-            member.assetnum = assetnum
-        }
-        member.description = deskWo
-        member.status = BaseParam.WAPPR
-        member.reportdate = DateUtils.getDateTimeMaximo()
+            if (!assetnum.equals(BaseParam.APP_DASH)) {
+                member.assetnum = assetnum
+            }
+            member.description = deskWo
+            member.status = BaseParam.WAPPR
+            member.reportdate = DateUtils.getDateTimeMaximo()
 //        member.woserviceaddress = woserviceaddress
-        member.estdur = estDur
-        member.wopriority = workPriority
-        member.descriptionLongdescription = longdesc
-        origwonum.whatIfNotNull {
-            member.origrecordid = it
-            member.origrecordclass = BaseParam.WORKORDER
-        }
+            member.estdur = estDur
+            member.wopriority = workPriority
+            member.descriptionLongdescription = longdesc
+            origwonum.whatIfNotNull {
+                member.origrecordid = it
+                member.origrecordclass = BaseParam.WORKORDER
+            }
 
-        materialPlanlist.whatIfNotNullOrEmpty {
-            member.wpmaterial = it
-        }
+            materialPlanlist.whatIfNotNullOrEmpty {
+                member.wpmaterial = it
+            }
+            taskList.whatIfNotNullOrEmpty {
+                member.woactivity = it
+            }
 
-        val moshi = Moshi.Builder().build()
-        val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
-        Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
+            externalrefid.whatIfNotNull {
+                member.externalrefid = it
+            }
 
-        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository.createWo(
-                cookie, member,
-                onSuccess = {
-
-                }, onError = {
-                    Timber.tag(TAG).i("createWo() error: %s", it)
-                }
+            //save create Wo to local
+            workOrderRepository.saveCreatedWoLocally(
+                member,
+                tempWonum,
+                externalrefid
             )
+
+            val moshi = Moshi.Builder().build()
+            val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
+            Timber.tag(TAG)
+                .d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
+
+            val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+            val properties = BaseParam.APP_ALL_PROPERTIES
+            viewModelScope.launch(Dispatchers.IO) {
+                workOrderRepository.createWo(
+                    cookie, properties, member,
+                    onSuccess = { woMember ->
+                        val workorderid = woMember.workorderid
+                        val wonum = woMember.wonum
+                        workOrderRepository.updateCreateWoCacheOnlineMode(
+                            workorderid,
+                            wonum,
+                            tempWonum,
+                            woMember
+                        )
+                        woMember.woactivity.whatIfNotNullOrEmpty {
+                            Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                            taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
+                        }
+                    }, onError = {
+                        taskRepository.handlingTaskFailedFromCreateWo(tempwoid)
+                        Timber.tag(TAG).i("createWo() error: %s", it)
+                    }
+                )
+            }
         }
     }
 
@@ -166,45 +196,50 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+        tempWoId.whatIfNotNull { tempwoid ->
+            val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val member = Member()
+            member.siteid = appSession.siteId
+            if (!location.equals(BaseParam.APP_DASH)) {
+                member.location = location
+            }
 
-        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
-
-        val member = Member()
-        member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
-            member.location = location
-        }
-
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
-            member.assetnum = assetnum
-        }
-        member.description = deskWo
-        member.status = BaseParam.WAPPR
-        member.reportdate = DateUtils.getDateTimeMaximo()
+            if (!assetnum.equals(BaseParam.APP_DASH)) {
+                member.assetnum = assetnum
+            }
+            member.description = deskWo
+            member.status = BaseParam.WAPPR
+            member.reportdate = DateUtils.getDateTimeMaximo()
 //        member.woserviceaddress = woserviceaddress
-        member.estdur = estDur
-        member.wopriority = workPriority
-        member.descriptionLongdescription = longdesc
-        origwonum.whatIfNotNull {
-            member.origrecordid = it
-            member.origrecordclass = BaseParam.WORKORDER
-        }
-        materialPlanlist.whatIfNotNullOrEmpty {
-            member.wpmaterial = it
-        }
+            member.estdur = estDur
+            member.wopriority = workPriority
+            member.descriptionLongdescription = longdesc
+            origwonum.whatIfNotNull {
+                member.origrecordid = it
+                member.origrecordclass = BaseParam.WORKORDER
+            }
+            materialPlanlist.whatIfNotNullOrEmpty {
+                member.wpmaterial = it
+            }
+            taskList.whatIfNotNullOrEmpty { tasklist ->
+                member.woactivity = tasklist
+            }
 
-        val tWoCacheEntity = WoCacheEntity()
-        tWoCacheEntity.syncBody = convertToJson(member)
-        tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
-        tWoCacheEntity.isChanged = BaseParam.APP_TRUE
-        tWoCacheEntity.createdBy = appSession.userEntity.username
-        tWoCacheEntity.updatedBy = appSession.userEntity.username
-        tWoCacheEntity.createdDate = Date()
-        tWoCacheEntity.updatedDate = Date()
-        tWoCacheEntity.wonum = tempWonum
-        tWoCacheEntity.status = BaseParam.WAPPR
-        workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
-        Timber.d("createwointeractor: %s", longdesc)
+            val tWoCacheEntity = WoCacheEntity()
+            tWoCacheEntity.syncBody = convertToJson(member)
+            tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
+            tWoCacheEntity.isChanged = BaseParam.APP_TRUE
+            tWoCacheEntity.createdBy = appSession.userEntity.username
+            tWoCacheEntity.updatedBy = appSession.userEntity.username
+            tWoCacheEntity.createdDate = Date()
+            tWoCacheEntity.updatedDate = Date()
+            tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.status = BaseParam.WAPPR
+            tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
+            workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
+            Timber.d("createwointeractor: %s", longdesc)
+        }
     }
 
     private fun convertToJson(member: Member): String? {
@@ -242,5 +277,9 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             listMaterialPlan.add(wpmaterial)
         }
         return listMaterialPlan
+    }
+
+    fun removeTask(wonum: String): Long {
+        return taskRepository.removeTaskByWonum(wonum)
     }
 }

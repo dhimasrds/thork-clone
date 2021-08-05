@@ -18,12 +18,12 @@ data class Member(
     val thisfsmappid: Int? = null,
     @Json(name = "thisfsmblindcount")
     val thisfsmblindcount: Boolean? = null,
-    @Json(name = "thisfsmresource")
-    val thisfsmresource: List<Thisfsmresource>? = null,
-    @Json(name = "thisfsmresource_collectionref")
-    val thisfsmresourceCollectionref: String? = null,
-    @Json(name = "thisfsmsysprop")
-    val thisfsmsysprop: List<Thisfsmsysprop>? = null,
-    @Json(name = "thisfsmsysprop_collectionref")
-    val thisfsmsyspropCollectionref: String? = null
+    @Json(name = "thisfsmresvalue")
+    val thisfsmresvalue: List<Thisfsmresvalue>? = null,
+    @Json(name = "thisfsmresvalue_collectionref")
+    val thisfsmresvalueCollectionref: String? = null,
+    @Json(name = "thisfsmsyspropvalue")
+    val thisfsmsyspropvalue: List<Thisfsmsyspropvalue>? = null,
+    @Json(name = "thisfsmsyspropvalue_collectionref")
+    val thisfsmsyspropvalueCollectionref: String? = null
 )

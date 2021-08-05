@@ -32,11 +32,15 @@ interface WoCacheDao {
 
     fun findWoByWonum(offset: Int, wonum: String, status: String): List<WoCacheEntity>
     fun findListWoByStatus(status: String): List<WoCacheEntity>
-    fun findListWoByStatus(status: String, offset: Int): List<WoCacheEntity>
+    fun findListWoByStatusOffset( offset: Int, vararg status: String): List<WoCacheEntity>
+    fun findListWoByStatusOffsetAndRfid( offset: Int, vararg status: String): List<WoCacheEntity>
     fun findWoByWonumComp(offset: Int, wonum: String, status: String): List<WoCacheEntity>
     fun remove()
 
     fun findWoByisLatest(isLatest: Int, offset: Int): List<WoCacheEntity>
     fun findWoByWonumAndIslatest(wonum: String, isLatest: Int): WoCacheEntity?
     fun findWoListBySyncStatusAndisChange(syncStatus: Int, isChange: Int): List<WoCacheEntity>
+    fun findListWoByStatusHistory(vararg status: String): List<WoCacheEntity>
+    fun findWoByWonumAndIsChange(wonum: String, isChange: Int): WoCacheEntity?
+
 }

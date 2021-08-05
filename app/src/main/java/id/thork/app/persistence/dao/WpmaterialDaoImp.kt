@@ -3,6 +3,7 @@ package id.thork.app.persistence.dao
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MatusetransEntity
+import id.thork.app.persistence.entity.MatusetransEntity_
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity_
 import io.objectbox.Box
@@ -65,6 +66,17 @@ class WpmaterialDaoImp : WpmaterialDao {
     override fun saveListMaterialPlan(materialList: List<WpmaterialEntity>): List<WpmaterialEntity> {
         wpmaterialEntityBox.put(materialList)
         return materialList
+    }
+
+    override fun findByWoidAndItemnum(workorderid: String, itemnum: String): WpmaterialEntity? {
+        val materialEntity =
+            wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, workorderid)
+                .equal(WpmaterialEntity_.itemNum, itemnum).build()
+                .find()
+        materialEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
     }
 
 }

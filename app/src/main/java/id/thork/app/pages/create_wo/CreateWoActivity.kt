@@ -43,11 +43,13 @@ import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.find_asset_location.FindAssetActivity
 import id.thork.app.pages.find_asset_location.FindLocationActivity
+import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
+import id.thork.app.pages.task.TaskActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -84,7 +86,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             lifecycleOwner = this@CreateWoActivity
             vm = viewModel
         }
-
+        retrieveFromIntent()
         tempWonum = viewModel.getTempWonum()!!
         tempWorkOrderId = viewModel.getTempWoId()!!
         binding.complaintDate.setText(DateUtils.getDateTime())
@@ -99,26 +101,28 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
+
+    }
+
+    private fun retrieveFromIntent() {
+        val intentLocation = intent.getStringExtra(BaseParam.LOCATIONS)
+        intentLocation.whatIfNotNull {
+            binding.tvLocation.text = it
+        }
+
+        val intentAsset = intent.getStringExtra(BaseParam.ASSETNUM)
+        intentAsset.whatIfNotNull {
+            binding.asset.text = it
+        }
     }
 
     override fun setupListener() {
         super.setupListener()
 
         binding.editEstimdur.setOnClickListener(setEstimdur)
-
-        binding.pickMap.setOnClickListener {
-            vibrateAndPickLocation()
-        }
-
-//        binding.scanQr.setOnClickListener {
-//            gotoListMaterial()
-//        }
-
-        binding.includeLongdesc.longdesc.setOnClickListener {
-            gotoLongDescActivity()
-        }
 
         binding.includeAttachments.attachment.setOnClickListener {
             goToAttachments()
@@ -159,6 +163,14 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         binding.includeMaterialPlan.materialPlan.setOnClickListener {
             goToMaterialPlan()
+        }
+
+        binding.includeLaborplan.laborPlan.setOnClickListener {
+            goToLaborPlan()
+        }
+
+        binding.includeTask.cardTask.setOnClickListener {
+            gotoTaskActivity()
         }
 
     }
@@ -235,9 +247,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     @SuppressLint("SetTextI18n")
     var setEstimdur = View.OnClickListener {
-        dialogUtils.setInflater(R.layout.dialog_estdur, null, layoutInflater).create().setRounded(
-            true
-        )
+        dialogUtils.setInflater(R.layout.dialog_estdur, null, layoutInflater).create()
         dialogUtils.show()
         val esdurHours = dialogUtils.setViewId(R.id.esdur_hours) as EditText
         val esdurMinutes = dialogUtils.setViewId(R.id.esdur_minutes) as EditText
@@ -286,21 +296,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun getWorkPriority(): Int {
         selectedId = binding.radioGroupPriority.checkedRadioButtonId
         radioButtonPriority = findViewById(selectedId)
-        if (radioButtonPriority.text != null) {
-            when (radioButtonPriority.text) {
-                BaseParam.PRIORITY_NORMAL_DESC -> {
-                    1.also { workPriority = it }
-                }
-                BaseParam.PRIORITY_MEDIUM_DESC -> {
-                    2.also { workPriority = it }
-                }
-                BaseParam.PRIORITY_HIGH_DESC -> {
-                    3.also { workPriority = it }
-                }
-                else -> {
-                    return workPriority
-                }
-            }
+        radioButtonPriority.text.whatIfNotNull {
+            return StringUtils.createPriorityToMx(it.toString())
         }
         return workPriority
     }
@@ -358,35 +355,24 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         startActivity(intent)
     }
 
-    private fun pickLocation() {
-        try {
-            // Request location updates
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                0L,
-                0f,
-                locationListener
-            )
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        }
+    private fun goToLaborPlan() {
+        val intent = Intent(this, LaborPlanActivity::class.java)
+        startActivity(intent)
     }
 
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            latitudey = location.latitude
-            longitudex = location.longitude
-            binding.locationWo.setText("$latitudey , $longitudex")
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
+    private fun gotoTaskActivity() {
+        val intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        intent.putExtra(BaseParam.WONUM, tempWonum)
+        intent.putExtra(BaseParam.STATUS, BaseParam.WAPPR)
+        intent.putExtra(BaseParam.TAG_TASK, "TAG_TASK")
+        startActivity(intent)
     }
 
     override fun onRightButton() {
         if (validateDialogExit) {
             viewModel.removeScanner(tempWonum)
+            viewModel.removeTask(tempWonum)
         } else {
             if (isConnected) {
                 updateWoOnline()
@@ -478,8 +464,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun dialogExit() {
         validateDialogExit = true
-        customDialogUtils.setTitle(R.string.service_request_create)
-        customDialogUtils.setDescription(R.string.service_request_cancel)
+        customDialogUtils.setTitle(R.string.create_work_order)
+        customDialogUtils.setDescription(R.string.create_workorder_cancel)
         customDialogUtils.setRightButtonText(R.string.dialog_yes)
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
         customDialogUtils.setListener(this)
@@ -494,29 +480,13 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         customDialogUtils.show()
     }
 
-    @Suppress("DEPRECATION")
-    private fun vibrateAndPickLocation() {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            vibrator.vibrate(
-                VibrationEffect.createOneShot(
-                    100,
-                    VibrationEffect.DEFAULT_AMPLITUDE
-                )
-            )
-        } else {
-            vibrator.vibrate(100)
-        }
-        pickLocation()
-    }
-
     private fun gotoHome() {
         finish()
     }
 
     private fun startQRScanner(requestCode: Int) {
         IntentIntegrator(this).apply {
-            setCaptureActivity(ScannerActivity::class.java)
+            captureActivity = ScannerActivity::class.java
             setRequestCode(requestCode)
             initiateScan()
         }

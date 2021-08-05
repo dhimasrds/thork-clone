@@ -1,6 +1,5 @@
 package id.thork.app.pages.main.element
 
-import android.annotation.SuppressLint
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -97,7 +96,9 @@ class MapViewModel @ViewModelInject constructor(
     }
 
     fun setDataWo(wonum: String, tag: String) {
+        Timber.d("setDataWo() wonum : %s", wonum)
         val wocache = workOrderRepository.findWobyWonum(wonum)
+        Timber.d("setDataWo() : %s", wocache.toString())
         _woCache.value = wocache
         _resultTagMarker.value = tag
     }

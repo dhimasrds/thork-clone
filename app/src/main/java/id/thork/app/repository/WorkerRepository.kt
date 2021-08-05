@@ -37,7 +37,9 @@ class WorkerRepository constructor(
     private val wpmaterialDao: WpmaterialDao,
     private val materialDao: MaterialDao,
     private val worklogDao: WorklogDao,
-    private val worklogTypeDao: WorklogTypeDao
+    private val worklogTypeDao: WorklogTypeDao,
+    private val taskDao: TaskDao
+
 ) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
@@ -62,6 +64,8 @@ class WorkerRepository constructor(
             worklogDao, worklogTypeDao, appSession
         )
 
+        val taskRepository = TaskRepository(appSession, taskDao, httpLoggingInterceptor, preferenceManager)
+
         return WorkOrderRepository(
             context,
             workOrderClient,
@@ -70,7 +74,8 @@ class WorkerRepository constructor(
             assetDao,
             attachmentRepository,
             materialRepository,
-            worklogRepository
+            worklogRepository,
+            taskRepository
         )
     }
 
@@ -107,6 +112,12 @@ class WorkerRepository constructor(
     fun buildWorklogRepository(): WorklogRepository {
         return WorklogRepository(
             worklogDao, worklogTypeDao, appSession
+        )
+    }
+
+    fun buildTaskRepository(): TaskRepository {
+        return TaskRepository(
+            appSession, taskDao, httpLoggingInterceptor, preferenceManager
         )
     }
 

@@ -130,13 +130,16 @@ class MaterialRepository @Inject constructor(
         return wpmaterialDao.findListMaterialActualByWoid(workorderid)
     }
 
+    fun getMaterialPlanByWoidAndItemnum(workorderid: String, itemnum: String) : WpmaterialEntity? {
+        return wpmaterialDao.findByWoidAndItemnum(workorderid, itemnum)
+    }
+
     fun addListMaterialPlanToObjectBox(
         wpMaterialList: List<Wpmaterial>,
         wonum: String,
         workorderid: String
     ) {
         val templistMaterialPlan = mutableListOf<WpmaterialEntity>()
-        val templistMaterialActual = mutableListOf<MatusetransEntity>()
         wpMaterialList.whatIfNotNull { listMaterialPlan ->
             listMaterialPlan.forEach {
                 val matPlanCache = WpmaterialEntity()
@@ -152,26 +155,8 @@ class MaterialRepository @Inject constructor(
                 matPlanCache.storeroom = it.location
                 matPlanCache.itemqty = it.itemqty?.toInt()
                 templistMaterialPlan.add(matPlanCache)
-
-                //Material Actual Reference from Material Plan
-                val matActual = MatusetransEntity()
-                matActual.itemId = it.wpitemid
-                matActual.itemNum = it.itemnum
-                matActual.description = it.description
-                matActual.itemType = it.linetype
-                matActual.itemsetId = it.itemsetid
-                matActual.wonum = wonum
-                matActual.workorderId = workorderid
-                matActual.siteid = appSession.siteId
-                matActual.orgid = appSession.orgId
-                matActual.storeroom = it.location
-                matActual.itemqty = it.itemqty?.toInt()
-                matActual.syncUpdate = BaseParam.APP_TRUE
-                templistMaterialActual.add(matActual)
-
             }
             saveListMaterialPlan(templistMaterialPlan)
-            saveListMaterialActual(templistMaterialActual)
         }
     }
 

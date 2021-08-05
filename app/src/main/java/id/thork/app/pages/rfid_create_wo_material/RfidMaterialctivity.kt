@@ -13,7 +13,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidMaterialctivityBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_create_wo_material.element.RfidMaterialActivityViewModel
-import id.thork.app.persistence.entity.MaterialEntity
 import timber.log.Timber
 
 class RfidMaterialctivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
@@ -41,7 +40,8 @@ class RfidMaterialctivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
         setupRfid()
     }

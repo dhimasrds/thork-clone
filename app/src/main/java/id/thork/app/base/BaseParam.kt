@@ -71,6 +71,7 @@ object BaseParam {
     const val INTENT_PERSON_UID = "personUID"
     const val INTENT_VALIDATE_PATTERN = "validatePattern"
     const val TAG_SETTING = "TAG_SETTING"
+    const val TAG_TASK = "TAG_TASK"
 
     /**
      *  Workorder status Param
@@ -89,6 +90,7 @@ object BaseParam {
     const val REASSGN = "REASSGN"
     const val WSUPP = "WSUPP"
     const val DONE = "DONE"
+    const val WORK = "WORK"
 
     /**
      *  Workorder priority
@@ -121,6 +123,10 @@ object BaseParam {
     const val PRIORITY_MEDIUM_DESC = "MEDIUM"
     const val PRIORITY_HIGH_DESC = "HIGH"
 
+    const val PRIORITY_NORMAL_DESC_CREATE = "Normal"
+    const val PRIORITY_MEDIUM_DESC_CREATE = "Medium"
+    const val PRIORITY_HIGH_DESC_CREATE = "High"
+
 
     /**
      * Base Parameter Google Maps Direction Route
@@ -152,6 +158,7 @@ object BaseParam {
     const val LISTITEM = "List Item"
     const val WORKORDERID = "WORKORDERID"
     const val WORKORDER = "WORKORDER"
+    const val SUMMARY = "SUMMARY"
     const val STATUS = "STATUS"
     const val LATITUDE = "SERVICEADDRESS_latitude"
     const val LONGITUDE = "SERVICEADDRESS_longitude"
@@ -168,9 +175,15 @@ object BaseParam {
     const val ITEM = "ITEM"
     const val ISSUE = "ISSUE"
     const val WORKLOGTYPE = "WORKLOGTYPE"
+    const val ATTENDANCEID = "ATTENDANCEID"
+    const val TASKID = "TASKID"
+    const val DETAIL_TASK = "DETAIL_TASK"
+    const val SHEDULE_START = "SHEDULE_START"
+    const val SHEDULE_START_TIME = "SHEDULE_START_TIME"
+    const val ACTUAL_START = "ACTUAL_START"
+    const val ACTUAL_START_TIME = "ACTUAL_START_TIME"
 
-
-
+    const val PRIORITY = "PRIORITY"
 
     /**
      * Status Code
@@ -201,7 +214,6 @@ object BaseParam {
     const val REQUEST_CODE_MATERIAL_ACTUAL = 1179
 
 
-
     const val RFID_ASSETNUM = "assetnum"
     const val RFID_LOCATION = "location"
     const val RFID_MULTIASSET = "multiassset"
@@ -215,7 +227,6 @@ object BaseParam {
     const val SCAN_TYPE_RFID = "RFID"
     const val SCAN_TYPE_BARCODE = "BARCODE"
     const val IS_SCAN = "IS_SCAN"
-
 
 
     /**

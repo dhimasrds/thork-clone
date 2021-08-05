@@ -19,6 +19,9 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
@@ -38,6 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
+import java.util.*
 
 class WorkOrderWorker @WorkerInject constructor(
     @Assisted context: Context,
@@ -55,7 +59,8 @@ class WorkOrderWorker @WorkerInject constructor(
     val wpmaterialDao: WpmaterialDao,
     val materialDao: MaterialDao,
     val worklogDao: WorklogDao,
-    val worklogTypeDao: WorklogTypeDao
+    val worklogTypeDao: WorklogTypeDao,
+    val taskDao: TaskDao
 ) :
     Worker(context, workerParameters) {
     private val TAG = WorkOrderWorker::class.java.name
@@ -65,6 +70,7 @@ class WorkOrderWorker @WorkerInject constructor(
     var attachmentRepository: AttachmentRepository
     var materialRepository: MaterialRepository
     var worklogRepository: WorklogRepository
+    var taskRepository: TaskRepository
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
@@ -80,12 +86,14 @@ class WorkOrderWorker @WorkerInject constructor(
                 attachmentDao,
                 doclinksClient,
                 materialBackupDao, matusetransDao, wpmaterialDao, materialDao, worklogDao,
-                worklogTypeDao
+                worklogTypeDao,
+                taskDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
         worklogRepository = workerRepository.buildWorklogRepository()
+        taskRepository = workerRepository.buildTaskRepository()
 
         Timber.tag(TAG).i("WorkOrderWorker() workOrderRepository: %s", workOrderRepository)
     }
@@ -95,7 +103,7 @@ class WorkOrderWorker @WorkerInject constructor(
 
     override fun doWork(): Result {
         try {
-            //Query Local WO Record is needed to sync with the server
+            Timber.tag(TAG).d("doWork() workOrderWorker")
             if (runAttemptCount > MAX_RUN_ATTEMPT) {
                 Result.failure()
             }
@@ -112,9 +120,11 @@ class WorkOrderWorker @WorkerInject constructor(
 
     //TODO http request
     private fun syncUpdateWo() {
+        Timber.tag(TAG).d("syncUpdateWo() syncUpdateWo")
         //TODO Query to local check wo cache offline
         val woCacheList =
             workOrderRepository.fetchWoListOffline(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+
         val index = 0
         val listWocache = mutableListOf<WoCacheEntity>()
         val listCreateWoOffline = mutableListOf<WoCacheEntity>()
@@ -151,7 +161,8 @@ class WorkOrderWorker @WorkerInject constructor(
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
                 val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
-                val listWorklog = worklogRepository.prepareBodyListWorklog(woId.toString(), BaseParam.APP_FALSE)
+                val listWorklog =
+                    worklogRepository.prepareBodyListWorklog(woId.toString(), BaseParam.APP_FALSE)
                 val member = Member()
                 member.status = status
                 member.descriptionLongdescription = longdesc
@@ -180,6 +191,15 @@ class WorkOrderWorker @WorkerInject constructor(
                 runBlocking {
                     launch(Dispatchers.IO) {
                         if (woId != null) {
+                            //TESTING
+                            val moshi = Moshi.Builder()
+                                .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe()).build()
+                            val jsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
+                            val jsonString = jsonAdapter.toJson(member)
+
+                            Timber.tag(TAG).d("updateStatusWoOffline() woId: %s", woId)
+                            Timber.tag(TAG).d("updateStatusWoOffline() jsonString: %s", jsonString)
+
                             workOrderRepository.updateStatus(cookie,
                                 xMethodeOverride,
                                 contentType,
@@ -228,12 +248,13 @@ class WorkOrderWorker @WorkerInject constructor(
     ) {
         val currentWo = listWo.get(currentIndex)
 
-        currentWo.whatIfNotNull {
-            val prepareBody = WoUtils.convertBodyToMember(it.syncBody.toString())
+        currentWo.whatIfNotNull { currentWo ->
+            val prepareBody = WoUtils.convertBodyToMember(currentWo.syncBody.toString())
 
             prepareBody.whatIfNotNull { prepareBody ->
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
+                val tempWonum = currentWo.wonum
 
                 val member = Member()
                 member.siteid = appSession.siteId
@@ -245,6 +266,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 member.estdur = prepareBody.estdur
                 member.wopriority = prepareBody.wopriority
                 member.descriptionLongdescription = prepareBody.descriptionLongdescription
+                member.externalrefid = currentWo.externalREFID
                 prepareBody.origrecordid.whatIfNotNull {
                     member.origrecordid = it
                     member.origrecordclass = prepareBody.origrecordclass
@@ -252,20 +274,29 @@ class WorkOrderWorker @WorkerInject constructor(
                 prepareBody.wpmaterial.whatIfNotNullOrEmpty {
                     member.wpmaterial = it
                 }
+                prepareBody.woactivity.whatIfNotNullOrEmpty {
+                    member.woactivity = it
+                }
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+                val properties = BaseParam.APP_ALL_PROPERTIES
                 GlobalScope.launch(Dispatchers.IO) {
                     workOrderRepository.createWo(
-                        cookie, member,
+                        cookie, properties, member,
                         onSuccess = {
                             //TODO handle create wo cache after update
-                            workOrderRepository.updateWoCacheAfterSync(
-                                it.woId,
+                            workOrderRepository.updateCreateWoCacheOfflineMode(
+                                it.workorderid,
                                 it.wonum,
                                 longdesc,
-                                status.toString()
+                                currentWo
                             )
 
+                            it.woactivity.whatIfNotNullOrEmpty { woActivity ->
+                                if (tempWonum != null) {
+                                    taskRepository.handlingTaskSuccessFromCreateWo(it, woActivity, tempWonum)
+                                }
+                            }
                             val nextIndex = currentIndex + 1
                             if (nextIndex <= listWo.size - 1) {
                                 updateCreateWo(listWo, nextIndex)

@@ -126,8 +126,6 @@ data class Member(
     val interruptible: Boolean? = null,
     @Json(name = "istask")
     val istask: Boolean? = null,
-    @Json(name = "labtrans")
-    val labtrans: List<Labtran>? = null,
     @Json(name = "labtrans_collectionref")
     val labtransCollectionref: String? = null,
     @Json(name = "lastcopylinkdate")
@@ -260,4 +258,8 @@ data class Member(
     val multiassetlocci: List<Multiassetlocci>? = null,
     @Json(name = "worklog")
     var worklog: List<Worklog>? = null,
+    @Json(name = "woactivity")
+    var woactivity: List<Woactivity>? = null,
+    @Json(name = "externalrefid")
+    var externalrefid: String? = null,
 )

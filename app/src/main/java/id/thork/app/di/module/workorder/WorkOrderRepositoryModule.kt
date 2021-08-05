@@ -30,11 +30,13 @@ object WorkOrderRepositoryModule {
         appSession: AppSession,
         attachmentRepository: AttachmentRepository,
         materialRepository: MaterialRepository,
-        worklogRepository: WorklogRepository
+        worklogRepository: WorklogRepository,
+        taskRepository: TaskRepository
     ): WorkOrderRepository {
-        return WorkOrderRepository(context,
+        return WorkOrderRepository(
+            context,
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
-            attachmentRepository, materialRepository, worklogRepository
+            attachmentRepository, materialRepository, worklogRepository, taskRepository
         )
     }
 
@@ -82,10 +84,25 @@ object WorkOrderRepositoryModule {
     fun provideWorklogRepository(
         appSession: AppSession
     ): WorklogRepository {
-        return  WorklogRepository(
+        return WorklogRepository(
             WorklogDaoImp(),
             WorklogTypeDaoImp(),
             appSession
+        )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideTaskRepository(
+        appSession: AppSession,
+        preferenceManager: PreferenceManager,
+        httpLoggingInterceptor: HttpLoggingInterceptor
+    ): TaskRepository {
+        return TaskRepository(
+            appSession,
+            TaskDaoImp(),
+            httpLoggingInterceptor,
+            preferenceManager
         )
     }
 }

@@ -66,7 +66,8 @@ class LongDescActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
         requestPermission()
         retrieveFromIntent()

@@ -1,8 +1,6 @@
 package id.thork.app.pages.material_actual.element.detail_material_actual
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNull
@@ -10,11 +8,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMaterialActualDetailBinding
-import id.thork.app.databinding.ActivityMaterialActualFormBinding
 import id.thork.app.pages.material_actual.MaterialActualActivity
-import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
-import id.thork.app.pages.material_actual.element.form.MaterialActualFormViewModel
-import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.MatusetransEntity
 import timber.log.Timber
 
@@ -39,7 +33,8 @@ class MaterialActualDetail : BaseActivity(){
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
         retrieveFromIntent()
     }

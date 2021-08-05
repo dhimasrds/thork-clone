@@ -1,5 +1,6 @@
 package id.thork.app.pages.material_actual.element.material_actual_item_master
 
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -11,6 +12,7 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivityMaterialActualItemBinding
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.entity.MaterialEntity
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,7 +37,13 @@ class MaterialActualItem : BaseActivity() {
         super.setupView()
         materialEntities = mutableListOf()
         materialActualItemAdapter =
-            MaterialActualItemAdapter(this, preferenceManager, svgRequestOptions, materialEntities, this)
+            MaterialActualItemAdapter(
+                this,
+                preferenceManager,
+                svgRequestOptions,
+                materialEntities,
+                this
+            )
 
         binding.apply {
             lifecycleOwner = this@MaterialActualItem
@@ -58,8 +66,10 @@ class MaterialActualItem : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
+        setUpFilterListener()
         viewModel.initListMaterial()
     }
 
@@ -72,5 +82,21 @@ class MaterialActualItem : BaseActivity() {
         })
     }
 
+    private fun setUpFilterListener() {
+        binding.apply {
+            etFindMaterial.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
 
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    Timber.d("setUpFilterListener() TextChange : %s", newText)
+                    materialActualItemAdapter.filter.filter(newText)
+                    return false
+                }
+
+            })
+        }
+    }
 }

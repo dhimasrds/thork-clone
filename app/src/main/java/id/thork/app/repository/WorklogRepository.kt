@@ -77,6 +77,11 @@ class WorklogRepository @Inject constructor(
         return worklogDao.findListWorklogByWoid(workorderid)
     }
 
+    fun findWorklog(wonum: String, summary: String) : WorklogEntity? {
+        return worklogDao.findWorklog(wonum, summary)
+    }
+
+
     fun saveWorklogEntity(
         summary: String,
         description: String,

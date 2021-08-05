@@ -22,7 +22,7 @@
     <data>
         <variable
             name="settingsLanguage"
-            type="id.thork.app.pages.settings_language.element.SettingsLanguageViewModel" />
+            type="id.thork.app.pages.profiles.setting.settings_language.element.SettingsLanguageViewModel" />
 
     </data>
 
@@ -30,7 +30,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".pages.settings_language.SettingsLanguageActivity">
+    tools:context=".pages.profiles.setting.settings_language.SettingsLanguageActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"

@@ -22,14 +22,14 @@
 
         <variable
             name="logsActivity"
-            type="id.thork.app.pages.settings_log.element.LogViewModel" />
+            type="id.thork.app.pages.profiles.setting.settings_log.element.LogViewModel" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="id.thork.app.pages.settings_log.LogActivity">
+        tools:context="id.thork.app.pages.profiles.setting.settings_log.LogActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"

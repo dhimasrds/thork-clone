@@ -45,7 +45,10 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
             val woCacheDao: WoCacheDao = WoCacheDaoImp()
             val woCache =
                 woCacheDao.findWoByWonumAndIslatest(woEntity.wonum.toString(), BaseParam.APP_TRUE)
+            Timber.d("adapterwo wocache :%s", woEntity.wonum)
             woCache.whatIfNotNull {
+                Timber.d("adapterwo sync :%s", it.syncStatus)
+                Timber.d("adapterwo isChanged :%s", it.isChanged)
                 if (it.syncStatus == BaseParam.APP_FALSE && it.isChanged == BaseParam.APP_TRUE) {
                     binding.ivOffline.visibility = View.VISIBLE
                 } else {
@@ -62,7 +65,7 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
                 id.thork.app.utils.StringUtils.NVL(woEntity.assetnum, BaseParam.APP_DASH)
             binding.tvWoLocation.text = woEntity.location
             binding.tvWoServiceAddress.text = id.thork.app.utils.StringUtils.truncate(
-                woEntity.woserviceaddress!![0].formattedaddress,
+                woEntity.woserviceaddress?.get(0)?.formattedaddress,
                 13
             )
             binding.tvStatus.text = woEntity.status
@@ -77,6 +80,7 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
                 val bundle = Bundle()
                 intent.putExtra(BaseParam.APP_WONUM, woEntity.wonum)
                 intent.putExtra(BaseParam.STATUS, woEntity.status)
+                intent.putExtra(BaseParam.PRIORITY, woEntity.wopriority)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(context, intent, bundle)
             }

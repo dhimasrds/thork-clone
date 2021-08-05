@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.request.RequestOptions
@@ -57,6 +58,7 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
+
 @AndroidEntryPoint
 class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     val TAG = AttachmentActivity::class.java.name
@@ -71,6 +73,8 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
     private lateinit var dialogUtils: DialogUtils
 
     private var intentWoId = 0
+    private var status: String? = null
+
 
     @Inject
     @Named("svgRequestOption")
@@ -100,23 +104,43 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                 adapter = attachmentAdapter
             }
         }
-
-        setupToolbarWithHomeNavigation(
-            getString(R.string.attachments),
-            navigation = false,
-            filter = false,
-            scannerIcon = false,
-            notification = false,
-            option = true
-        )
+        retrieveFromIntent()
+        validationView()
 
         pickiT = PickiT(this, this, this)
         requestPermission()
 
         setupDialog()
 
-        retrieveFromIntent()
         viewModel.fetchAttachments(intentWoId)
+
+        Timber.d("status detail :%s", status)
+
+    }
+
+    fun validationView() {
+        if (status.equals(BaseParam.CLOSED)) {
+            setupToolbarWithHomeNavigation(
+                getString(R.string.attachments),
+                navigation = false,
+                filter = false,
+                scannerIcon = false,
+                notification = false,
+                option = false,
+                historyAttendanceIcon = false
+            )
+            binding.btnUpload.visibility = View.GONE
+        } else {
+            setupToolbarWithHomeNavigation(
+                getString(R.string.attachments),
+                navigation = false,
+                filter = false,
+                scannerIcon = false,
+                notification = false,
+                option = true,
+                historyAttendanceIcon = false
+            )
+        }
     }
 
     override fun setupListener() {
@@ -151,6 +175,13 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     navigateToPreview(uri)
                 }
             }
+            SELECT_SIGNATURE_REQUEST -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val uri: Uri = data?.data!!
+                    navigateToPreview(uri)
+                    Timber.tag(TAG).d("onActivityResult() signature data: %s", uri.toString())
+                }
+            }
             else -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val uri: Uri = data?.data!!
@@ -169,12 +200,9 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        status = intent.getStringExtra(BaseParam.STATUS)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
     }
 
@@ -205,7 +233,9 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         val li = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         dialogUtils =
             DialogUtils(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen)
+        dialogUtils.setCancelable(true)
         dialogUtils.setInflater(R.layout.layout_attachment_preview, null, li).create()
+
     }
 
     private fun navigateToPreview(uri: Uri) {
@@ -235,6 +265,13 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                 })
         }
 
+        val toolBarAttachment: Toolbar = dialogUtils.setViewId(R.id.app_toolbar) as Toolbar
+        toolBarAttachment.setNavigationIcon(R.drawable.ic_arrow_back_white)
+        toolBarAttachment.setNavigationOnClickListener {
+            Timber.tag(TAG).d("navigateToPreview() toolbar event: true")
+            dialogUtils.dismiss()
+        }
+
         val fabSave = dialogUtils.setViewId(R.id.fab_save) as FloatingActionButton
         setupFabButton(fabSave)
         fabSave.setOnClickListener {
@@ -249,6 +286,7 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
                     fileName,
                     mimeType
                 )
+                viewModel.uploadAttachment()
             }
             dialogUtils.dismiss()
         }
@@ -283,10 +321,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         TODO("Not yet implemented")
     }
 
-//    override fun onLostConnection() {
-//
-//    }
-
     private fun addAttachment(
         woCacheEntity: WoCacheEntity,
         uriString: String,
@@ -295,9 +329,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         mimeType: String
     ) {
         var docType: String? = BaseParam.ATTACHMENT_FOLDER
-        if (FileUtils.isImageType(mimeType)) {
-            docType = BaseParam.IMAGES_FOLDER
-        }
 
         val attachmentEntity = AttachmentEntity(
             mimeType = mimeType, syncStatus = false,
@@ -308,4 +339,6 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         )
         viewModel.addItem(attachmentEntity)
     }
+
+
 }

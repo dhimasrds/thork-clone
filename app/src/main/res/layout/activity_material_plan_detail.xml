@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vmdetail"
+            type="id.thork.app.pages.material_plan.element.detail_material_plan.MaterialPlanDetailViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".pages.material_plan.element.form.MaterialPlanFormActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/general_margin_15dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- Item Name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/general_padding_15dp"
+            android:paddingRight="@dimen/general_padding_15dp"
+            android:text="Item Name" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/general_padding_15dp"
+            android:paddingRight="@dimen/general_padding_15dp"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_material"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:focusable="false" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/include_material_plan_form"
+            layout="@layout/activity_material_plan_subdetail" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_margin_20dp"
+            android:background="@drawable/ic_rectangle_528"
+            android:text="Save"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</layout>

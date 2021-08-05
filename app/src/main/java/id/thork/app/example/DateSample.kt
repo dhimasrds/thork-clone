@@ -12,26 +12,29 @@
 
 package id.thork.app.example
 
-import id.thork.app.utils.DateUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDateTime
+import java.lang.String
 import java.util.*
 
 fun main() {
-    runBlocking {
-        val lastUpdate = Date()
-        val lastUpdateLong = lastUpdate.time
-        println(lastUpdate)
-        println(lastUpdateLong)
-        delay(10000)
+    var str = "2021-08-03T23:52:50+0700"
+    str = str.substring(0, str.length-2).plus(":").plus(str.substring(str.length-2))
+    print(str)
 
-        val nextUpdate = Date()
-        val nextUpdateLong = nextUpdate.time
-        println(nextUpdate)
-        println(nextUpdateLong)
-
-    }
+//    runBlocking {
+//        val lastUpdate = Date()
+//        val lastUpdateLong = lastUpdate.time
+//        println(lastUpdate)
+//        println(lastUpdateLong)
+//        delay(10000)
+//
+//        val nextUpdate = Date()
+//        val nextUpdateLong = nextUpdate.time
+//        println(nextUpdate)
+//        println(nextUpdateLong)
+//
+//    }
 
 
 

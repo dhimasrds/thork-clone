@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
   ~
   ~ This software is the confidential and proprietary information of
@@ -57,19 +56,27 @@
                 android:id="@+id/et_find_material"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_edit_text"
-                android:textCursorDrawable="@null"
+                android:background="@drawable/bg_rounded_edit_text"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@null"
-                app:queryHint="@string/search_asset"
+                app:queryHint="@string/search_material"
                 app:searchIcon="@drawable/ic_search" />
-            <Button
-                android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:text="Add"
-                android:textAllCaps="false"/>
+
+            <LinearLayout
+                android:id="@+id/btn_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/btn_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:text="Add"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -78,6 +85,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_rectangle_528"
             android:clipToPadding="true"
             android:paddingBottom="@dimen/general_padding_8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

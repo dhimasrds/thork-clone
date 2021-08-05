@@ -19,6 +19,7 @@ import id.thork.app.persistence.entity.*
 import id.thork.app.repository.*
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
+import id.thork.app.utils.WoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,6 +37,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val locationRepository: LocationRepository,
     private val workOrderRepository: WorkOrderRepository,
     private val attachmentRepository: AttachmentRepository,
+    private val taskRepository: TaskRepository,
     private val preferenceManager: PreferenceManager,
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
@@ -92,24 +94,25 @@ class CreateWoViewModel @ViewModelInject constructor(
         tempWonum: String,
         tempWoId: Int,
         assetnum: String,
-        location: String
+        location: String,
     ) {
-
 //        val wsa = Woserviceaddres()
 //        wsa.longitudex = longitudex
 //        wsa.latitudey = latitudey
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
+        val externalrefid = WoUtils.getExternalRefid()
 
         val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+        val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempWoId)
 
         val member = Member()
         member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
+        if (!location.equals(BaseParam.APP_DASH)) {
             member.location = location
         }
 
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
+        if (!assetnum.equals(BaseParam.APP_DASH)) {
             member.assetnum = assetnum
         }
 
@@ -123,18 +126,46 @@ class CreateWoViewModel @ViewModelInject constructor(
         materialPlanlist.whatIfNotNullOrEmpty {
             member.wpmaterial = it
         }
+        taskList.whatIfNotNullOrEmpty {
+            member.woactivity = it
+        }
+
+        externalrefid.whatIfNotNull {
+            member.externalrefid = it
+        }
+
+        //save create Wo to local when online
+        workOrderRepository.saveCreatedWoLocally(
+            member, tempWonum, externalrefid
+        )
 
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
         Timber.tag(TAG).d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val properties = BaseParam.APP_ALL_PROPERTIES
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.createWo(
-                cookie, member,
-                onSuccess = {
-//                    uploadAttachments(tempWoId)
+                cookie, properties, member,
+                onSuccess = { woMember ->
+                    val workorderid = woMember.workorderid
+                    val wonum = woMember.wonum
+                    workOrderRepository.updateCreateWoCacheOnlineMode(
+                        workorderid,
+                        wonum,
+                        tempWonum,
+                        woMember
+                    )
+                    woMember.woactivity.whatIfNotNullOrEmpty {
+                        Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                        taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
+                    }
+//                    workorderid.whatIfNotNull {
+//                        uploadAttachments(it)
+//                    }
                 }, onError = {
+                    taskRepository.handlingTaskFailedFromCreateWo(tempWoId)
                     Timber.tag(TAG).i("createWo() error: %s", it)
                 }
             )
@@ -154,7 +185,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     fun createNewWoCache(
         deskWo: String,
         estDur: Double?, workPriority: Int, longdesc: String?, assetnum: String,
-        location: String
+        location: String,
     ) {
 
 //        val wsa = Woserviceaddres()
@@ -163,40 +194,46 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
 
-        val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+        tempWoId.whatIfNotNull { tempwoid ->
+            val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
+            val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val member = Member()
+            member.siteid = appSession.siteId
+            if (!location.equals(BaseParam.APP_DASH)) {
+                member.location = location
+            }
 
-        val member = Member()
-        member.siteid = appSession.siteId
-        if(!location.equals(BaseParam.APP_DASH)) {
-            member.location = location
-        }
-
-        if(!assetnum.equals(BaseParam.APP_DASH)) {
-            member.assetnum = assetnum
-        }
-        member.description = deskWo
-        member.status = BaseParam.WAPPR
-        member.reportdate = DateUtils.getDateTimeMaximo()
+            if (!assetnum.equals(BaseParam.APP_DASH)) {
+                member.assetnum = assetnum
+            }
+            member.description = deskWo
+            member.status = BaseParam.WAPPR
+            member.reportdate = DateUtils.getDateTimeMaximo()
 //        member.woserviceaddress = woserviceaddress
-        member.estdur = estDur
-        member.wopriority = workPriority
-        member.descriptionLongdescription = longdesc
-        materialPlanlist.whatIfNotNullOrEmpty {
-            member.wpmaterial = it
-        }
+            member.estdur = estDur
+            member.wopriority = workPriority
+            member.descriptionLongdescription = longdesc
+            materialPlanlist.whatIfNotNullOrEmpty {
+                member.wpmaterial = it
+            }
+            taskList.whatIfNotNullOrEmpty { tasklist ->
+                member.woactivity = tasklist
+            }
 
-        val tWoCacheEntity = WoCacheEntity()
-        tWoCacheEntity.syncBody = convertToJson(member)
-        tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
-        tWoCacheEntity.isChanged = BaseParam.APP_TRUE
-        tWoCacheEntity.createdBy = appSession.userEntity.username
-        tWoCacheEntity.updatedBy = appSession.userEntity.username
-        tWoCacheEntity.createdDate = Date()
-        tWoCacheEntity.updatedDate = Date()
-        tWoCacheEntity.wonum = tempWonum
-        tWoCacheEntity.status = BaseParam.WAPPR
-        workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
-        Timber.d("createwointeractor: %s", longdesc)
+            val tWoCacheEntity = WoCacheEntity()
+            tWoCacheEntity.syncBody = convertToJson(member)
+            tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
+            tWoCacheEntity.isChanged = BaseParam.APP_TRUE
+            tWoCacheEntity.createdBy = appSession.userEntity.username
+            tWoCacheEntity.updatedBy = appSession.userEntity.username
+            tWoCacheEntity.createdDate = Date()
+            tWoCacheEntity.updatedDate = Date()
+            tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.status = BaseParam.WAPPR
+            tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
+            workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
+            Timber.d("createwointeractor: %s", longdesc)
+        }
     }
 
     private fun convertToJson(member: Member): String? {
@@ -206,6 +243,10 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     fun removeScanner(wonum: String): Long {
         return materialRepository.removeMaterialByWonum(wonum)
+    }
+
+    fun removeTask(wonum: String): Long {
+        return taskRepository.removeTaskByWonum(wonum)
     }
 
     fun checkResultAsset(assetnum: String) {
@@ -233,7 +274,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun prepareMaterialTrans(woid: String) : List<Wpmaterial> {
+    private fun prepareMaterialTrans(woid: String): List<Wpmaterial> {
         val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
         val listMaterialPlan = mutableListOf<Wpmaterial>()
         materialPlanCache.forEach {

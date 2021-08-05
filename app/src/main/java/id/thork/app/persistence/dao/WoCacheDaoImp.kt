@@ -7,6 +7,8 @@ import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.persistence.entity.WoCacheEntity_
 import io.objectbox.Box
 import io.objectbox.kotlin.equal
+import io.objectbox.query.OrderFlags
+import io.objectbox.query.QueryBuilder
 import java.util.*
 
 /**
@@ -55,6 +57,7 @@ class WoCacheDaoImp : WoCacheDao {
         val woCacheBox: Box<WoCacheEntity> = boxStore.boxFor(WoCacheEntity::class.java)
         val woCacheEntity: List<WoCacheEntity> =
             woCacheBox.query().equal(WoCacheEntity_.status, status)
+                .order(WoCacheEntity_.reportDateUTCTime, QueryBuilder.DESCENDING or QueryBuilder.CASE_SENSITIVE)
                 .contains(WoCacheEntity_.wonum, wonum).build().find(
                     offset.toLong(),
                     10
@@ -140,12 +143,31 @@ class WoCacheDaoImp : WoCacheDao {
         return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build().find()
     }
 
-    override fun findListWoByStatus(status: String, offset: Int): List<WoCacheEntity> {
-        return woCacheEntityBox.query().equal(WoCacheEntity_.status, status).build()
+    override fun findListWoByStatusOffset( offset: Int, vararg status: String): List<WoCacheEntity> {
+        return woCacheEntityBox.query()
+            .`in`(WoCacheEntity_.status, status).build()
             .find(offset.toLong(), 10)
     }
 
+    override fun findListWoByStatusOffsetAndRfid( offset: Int, vararg status: String): List<WoCacheEntity> {
+        return woCacheEntityBox.query()
+            .`in`(WoCacheEntity_.status, status).notNull(WoCacheEntity_.externalREFID).build()
+            .find(offset.toLong(), 10)
+    }
+
+
     override fun remove() {
         woCacheEntityBox.removeAll()
+    }
+
+    override fun findListWoByStatusHistory(vararg status: String): List<WoCacheEntity> {
+        return woCacheEntityBox.query().`in`(WoCacheEntity_.status, status).build().find()
+    }
+
+    override fun findWoByWonumAndIsChange(wonum: String, isChange: Int): WoCacheEntity? {
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum).equal(WoCacheEntity_.isChanged, isChange).build().find()
+        woCacheEntity.whatIfNotNullOrEmpty { return woCacheEntity[0] }
+        return null
     }
 }

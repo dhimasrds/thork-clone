@@ -16,7 +16,6 @@ import id.thork.app.databinding.ActivityMaterialActualFormBinding
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.material_actual.MaterialActualActivity
 import id.thork.app.pages.material_actual.element.material_actual_item_master.MaterialActualItem
-import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem
 import id.thork.app.pages.rfid_create_wo_material.RfidMaterialctivity
 import id.thork.app.persistence.entity.MaterialEntity
 import timber.log.Timber
@@ -44,7 +43,8 @@ class MaterialActualFormActivity : BaseActivity() {
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         //TODO HARDCODE SPINNER

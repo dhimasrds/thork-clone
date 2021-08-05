@@ -43,7 +43,8 @@ class RfidMultiAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterf
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
         setupRfid()
         retrieveFromIntent()

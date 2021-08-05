@@ -21,7 +21,6 @@ import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.material_response.MaterialResponse
-import id.thork.app.network.response.work_order.Assignment
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.network.response.worklogtype_response.WorklogtypeResponse
@@ -47,7 +46,8 @@ class WorkOrderRepository @Inject constructor(
     private val assetDao: AssetDao,
     private val attachmentRepository: AttachmentRepository,
     private val materialRepository: MaterialRepository,
-    private val worklogRepository: WorklogRepository
+    private val worklogRepository: WorklogRepository,
+    private val taskRepository: TaskRepository
 ) : BaseRepository {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
@@ -142,13 +142,16 @@ class WorkOrderRepository @Inject constructor(
 
     suspend fun createWo(
         headerParam: String,
+        properties: String,
         body: Member,
-        onSuccess: () -> Unit,
+        onSuccess: (Member) -> Unit,
         onError: (String) -> Unit,
     ) {
-        val response = workOrderClient.createWo(headerParam, body)
+        val response = workOrderClient.createWo(headerParam, properties, body)
         response.suspendOnSuccess {
-            onSuccess()
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
         }.onError {
             Timber.tag(TAG).i("createWo() code: %s error: %s", statusCode.code, message())
             onError(message())
@@ -226,7 +229,8 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     null,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    null
                 )
             }
         ).liveData
@@ -250,7 +254,33 @@ class WorkOrderRepository @Inject constructor(
                     woCacheDao,
                     query,
                     preferenceManager,
-                    appResourceMx
+                    appResourceMx,
+                    null
+                )
+            }
+        ).liveData
+
+    fun getWoWappr(
+        appSession: AppSession,
+        workOrderRepository: WorkOrderRepository,
+        preferenceManager: PreferenceManager,
+        appResourceMx: AppResourceMx,
+        wappr: String
+    ) =
+        Pager(
+            config = PagingConfig(
+                pageSize = 5,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                WoPagingSource(
+                    appSession = appSession,
+                    repository = workOrderRepository,
+                    woCacheDao,
+                    null,
+                    preferenceManager,
+                    appResourceMx,
+                    wappr
                 )
             }
         ).liveData
@@ -284,110 +314,126 @@ class WorkOrderRepository @Inject constructor(
 
     fun addWoToObjectBox(list: List<Member>) {
         for (wo in list) {
-            var assignment: Assignment
-            wo.assignment.whatIfNotNullOrEmpty(
-                whatIf = {
-                    assignment = it.get(0)
-                    val laborCode: String = assignment.laborcode!!
-                    val woCacheEntity = WoCacheEntity(
-                        syncBody = WoUtils.convertMemberToBody(wo),
-                        woId = wo.workorderid,
-                        wonum = wo.wonum,
-                        status = wo.status,
-                        isChanged = BaseParam.APP_FALSE,
-                        isLatest = BaseParam.APP_TRUE,
-                        syncStatus = BaseParam.APP_TRUE,
-                        laborCode = laborCode
-                    )
-                    woCacheEntity.changeDate = wo.changedate
-                    setupWoLocation(woCacheEntity, wo)
-                    multiAssetToObjectBox(wo)
-                    woCacheEntity.createdDate = Date()
-                    woCacheEntity.createdBy = appSession.userEntity.username
-                    woCacheEntity.updatedBy = appSession.userEntity.username
-                    saveWoList(woCacheEntity, appSession.userEntity.username)
+            Timber.d("addWoToObjectBox() wonum: %s", wo.wonum)
+            val laborCode: String = appSession.laborCode.toString()
+            val woCacheEntity = WoCacheEntity(
+                syncBody = WoUtils.convertMemberToBody(wo),
+                woId = wo.workorderid,
+                wonum = wo.wonum,
+                status = wo.status,
+                isChanged = BaseParam.APP_FALSE,
+                isLatest = BaseParam.APP_TRUE,
+                syncStatus = BaseParam.APP_TRUE,
+                laborCode = laborCode,
+                reportDateUTCTime = DateUtils.convertStringToMaximoDate(wo.reportdate),
+                reportString = DateUtils.convertMxDateStringToString(
+                    DateUtils.convertStringToMaximoDate(wo.reportdate)
+                )
+            )
+            woCacheEntity.changeDate = wo.changedate
+            setupWoLocation(woCacheEntity, wo)
+            multiAssetToObjectBox(wo)
+            woCacheEntity.createdDate = Date()
+            woCacheEntity.createdBy = appSession.userEntity.username
+            woCacheEntity.updatedBy = appSession.userEntity.username
+            saveWoList(woCacheEntity, appSession.userEntity.username)
 
-                    runBlocking {
-                        Timber.tag(TAG).d("addWoToObjectBox() doclinks")
-                        wo.doclinks.whatIfNotNull { doclinks ->
-                            Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
-                            appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
-                                doclinks.href.whatIfNotNullOrEmpty { href ->
-                                    Timber.tag(TAG).d(
-                                        "addWoToObjectBox() username: %s href: %s",
-                                        username, href
-                                    )
-                                    attachmentRepository.createAttachmentFromDocklinks(
-                                        href,
-                                        username
-                                    )
-                                }
-                            }
+            runBlocking {
+                Timber.tag(TAG).d("addWoToObjectBox() doclinks")
+                wo.doclinks.whatIfNotNull { doclinks ->
+                    Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
+                    appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
+                        doclinks.href.whatIfNotNullOrEmpty { href ->
+                            Timber.tag(TAG).d(
+                                "addWoToObjectBox() username: %s href: %s",
+                                username, href
+                            )
+                            attachmentRepository.createAttachmentFromDocklinks(
+                                href,
+                                username
+                            )
                         }
                     }
+                }
+            }
 
-                    wo.wpmaterial.whatIfNotNullOrEmpty {
-                        materialRepository.addListMaterialPlanToObjectBox(
-                            it,
-                            wo.wonum.toString(),
-                            wo.workorderid.toString()
-                        )
+            wo.wpmaterial.whatIfNotNullOrEmpty {
+                materialRepository.addListMaterialPlanToObjectBox(
+                    it,
+                    wo.wonum.toString(),
+                    wo.workorderid.toString()
+                )
+            }
+
+            wo.woactivity.whatIfNotNullOrEmpty {
+                wo.workorderid.whatIfNotNull { woid ->
+                    wo.wonum.whatIfNotNull { wonum ->
+                        taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
                     }
-                })
+                }
+            }
         }
     }
 
     fun addWoToObjectBox(member: Member) {
-        var assignment: Assignment
-        member.assignment.whatIfNotNullOrEmpty(
-            whatIf = {
-                assignment = it.get(0)
-                val laborCode: String = assignment.laborcode!!
-                val woCacheEntity = WoCacheEntity(
-                    syncBody = WoUtils.convertMemberToBody(member),
-                    woId = member.workorderid,
-                    wonum = member.wonum,
-                    status = member.status,
-                    isChanged = BaseParam.APP_FALSE,
-                    isLatest = BaseParam.APP_TRUE,
-                    syncStatus = BaseParam.APP_TRUE,
-                    laborCode = laborCode
-                )
-                setupWoLocation(woCacheEntity, member)
-                woCacheEntity.changeDate = member.changedate
-                multiAssetToObjectBox(member)
-                woCacheEntity.createdDate = Date()
-                woCacheEntity.createdBy = appSession.userEntity.username
-                woCacheEntity.updatedBy = appSession.userEntity.username
-                saveWoList(woCacheEntity, appSession.userEntity.username)
+        val laborCode: String = appSession.laborCode.toString()
+        val woCacheEntity = WoCacheEntity(
+            syncBody = WoUtils.convertMemberToBody(member),
+            woId = member.workorderid,
+            wonum = member.wonum,
+            status = member.status,
+            isChanged = BaseParam.APP_FALSE,
+            isLatest = BaseParam.APP_TRUE,
+            syncStatus = BaseParam.APP_TRUE,
+            laborCode = laborCode,
+            reportDateUTCTime = DateUtils.convertStringToMaximoDate(member.reportdate),
+            reportString = DateUtils.convertMxDateStringToString(
+                DateUtils.convertStringToMaximoDate(member.reportdate)
+            )
+        )
+        setupWoLocation(woCacheEntity, member)
+        woCacheEntity.changeDate = member.changedate
+        multiAssetToObjectBox(member)
+        woCacheEntity.createdDate = Date()
+        woCacheEntity.createdBy = appSession.userEntity.username
+        woCacheEntity.updatedBy = appSession.userEntity.username
+        saveWoList(woCacheEntity, appSession.userEntity.username)
 
-                runBlocking {
-                    Timber.tag(TAG).d("addWoToObjectBox() doclinks")
-                    member.doclinks.whatIfNotNull { doclinks ->
-                        Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
-                        appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
-                            doclinks.href.whatIfNotNullOrEmpty { href ->
-                                Timber.tag(TAG).d(
-                                    "addWoToObjectBox() username: %s href: %s",
-                                    username, href
-                                )
-                                attachmentRepository.createAttachmentFromDocklinks(
-                                    href,
-                                    username
-                                )
-                            }
-                        }
+        runBlocking {
+            Timber.tag(TAG).d("addWoToObjectBox() doclinks")
+            member.doclinks.whatIfNotNull { doclinks ->
+                Timber.tag(TAG).d("addWoToObjectBox() doclinks: %s", doclinks)
+                appSession.userEntity.username.whatIfNotNullOrEmpty { username ->
+                    doclinks.href.whatIfNotNullOrEmpty { href ->
+                        Timber.tag(TAG).d(
+                            "addWoToObjectBox() username: %s href: %s",
+                            username, href
+                        )
+                        attachmentRepository.createAttachmentFromDocklinks(
+                            href,
+                            username
+                        )
                     }
                 }
+            }
+        }
 
-                member.wpmaterial.whatIfNotNullOrEmpty {
-                    materialRepository.addListMaterialPlanToObjectBox(
-                        it,
-                        member.wonum.toString(),
-                        member.workorderid.toString()
-                    )
+        member.wpmaterial.whatIfNotNullOrEmpty {
+            materialRepository.addListMaterialPlanToObjectBox(
+                it,
+                member.wonum.toString(),
+                member.workorderid.toString()
+            )
+        }
+
+        member.woactivity.whatIfNotNullOrEmpty {
+            member.workorderid.whatIfNotNull { woid ->
+                member.wonum.whatIfNotNull { wonum ->
+                    taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
                 }
-            })
+            }
+        }
+
     }
 
     fun replaceWolocalChace(
@@ -403,18 +449,22 @@ class WorkOrderRepository @Inject constructor(
         woCacheEntity.isLatest = BaseParam.APP_TRUE
         woCacheEntity.syncStatus = BaseParam.APP_FALSE
         woCacheEntity.updatedBy = appSession.userEntity.username
+        woCacheEntity.reportDateUTCTime = DateUtils.convertStringToMaximoDate(member.reportdate)
+        woCacheEntity.reportString = DateUtils.convertMxDateStringToString(
+            DateUtils.convertStringToMaximoDate(member.reportdate)
+        )
         saveWoList(woCacheEntity, appSession.userEntity.username)
     }
 
 
     private fun setupWoLocation(woCacheEntity: WoCacheEntity, wo: Member) {
         woCacheEntity.latitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress!![0].latitudey
+            wo.woserviceaddress[0].latitudey
         } else {
             null
         }
         woCacheEntity.longitude = if (!wo.woserviceaddress.isNullOrEmpty()) {
-            wo.woserviceaddress!![0].longitudex
+            wo.woserviceaddress[0].longitudex
         } else {
             null
         }
@@ -646,7 +696,9 @@ class WorkOrderRepository @Inject constructor(
         val memberJsonAdapter = moshi.adapter(Member::class.java)
         val currentMember: Member? = memberJsonAdapter.fromJson(currentWoCache?.syncBody)
         currentMember?.status = nextStatus
-        currentMember?.descriptionLongdescription = longdesc
+        longdesc.whatIfNotNullOrEmpty {
+            currentMember?.descriptionLongdescription = longdesc
+        }
         listMatAct.whatIfNotNullOrEmpty {
             currentMember?.matusetrans = it
         }
@@ -656,6 +708,56 @@ class WorkOrderRepository @Inject constructor(
         currentWoCache?.isChanged = BaseParam.APP_FALSE
         currentWoCache?.isLatest = BaseParam.APP_TRUE
         updateWo(currentWoCache!!, appSession.userEntity.username)
+    }
+
+    fun updateCreateWoCacheOfflineMode(
+        woId: Int?,
+        wonum: String?,
+        longdesc: String?,
+        currentWo: WoCacheEntity
+    ) {
+        Timber.d("updateCreateWoCacheOfflineMode() syncBody %s ", currentWo.syncBody)
+
+        val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter = moshi.adapter(Member::class.java)
+        val currentMember = memberJsonAdapter.fromJson(currentWo.syncBody)
+        longdesc.whatIfNotNullOrEmpty {
+            currentMember?.descriptionLongdescription = longdesc
+        }
+        listMatAct.whatIfNotNullOrEmpty {
+            currentMember?.matusetrans = it
+        }
+
+        currentWo.woId = woId
+        currentWo.wonum = wonum
+        currentWo.laborCode = appSession.laborCode
+        currentWo.syncBody = memberJsonAdapter.toJson(currentMember)
+        currentWo.syncStatus = BaseParam.APP_TRUE
+        currentWo.isChanged = BaseParam.APP_FALSE
+        currentWo.isLatest = BaseParam.APP_TRUE
+        updateWo(currentWo, appSession.userEntity.username)
+
+    }
+
+    fun updateCreateWoCacheOnlineMode(
+        woId: Int?,
+        wonum: String?,
+        tempWonum: String,
+        member: Member
+    ) {
+        val syncBody = WoUtils.convertMemberToBody(member)
+        val woCache = woCacheDao.findWoByWonum(tempWonum)
+        woCache.whatIfNotNull {
+            it.woId = woId
+            it.wonum = wonum
+            it.syncBody = syncBody
+            it.laborCode = appSession.laborCode
+            it.syncStatus = BaseParam.APP_TRUE
+            it.isChanged = BaseParam.APP_FALSE
+            it.isLatest = BaseParam.APP_TRUE
+            updateWo(it, appSession.userEntity.username)
+        }
     }
 
     fun addObjectBoxToHashMapActivity() {
@@ -774,6 +876,25 @@ class WorkOrderRepository @Inject constructor(
 
     fun findByLocation(location: String): LocationEntity? {
         return locationDao.findByLocation(location)
+    }
+
+    fun saveCreatedWoLocally(
+        member: Member,
+        tempWonum: String,
+        externalrefid: String
+    ) {
+        val tWoCacheEntity = WoCacheEntity()
+        tWoCacheEntity.syncBody = WoUtils.convertMemberToBody(member)
+        tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
+        tWoCacheEntity.isChanged = BaseParam.APP_TRUE
+        tWoCacheEntity.createdBy = appSession.userEntity.username
+        tWoCacheEntity.updatedBy = appSession.userEntity.username
+        tWoCacheEntity.createdDate = Date()
+        tWoCacheEntity.updatedDate = Date()
+        tWoCacheEntity.wonum = tempWonum
+        tWoCacheEntity.status = BaseParam.WAPPR
+        tWoCacheEntity.externalREFID = externalrefid
+        saveWoList(tWoCacheEntity, appSession.userEntity.username)
     }
 
 

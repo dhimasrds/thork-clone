@@ -21,7 +21,6 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.pages.material_plan.element.MaterialPlanViewModel
 import id.thork.app.persistence.entity.MatusetransEntity
-import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
 
 class MaterialActualViewModel@ViewModelInject constructor(

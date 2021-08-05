@@ -32,6 +32,7 @@ class AppSession @Inject constructor(context: Context) {
     var personUID: Int = -1
     var firstLogin: Int = 1
     var userHash: String? = null
+    var cookie: String? = null
     var laborCode: String? = null
     var siteId: String? = null
     var orgId: String? = null

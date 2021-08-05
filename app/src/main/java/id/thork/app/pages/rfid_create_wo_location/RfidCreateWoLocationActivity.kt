@@ -41,7 +41,8 @@ class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandler
             filter = false,
             scannerIcon = false,
             notification = false,
-            option = false
+            option = false,
+            historyAttendanceIcon = false
         )
 
         setupRfid()

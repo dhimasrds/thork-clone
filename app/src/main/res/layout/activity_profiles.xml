@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="id.thork.app.pages.profiles.profile.element.ProfileViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/general_margin_5dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_profile" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#436CFF"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:background="@drawable/ic_user_profile" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/username_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_margin_15dp"
+                    android:text="Username"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_black"/>
+
+                <TextView
+                    android:id="@+id/role_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_black"
+                    android:text="-"
+                    android:textColor="@color/white"
+                    android:textSize="17sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/attendance"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="@dimen/general_margin_5dp"
+            android:layout_marginBottom="@dimen/general_margin_5dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/base_text_size_10"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_attendance" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="7"
+                    android:text="@string/settings_attendance" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="@dimen/general_margin_5dp"
+            android:layout_marginBottom="@dimen/general_margin_5dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_settings" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="7"
+                    android:text="@string/action_settings" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/help_center"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="@dimen/general_margin_5dp"
+            android:layout_marginBottom="@dimen/general_margin_5dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_help_center" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="7"
+                    android:text="@string/settings_help_center" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/about_us"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="@dimen/general_margin_5dp"
+            android:layout_marginBottom="@dimen/general_margin_5dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_about_us" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="7"
+                    android:text="@string/settings_about" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/button_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/settings_left_margin"
+            android:layout_marginTop="@dimen/settings_start_logout"
+            android:layout_marginEnd="@dimen/settings_right_margin"
+            android:layout_marginBottom="@dimen/settings_start_logout"
+            android:background="@drawable/btn_rounded"
+            android:minHeight="@dimen/settings_button_min_height"
+            android:text="@string/settings_logout"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
+</layout>
