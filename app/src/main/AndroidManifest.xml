@@ -27,7 +27,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.labor_actual.create_labor_actual.CreateLaborActualActivity"></activity>
+        <activity
+            android:name=".pages.labor_actual.details_labor_actual.LaborActualDetailsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".pages.labor_plan.details_labor_plan.LaborPlanDetailsActivity"
+            android:exported="true" />
+        <activity android:name=".pages.labor_actual.create_labor_actual.CreateLaborActualActivity" />
         <activity android:name=".pages.labor_actual.LaborActualActivity" />
         <activity android:name=".pages.attachment.element.signature.SignatureActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
