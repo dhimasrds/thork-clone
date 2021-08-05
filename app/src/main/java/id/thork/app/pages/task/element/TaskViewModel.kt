@@ -113,17 +113,15 @@ class TaskViewModel @ViewModelInject constructor(
     ) {
         woid.whatIfNotNull {
             taskId.whatIfNotNull { taskId ->
-        taskRepository.updateTaskModule(
-            it,
-            taskId,
-            desc,
-            scheduleStart,
-            estDur,
-            actualStart
-        )
-                scheduleStart.whatIfNotNull { schedule ->
-                        Timber.d("raka %s ", "sukses")
-                    }
+                taskRepository.updateTaskModule(
+                    it,
+                    taskId,
+                    desc,
+                    scheduleStart,
+                    estDur,
+                    actualStart
+                )
+                Timber.d("raka %s ", "sukses")
             }
         }
     }

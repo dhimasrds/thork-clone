@@ -103,6 +103,7 @@ class TaskAdapter constructor(
                     intent.putExtra(BaseParam.TASKID, taskEntity.taskId)
                     intent.putExtra(BaseParam.ESTDUR, taskEntity.estDuration)
                     intent.putExtra(BaseParam.DETAIL_TASK, BaseParam.DETAIL_TASK)
+                    Timber.d("raka woid %s, taskid %s ", taskEntity.woId, taskEntity.taskId)
                     startActivity(context, intent, bundle)
                 }
             }

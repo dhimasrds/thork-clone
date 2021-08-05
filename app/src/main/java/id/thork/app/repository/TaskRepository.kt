@@ -313,6 +313,7 @@ class TaskRepository @Inject constructor(
                          desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?) {
         val taskEntity = findTaskByWoIdAndTaskId(woid, taskId)
         Timber.d("raka %s ", taskId)
+        Timber.d("raka %s ", desc)
         taskEntity.whatIfNotNull {
             it.desc = desc
             it.scheduleStart = scheduleStart

@@ -196,7 +196,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         binding.tvEstDur.setOnClickListener(setEstimdur)
 
         binding.btnSaveTask.setOnClickListener {
-            if (intentDetailTag != null){
+            if (intentDetailTag != null && formValidation() && dateValidation()){
                 setDialogUpdate()
             } else if (formValidation() && dateValidation()) {
                 setDialogSaveTask()
