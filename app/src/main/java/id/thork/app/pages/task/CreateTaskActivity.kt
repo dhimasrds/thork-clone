@@ -185,7 +185,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                         )
                     )
                     tvStatusTask.setBackgroundResource(R.drawable.bg_status)
-
                 }
             }
         }
