@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.example
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,14 +21,18 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import id.thork.app.R
+import id.thork.app.base.BaseParam
 import id.thork.app.helper.builder.LocomotifAttribute
 import id.thork.app.helper.builder.LocomotifBuilder
+import id.thork.app.pages.followup_wo.FollowUpWoActivity
+import timber.log.Timber
 import java.util.*
 
 
 class FormActivity : AppCompatActivity() {
     var locomotifBuilder: LocomotifBuilder<Person>? = null
 
+    lateinit var country: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
@@ -55,6 +60,16 @@ class FormActivity : AppCompatActivity() {
         getWidgetListener()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Timber.tag("TAG").d("onActivityResult() resultcode: %s", resultCode)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 123) {
+                country.setText(data?.getStringExtra("NAME"))
+            }
+        }
+    }
+
     private fun getGenderItems(): List<LocomotifAttribute> {
         val mutableList = mutableListOf<LocomotifAttribute>()
         val male = LocomotifAttribute("Male", "Male")
@@ -64,12 +79,27 @@ class FormActivity : AppCompatActivity() {
         return mutableList.toList()
     }
 
-    fun getWidgetListener() {
+    private fun getWidgetListener() {
+        country = locomotifBuilder?.getWidgetByTag("country") as EditText
+        country.setOnClickListener {
+            Timber.tag("TAG").d("getWidgetListener() country listener")
+            val intent = Intent(this, CountryListActivity::class.java)
+            startActivityForResult(intent, 123)
+        }
+
+//        country.setOnTouchListener(OnTouchListener { v, event ->
+//            Timber.tag("TAG").d("getWidgetListener() country listener")
+//            val intent = Intent(this, CountryListActivity::class.java)
+//            startActivityForResult(intent, 123)
+//            true
+//        })
+
         val address = locomotifBuilder?.getWidgetByTag("address") as EditText
         val phone = locomotifBuilder?.getWidgetByTag("phone") as EditText
         address.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 phone.setText("Inject "  + s.toString())
+                country.setText("Inject "  + s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -85,8 +115,6 @@ class FormActivity : AppCompatActivity() {
                 println("Field $key is $value")
             }
         }
-
-//        println(locomotifBuilder?.getDataAsJson())
 
         val pDuplicate: Person? = locomotifBuilder?.getDataAsEntity()
         println("RETURN AS ENTITY")

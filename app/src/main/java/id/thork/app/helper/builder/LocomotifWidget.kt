@@ -33,7 +33,7 @@ class LocomotifWidget constructor(val context: Context) {
             val outValue = TypedValue()
             context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             setBackgroundResource(outValue.resourceId)
-
+            isFocusableInTouchMode = false
             isClickable = true
             setBackgroundColor(Color.TRANSPARENT)
             setTextColor(Color.BLACK)

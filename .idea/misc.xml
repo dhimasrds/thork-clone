@@ -16,7 +16,10 @@
         <entry key="app/src/main/res/layout/activity_material_plan.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_material_plan_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_material_plan_form_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_person_list.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/cardview_findmaterial.xml" value="0.12604166666666666" />
+        <entry key="app/src/main/res/layout/form_list_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/material_plan_item.xml" value="0.5" />
       </map>
     </option>

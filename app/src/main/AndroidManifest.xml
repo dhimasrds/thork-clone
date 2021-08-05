@@ -27,14 +27,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pages.attachment.element.signature.SignatureActivity"></activity>
+        <activity
+            android:name=".pages.example.CountryListActivity">
+        </activity>
+        <activity android:name=".pages.attachment.element.signature.SignatureActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
         <activity android:name=".pages.labor_plan.SelectLaborActivity" />
         <activity android:name=".pages.labor_plan.SelectCraftActivity" />
         <activity android:name=".pages.labor_plan.SelectTaskActivity" />
         <activity android:name=".pages.labor_plan.create_labor_plan.CreateLaborPlanActivity" />
         <activity android:name=".pages.labor_plan.LaborPlanActivity" />
-        <activity android:name=".pages.task.CreateTaskActivity"></activity>
+        <activity android:name=".pages.task.CreateTaskActivity" />
         <activity android:name=".pages.task.TaskActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceActivity" />
         <activity android:name=".pages.profiles.attendance.AttendanceActivity" />
@@ -101,11 +104,13 @@
             android:name=".pages.splash_screen.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ColdStart">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".pages.main.MainActivity" />
 
