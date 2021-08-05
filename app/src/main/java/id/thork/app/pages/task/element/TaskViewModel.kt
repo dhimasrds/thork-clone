@@ -107,6 +107,27 @@ class TaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun updateTaskOnline(
+        woid: Int?, taskId: Int?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+    ) {
+        woid.whatIfNotNull {
+            taskId.whatIfNotNull { taskId ->
+        taskRepository.updateTaskModule(
+            it,
+            taskId,
+            desc,
+            scheduleStart,
+            estDur,
+            actualStart
+        )
+                scheduleStart.whatIfNotNull { schedule ->
+                        Timber.d("raka %s ", "sukses")
+                    }
+            }
+        }
+    }
+
     private fun updateToMaximo(woid: Int, taskId: Int, scheduleStart: String, wonum: String) {
 
         val taskList = taskRepository.prepareTaskBodyFromWoDetail(woid, scheduleStart)

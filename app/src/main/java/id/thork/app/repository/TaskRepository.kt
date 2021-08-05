@@ -308,4 +308,17 @@ class TaskRepository @Inject constructor(
             }
         }
     }
+
+    fun updateTaskModule(woid: Int, taskId: Int,
+                         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?) {
+        val taskEntity = findTaskByWoIdAndTaskId(woid, taskId)
+        Timber.d("raka %s ", taskId)
+        taskEntity.whatIfNotNull {
+            it.desc = desc
+            it.scheduleStart = scheduleStart
+            it.estDuration = estDur
+            it.actualStart = actualStart
+            saveTaskCache(it)
+        }
+    }
 }

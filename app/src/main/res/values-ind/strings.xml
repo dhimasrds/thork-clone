@@ -37,6 +37,8 @@
     <string name="general_search">Masukkan pencarian</string>
     <string name="general_save">Save</string>
     <string name="general_required_fields">Periksa terlebih dahulu untuk data yang wajib</string>
+    <string name="task_updated">Task Updated</string>
+
 
     <!-- Intro Slider -->
     <string name="next">BERIKUTNYA</string>

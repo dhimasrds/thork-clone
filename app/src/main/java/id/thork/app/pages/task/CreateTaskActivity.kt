@@ -128,12 +128,12 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                             tvActualStart.setText(actual)
                             tvEstDur.text = estDur.toString()
 
-                            btnSaveTask.visibility = View.GONE
-                            tvDesc.isEnabled = false
-                            tvScheduleStart.isEnabled = false
-                            tvActualStart.isEnabled = false
-                            tvEstDur.isEnabled = false
-                            tvDesc.inputType = InputType.TYPE_NULL
+//                            btnSaveTask.visibility = View.GONE
+//                            tvDesc.isEnabled = false
+//                            tvScheduleStart.isEnabled = false
+//                            tvActualStart.isEnabled = false
+//                            tvEstDur.isEnabled = false
+//                            tvDesc.inputType = InputType.TYPE_NULL
                         }
                     }
                 }
@@ -196,7 +196,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         binding.tvEstDur.setOnClickListener(setEstimdur)
 
         binding.btnSaveTask.setOnClickListener {
-            if (formValidation() && dateValidation()) {
+            if (intentDetailTag != null){
+                setDialogUpdate()
+            } else if (formValidation() && dateValidation()) {
                 setDialogSaveTask()
             } else {
                 Toast.makeText(
@@ -411,6 +413,15 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         startActivity(intent)
     }
 
+    private fun setDialogUpdate() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.task_title)
+            .setDescription(R.string.task_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
     private fun setDialogSaveTask() {
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
             .setRightButtonText(R.string.dialog_yes)
@@ -441,6 +452,20 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
 
     override fun onRightButton() {
         when {
+            intentDetailTag != null ->{
+                viewModels.updateTaskOnline(intentWoid,
+                    intentTaskId,
+                    desc,
+                    scheduleStartObjectBox,
+                    estDur,
+                    actualStartObjectBox
+                    )
+                Toast.makeText(
+                    this,
+                    R.string.task_updated,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
             intentTag != null && !cancelTaskValidation -> {
                 saveTaskFromCreateWo()
             }
