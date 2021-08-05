@@ -455,6 +455,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             intentDetailTag != null ->{
                 viewModels.updateTaskOnline(intentWoid,
                     intentTaskId,
+                    intentWonum,
                     desc,
                     scheduleStartObjectBox,
                     estDur,

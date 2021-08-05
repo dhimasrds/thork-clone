@@ -107,25 +107,6 @@ class TaskViewModel @ViewModelInject constructor(
         }
     }
 
-    fun updateTaskOnline(
-        woid: Int?, taskId: Int?,
-        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
-    ) {
-        woid.whatIfNotNull {
-            taskId.whatIfNotNull { taskId ->
-                taskRepository.updateTaskModule(
-                    it,
-                    taskId,
-                    desc,
-                    scheduleStart,
-                    estDur,
-                    actualStart
-                )
-                Timber.d("raka %s ", "sukses")
-            }
-        }
-    }
-
     private fun updateToMaximo(woid: Int, taskId: Int, scheduleStart: String, wonum: String) {
 
         val taskList = taskRepository.prepareTaskBodyFromWoDetail(woid, scheduleStart)
@@ -144,6 +125,72 @@ class TaskViewModel @ViewModelInject constructor(
         val properties = BaseParam.APP_ALL_PROPERTIES
         viewModelScope.launch(Dispatchers.IO) {
             taskRepository.createTaskToMx(
+                xmethodeOverride,
+                contentType,
+                cookie,
+                patchType,
+                properties,
+                woid,
+                taskResponse,
+                onSuccess = { woMember ->
+                    woMember.woactivity.whatIfNotNullOrEmpty {
+                        Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                        taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
+                    }
+                },
+                onError = {
+                    taskRepository.handlingTaskFailedFromWoDetail(woid, taskId)
+                    Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
+
+                }
+            )
+        }
+
+    }
+
+
+    fun updateTaskOnline(
+        woid: Int?, taskId: Int?, wonum: String?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+    ) {
+        woid.whatIfNotNull {
+            taskId.whatIfNotNull { taskId ->
+                scheduleStart.whatIfNotNull { scheduleStart ->
+                    wonum.whatIfNotNull { wonum ->
+                        taskRepository.updateTaskModule(
+                            it,
+                            taskId,
+                            desc,
+                            scheduleStart,
+                            estDur,
+                            actualStart
+                        )
+                        Timber.d("raka %s ", "sukses")
+                        editTaskToMaximo(it, taskId, scheduleStart, wonum)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun editTaskToMaximo(woid: Int, taskId: Int, scheduleStart: String, wonum: String) {
+
+        val taskList = taskRepository.prepareTaskBodyForUpdateTask(woid, scheduleStart)
+        val taskResponse = TaskResponse()
+        taskList.whatIfNotNullOrEmpty {
+            taskResponse.woactivity = it
+        }
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter: JsonAdapter<TaskResponse> = moshi.adapter(TaskResponse::class.java)
+        Timber.tag(TAG).d("updateToMaximo() results: %s", memberJsonAdapter.toJson(taskResponse))
+
+        val xmethodeOverride: String = BaseParam.APP_PATCH
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
+        val properties = BaseParam.APP_ALL_PROPERTIES
+        viewModelScope.launch(Dispatchers.IO) {
+            taskRepository.editTaskToMx(
                 xmethodeOverride,
                 contentType,
                 cookie,

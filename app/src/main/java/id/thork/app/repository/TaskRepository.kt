@@ -309,6 +309,39 @@ class TaskRepository @Inject constructor(
         }
     }
 
+    suspend fun editTaskToMx(
+        xMethodOverride: String?,
+        contentType: String,
+        cookie: String,
+        patchType: String,
+        properties: String,
+        woid: Int,
+        prepareBody: TaskResponse,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = taskClient.editTask(
+            xMethodOverride, contentType, cookie, patchType, properties, woid,
+            prepareBody
+        )
+
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createTaskToMx() code: %s ", statusCode.code)
+
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "createTaskToMx() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+    }
+
     fun updateTaskModule(woid: Int, taskId: Int,
                          desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?) {
         val taskEntity = findTaskByWoIdAndTaskId(woid, taskId)
@@ -321,5 +354,22 @@ class TaskRepository @Inject constructor(
             it.actualStart = actualStart
             saveTaskCache(it)
         }
+    }
+
+    fun prepareTaskBodyForUpdateTask(woid: Int, scheduleStart: String): List<Woactivity> {
+        val taskEntity = findTaskByWoIdAndScheduleDate(woid, scheduleStart)
+        val memberTask = mutableListOf<Woactivity>()
+        taskEntity.forEach {
+            val member = Woactivity()
+            member.taskid = it.taskId
+            member.wonum = it.refWonum
+            member.description = it.desc
+            member.estdur = it.estDuration
+            member.schedstart = it.scheduleStart
+            member.actstart = it.actualStart
+            memberTask.add(member)
+        }
+        Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
+        return memberTask
     }
 }
