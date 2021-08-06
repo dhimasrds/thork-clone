@@ -50,4 +50,23 @@ class CraftMasterDaoImp : CraftMasterDao {
             .equal(CraftMasterEntity_.laborcode, laborcode)
             .build().find()
     }
+
+    override fun getCraftByLaborcode(
+        laborcode: String
+    ): CraftMasterEntity? {
+        val craftEntity =
+            craftMasterEntityBox.query().equal(CraftMasterEntity_.laborcode, laborcode)
+                .build()
+                .find()
+        craftEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
+    override fun getCraft() : List<CraftMasterEntity> {
+        return craftMasterEntityBox.query().notNull(CraftMasterEntity_.craft).build().find()
+
+
+    }
 }

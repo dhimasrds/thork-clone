@@ -3,15 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.12" />
-        <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.1" />
+        <entry key="../../../layout/custom_preview.xml" value="0.37083333333333335" />
+        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_create_work_log.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_detail_wo.xml" value="0.14924863387978143" />
         <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.2151639344262295" />
         <entry key="app/src/main/res/layout/activity_select_labor.xml" value="0.10733695652173914" />
         <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/activity_work_log.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/cardview_labor_and_craft.xml" value="0.210724043715847" />
+        <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.2151639344262295" />
+        <entry key="app/src/main/res/layout/cardview_list_worklog.xml" value="0.21" />
       </map>
     </option>
   </component>

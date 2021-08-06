@@ -11,7 +11,8 @@ import id.thork.app.databinding.CardviewLaborPlanBinding
  * Created by Dhimas Saputra on 23/06/21
  * Jakarta, Indonesia.
  */
-class CraftAdapter  constructor(
+class CraftAdapter constructor(
+
 
 ) :
     RecyclerView.Adapter<CraftAdapter.ViewHolder>() {

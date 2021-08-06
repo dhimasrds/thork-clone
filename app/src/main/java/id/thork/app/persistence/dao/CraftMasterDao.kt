@@ -10,4 +10,6 @@ interface CraftMasterDao {
     fun createCraftCache(craftMasterEntity: CraftMasterEntity, username: String?)
     fun remove()
     fun getListCraftByLaborcode(laborcode: String): List<CraftMasterEntity>
+    fun getCraftByLaborcode(laborcode: String): CraftMasterEntity?
+    fun getCraft(): List<CraftMasterEntity>
 }

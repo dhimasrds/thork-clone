@@ -13,12 +13,15 @@ import id.thork.app.pages.labor_plan.element.CraftAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
 import id.thork.app.pages.work_log.WorkLogActivity
+import id.thork.app.persistence.entity.CraftMasterEntity
+import id.thork.app.persistence.entity.LaborPlanEntity
 
 class SelectCraftActivity: BaseActivity() {
     val TAG = SelectCraftActivity::class.java.name
     private val viewModels: LaborPlanViewModel by viewModels()
     private val binding: ActivitySelectCraftBinding by binding(R.layout.activity_select_craft)
     private lateinit var craftAdapter: CraftAdapter
+    private lateinit var craftEntities: MutableList<CraftMasterEntity>
 
 
     override fun setupView() {
@@ -30,6 +33,7 @@ class SelectCraftActivity: BaseActivity() {
         }
         craftAdapter = CraftAdapter()
 
+        craftEntities = mutableListOf()
         binding.rvSelectCraft.adapter = craftAdapter
 
 
@@ -46,5 +50,6 @@ class SelectCraftActivity: BaseActivity() {
 
     override fun setupObserver() {
         super.setupObserver()
+
     }
 }

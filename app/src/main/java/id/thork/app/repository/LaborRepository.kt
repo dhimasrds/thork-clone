@@ -14,7 +14,6 @@ import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborMasterEntity
 import id.thork.app.persistence.entity.LaborPlanEntity
-import id.thork.app.utils.DateUtils
 import javax.inject.Inject
 
 /**
@@ -30,7 +29,7 @@ class LaborRepository @Inject constructor(
 ) : BaseRepository {
     val TAG = LaborRepository::class.java.name
 
-    var usernameGlobal : String? = null
+    var usernameGlobal: String? = null
 
     /**
      * Labor Plan
@@ -52,6 +51,19 @@ class LaborRepository @Inject constructor(
     fun findLaborPlan(laborcode: String, workroderid: String): LaborPlanEntity? {
         return laborPlanDao.findlaborPlanByworkorderid(laborcode, workroderid)
     }
+
+    fun findLaborPlanByLaborCodeCraft(laborcode: String, craft: String): LaborPlanEntity? {
+        return laborPlanDao.findlaborPlanBylaborcodedandCraft(laborcode, craft)
+    }
+
+    fun findLaborPlanByCraft(craft: String, workroderid: String): LaborPlanEntity? {
+        return laborPlanDao.findlaborPlanByworkorderidandCraft(craft, workroderid)
+    }
+
+    fun craftMaster(laborcode: String): List<CraftMasterEntity>? {
+        return craftMasterDao.getListCraftByLaborcode(laborcode)
+    }
+
 
     fun addLaborPlanToObjectBox(member: Member) {
         val woact = member.woactivity
@@ -202,11 +214,23 @@ class LaborRepository @Inject constructor(
         }
     }
 
+    fun fetchCraft(laborcode: String): CraftMasterEntity? {
+        return craftMasterDao.getCraftByLaborcode(laborcode)
+    }
+
+    fun fetchMasterCraft() : List<CraftMasterEntity>{
+        return craftMasterDao.getCraft()
+    }
+
+
     /**
      * save Master Data labor To Object Box
      */
 
-    fun addMasterDataLaborToObjectBox(listMember: List<id.thork.app.network.response.labor_response.Member>, username: String) {
+    fun addMasterDataLaborToObjectBox(
+        listMember: List<id.thork.app.network.response.labor_response.Member>,
+        username: String
+    ) {
         usernameGlobal = username
         listMember.forEach { member ->
             //save labor to local cache

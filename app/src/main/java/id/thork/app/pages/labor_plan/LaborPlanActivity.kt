@@ -1,10 +1,10 @@
 package id.thork.app.pages.labor_plan
 
 import android.content.Intent
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNull
-import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
@@ -14,7 +14,6 @@ import id.thork.app.pages.labor_plan.element.LaborPlanAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
 import id.thork.app.pages.work_log.WorkLogActivity
 import id.thork.app.persistence.entity.LaborPlanEntity
-import okhttp3.internal.notifyAll
 import timber.log.Timber
 
 class LaborPlanActivity : BaseActivity() {
@@ -54,6 +53,7 @@ class LaborPlanActivity : BaseActivity() {
             historyAttendanceIcon = false
         )
         retriveFromIntent()
+        viewModels.fetchMasterCraft()
     }
 
     override fun setupObserver() {
@@ -65,6 +65,15 @@ class LaborPlanActivity : BaseActivity() {
             laborPlanEntity.addAll(it)
             laborPlanAdapter.notifyDataSetChanged()
         })
+
+        viewModels.woCache.observe(this, Observer {
+            val status = it.status
+            if(status != BaseParam.WAPPR) {
+                binding.apply {
+                    btnCreate.visibility = View.INVISIBLE
+                }
+            }
+        })
     }
 
     private fun retriveFromIntent() {
@@ -72,7 +81,11 @@ class LaborPlanActivity : BaseActivity() {
         intentWorkorderid = intent.getIntExtra(BaseParam.WORKORDERID,0)
 
         intentWorkorderid.whatIfNotNull {
-            viewModels.fetchLaborPlan(it.toString())
+            viewModels.fetchListLaborPlan(it.toString())
+        }
+
+        intentWonum.whatIfNotNull {
+            viewModels.fetchWoCache(it)
         }
     }
 }

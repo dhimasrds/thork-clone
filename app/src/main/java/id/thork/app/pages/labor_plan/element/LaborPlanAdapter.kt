@@ -11,6 +11,7 @@ import id.thork.app.databinding.CardviewLaborPlanBinding
 import id.thork.app.databinding.CardviewListWorklogBinding
 import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
 import id.thork.app.pages.labor_plan.create_labor_plan.CreateLaborPlanActivity
+import id.thork.app.pages.labor_plan.details_labor_plan.LaborPlanDetailsActivity
 import id.thork.app.pages.work_log.detail_work_log.DetailWorkLogActivity
 import id.thork.app.pages.work_log.element.WorkLogAdapter
 import id.thork.app.persistence.entity.LaborPlanEntity
@@ -47,12 +48,20 @@ class LaborPlanAdapter constructor(
             val vendor = StringUtils.NVL(laborPlanEntity.vendor, BaseParam.APP_DASH)
             val laborcode = StringUtils.NVL(laborPlanEntity.laborcode, BaseParam.APP_DASH)
             binding.apply {
+                if (laborcode != BaseParam.APP_DASH) {
+                    tvLabor.text = laborcode
+                } else {
+                    tvLabor.text = laborPlanEntity.craft
+                }
+
                 tvType.text = laborPlanEntity.taskid.plus(BaseParam.APP_DASH).plus(laborPlanEntity.taskDescription)
                 tvStatus.text = vendor
                 cardLaborPlan.setOnClickListener {
-                    val intent = Intent(activity, CreateLaborPlanActivity::class.java)
+                    val intent = Intent(activity, LaborPlanDetailsActivity::class.java)
                     intent.putExtra(BaseParam.WONUM, laborPlanEntity.wonumHeader)
+                    intent.putExtra(BaseParam.WORKORDERID, laborPlanEntity.workorderid)
                     intent.putExtra(BaseParam.LABORCODE, laborPlanEntity.laborcode)
+                    intent.putExtra(BaseParam.CRAFT, laborPlanEntity.craft)
                     activity.startActivity(intent)
                 }
             }

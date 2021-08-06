@@ -530,6 +530,8 @@
     <string name="vendor">Vendor</string>
     <string name="create_labor_plan">Create Labor Plan</string>
     <string name="labor_plan">Labor Plan</string>
+    <string name="labor_plan_detail">Detail Labor Plan</string>
+
     <string name="labor_actual">Labor Actual</string>
     <string name="select_skill_level">Select Skill Level</string>
 

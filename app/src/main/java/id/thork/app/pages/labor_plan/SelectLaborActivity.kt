@@ -3,6 +3,7 @@ package id.thork.app.pages.labor_plan
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.databinding.ActivitySelectCraftBinding
@@ -11,13 +12,15 @@ import id.thork.app.pages.labor_plan.element.CraftAdapter
 import id.thork.app.pages.labor_plan.element.LaborAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
+import id.thork.app.persistence.entity.CraftMasterEntity
+import id.thork.app.persistence.entity.LaborMasterEntity
 
 class SelectLaborActivity : BaseActivity() {
     val TAG = SelectLaborActivity::class.java.name
     private val viewModels: LaborPlanViewModel by viewModels()
     private val binding: ActivitySelectLaborBinding by binding(R.layout.activity_select_labor)
     private lateinit var laborAdapter: LaborAdapter
-
+    private lateinit var laborEntities: MutableList<LaborMasterEntity>
 
     override fun setupView() {
         super.setupView()
@@ -26,7 +29,8 @@ class SelectLaborActivity : BaseActivity() {
             vm =viewModels
 
         }
-        laborAdapter = LaborAdapter()
+        laborEntities = mutableListOf()
+        laborAdapter = LaborAdapter(this, laborEntities)
 
         binding.rvSelectLabor.adapter = laborAdapter
 
@@ -40,9 +44,17 @@ class SelectLaborActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
+
+        viewModels.fetchMasterLabor()
     }
 
     override fun setupObserver() {
         super.setupObserver()
+
+        viewModels.getLaborMaster.observe(this, Observer {
+            laborEntities.clear()
+            laborEntities.addAll(it)
+            laborAdapter.notifyDataSetChanged()
+        })
     }
 }

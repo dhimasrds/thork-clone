@@ -11,4 +11,6 @@ interface LaborPlanDao {
     fun createLaborPlanCache(laborPlanEntity: LaborPlanEntity, username: String?)
     fun findlaborPlanByworkorderid(laborcode: String, workorderid: String): LaborPlanEntity?
     fun findListLaborPlan(workorderid: String): List<LaborPlanEntity>
+    fun findlaborPlanByworkorderidandCraft(craft: String, workorderid: String): LaborPlanEntity?
+    fun findlaborPlanBylaborcodedandCraft(laborcode: String, craft: String): LaborPlanEntity?
 }
