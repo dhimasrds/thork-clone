@@ -8,6 +8,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityTaskBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.task.element.TaskAdapter
 import id.thork.app.pages.task.element.TaskViewModel
 import id.thork.app.persistence.entity.TaskEntity
@@ -19,18 +20,20 @@ import java.util.*
  * Created by Raka Putra on 6/23/21
  * Jakarta, Indonesia.
  */
-class TaskActivity : BaseActivity() {
+class TaskActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = TaskActivity::class.java.name
     private val viewModels: TaskViewModel by viewModels()
     private val binding: ActivityTaskBinding by binding(R.layout.activity_task)
 
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var taskEntity: MutableList<TaskEntity>
+    private lateinit var customDialogUtils: CustomDialogUtils
 
     private var intentWonum: String? = null
     private var intentStatus: String? = null
     private var intentTag: String? = null
     private var intentWoid: Int? = null
+    private var intentWoidTask: Int? = null
     private var idTask: Int = 10
 
     override fun setupView() {
@@ -49,6 +52,7 @@ class TaskActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
+        customDialogUtils = CustomDialogUtils(this)
 
         taskEntity = mutableListOf()
         taskAdapter = TaskAdapter(this, taskEntity)
@@ -126,5 +130,30 @@ class TaskActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    fun setDialogDeleteTask(woidTask: Int) {
+        intentWoidTask = woidTask
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.task_title)
+            .setDescription(R.string.task_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        intentWoidTask.whatIfNotNull {
+            viewModels.deleteTask(it)
+            finish()
+        }
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
     }
 }

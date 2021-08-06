@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
@@ -14,9 +15,9 @@ import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewListTaskBinding
 import id.thork.app.pages.task.CreateTaskActivity
+import id.thork.app.pages.task.TaskActivity
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.utils.StringUtils
-import timber.log.Timber
 
 /**
  * Created by Raka Putra on 6/23/21
@@ -82,6 +83,7 @@ class TaskAdapter constructor(
                         tvPriorityTask.setBackgroundResource(R.drawable.bg_status_green)
                     }
                     BaseParam.WAPPR -> {
+                        deleteTask.visibility = View.VISIBLE
                         tvPriorityTask.text = BaseParam.WAPPR
                         tvPriorityTask.setTextColor(
                             ContextCompat.getColor(
@@ -92,6 +94,13 @@ class TaskAdapter constructor(
                         tvPriorityTask.setBackgroundResource(R.drawable.bg_status)
                     }
                 }
+
+                deleteTask.setOnClickListener {
+                    taskEntity.workorderIdTask.whatIfNotNull {
+                        (context as TaskActivity).setDialogDeleteTask(it)
+                    }
+                }
+
                 cardTask.setOnClickListener {
                     val intent = Intent(context, CreateTaskActivity::class.java)
                     val bundle = Bundle()
@@ -104,7 +113,6 @@ class TaskAdapter constructor(
                     intent.putExtra(BaseParam.TASKID, taskEntity.taskId)
                     intent.putExtra(BaseParam.ESTDUR, taskEntity.estDuration)
                     intent.putExtra(BaseParam.DETAIL_TASK, BaseParam.DETAIL_TASK)
-                    Timber.d("raka woid %s, taskid %s ", taskEntity.woId, taskEntity.taskId)
                     startActivity(context, intent, bundle)
                 }
             }

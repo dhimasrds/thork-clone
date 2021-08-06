@@ -142,6 +142,10 @@ class TaskRepository @Inject constructor(
         return taskDao.removeTaskByWonumAndOfflineMode(wonum, offlineMode)
     }
 
+    private fun removeTaskByWoidTask(woidTask: Int): Long {
+        return taskDao.removeTaskByWoidTask(woidTask)
+    }
+
     suspend fun createTaskToMx(
         xMethodOverride: String?,
         contentType: String,
@@ -205,6 +209,7 @@ class TaskRepository @Inject constructor(
                 wonum = wonum,
                 taskId = tasks.taskid,
                 refWonum = tasks.wonum,
+                workorderIdTask = tasks.workorderid,
                 desc = tasks.description,
                 scheduleStart = tasks.schedstart,
                 estDuration = tasks.estdur,
@@ -267,6 +272,7 @@ class TaskRepository @Inject constructor(
                 wonum = wonumber,
                 taskId = tasks.taskid,
                 refWonum = tasks.wonum,
+                workorderIdTask = tasks.workorderid,
                 desc = tasks.description,
                 scheduleStart = tasks.schedstart,
                 estDuration = tasks.estdur,
@@ -302,6 +308,7 @@ class TaskRepository @Inject constructor(
         for (listTask in list) {
             if (taskEntity.woId == woid && taskEntity.taskId == listTask.taskid) {
                 taskEntity.refWonum = listTask.wonum
+                taskEntity.workorderIdTask = listTask.workorderid
                 taskEntity.offlineMode = BaseParam.APP_FALSE
                 taskEntity.syncStatus = BaseParam.APP_TRUE
                 saveTaskCache(taskEntity)
@@ -342,11 +349,11 @@ class TaskRepository @Inject constructor(
             }
     }
 
-    fun updateTaskModule(woid: Int, taskId: Int,
-                         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?) {
+    fun editTaskModule(
+        woid: Int, taskId: Int,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?
+    ) {
         val taskEntity = findTaskByWoIdAndTaskId(woid, taskId)
-        Timber.d("raka %s ", taskId)
-        Timber.d("raka %s ", desc)
         taskEntity.whatIfNotNull {
             it.desc = desc
             it.scheduleStart = scheduleStart
@@ -371,5 +378,33 @@ class TaskRepository @Inject constructor(
         }
         Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
         return memberTask
+    }
+
+    suspend fun deleteTaskInMaximo(
+        contentType: String,
+        cookie: String,
+        woidTask: Int,
+        onSuccess: (Void) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = taskClient.deleteTask(
+            contentType, cookie, woidTask
+        )
+
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createTaskToMx() code: %s ", statusCode.code)
+            removeTaskByWoidTask(woidTask)
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "createTaskToMx() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
     }
 }

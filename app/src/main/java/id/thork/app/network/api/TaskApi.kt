@@ -35,4 +35,12 @@ interface TaskApi {
         @Query(value = "lean") lean: Int,
         @Body body: TaskResponse
     ): ApiResponse<Member>
+
+    @DELETE("/maximo/oslc/os/thisfsmwodetail/{workorderidTask}")
+    suspend fun deleteTask(
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Path("workorderidTask") workorderidTask: Int,
+        @Query(value = "lean") lean: Int,
+    ): ApiResponse<Void>
 }

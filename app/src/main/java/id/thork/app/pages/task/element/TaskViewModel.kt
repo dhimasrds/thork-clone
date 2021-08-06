@@ -149,7 +149,7 @@ class TaskViewModel @ViewModelInject constructor(
     }
 
 
-    fun updateTaskOnline(
+    fun editTaskOnlineFromWoDetail(
         woid: Int?, taskId: Int?, wonum: String?,
         desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
     ) {
@@ -157,7 +157,7 @@ class TaskViewModel @ViewModelInject constructor(
             taskId.whatIfNotNull { taskId ->
                 scheduleStart.whatIfNotNull { scheduleStart ->
                     wonum.whatIfNotNull { wonum ->
-                        taskRepository.updateTaskModule(
+                        taskRepository.editTaskModule(
                             it,
                             taskId,
                             desc,
@@ -165,7 +165,6 @@ class TaskViewModel @ViewModelInject constructor(
                             estDur,
                             actualStart
                         )
-                        Timber.d("raka %s ", "sukses")
                         editTaskToMaximo(it, taskId, scheduleStart, wonum)
                     }
                 }
@@ -207,10 +206,49 @@ class TaskViewModel @ViewModelInject constructor(
                 onError = {
                     taskRepository.handlingTaskFailedFromWoDetail(woid, taskId)
                     Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
-
                 }
             )
         }
+    }
 
+    fun editTaskOnlineFromCreateWo(
+        woid: Int?, taskId: Int?, wonum: String?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+    ) {
+        woid.whatIfNotNull {
+            taskId.whatIfNotNull { taskId ->
+                scheduleStart.whatIfNotNull { scheduleStart ->
+                    wonum.whatIfNotNull { wonum ->
+                        taskRepository.editTaskModule(
+                            it,
+                            taskId,
+                            desc,
+                            scheduleStart,
+                            estDur,
+                            actualStart
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteTask(woidTask: Int){
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val contentType: String = ("application/json")
+        viewModelScope.launch(Dispatchers.IO) {
+            taskRepository.deleteTaskInMaximo(
+                contentType,
+                cookie,
+                woidTask,
+                onSuccess = {
+                        Timber.tag(TAG).i("deleteTask() onSuccess() onSuccess: %s", it)
+
+                },
+                onError = {
+                    Timber.tag(TAG).i("deleteTask() onError() onError: %s", it)
+                }
+            )
+        }
     }
 }

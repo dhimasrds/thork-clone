@@ -16,6 +16,7 @@ class TaskEntity(
     var wonum : String? = null,
     var taskId : Int? = null,
     var refWonum: String? = null,
+    var workorderIdTask: Int? = null,
     var desc : String? = null,
     var scheduleStart : String? = null,
     var actualStart : String? = null,
