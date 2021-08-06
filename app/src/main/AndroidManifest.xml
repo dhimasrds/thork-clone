@@ -27,9 +27,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Thork"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".pages.example.CountryListActivity">
+        <activity android:name=".pages.example.FormMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <activity android:name=".pages.example.CountryListActivity"></activity>
         <activity android:name=".pages.attachment.element.signature.SignatureActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
         <activity android:name=".pages.labor_plan.SelectLaborActivity" />
@@ -84,11 +89,11 @@
         <activity android:name=".pages.ScannerActivity" />
         <activity android:name=".pages.long_description.LongDescActivity" />
         <activity android:name=".pages.example.FormActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".pages.login.LoginActivity"

@@ -20,6 +20,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.skydoves.whatif.whatIfNotNull
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.helper.builder.LocomotifAttribute
@@ -38,26 +42,48 @@ class FormActivity : AppCompatActivity() {
         setContentView(R.layout.activity_form)
 
         val calendar: Calendar = Calendar.getInstance()
-        calendar.set(1991 , 0 , 24)
+        calendar.set(1991, 0, 24)
 
         val person = Person()
-        person.name = "REJA"
-        person.age = 32
-        person.birthDate = calendar.time
-        person.address = "Puri Park View Tower E"
-        person.nik = "1001"
-        person.email = "rejaluo24@gmail.com"
-        person.gender = "Male"
+        person.whatIfNotNull { person ->
+            locomotifBuilder = LocomotifBuilder(person, this)
+            locomotifBuilder?.setupFields(
+                arrayOf(
+                    "birthDate",
+                    "name",
+                    "address",
+                    "nik",
+                    "email",
+                    "gender",
+                    "phone",
+                    "country",
+                    "city",
+                    "zipcode",
+                    "married"
+                )
+            )
+            locomotifBuilder?.setupFieldsCaption(
+                arrayOf(
+                    "Tanggal Lahir",
+                    "Nama Lengkap",
+                    "Alamat Rumah",
+                    "NIK",
+                    "Email",
+                    "Jenis Kelamin",
+                    "Phone",
+                    "Negara",
+                    "Kota",
+                    "Kode POS",
+                    "Menikah"
+                )
+            )
+            val rootView: LinearLayout = findViewById(R.id.root_view)
+            locomotifBuilder?.forFieldItems("gender", getGenderItems())
+            locomotifBuilder?.forFieldItems("city", getCities())
+            rootView.addView(locomotifBuilder?.build())
 
-        locomotifBuilder = LocomotifBuilder(person, this)
-        locomotifBuilder?.setupFields(arrayOf("birthDate","name", "address", "nik","email", "gender", "phone", "country", "city" , "zipcode", "married"))
-        locomotifBuilder?.setupFieldsCaption(arrayOf("Tanggal Lahir","Nama Lengkap", "Alamat", "NIK", "Email", "Jenis Kelamin", "Phone", "Negara", "Kota", "Kode POS", "Menikah"))
-        val rootView: LinearLayout = findViewById(R.id.root_view)
-        locomotifBuilder?.forFieldItems("gender", getGenderItems())
-        rootView.addView(locomotifBuilder?.build())
-
-        locomotifBuilder?.setFieldReadOnlyByTag("name")
-        getWidgetListener()
+            getWidgetListener()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -74,8 +100,21 @@ class FormActivity : AppCompatActivity() {
         val mutableList = mutableListOf<LocomotifAttribute>()
         val male = LocomotifAttribute("Male", "Male")
         val female = LocomotifAttribute("Female", "Female")
+        val malefemale = LocomotifAttribute("MaleFemale", "MaleFemale")
         mutableList.add(male)
         mutableList.add(female)
+        mutableList.add(malefemale)
+        return mutableList.toList()
+    }
+
+    private fun getCities(): List<LocomotifAttribute> {
+        val mutableList = mutableListOf<LocomotifAttribute>()
+        val newYork = LocomotifAttribute("New York", "New York")
+        val jakarta = LocomotifAttribute("Jakarta", "Jakarta")
+        val macao = LocomotifAttribute("Macao", "Macao")
+        mutableList.add(newYork)
+        mutableList.add(jakarta)
+        mutableList.add(macao)
         return mutableList.toList()
     }
 
@@ -91,8 +130,8 @@ class FormActivity : AppCompatActivity() {
         val phone = locomotifBuilder?.getWidgetByTag("phone") as EditText
         address.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                phone.setText("Inject "  + s.toString())
-                country.setText("Inject "  + s.toString())
+                phone.setText("")
+                locomotifBuilder?.setFieldReadOnlyByTag("name")
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

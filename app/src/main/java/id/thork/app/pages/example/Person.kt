@@ -15,25 +15,27 @@ package id.thork.app.pages.example
 import id.thork.app.helper.builder.LocoCheckBox
 import id.thork.app.helper.builder.LocoLov
 import id.thork.app.helper.builder.LocoRadioButton
+import id.thork.app.helper.builder.LocoSpinner
 import java.util.*
 
 class Person {
     var id: Long = 0
-    var name: String? = null
-    var address: String? = null
-    var nik: String? = null
-    var email: String? = null
-    var phone: String? = null
+    var name: String? = ""
+    var address: String? = ""
+    var nik: String? = ""
+    var email: String? = ""
+    var phone: String? = ""
     var birthDate: Date? = null
     var age: Int? = null
     @LocoLov
     var country: String? = ""
-    var city: String? = null
-    var state: String? = null
-    var zipcode: String? = null
+    @LocoSpinner
+    var city: String? = ""
+    var state: String? = ""
+    var zipcode: String? = ""
 
     @LocoRadioButton
-    var gender: String? = null
+    var gender: String? = ""
 
     @LocoCheckBox
     var married: Boolean = false

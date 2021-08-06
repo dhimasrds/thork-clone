@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.RadioButton
 import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatSpinner
 
 
 class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
@@ -114,13 +115,15 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
             val isLovField = locomotifValidator.isListOfValues(field) as Boolean
             val isRadioButtonField = locomotifValidator.isRadioButton(field) as Boolean
             val isCheckBoxField = locomotifValidator.isCheckBox(field) as Boolean
+            val isSpinnerField = locomotifValidator.isSpinner(field) as Boolean
 
             val type = fieldName.type
             val typeName = type.name
 
             Log.d(
                 TAG,
-                "buildField() $field type $type isLovField $isLovField isRadioButton $isRadioButtonField"
+                "buildField() $field type $type isLovField $isLovField isRadioButton $isRadioButtonField" +
+                        " isSpinner $isSpinnerField"
             )
             if (isLovField) {
                 view = createLovWidget(context, field, index)
@@ -134,6 +137,14 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                     }
             } else if (isCheckBoxField) {
                 view = createCheckBoxWidget(context, field, index)
+            } else if (isSpinnerField) {
+                view =
+                    fieldItems.get(field)?.let {
+                        createSpinnerWidget(
+                            context, field,
+                            it, index
+                        )
+                    }
             } else if (typeName.equals("java.lang.String")) {
                 view = createTextWidget(context, field, index)
             } else if (typeName.equals("java.lang.Integer")) {
@@ -231,10 +242,50 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return fieldWrapper
     }
 
+
+    /**
+     * Spinner Widget
+     */
+    private fun createSpinnerWidget(
+        context: Context,
+        fieldName: String,
+        items: List<LocomotifAttribute>,
+        index: Int
+    ): LinearLayout {
+        val widgetValue = item?.getPrivateProperty(fieldName)
+        widgetValue.whatIfNotNull {
+            fieldValueMap.put(fieldName, it)
+        }
+
+        val title = createFieldLabel(fieldName, index)
+
+        val separator = View(context)
+        separator.setBackgroundColor(Color.LTGRAY)
+        separator.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            getRealDp(1)
+        )
+        setMargins(separator, 0, 0, 0, getRealDp(0))
+
+        val spinnerWidget =
+            locomotifWidget.createSpinnerWidget(fieldName, widgetValue.toString(), items)
+        setupSpinnerListener(spinnerWidget, fieldName)
+
+        val fieldWrapper = createFieldWrapper()
+        fieldWrapper.addView(title)
+        fieldWrapper.addView(separator)
+        fieldWrapper.addView(spinnerWidget)
+        return fieldWrapper
+    }
+
     /**
      * CheckBox Widget
      */
-    private fun createCheckBoxWidget(context: Context, fieldName: String, index: Int): LinearLayout {
+    private fun createCheckBoxWidget(
+        context: Context,
+        fieldName: String,
+        index: Int
+    ): LinearLayout {
         val widgetValue = item?.getPrivateProperty(fieldName)
         widgetValue.whatIfNotNull {
             fieldValueMap.put(fieldName, it)
@@ -360,7 +411,10 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
                 val typeName = getFieldTypeByFieldName(fieldName)
                 if (typeName.equals("java.util.Date")) {
-                    item?.setAndReturnPrivateProperty(fieldName, LocomotifHelper().getAppDateFormat(s.toString()))
+                    item?.setAndReturnPrivateProperty(
+                        fieldName,
+                        LocomotifHelper().getAppDateFormat(s.toString())
+                    )
                 } else {
                     item?.setAndReturnPrivateProperty(fieldName, s.toString())
                 }
@@ -383,6 +437,24 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         checkBox.setOnCheckedChangeListener { compoundButton, checked ->
             fieldValueMap.put(fieldName, checked)
             item?.setAndReturnPrivateProperty(fieldName, checked)
+        }
+    }
+
+    private fun setupSpinnerListener(spinner: AppCompatSpinner, fieldName: String) {
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                val selectedItem = parent.getItemAtPosition(position).toString()
+                fieldValueMap.put(fieldName, selectedItem)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                fieldValueMap.put(fieldName, "")
+            }
         }
     }
 

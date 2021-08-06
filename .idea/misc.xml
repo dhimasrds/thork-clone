@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_item.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/drawable-v24/ic_line.xml" value="0.14583333333333334" />
         <entry key="app/src/main/res/drawable/bg_edit_text.xml" value="0.15104166666666666" />
         <entry key="app/src/main/res/drawable/ic_line.xml" value="0.14583333333333334" />
@@ -13,6 +14,7 @@
         <entry key="app/src/main/res/layout/activity_create_task.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.2431924882629108" />
         <entry key="app/src/main/res/layout/activity_create_workorder_menu.xml" value="0.1296875" />
+        <entry key="app/src/main/res/layout/activity_form_main.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_material_actual_detail.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_material_plan.xml" value="0.13489583333333333" />
