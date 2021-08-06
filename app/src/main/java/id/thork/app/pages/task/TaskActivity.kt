@@ -69,19 +69,6 @@ class TaskActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
 
     override fun setupObserver() {
         super.setupObserver()
-        intentTag.whatIfNotNull(
-            whatIf = {
-                viewModels.listTaskCreateWo.observe(this, Observer {
-                    taskEntity.clear()
-                    taskEntity.addAll(it)
-                    taskAdapter.notifyDataSetChanged()
-                    val lattestTaskId = taskEntity[it.size - 1].taskId
-                    lattestTaskId.whatIfNotNull { taskid ->
-                        validateTaskId(taskid)
-                    }
-                })
-            },
-            whatIfNot = {
                 viewModels.listTask.observe(this, Observer {
                     taskEntity.clear()
                     taskEntity.addAll(it)
@@ -90,9 +77,7 @@ class TaskActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
                     lattestTaskId.whatIfNotNull { taskid ->
                         validateTaskId(taskid)
                     }
-                }
-                )
-            })
+                })
     }
 
     override fun setupListener() {
@@ -123,11 +108,7 @@ class TaskActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
         intentTag = intent.getStringExtra(BaseParam.TAG_TASK)
         intentWoid.whatIfNotNull {
             intentWonum.whatIfNotNull { wonum ->
-                if (intentTag != null) {
-                    viewModels.initTaskCreateWo(wonum)
-                } else {
-                    viewModels.initTask(it)
-                }
+                viewModels.initListTask(wonum, it, intentTag)
             }
         }
     }

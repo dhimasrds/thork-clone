@@ -31,22 +31,19 @@ class TaskViewModel @ViewModelInject constructor(
     val TAG = TaskViewModel::class.java.name
 
     private val _listTask = MutableLiveData<List<TaskEntity>>()
-    private val _listTaskCreateWo = MutableLiveData<List<TaskEntity>>()
-
     val listTask: LiveData<List<TaskEntity>> get() = _listTask
-    val listTaskCreateWo: LiveData<List<TaskEntity>> get() = _listTaskCreateWo
 
-    fun initTask(workoderid: Int) {
-        val task = taskRepository.findListTaskByWoid(workoderid)
-        task.whatIfNotNullOrEmpty {
-            _listTask.value = it
-        }
-    }
-
-    fun initTaskCreateWo(wonum: String) {
-        val task = taskRepository.findListTaskByWonum(wonum)
-        task.whatIfNotNullOrEmpty {
-            _listTaskCreateWo.value = it
+    fun initListTask(wonum: String, woid: Int, isCreateWO: String?) {
+        if (isCreateWO != null){
+            val task = taskRepository.findListTaskByWonum(wonum)
+            task.whatIfNotNullOrEmpty {
+                _listTask.value = it
+            }
+        } else {
+            val task = taskRepository.findListTaskByWoid(woid)
+            task.whatIfNotNullOrEmpty {
+                _listTask.value = it
+            }
         }
     }
 
