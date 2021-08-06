@@ -23,9 +23,9 @@ import id.thork.app.R
 class LocomotifWidget constructor(val context: Context) {
     private val LOCOMOTIF = "LOCOMOTIF"
     private val WIDGET_HINT_SELECT = "Select "
-    private val WIDGET_HINT_INPUT = "Input "
+    private val WIDGET_HINT_TYPE = "Type "
 
-    private val VALUE_SIZE = 14F
+    private val VALUE_SIZE = 16F
 
     /**
      * Lov Widget
@@ -160,7 +160,7 @@ class LocomotifWidget constructor(val context: Context) {
         val editText = AppCompatEditText(context)
         editText.apply {
             tag = LOCOMOTIF.plus(fieldName)
-            hint = WIDGET_HINT_INPUT.plus(fieldName)
+            hint = WIDGET_HINT_TYPE.plus(fieldName)
             setBackgroundColor(Color.TRANSPARENT)
             setTextColor(Color.BLACK)
             val typeface = ResourcesCompat.getFont(context, R.font.roboto_regular)

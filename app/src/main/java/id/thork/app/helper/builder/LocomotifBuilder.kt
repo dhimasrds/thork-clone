@@ -49,8 +49,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     private val LOCOMOTIF_DATEFORMAT = "dd/MM/yyyy"
     private val locomotifDateFormat = SimpleDateFormat(LOCOMOTIF_DATEFORMAT, Locale.UK)
 
-    private val TITLE_SIZE = 16F
-    private val VALUE_SIZE = 14F
+    private val TITLE_SIZE = 21F
 
     val scrollLayout = ScrollView(context)
     val formLayout = LinearLayout(context)
@@ -491,7 +490,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = TextView(context)
         title.apply {
             setTextColor(Color.BLACK)
-            val typeface = ResourcesCompat.getFont(context, R.font.roboto_regular)
+            val typeface = ResourcesCompat.getFont(context, R.font.roboto)
             setTypeface(typeface, Typeface.BOLD)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, TITLE_SIZE)
             layoutParams = LinearLayout.LayoutParams(
