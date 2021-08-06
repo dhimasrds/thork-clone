@@ -27,7 +27,7 @@ class Person {
     var birthDate: Date? = null
     var age: Int? = null
     @LocoLov
-    var country: String? = null
+    var country: String? = ""
     var city: String? = null
     var state: String? = null
     var zipcode: String? = null

@@ -87,13 +87,6 @@ class FormActivity : AppCompatActivity() {
             startActivityForResult(intent, 123)
         }
 
-//        country.setOnTouchListener(OnTouchListener { v, event ->
-//            Timber.tag("TAG").d("getWidgetListener() country listener")
-//            val intent = Intent(this, CountryListActivity::class.java)
-//            startActivityForResult(intent, 123)
-//            true
-//        })
-
         val address = locomotifBuilder?.getWidgetByTag("address") as EditText
         val phone = locomotifBuilder?.getWidgetByTag("phone") as EditText
         address.addTextChangedListener(object : TextWatcher {

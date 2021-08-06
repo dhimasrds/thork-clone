@@ -20,6 +20,7 @@ import id.thork.app.R
 
 class LocomotifWidget constructor(val context: Context) {
     private val LOCOMOTIF = "LOCOMOTIF"
+    private val WIDGET_HINT_SELECT = "Select "
     private val VALUE_SIZE = 14F
 
     /**
@@ -29,15 +30,15 @@ class LocomotifWidget constructor(val context: Context) {
         val editText = AppCompatEditText(context)
         editText.apply {
             tag = LOCOMOTIF.plus(fieldName)
-
+            hint = WIDGET_HINT_SELECT.plus(fieldName)
             val outValue = TypedValue()
             context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             setBackgroundResource(outValue.resourceId)
             isFocusableInTouchMode = false
             isClickable = true
+            inputType = InputType.TYPE_NULL
             setBackgroundColor(Color.TRANSPARENT)
             setTextColor(Color.BLACK)
-            inputType = InputType.TYPE_NULL
             val typeface = ResourcesCompat.getFont(context, R.font.roboto_regular)
             setTypeface(typeface)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, VALUE_SIZE)
@@ -47,11 +48,11 @@ class LocomotifWidget constructor(val context: Context) {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             )
-            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_search)
+            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_loco_search)
             drawable.whatIfNotNull {
                 DrawableCompat.setTint(
                     DrawableCompat.wrap(it),
-                    ContextCompat.getColor(context, R.color.black)
+                    ContextCompat.getColor(context, R.color.blue)
                 )
             }
             setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
