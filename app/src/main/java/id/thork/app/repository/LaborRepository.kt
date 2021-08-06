@@ -218,7 +218,7 @@ class LaborRepository @Inject constructor(
         return craftMasterDao.getCraftByLaborcode(laborcode)
     }
 
-    fun fetchMasterCraft() : List<CraftMasterEntity>{
+    fun fetchMasterCraft() : Array<out String>? {
         return craftMasterDao.getCraft()
     }
 

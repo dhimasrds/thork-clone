@@ -104,6 +104,9 @@ class LaborPlanViewModel @ViewModelInject constructor(
 
     fun fetchMasterCraft() {
         val list = laborRepository.fetchMasterCraft()
+        for (a in list!!){
+            Timber.d("fetchMasterCraft() craft :%s", a)
+        }
         Timber.d("fetchMasterCraft() :%s", list.size)
     }
 

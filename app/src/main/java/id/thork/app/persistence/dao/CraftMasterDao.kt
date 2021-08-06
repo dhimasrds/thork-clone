@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import id.thork.app.persistence.entity.CraftMasterEntity
+import io.objectbox.query.PropertyQuery
 
 /**
  * Created by M.Reza Sulaiman on 03/08/2021
@@ -11,5 +12,5 @@ interface CraftMasterDao {
     fun remove()
     fun getListCraftByLaborcode(laborcode: String): List<CraftMasterEntity>
     fun getCraftByLaborcode(laborcode: String): CraftMasterEntity?
-    fun getCraft(): List<CraftMasterEntity>
+    fun getCraft(): Array<out String>?
 }
