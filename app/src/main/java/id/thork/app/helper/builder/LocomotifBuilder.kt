@@ -182,15 +182,15 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         )
         setMargins(separator, 0, 0, 0, getRealDp(0))
 
-        val editText = locomotifWidget.createLovWidget(fieldName, widgetValue.toString())
-        setupEditTextListener(editText, fieldName)
+        val lovBox = locomotifWidget.createLovWidget(fieldName, widgetValue.toString())
+        setupLovListener(lovBox, fieldName)
 
         val lovWrapper = LinearLayout(context)
         val outValue = TypedValue()
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
         lovWrapper.setBackgroundResource(outValue.resourceId)
         lovWrapper.isClickable = true
-        lovWrapper.addView(editText)
+        lovWrapper.addView(lovBox)
 
         val fieldWrapper = createFieldWrapper()
         fieldWrapper.addView(title)
@@ -424,6 +424,27 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         })
     }
 
+    private fun setupLovListener(lovBox: LocomotifLovBox, fieldName: String) {
+        lovBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                fieldValueMap.put(fieldName, s)
+
+                val typeName = getFieldTypeByFieldName(fieldName)
+                if (typeName.equals("java.util.Date")) {
+                    item?.setAndReturnPrivateProperty(
+                        fieldName,
+                        LocomotifHelper().getAppDateFormat(s.toString())
+                    )
+                } else {
+                    item?.setAndReturnPrivateProperty(fieldName, s.toString())
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+    }
+
     private fun setupRadioGroupListener(radioGroup: RadioGroup, fieldName: String) {
         radioGroup.setOnCheckedChangeListener({ radioGroup, checkedId ->
             val checkedRadioButton: RadioButton = radioGroup.findViewById(checkedId)
@@ -490,7 +511,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val title = TextView(context)
         title.apply {
             setTextColor(Color.BLACK)
-            val typeface = ResourcesCompat.getFont(context, R.font.roboto)
+            val typeface = ResourcesCompat.getFont(context, R.font.roboto_regular)
             setTypeface(typeface, Typeface.BOLD)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, TITLE_SIZE)
             layoutParams = LinearLayout.LayoutParams(

@@ -29,6 +29,8 @@ class Person {
     var age: Int? = null
     @LocoLov
     var country: String? = ""
+    @LocoLov
+    var secondCountry: String? = ""
     @LocoSpinner
     var city: String? = ""
     var state: String? = ""

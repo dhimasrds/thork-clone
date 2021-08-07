@@ -58,4 +58,10 @@ class LocomotifHelper {
         val date = SimpleDateFormat(APP_DATE_FORMAT).parse(dateString)
         return date
     }
+
+    fun NVL(originText: String?, replacementText: String): String {
+        return if (originText != null && !originText.isEmpty()) {
+            originText
+        } else replacementText
+    }
 }

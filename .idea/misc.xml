@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_loco_search.xml" value="0.14739583333333334" />
         <entry key="app/src/main/res/drawable/ic_rectangle_528.xml" value="0.15104166666666666" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.14739583333333334" />
+        <entry key="app/src/main/res/drawable/locomotif_dialog.xml" value="0.14375" />
         <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_create_task.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.2431924882629108" />
@@ -24,6 +25,8 @@
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/cardview_findmaterial.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/form_list_layout.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/locomotif_dialog.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/locomotif_dialog_item.xml" value="0.22" />
         <entry key="app/src/main/res/layout/material_plan_item.xml" value="0.5" />
       </map>
     </option>

@@ -12,11 +12,13 @@
 
 package id.thork.app.pages.example
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Adapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -26,17 +28,20 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import id.thork.app.R
 import id.thork.app.base.BaseParam
-import id.thork.app.helper.builder.LocomotifAttribute
-import id.thork.app.helper.builder.LocomotifBuilder
-import id.thork.app.pages.followup_wo.FollowUpWoActivity
+import id.thork.app.helper.builder.*
 import timber.log.Timber
 import java.util.*
 
 
-class FormActivity : AppCompatActivity() {
+class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemClickListener {
+    private val TAG = FormActivity::class.java.name
+
     var locomotifBuilder: LocomotifBuilder<Person>? = null
 
-    lateinit var country: EditText
+    lateinit var country: LocomotifLovBox
+    lateinit var secondCountry: EditText
+    lateinit var locomotifLov: LocomotifLov
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
@@ -44,7 +49,16 @@ class FormActivity : AppCompatActivity() {
         val calendar: Calendar = Calendar.getInstance()
         calendar.set(1991, 0, 24)
 
-        val person = Person()
+        val intentData = intent.getStringExtra("PERSON")
+        Timber.tag(TAG).d("onCreate() data: %s", intentData)
+
+        var person: Person? = null
+        if (intentData.equals("NEW")) {
+            person = Person()
+        } else {
+            person = Person()
+            person.name = "REJA LUO"
+        }
         person.whatIfNotNull { person ->
             locomotifBuilder = LocomotifBuilder(person, this)
             locomotifBuilder?.setupFields(
@@ -57,6 +71,7 @@ class FormActivity : AppCompatActivity() {
                     "gender",
                     "phone",
                     "country",
+                    "secondCountry",
                     "city",
                     "zipcode",
                     "married"
@@ -72,6 +87,7 @@ class FormActivity : AppCompatActivity() {
                     "Jenis Kelamin",
                     "Phone",
                     "Negara",
+                    "Negara ke-2",
                     "Kota",
                     "Kode POS",
                     "Menikah"
@@ -119,8 +135,24 @@ class FormActivity : AppCompatActivity() {
     }
 
     private fun getWidgetListener() {
-        country = locomotifBuilder?.getWidgetByTag("country") as EditText
+        country = locomotifBuilder?.getWidgetByTag("country") as LocomotifLovBox
         country.setOnClickListener {
+            Timber.tag("TAG").d("getWidgetListener() country listener")
+            val locomotifAttributes = mutableListOf<LocomotifAttribute>()
+            var locomotifAttribute1 = LocomotifAttribute("Indonesia", "ID")
+            var locomotifAttribute2 = LocomotifAttribute("Malaysia", "MY")
+            var locomotifAttribute3 = LocomotifAttribute("Australia", "AUS")
+            locomotifAttributes.add(locomotifAttribute1)
+            locomotifAttributes.add(locomotifAttribute2)
+            locomotifAttributes.add(locomotifAttribute3)
+
+            val locomotifAdapter = LocomotifAdapter(locomotifAttributes, this)
+            locomotifLov = LocomotifLov(this,                locomotifAdapter)
+            locomotifLov.show()
+        }
+
+        secondCountry = locomotifBuilder?.getWidgetByTag("secondCountry") as EditText
+        secondCountry.setOnClickListener {
             Timber.tag("TAG").d("getWidgetListener() country listener")
             val intent = Intent(this, CountryListActivity::class.java)
             startActivityForResult(intent, 123)
@@ -155,5 +187,17 @@ class FormActivity : AppCompatActivity() {
             println(it?.birthDate)
             println(it?.address)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locomotifLov.destroy()
+    }
+
+    override fun clickOnItem(data: LocomotifAttribute) {
+        Timber.tag("TAG").d("clickOnItem() data: %s", data.name)
+        locomotifLov.destroy()
+        country.setText(data.name)
+        country.value = data.value
     }
 }

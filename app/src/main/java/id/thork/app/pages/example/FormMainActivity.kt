@@ -18,7 +18,7 @@ class FormMainActivity : AppCompatActivity() {
 
     fun addRecord(view: View) {
         val intent = Intent(this, FormActivity::class.java)
-//        intent.putExtra("PERSON", "NEW")
+        intent.putExtra("PERSON", "EDIT")
         startActivity(intent)
     }
 }

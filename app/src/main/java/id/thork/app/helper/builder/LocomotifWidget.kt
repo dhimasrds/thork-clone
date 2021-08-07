@@ -6,10 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.text.InputType
 import android.util.TypedValue
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
+import android.widget.*
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatRadioButton
@@ -30,13 +27,12 @@ class LocomotifWidget constructor(val context: Context) {
     /**
      * Lov Widget
      */
-    fun createLovWidget(fieldName: String, widgetValue: String): AppCompatEditText {
+    fun createOldLovWidget(fieldName: String, widgetValue: String): LinearLayout {
         val editText = AppCompatEditText(context)
         editText.apply {
-            tag = LOCOMOTIF.plus(fieldName)
             hint = WIDGET_HINT_SELECT.plus(fieldName)
             val outValue = TypedValue()
-            context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+            context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true)
             setBackgroundResource(outValue.resourceId)
             isFocusableInTouchMode = false
             isClickable = true
@@ -52,14 +48,51 @@ class LocomotifWidget constructor(val context: Context) {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             )
-            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_loco_search)
-            drawable.whatIfNotNull {
-                DrawableCompat.setTint(
-                    DrawableCompat.wrap(it),
-                    ContextCompat.getColor(context, R.color.blue)
+            setText(widgetValue)
+        }
+
+        val lovBox = LinearLayout(context)
+        lovBox.apply {
+            tag = LOCOMOTIF.plus(fieldName)
+            orientation = LinearLayout.HORIZONTAL
+            addView(editText)
+        }
+        return lovBox
+    }
+
+    /**
+     * Lov only edittext as component
+     */
+    fun createLovWidget(fieldName: String, widgetValue: String): LocomotifLovBox {
+        val editText = LocomotifLovBox(context)
+        editText.apply {
+            tag = LOCOMOTIF.plus(fieldName)
+            hint = WIDGET_HINT_SELECT.plus(fieldName)
+            val outValue = TypedValue()
+            context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true)
+            setBackgroundResource(outValue.resourceId)
+            isFocusableInTouchMode = false
+            isClickable = true
+            inputType = InputType.TYPE_NULL
+            setBackgroundColor(Color.TRANSPARENT)
+            setTextColor(Color.BLACK)
+            val typeface = ResourcesCompat.getFont(context, R.font.roboto_regular)
+            setTypeface(typeface)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, VALUE_SIZE)
+            setLayoutParams(
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-            }
-            setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+            )
+//            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_loco_search)
+//            drawable.whatIfNotNull {
+//                DrawableCompat.setTint(
+//                    DrawableCompat.wrap(it),
+//                    ContextCompat.getColor(context, R.color.blue)
+//                )
+//            }
+            //setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
             setText(widgetValue)
         }
         return editText
