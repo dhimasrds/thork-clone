@@ -18,7 +18,42 @@ class TaskClient @Inject constructor(
         properties: String,
         woid: Int,
         body: TaskResponse
-    ) = taskApi.createTask(xMethodOverride, contentType, cookie, patchType, properties,  woid, LEAN, body)
+    ) = taskApi.createTask(
+        xMethodOverride,
+        contentType,
+        cookie,
+        patchType,
+        properties,
+        woid,
+        LEAN,
+        body
+    )
+
+    suspend fun editTask(
+        xMethodOverride: String?,
+        contentType: String,
+        cookie: String,
+        patchType: String,
+        properties: String,
+        woid: Int,
+        body: TaskResponse
+    ) = taskApi.editTask(
+        xMethodOverride,
+        contentType,
+        cookie,
+        patchType,
+        properties,
+        woid,
+        LEAN,
+        body
+    )
+
+    suspend fun deleteTask(
+        contentType: String,
+        cookie: String,
+        woidTask: Int,
+    ) = taskApi.deleteTask(contentType, cookie, woidTask, LEAN)
+
 
     companion object {
         private const val LEAN = 1

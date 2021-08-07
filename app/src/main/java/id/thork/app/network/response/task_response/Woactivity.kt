@@ -15,6 +15,9 @@ data class Woactivity (
     @Json(name = "taskid")
     var taskid: Int? = null,
 
+    @Json(name = "wonum")
+    var wonum: String? = null,
+
     @Json(name = "description")
     var description: String? = null,
 

@@ -38,6 +38,9 @@
     <string name="general_save">Save</string>
     <string name="general_required_fields">Please fill in a valid value for required fields</string>
 
+    <string name="task_updated">Task Updated</string>
+
+
     <!-- Intro Slider -->
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>

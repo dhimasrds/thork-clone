@@ -142,6 +142,10 @@ class TaskRepository @Inject constructor(
         return taskDao.removeTaskByWonumAndOfflineMode(wonum, offlineMode)
     }
 
+    private fun removeTaskByWoidTask(woidTask: Int): Long {
+        return taskDao.removeTaskByWoidTask(woidTask)
+    }
+
     suspend fun createTaskToMx(
         xMethodOverride: String?,
         contentType: String,
@@ -205,6 +209,7 @@ class TaskRepository @Inject constructor(
                 wonum = wonum,
                 taskId = tasks.taskid,
                 refWonum = tasks.wonum,
+                workorderIdTask = tasks.workorderid,
                 desc = tasks.description,
                 scheduleStart = tasks.schedstart,
                 estDuration = tasks.estdur,
@@ -267,6 +272,7 @@ class TaskRepository @Inject constructor(
                 wonum = wonumber,
                 taskId = tasks.taskid,
                 refWonum = tasks.wonum,
+                workorderIdTask = tasks.workorderid,
                 desc = tasks.description,
                 scheduleStart = tasks.schedstart,
                 estDuration = tasks.estdur,
@@ -302,10 +308,103 @@ class TaskRepository @Inject constructor(
         for (listTask in list) {
             if (taskEntity.woId == woid && taskEntity.taskId == listTask.taskid) {
                 taskEntity.refWonum = listTask.wonum
+                taskEntity.workorderIdTask = listTask.workorderid
                 taskEntity.offlineMode = BaseParam.APP_FALSE
                 taskEntity.syncStatus = BaseParam.APP_TRUE
                 saveTaskCache(taskEntity)
             }
         }
+    }
+
+    suspend fun editTaskToMx(
+        xMethodOverride: String?,
+        contentType: String,
+        cookie: String,
+        patchType: String,
+        properties: String,
+        woid: Int,
+        prepareBody: TaskResponse,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = taskClient.editTask(
+            xMethodOverride, contentType, cookie, patchType, properties, woid,
+            prepareBody
+        )
+
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createTaskToMx() code: %s ", statusCode.code)
+
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "createTaskToMx() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
+    }
+
+    fun editTaskModule(
+        woid: Int, taskId: Int,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?
+    ) {
+        val taskEntity = findTaskByWoIdAndTaskId(woid, taskId)
+        taskEntity.whatIfNotNull {
+            it.desc = desc
+            it.scheduleStart = scheduleStart
+            it.estDuration = estDur
+            it.actualStart = actualStart
+            saveTaskCache(it)
+        }
+    }
+
+    fun prepareTaskBodyForUpdateTask(woid: Int, scheduleStart: String): List<Woactivity> {
+        val taskEntity = findTaskByWoIdAndScheduleDate(woid, scheduleStart)
+        val memberTask = mutableListOf<Woactivity>()
+        taskEntity.forEach {
+            val member = Woactivity()
+            member.taskid = it.taskId
+            member.wonum = it.refWonum
+            member.description = it.desc
+            member.estdur = it.estDuration
+            member.schedstart = it.scheduleStart
+            member.actstart = it.actualStart
+            memberTask.add(member)
+        }
+        Timber.tag(TAG).d("prepareTaskBody() results: %s", memberTask)
+        return memberTask
+    }
+
+    suspend fun deleteTaskInMaximo(
+        contentType: String,
+        cookie: String,
+        woidTask: Int,
+        onSuccess: (Void) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = taskClient.deleteTask(
+            contentType, cookie, woidTask
+        )
+
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createTaskToMx() code: %s ", statusCode.code)
+            removeTaskByWoidTask(woidTask)
+        }
+            .onError {
+                Timber.tag(TAG).i(
+                    "createTaskToMx() code: %s error: %s",
+                    statusCode.code,
+                    message()
+                )
+                onError(message())
+            }
     }
 }

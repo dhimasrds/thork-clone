@@ -31,22 +31,19 @@ class TaskViewModel @ViewModelInject constructor(
     val TAG = TaskViewModel::class.java.name
 
     private val _listTask = MutableLiveData<List<TaskEntity>>()
-    private val _listTaskCreateWo = MutableLiveData<List<TaskEntity>>()
-
     val listTask: LiveData<List<TaskEntity>> get() = _listTask
-    val listTaskCreateWo: LiveData<List<TaskEntity>> get() = _listTaskCreateWo
 
-    fun initTask(workoderid: Int) {
-        val task = taskRepository.findListTaskByWoid(workoderid)
-        task.whatIfNotNullOrEmpty {
-            _listTask.value = it
-        }
-    }
-
-    fun initTaskCreateWo(wonum: String) {
-        val task = taskRepository.findListTaskByWonum(wonum)
-        task.whatIfNotNullOrEmpty {
-            _listTaskCreateWo.value = it
+    fun initListTask(wonum: String, woid: Int, isCreateWO: String?) {
+        if (isCreateWO != null){
+            val task = taskRepository.findListTaskByWonum(wonum)
+            task.whatIfNotNullOrEmpty {
+                _listTask.value = it
+            }
+        } else {
+            val task = taskRepository.findListTaskByWoid(woid)
+            task.whatIfNotNullOrEmpty {
+                _listTask.value = it
+            }
         }
     }
 
@@ -146,5 +143,109 @@ class TaskViewModel @ViewModelInject constructor(
             )
         }
 
+    }
+
+
+    fun editTaskOnlineFromWoDetail(
+        woid: Int?, taskId: Int?, wonum: String?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+    ) {
+        woid.whatIfNotNull {
+            taskId.whatIfNotNull { taskId ->
+                scheduleStart.whatIfNotNull { scheduleStart ->
+                    wonum.whatIfNotNull { wonum ->
+                        taskRepository.editTaskModule(
+                            it,
+                            taskId,
+                            desc,
+                            scheduleStart,
+                            estDur,
+                            actualStart
+                        )
+                        editTaskToMaximo(it, taskId, scheduleStart, wonum)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun editTaskToMaximo(woid: Int, taskId: Int, scheduleStart: String, wonum: String) {
+
+        val taskList = taskRepository.prepareTaskBodyForUpdateTask(woid, scheduleStart)
+        val taskResponse = TaskResponse()
+        taskList.whatIfNotNullOrEmpty {
+            taskResponse.woactivity = it
+        }
+        val moshi = Moshi.Builder().build()
+        val memberJsonAdapter: JsonAdapter<TaskResponse> = moshi.adapter(TaskResponse::class.java)
+        Timber.tag(TAG).d("updateToMaximo() results: %s", memberJsonAdapter.toJson(taskResponse))
+
+        val xmethodeOverride: String = BaseParam.APP_PATCH
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
+        val properties = BaseParam.APP_ALL_PROPERTIES
+        viewModelScope.launch(Dispatchers.IO) {
+            taskRepository.editTaskToMx(
+                xmethodeOverride,
+                contentType,
+                cookie,
+                patchType,
+                properties,
+                woid,
+                taskResponse,
+                onSuccess = { woMember ->
+                    woMember.woactivity.whatIfNotNullOrEmpty {
+                        Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                        taskRepository.handlingTaskSuccesFromWoDetail(it, woid, wonum)
+                    }
+                },
+                onError = {
+                    taskRepository.handlingTaskFailedFromWoDetail(woid, taskId)
+                    Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
+                }
+            )
+        }
+    }
+
+    fun editTaskOnlineFromCreateWo(
+        woid: Int?, taskId: Int?, wonum: String?,
+        desc: String?, scheduleStart: String?, estDur: Double?, actualStart: String?,
+    ) {
+        woid.whatIfNotNull {
+            taskId.whatIfNotNull { taskId ->
+                scheduleStart.whatIfNotNull { scheduleStart ->
+                    wonum.whatIfNotNull { wonum ->
+                        taskRepository.editTaskModule(
+                            it,
+                            taskId,
+                            desc,
+                            scheduleStart,
+                            estDur,
+                            actualStart
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteTask(woidTask: Int){
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val contentType: String = ("application/json")
+        viewModelScope.launch(Dispatchers.IO) {
+            taskRepository.deleteTaskInMaximo(
+                contentType,
+                cookie,
+                woidTask,
+                onSuccess = {
+                        Timber.tag(TAG).i("deleteTask() onSuccess() onSuccess: %s", it)
+
+                },
+                onError = {
+                    Timber.tag(TAG).i("deleteTask() onError() onError: %s", it)
+                }
+            )
+        }
     }
 }

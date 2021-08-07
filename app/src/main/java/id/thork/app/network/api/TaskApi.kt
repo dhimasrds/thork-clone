@@ -24,4 +24,23 @@ interface TaskApi {
         @Body body: TaskResponse
     ): ApiResponse<Member>
 
+    @PUT("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
+    suspend fun editTask(
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodOverride: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchType: String?,
+        @Header(BaseParam.APP_PROPERTIES) properties: String?,
+        @Path("workorderid") workorderid: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: TaskResponse
+    ): ApiResponse<Member>
+
+    @DELETE("/maximo/oslc/os/thisfsmwodetail/{workorderidTask}")
+    suspend fun deleteTask(
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Path("workorderidTask") workorderidTask: Int,
+        @Query(value = "lean") lean: Int,
+    ): ApiResponse<Void>
 }

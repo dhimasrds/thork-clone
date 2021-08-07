@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.text.InputFilter
-import android.text.InputType
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -94,50 +91,69 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         intentSchduleTime = intent.getStringExtra(BaseParam.SHEDULE_START_TIME)
         intentActual = intent.getStringExtra(BaseParam.ACTUAL_START)
         intentEstDur = intent.getDoubleExtra(BaseParam.ESTDUR, 0.0)
-        binding.tvIdTask.text = intentTaskId.toString()
+        intentDetailTag = intent.getStringExtra(BaseParam.DETAIL_TASK)
         intentStatus.whatIfNotNullOrEmpty {
             setupStatus(it)
         }
-        intentDetailTag = intent.getStringExtra(BaseParam.DETAIL_TASK)
-//        intentSchdule.whatIfNotNullOrEmpty {
-//            binding.tvScheduleStart.setText(it)
-//        }
-//        intentSchduleTime.whatIfNotNull {
-//            binding.tvTimeScheduleStart.setText(it)
-//        }
-        initDateInView()
-        intentDetailTag.whatIfNotNull {
-            setupDetailTask(intentDesc, intentSchdule, intentActual, intentEstDur)
+        intentSchduleTime.whatIfNotNull {
+            binding.tvTimeScheduleStart.setText(it)
         }
+        intentDetailTag.whatIfNotNull {
+            setupDetailTask(intentDesc, intentSchdule, intentActual, intentEstDur, intentTag)
+        }
+        binding.tvIdTask.text = intentTaskId.toString()
     }
 
     private fun setupDetailTask(
         intentDesc: String?,
         intentSchdule: String?,
         intentActual: String?,
-        intentEstDur: Double?
+        intentEstDur: Double?,
+        intenttag: String?
     ) {
         Timber.tag(TAG).d("setupDetailTask() schedule: %s", intentSchdule)
         binding.apply {
             intentDesc.whatIfNotNull { description ->
                 intentSchdule.whatIfNotNull { schedule ->
                     intentActual.whatIfNotNull { actual ->
-                        intentEstDur.whatIfNotNull { estDur ->
+                        intentEstDur.whatIfNotNull { estimateDuration ->
+                            val isCreateWo: Boolean = intenttag != null
+                            setupDateInView(isCreateWo, schedule, actual)
+                            scheduleStartObjectBox = schedule
+                            actualStartObjectBox = actual
+                            estDur = estimateDuration
                             tvDesc.setText(description)
-                            tvScheduleStart.setText(schedule)
-                            tvActualStart.setText(actual)
-                            tvEstDur.text = estDur.toString()
-
-                            btnSaveTask.visibility = View.GONE
-                            tvDesc.isEnabled = false
-                            tvScheduleStart.isEnabled = false
-                            tvActualStart.isEnabled = false
-                            tvEstDur.isEnabled = false
-                            tvDesc.inputType = InputType.TYPE_NULL
+                            tvEstDur.text = estimateDuration.toString()
+                            tvTimeScheduleStart.setText(DateUtils.getAppTimeFormat(cal.time))
+                            tvTimeActualStart.setText(DateUtils.getAppTimeFormat(cal.time))
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String){
+        if (isCreateWO) {
+            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+            val formatterOut = SimpleDateFormat("MM/dd/yyyy")
+            val convertedSchedule = formatter.parse(schedule)
+            val convertedActual = formatter.parse(actual)
+            val dateSchedule = formatterOut.format(convertedSchedule)
+            val dateActual = formatterOut.format(convertedActual)
+
+            binding.tvScheduleStart.setText(dateSchedule)
+            binding.tvActualStart.setText(dateActual)
+        } else {
+            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            val formatterOut = SimpleDateFormat("MM/dd/yyyy")
+            val convertedSchedule = formatter.parse(schedule)
+            val convertedActual = formatter.parse(actual)
+            val dateSchedule = formatterOut.format(convertedSchedule)
+            val dateActual = formatterOut.format(convertedActual)
+
+            binding.tvScheduleStart.setText(dateSchedule)
+            binding.tvActualStart.setText(dateActual)
         }
     }
 
@@ -185,7 +201,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                         )
                     )
                     tvStatusTask.setBackgroundResource(R.drawable.bg_status)
-
                 }
             }
         }
@@ -196,14 +211,23 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         binding.tvEstDur.setOnClickListener(setEstimdur)
 
         binding.btnSaveTask.setOnClickListener {
-            if (formValidation() && dateValidation()) {
-                setDialogSaveTask()
-            } else {
-                Toast.makeText(
-                    this,
-                    R.string.general_required_fields,
-                    Toast.LENGTH_LONG
-                ).show()
+            when {
+                intentTag != null && intentDetailTag != null && formValidation() && dateValidation() -> {
+                    setDialogUpdateFromCreateWO()
+                }
+                intentDetailTag != null && formValidation() && dateValidation() -> {
+                    setDialogUpdateFromCreateWO()
+                }
+                formValidation() && dateValidation() -> {
+                    setDialogSaveTask()
+                }
+                else -> {
+                    Toast.makeText(
+                        this,
+                        R.string.general_required_fields,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
@@ -212,13 +236,13 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         binding.apply {
             if (tvDesc.text.toString().isBlank()) {
                 tvDesc.error = getString(R.string.task_desc_required)
-                return false;
+                return false
             } else {
                 desc = tvDesc.text.toString()
             }
             if (tvEstDur.text.toString().isBlank()) {
                 tvEstDur.error = getString(R.string.task_estdur_required)
-                return false;
+                return false
             }
         }
         return true
@@ -234,7 +258,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             if (etScheduleStart.isNotBlank() || etActualStart.isNotBlank()) {
                 return longEndDate >= longStartDate
             } else {
-                return  true
+                return false
             }
         }
     }
@@ -269,6 +293,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 cal2.set(Calendar.MINUTE, minute)
                 updateTimeInView(false)
             }
+
         binding.tvScheduleStart.setOnClickListener {
             DatePickerDialog(
                 this@CreateTaskActivity,
@@ -296,6 +321,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 cal2.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
+
         binding.tvTimeActualStart.setOnClickListener {
             val timePickerDialog = TimePickerDialog(
                 this@CreateTaskActivity, R.style.ThorTimePickerDialog,
@@ -305,25 +331,21 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         }
     }
 
-    private fun initDateInView() {
-        scheduleStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal.time)
-        binding.tvScheduleStart.setText(DateUtils.getAppDateFormat(cal.time))
-        binding.tvTimeScheduleStart.setText(DateUtils.getAppTimeFormat(cal.time))
-    }
-
     private fun updateDateInView(isSchedule: Boolean) {
+        val dateFormatObjectBox = "yyyy-MM-dd'T'HH:mm:ss" // mention the format you need
+        val dateFormat = "MM/dd/yyyy" // mention the format you need
+        val sdfObjectBox = SimpleDateFormat(dateFormatObjectBox)
+        val sdf = SimpleDateFormat(dateFormat)
         when (isSchedule) {
             true -> {
-                scheduleStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal.time)
-                binding.tvScheduleStart.setText(DateUtils.getAppDateFormat(cal.time))
+                scheduleStartObjectBox = sdfObjectBox.format(cal.time)
+                binding.tvScheduleStart.setText(sdf.format(cal.time))
             }
             false -> {
-                actualStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal2.time)
-                binding.tvActualStart.setText(DateUtils.getAppDateFormat(cal2.time))
+                actualStartObjectBox = sdfObjectBox.format(cal2.time)
+                binding.tvActualStart.setText(sdf.format(cal2.time))
             }
         }
-        Timber.tag(TAG).d("updateDateInView() isSchedule: %s " +
-                "scheduleStartObjectBox: %s actualStartObjectBox: %s", isSchedule, scheduleStartObjectBox, actualStartObjectBox)
     }
 
     fun updateTimeInView(isSchedule: Boolean) {
@@ -337,8 +359,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 binding.tvTimeActualStart.setText(DateUtils.getAppTimeFormat(cal2.time))
             }
         }
-        Timber.tag(TAG).d("updateTimeInView() isSchedule: %s " +
-                "scheduleStartObjectBox: %s actualStartObjectBox: %s", isSchedule, scheduleStartObjectBox, actualStartObjectBox)
     }
 
     @SuppressLint("SetTextI18n")
@@ -430,17 +450,20 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         customDialogUtils.show()
     }
 
-    private fun setDialogErrorDateTask() {
-        customDialogUtils
-            .setMiddleButtonText(R.string.dialog_yes)
-            .setTittle(R.string.error_date_task_title)
-            .setDescription(R.string.error_date_task_qustion)
+    private fun setDialogUpdateFromCreateWO() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.task_title)
+            .setDescription(R.string.task_qustion)
             .setListener(this)
         customDialogUtils.show()
     }
 
     override fun onRightButton() {
         when {
+            intentDetailTag != null -> {
+                validateEditTask()
+            }
             intentTag != null && !cancelTaskValidation -> {
                 saveTaskFromCreateWo()
             }
@@ -452,6 +475,35 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             }
         }
         gotoTaskActivity()
+    }
+
+    private fun validateEditTask() {
+        if (intentTag != null) {
+            viewModels.editTaskOnlineFromCreateWo(
+                intentWoid,
+                intentTaskId,
+                intentWonum,
+                desc,
+                scheduleStartObjectBox,
+                estDur,
+                actualStartObjectBox
+            )
+        } else {
+            viewModels.editTaskOnlineFromWoDetail(
+                intentWoid,
+                intentTaskId,
+                intentWonum,
+                desc,
+                scheduleStartObjectBox,
+                estDur,
+                actualStartObjectBox
+            )
+        }
+        Toast.makeText(
+            this,
+            R.string.task_updated,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun updateTaskOfflineFromWoDetail() {

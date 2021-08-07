@@ -18,7 +18,7 @@ object DateUtils {
     const val APP_DATE_FORMAT = "dd/MM/yyyy"
     const val APP_TIME_FORMAT = "HH:mm"
     const val APP_DATETIME_FORMAT = "dd/MM/yyyy HH:mm"
-    const val APP_DATETIME_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ssZ"
+    const val APP_DATETIME_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ss"
 
     private val DATE_FORMAT = "dd-MMM-yyyy HH:mm"
     const val DATE_FORMAT_MAXIMO = "yyyy-MM-dd'T'HH:mm:ss"
@@ -215,10 +215,10 @@ object DateUtils {
     fun getAppDateTimeOBFormat(date: Date): String {
         try {
             val format = SimpleDateFormat(APP_DATETIME_FORMAT_OBJECTBOX)
-            var dateFormated = format.format(date)
-            dateFormated = dateFormated.substring(0, dateFormated.length-2)
-                .plus(":").plus(dateFormated.substring(dateFormated.length-2))
-            return dateFormated
+            return format.format(date)
+//            dateFormated = dateFormated.substring(0, dateFormated.length-2)
+//                .plus(":").plus(dateFormated.substring(dateFormated.length-2))
+//            return dateFormated
         } catch (e: Exception) {
             e.printStackTrace()
         }
