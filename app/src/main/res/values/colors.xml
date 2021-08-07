@@ -81,6 +81,8 @@
     <color name="priority_high">#FF2323</color>
     <color name="priority_medium">#FF7511</color>
     <color name="priority_normal">#436CFF</color>
+
+    <color name="locomotif_lov_color">#33A8A8A8</color>
 </resources>
 
 

@@ -2,16 +2,10 @@ package id.thork.app.helper.builder
 
 import android.R
 import android.content.Context
-
-import android.content.res.TypedArray
-
-import android.util.TypedValue
 import android.content.res.ColorStateList
+import android.content.res.TypedArray
 import android.graphics.Color
-
-import android.os.Build
-import androidx.core.content.ContextCompat
-import id.thork.app.utils.DateUtils
+import android.util.TypedValue
 import java.text.SimpleDateFormat
 import java.util.*
 

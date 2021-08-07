@@ -1,12 +1,12 @@
 package id.thork.app.helper.builder
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.os.Build
 import android.text.InputType
 import android.util.TypedValue
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatRadioButton

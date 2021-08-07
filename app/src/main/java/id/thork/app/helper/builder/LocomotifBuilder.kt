@@ -27,20 +27,17 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.res.ResourcesCompat
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
-import okhttp3.internal.toImmutableMap
 import org.apache.commons.lang3.StringUtils
-import org.json.JSONObject
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.*
-import android.widget.RadioButton
-import androidx.appcompat.widget.AppCompatCheckBox
-import androidx.appcompat.widget.AppCompatSpinner
 
 
 class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
