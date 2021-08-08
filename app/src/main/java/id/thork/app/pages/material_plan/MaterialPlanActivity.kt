@@ -36,7 +36,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
-class MaterialPlanActivity : BaseActivity() {
+class MaterialPlanActivity : BaseActivity(), MaterialPlanAdapter.MaterialPlanAdapterItemClickListener {
     val TAG = MaterialPlanActivity::class.java.name
 
     val viewModel: MaterialPlanViewModel by viewModels()
@@ -46,6 +46,7 @@ class MaterialPlanActivity : BaseActivity() {
     private lateinit var wpmaterialList: MutableList<WpmaterialEntity>
 
     private var intentWoId = 0
+    private var intentState: String? = BaseParam.FORM_STATE_READ_ONLY
 
     @Inject
     @Named("svgRequestOption")
@@ -95,6 +96,7 @@ class MaterialPlanActivity : BaseActivity() {
         binding.btnAdd.setOnClickListener {
             val intent = Intent(this, MaterialPlanFormActivity::class.java)
             intent.putExtra(BaseParam.WORKORDERID, intentWoId)
+            intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_NEW)
             startActivity(intent)
             finish()
         }
@@ -102,11 +104,13 @@ class MaterialPlanActivity : BaseActivity() {
 
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
-        val intentAct = intent.getStringExtra(BaseParam.APP_DETAIL)
+        intentState = intent.getStringExtra(BaseParam.FORM_STATE)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
         viewModel.initListMaterialPlan(intentWoId.toString())
-        intentAct.whatIfNotNull {
-            binding.btnLayout.visibility = View.GONE
+        intentState.whatIfNotNull {
+            if (it.equals(BaseParam.FORM_STATE_READ_ONLY)) {
+                binding.btnLayout.visibility = View.GONE
+            }
         }
     }
 
@@ -115,6 +119,7 @@ class MaterialPlanActivity : BaseActivity() {
         viewModel.listMaterial.observe(this, Observer {
             wpmaterialList.clear()
             wpmaterialList.addAll(it)
+            Timber.tag(TAG).d("setupObserver() listMaterial: %s", wpmaterialList)
             materialPlanAdapter.notifyDataSetChanged()
         })
     }
@@ -134,5 +139,16 @@ class MaterialPlanActivity : BaseActivity() {
                 }
             })
         }
+    }
+
+    override fun onClickItem(wpmaterialEntity: WpmaterialEntity) {
+        Timber.tag(TAG).d("onClickItem() woId: %s id: %s", wpmaterialEntity.workorderId,
+        wpmaterialEntity.id)
+        val intent = Intent(this, MaterialPlanFormActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, wpmaterialEntity.workorderId)
+        intent.putExtra(BaseParam.ID, wpmaterialEntity.id)
+        intent.putExtra(BaseParam.FORM_STATE, intentState)
+        startActivity(intent)
+        finish()
     }
 }

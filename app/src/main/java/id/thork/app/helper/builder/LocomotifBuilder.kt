@@ -29,33 +29,48 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.children
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
+import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.helper.builder.widget.LocomotifLovBox
 import org.apache.commons.lang3.StringUtils
+import timber.log.Timber
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.*
 
+import id.thork.app.helper.builder.widget.LocomotifRadio
+import id.thork.app.helper.builder.widget.OnValueChangeListener
+import android.widget.RadioButton
+import id.thork.app.base.BaseParam
+
 
 class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     private val TAG = LocomotifBuilder::class.java.name
+    private val LOCOMOTIF_GROUP = "GP"
     private val LOCOMOTIF = "LOCOMOTIF"
     private val LOCOMOTIF_DATEFORMAT = "dd/MM/yyyy"
     private val locomotifDateFormat = SimpleDateFormat(LOCOMOTIF_DATEFORMAT, Locale.UK)
 
-    private val TITLE_SIZE = 21F
+    private val TITLE_SIZE = 18F
 
     val scrollLayout = ScrollView(context)
     val formLayout = LinearLayout(context)
+    var extensionView = View(context)
+
     var fieldValueMap = hashMapOf<String, Any>()
+    var fieldTypeMap = hashMapOf<String, Any>()
     var fieldItems = hashMapOf<String, List<LocomotifAttribute>>()
     var fields: Array<String> = arrayOf()
     var fieldsCaption: Array<String> = arrayOf()
 
     val locomotifWidget = LocomotifWidget(context)
+    lateinit var listener: OnValueChangeListener
 
     fun forFieldItems(fieldName: String, items: List<LocomotifAttribute>) {
         fieldItems.put(fieldName, items)
@@ -67,6 +82,10 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
     fun setupFieldsCaption(fieldsCaption: Array<String>) {
         this.fieldsCaption = fieldsCaption
+    }
+
+    fun setupExtensionView(extensionView: View) {
+        this.extensionView = extensionView
     }
 
     fun <T : Any> T.getPrivateProperty(variableName: String): Any? {
@@ -106,9 +125,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         val locomotifValidator = LocomotifValidator(item)
         var view: View? = null
         fields.forEachIndexed { index, field ->
+            fieldValueMap.put(field, "")
             val fieldName = item!!::class.java.getDeclaredField(field)
 
             val isLovField = locomotifValidator.isListOfValues(field) as Boolean
+            val isLovWithExtField = locomotifValidator.isListOfValuesExtension(field) as Boolean
             val isRadioButtonField = locomotifValidator.isRadioButton(field) as Boolean
             val isCheckBoxField = locomotifValidator.isCheckBox(field) as Boolean
             val isSpinnerField = locomotifValidator.isSpinner(field) as Boolean
@@ -118,11 +139,13 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
             Log.d(
                 TAG,
-                "buildField() $field type $type isLovField $isLovField isRadioButton $isRadioButtonField" +
+                "buildField() $field type $type isLovField $isLovField isLovExtField $isLovWithExtField isRadioButton $isRadioButtonField" +
                         " isSpinner $isSpinnerField"
             )
             if (isLovField) {
                 view = createLovWidget(context, field, index)
+            } else if (isLovWithExtField) {
+                view = createLovWidgetWithExtension(context, field, index, extensionView)
             } else if (isRadioButtonField) {
                 view =
                     fieldItems.get(field)?.let {
@@ -165,6 +188,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
      */
     private fun createLovWidget(context: Context, fieldName: String, index: Int): LinearLayout {
         val widgetValue = item?.getPrivateProperty(fieldName)
+        Timber.tag(TAG).d("createLovWidget() fieldName: %s widgetValue: %s", fieldName, widgetValue)
         widgetValue.whatIfNotNull {
             fieldValueMap.put(fieldName, it)
         }
@@ -180,6 +204,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         setMargins(separator, 0, 0, 0, getRealDp(0))
 
         val lovBox = locomotifWidget.createLovWidget(fieldName, widgetValue.toString())
+        fieldTypeMap.put(fieldName, "lovBox")
         setupLovListener(lovBox, fieldName)
 
         val lovWrapper = LinearLayout(context)
@@ -187,9 +212,54 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
         lovWrapper.setBackgroundResource(outValue.resourceId)
         lovWrapper.isClickable = true
+        lovWrapper.orientation = LinearLayout.HORIZONTAL
         lovWrapper.addView(lovBox)
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
+        fieldWrapper.addView(title)
+        fieldWrapper.addView(separator)
+        fieldWrapper.addView(lovWrapper)
+        return fieldWrapper
+    }
+
+    /**
+     * Lov Builder
+     */
+    private fun createLovWidgetWithExtension(
+        context: Context, fieldName: String, index: Int,
+        extension: View
+    ): LinearLayout {
+        val widgetValue = item?.getPrivateProperty(fieldName)
+        Timber.tag(TAG).d("createLovWidget() fieldName: %s widgetValue: %s", fieldName, widgetValue)
+        widgetValue.whatIfNotNull {
+            fieldValueMap.put(fieldName, it)
+        }
+
+        val title = createFieldLabel(fieldName, index)
+        val separator = View(context)
+        separator.setBackgroundColor(Color.LTGRAY)
+        separator.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            getRealDp(1)
+        )
+        setMargins(separator, 0, 0, 0, getRealDp(0))
+
+        val lovBox = locomotifWidget.createLovWidget(fieldName, widgetValue.toString())
+        fieldTypeMap.put(fieldName, "lovBox")
+        setupLovListener(lovBox, fieldName)
+
+        val lovWrapper = createExtFieldWrapper()
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+        lovWrapper.setBackgroundResource(outValue.resourceId)
+        lovWrapper.isClickable = true
+        lovBox.layoutParams.width = (LocomotifHelper().getScreenWidth(context) * 0.60).toInt()
+        lovWrapper.addView(lovBox)
+        lovWrapper.addView(extension)
+
+        val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(lovWrapper)
@@ -206,6 +276,10 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         index: Int
     ): LinearLayout {
         val widgetValue = item?.getPrivateProperty(fieldName)
+        Timber.tag(TAG).d(
+            "createRadioButtonWidget() fieldName: %s widgetValue: %s",
+            fieldName, widgetValue
+        )
         widgetValue.whatIfNotNull {
             fieldValueMap.put(fieldName, it)
         }
@@ -222,7 +296,17 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
         val radioGroup =
             locomotifWidget.createRadioButtonWidget(fieldName, widgetValue.toString(), items)
+        fieldTypeMap.put(fieldName, "radioGroup")
+        locomotifWidget.createRadioDefaultValue(radioGroup, widgetValue.toString(), items)
         setupRadioGroupListener(radioGroup, fieldName)
+
+//        for (view in radioGroup.children) {
+//            if (view is RadioButton) {
+//                if (view.text.equals(widgetValue.toString())) {
+//                    radioGroup.check(view.id)
+//                }
+//            }
+//        }
 
         val lovWrapper = LinearLayout(context)
         val outValue = TypedValue()
@@ -232,6 +316,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         lovWrapper.addView(radioGroup)
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(lovWrapper)
@@ -265,9 +350,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
         val spinnerWidget =
             locomotifWidget.createSpinnerWidget(fieldName, widgetValue.toString(), items)
+        fieldTypeMap.put(fieldName, "spinner")
         setupSpinnerListener(spinnerWidget, fieldName)
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(spinnerWidget)
@@ -298,9 +385,12 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         setMargins(separator, 0, 0, 0, getRealDp(0))
 
         val editText = locomotifWidget.createCheckBoxWidget(fieldName, widgetValue.toString())
+        fieldTypeMap.put(fieldName, "checkBox")
         setupCheckBoxListener(editText, fieldName)
+        editText.isChecked = widgetValue.toString().toBoolean()
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(editText)
@@ -327,9 +417,12 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         setMargins(separator, 0, 0, 0, getRealDp(0))
 
         val editText = locomotifWidget.createTextWidget(fieldName, widgetValue.toString())
+        fieldTypeMap.put(fieldName, "editText")
         setupEditTextListener(editText, fieldName)
+        editText.setText(LocomotifHelper().convertNullToEmpty(widgetValue.toString()))
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(editText)
@@ -353,9 +446,12 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         setMargins(separator, 0, 0, 0, getRealDp(0))
 
         val editText = locomotifWidget.createNumberWidget(fieldName, widgetValue.toString())
+        fieldTypeMap.put(fieldName, "editText")
         setupEditTextListener(editText, fieldName)
+        editText.setText(LocomotifHelper().convertNullToZero(widgetValue.toString()))
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(editText)
@@ -390,10 +486,13 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         setMargins(separator, 0, 0, 0, getRealDp(0))
 
         val editText = locomotifWidget.createDateWidget(fieldName, currentDate)
+        fieldTypeMap.put(fieldName, "editText")
         setupEditTextListener(editText, fieldName)
+        editText.setText(currentDate)
         setupDateWidgetListener(editText)
 
         val fieldWrapper = createFieldWrapper()
+        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
         fieldWrapper.addView(title)
         fieldWrapper.addView(separator)
         fieldWrapper.addView(editText)
@@ -403,6 +502,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     private fun setupEditTextListener(editText: EditText, fieldName: String) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
+                Timber.tag(TAG).d("setupEditTextListener()")
                 fieldValueMap.put(fieldName, s)
 
                 val typeName = getFieldTypeByFieldName(fieldName)
@@ -411,8 +511,19 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                         fieldName,
                         LocomotifHelper().getAppDateFormat(s.toString())
                     )
+                    listener.onValueChange(fieldName, s.toString())
+                } else if (typeName.equals("java.lang.Integer")) {
+                    var fieldIntValue: Int = 0
+                    if (s.toString().equals("")) {
+                        fieldIntValue = 0
+                    } else {
+                        fieldIntValue = s.toString().toInt()
+                    }
+                    item?.setAndReturnPrivateProperty(fieldName, fieldIntValue)
+                    listener.onValueChange(fieldName, fieldIntValue.toString())
                 } else {
                     item?.setAndReturnPrivateProperty(fieldName, s.toString())
+                    listener.onValueChange(fieldName, s.toString())
                 }
             }
 
@@ -432,8 +543,10 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                         fieldName,
                         LocomotifHelper().getAppDateFormat(s.toString())
                     )
+                    listener.onValueChange(fieldName, s.toString())
                 } else {
                     item?.setAndReturnPrivateProperty(fieldName, s.toString())
+                    listener.onValueChange(fieldName, s.toString())
                 }
             }
 
@@ -442,18 +555,24 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         })
     }
 
-    private fun setupRadioGroupListener(radioGroup: RadioGroup, fieldName: String) {
+    private fun setupRadioGroupListener(radioGroup: LocomotifRadio, fieldName: String) {
         radioGroup.setOnCheckedChangeListener({ radioGroup, checkedId ->
-            val checkedRadioButton: RadioButton = radioGroup.findViewById(checkedId)
-            fieldValueMap.put(fieldName, checkedRadioButton.text.toString())
-            item?.setAndReturnPrivateProperty(fieldName, checkedRadioButton.text.toString())
+            if (checkedId != BaseParam.APP_EMPTY_ID) {
+                val checkedRadioButton: RadioButton = radioGroup.findViewById(checkedId)
+                fieldValueMap.put(fieldName, checkedRadioButton.text.toString())
+                item?.setAndReturnPrivateProperty(fieldName, checkedRadioButton.text.toString())
+                listener.onValueChange(fieldName, checkedRadioButton.text.toString())
+            }
         })
+
+
     }
 
     private fun setupCheckBoxListener(checkBox: AppCompatCheckBox, fieldName: String) {
         checkBox.setOnCheckedChangeListener { compoundButton, checked ->
             fieldValueMap.put(fieldName, checked)
             item?.setAndReturnPrivateProperty(fieldName, checked)
+            listener.onValueChange(fieldName, checked.toString())
         }
     }
 
@@ -467,10 +586,12 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
             ) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 fieldValueMap.put(fieldName, selectedItem)
+                listener.onValueChange(fieldName, selectedItem)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 fieldValueMap.put(fieldName, "")
+                listener.onValueChange(fieldName, "")
             }
         }
     }
@@ -540,7 +661,20 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        params.setMargins(0, getRealDp(10), 0, 0)
+        params.setMargins(0, 0, 0, getRealDp(10))
+        fieldWrapper.setLayoutParams(params)
+        return fieldWrapper
+    }
+
+    private fun createExtFieldWrapper(): LinearLayout {
+        val fieldWrapper = LinearLayout(context)
+        fieldWrapper.orientation = LinearLayout.HORIZONTAL
+
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(0, 0, 0, getRealDp(10))
         fieldWrapper.setLayoutParams(params)
         return fieldWrapper
     }
@@ -579,6 +713,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         }
     }
 
+    fun setFieldsReadOnly(readOnly: Boolean) {
+        //TODO
+        //All widget readonly
+    }
+
     fun setWidgetValueByTag(tag: String, value: String) {
         val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(tag))
         editText.setText(value)
@@ -586,14 +725,47 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     }
 
     fun getWidgetByTag(tag: String): View {
-        val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(tag))
-        return editText
+        val widget = formLayout.findViewWithTag<View>(LOCOMOTIF.plus(tag))
+        return widget
+    }
+
+    fun getWidgetGroupByTag(tag: String): View {
+        val widget = formLayout.findViewWithTag<View>(LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(tag))
+        return widget
     }
 
     fun getData(): HashMap<String, Any> {
         return fieldValueMap
     }
 
+    fun validate(): Boolean {
+        var fieldsEmptyValidator: MutableList<String> = mutableListOf()
+        fieldValueMap.forEach{(field, value) ->
+            Timber.tag(TAG).d("validate() field: %s value: %s", field, value)
+            if (!(value != null && !value.toString().isEmpty() && !value.toString().equals("null"))) {
+                fieldsEmptyValidator.add(field)
+            }
+        }
+
+        Timber.tag(TAG).d("validate() fieldsEmptyValidator: %s", fieldsEmptyValidator.size)
+        if (fieldsEmptyValidator.size > 0) {
+            fieldsEmptyValidator.forEach {field->
+                val textWidget = getWidgetByTag(field) as AppCompatEditText
+                var fieldValidator = StringUtils.capitalize(
+                    StringUtils.join(
+                        StringUtils.splitByCharacterTypeCamelCase(field), ' '
+                    )
+                )
+                Timber.tag(TAG).d("validate() fieldsEmptyValidator: %s field: %s",
+                    fieldsEmptyValidator.size, fieldValidator)
+                textWidget.setError("$fieldValidator can't empty")
+
+                Toast.makeText(context,R.string.general_required_fields, Toast.LENGTH_LONG).show()
+            }
+            return false
+        }
+        return true
+    }
     /**
      * Convert to JSON have bugs issue after update field
      */

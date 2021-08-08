@@ -45,13 +45,17 @@ class WpmaterialDaoImp : WpmaterialDao {
         wpmaterialEntityBox.put(wpmaterialEntity)
     }
 
+    override fun delete(wpmaterialEntity: WpmaterialEntity) {
+        wpmaterialEntityBox.remove(wpmaterialEntity)
+    }
+
     override fun remove() {
         wpmaterialEntityBox.removeAll()
     }
 
-    override fun findByWoid(workorderid: String): WpmaterialEntity? {
+    override fun findByWoid(workorderid: Int): WpmaterialEntity? {
         val materialEntity =
-            wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, workorderid).build()
+            wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, workorderid.toLong()).build()
                 .find()
         materialEntity.whatIfNotNullOrEmpty {
             return it[0]
@@ -59,8 +63,8 @@ class WpmaterialDaoImp : WpmaterialDao {
         return null
     }
 
-    override fun findListMaterialActualByWoid(woid: String): List<WpmaterialEntity> {
-        return wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, woid).build().find()
+    override fun findListMaterialActualByWoid(woid: Int): List<WpmaterialEntity> {
+        return wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, woid.toLong()).build().find()
     }
 
     override fun saveListMaterialPlan(materialList: List<WpmaterialEntity>): List<WpmaterialEntity> {
@@ -68,9 +72,9 @@ class WpmaterialDaoImp : WpmaterialDao {
         return materialList
     }
 
-    override fun findByWoidAndItemnum(workorderid: String, itemnum: String): WpmaterialEntity? {
+    override fun findByWoidAndItemnum(workorderid: Int, itemnum: String): WpmaterialEntity? {
         val materialEntity =
-            wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, workorderid)
+            wpmaterialEntityBox.query().equal(WpmaterialEntity_.workorderId, workorderid.toLong())
                 .equal(WpmaterialEntity_.itemNum, itemnum).build()
                 .find()
         materialEntity.whatIfNotNullOrEmpty {
@@ -79,4 +83,16 @@ class WpmaterialDaoImp : WpmaterialDao {
         return null
     }
 
+    override fun findByIdAndWoId(id: Long, workorderid: Int): WpmaterialEntity? {
+        val materialEntity =
+            wpmaterialEntityBox.query()
+                .equal(WpmaterialEntity_.id, id)
+                .equal(WpmaterialEntity_.workorderId, workorderid.toLong())
+                .build()
+                .find()
+        materialEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
 }

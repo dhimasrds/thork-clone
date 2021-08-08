@@ -396,6 +396,7 @@
     <!-- Material Plan -->
     <string name="material_plan_search">Masukkan Material Code</string>
     <string name="material_plan_create">Tambah Material Plan</string>
+    <string name="material_plan_delete">Apakah anda akan menghapus record material plan?</string>
 
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>

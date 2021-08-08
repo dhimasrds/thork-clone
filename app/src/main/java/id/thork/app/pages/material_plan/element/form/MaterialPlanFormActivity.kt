@@ -13,11 +13,14 @@
 package id.thork.app.pages.material_plan.element.form
 
 import android.content.Intent
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.RadioButton
+import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.children
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
@@ -26,25 +29,47 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityMaterialPlanFormBinding
+import id.thork.app.helper.builder.*
+import id.thork.app.helper.builder.adapter.LocomotifAdapter
+import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.helper.builder.widget.LocomotifLov
+import id.thork.app.helper.builder.widget.LocomotifLovBox
+import id.thork.app.helper.builder.widget.LocomotifRadio
+import id.thork.app.helper.builder.widget.OnValueChangeListener
+import id.thork.app.pages.CustomDialogUtils
+import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
-import id.thork.app.pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem
 import id.thork.app.pages.rfid_create_wo_material.RfidMaterialctivity
-import id.thork.app.persistence.entity.MaterialEntity
+import id.thork.app.persistence.entity.WpmaterialEntity
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MaterialPlanFormActivity : BaseActivity() {
+class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialogItemClickListener,
+    OnValueChangeListener, CustomDialogUtils.DialogActionListener {
     val TAG = MaterialPlanFormActivity::class.java.name
 
     val viewModel: MaterialPlanFormViewModel by viewModels()
     private val binding: ActivityMaterialPlanFormBinding by binding(R.layout.activity_material_plan_form)
-    var intentWorkorderId: String? = null
-    private var materialEntity: MaterialEntity? = null
 
-    //TODO
-    //Hardcode for a while
-    var storerooms: Array<String> = arrayOf("STOREROOMGST", "STOREROOMKBN", "STOREROOMPJG")
+    private var intentWoId = BaseParam.APP_EMPTY_ID
+    private var wpmaterialEntity: WpmaterialEntity? = null
+    private var lineTypeItems: List<LocomotifAttribute> = listOf()
+    private var storeroomItems: MutableList<LocomotifAttribute> = mutableListOf()
+    private var materialItems: MutableList<LocomotifAttribute> = mutableListOf()
+
+    private var locomotifBuilder: LocomotifBuilder<WpmaterialEntity>? = null
+    private lateinit var storeroomLovBox: LocomotifLovBox
+    private lateinit var storeroomLov: LocomotifLov
+    private lateinit var materialLovBox: LocomotifLovBox
+    private lateinit var materialLov: LocomotifLov
+    private lateinit var lineType: RadioGroup
+    private lateinit var direqReq: CheckBox
+    private lateinit var description: AppCompatEditText
+    private lateinit var itemNumGroup: View
+    private lateinit var itemNumExtension: View
+
+    private lateinit var customDialogUtils: CustomDialogUtils
 
     override fun setupView() {
         super.setupView()
@@ -64,21 +89,65 @@ class MaterialPlanFormActivity : BaseActivity() {
             historyAttendanceIcon = false
         )
 
-        //TODO
-        //Hardcode for a while
-        val arrayAdapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, storerooms)
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.includeMaterialPlanForm.spinnerStoreroom.adapter = arrayAdapter
-
+        viewModel.getLineTypeItems()
+        viewModel.getStoreroomItems()
+        viewModel.getMaterialItems()
         retrieveFromIntent()
+
+        customDialogUtils = CustomDialogUtils(this)
     }
 
     private fun retrieveFromIntent() {
-        val intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
-        Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
-        intentWoId.whatIfNotNull {
-            intentWorkorderId = it.toString()
+        val intentState = intent.getStringExtra(BaseParam.FORM_STATE)
+        intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        val intentId = intent.getLongExtra(BaseParam.ID, 0)
+        Timber.tag(TAG).d(
+            "retrieveFromIntent() intentState: %s intentWoId: %s",
+            intentState, intentWoId
+        )
+        intentState.whatIfNotNull { itState ->
+            if (itState.equals(BaseParam.FORM_STATE_NEW)) {
+                binding.btnDelete.visibility = View.GONE
+            } else if (itState.equals(BaseParam.FORM_STATE_EDIT)) {
+                binding.btnDelete.visibility = View.VISIBLE
+            } else if (itState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
+                binding.btnDelete.visibility = View.GONE
+                binding.btnSave.visibility = View.GONE
+                itemNumExtension.visibility = View.GONE
+            }
+            intentWoId.whatIfNotNull { itWoId ->
+                viewModel.setupEntity(itState, itWoId, intentId)
+            }
+        }
+    }
+
+    private fun setupForm(wpmaterialEntity: WpmaterialEntity) {
+        Timber.tag(TAG).d("setupForm() wpMaterialEntity: %s", wpmaterialEntity)
+        try {
+            wpmaterialEntity.whatIfNotNull {
+                locomotifBuilder = LocomotifBuilder(it, this)
+                locomotifBuilder?.listener = this
+                locomotifBuilder?.setupFields(
+                    arrayOf(
+                        "lineType", "itemNum", "description", "itemQty", "storeroom", "direqReq"
+                    )
+                )
+                locomotifBuilder?.setupFieldsCaption(
+                    arrayOf(
+                        "Line Type", "Item", "Description", "Qty", "Storeroom", "Direct Issue"
+                    )
+                )
+                itemNumExtension = View.inflate(this, R.layout.material_plan_item_extension, null)
+                locomotifBuilder?.setupExtensionView(itemNumExtension)
+                locomotifBuilder?.forFieldItems("lineType", lineTypeItems)
+                val rootView: LinearLayout = findViewById(R.id.root_view)
+                rootView.removeAllViews()
+                rootView.addView(locomotifBuilder?.build())
+
+                widgetListener()
+            }
+        } catch (exception: Exception) {
+            Timber.tag(TAG).e(exception)
         }
     }
 
@@ -93,21 +162,13 @@ class MaterialPlanFormActivity : BaseActivity() {
                         data.whatIfNotNull {
                             val material = it.getStringExtra(BaseParam.MATERIAL)
                             val description = it.getStringExtra(BaseParam.DESCRIPTION)
-                            viewModel.checkResultMaterial(material.toString())
+                            viewModel.getItemNumResult(material.toString())
                         }
                     }
 
                     BaseParam.BARCODE_REQUEST_CODE -> {
-                        //TODO display decs material
                         result.whatIfNotNull {
-                            viewModel.checkResultMaterial(it.contents)
-                        }
-                    }
-
-                    BaseParam.REQUEST_CODE_MATERIAL_PLAN -> {
-                        data.whatIfNotNull {
-                            val material = it.getStringExtra(BaseParam.MATERIAL)
-                            viewModel.checkResultMaterial(material.toString())
+                            viewModel.getItemNumResult(it.contents)
                         }
                     }
                 }
@@ -119,37 +180,61 @@ class MaterialPlanFormActivity : BaseActivity() {
 
     override fun setupListener() {
         super.setupListener()
-        binding.btnRfid.setOnClickListener {
-            gotoRfidMaterial()
-        }
-
-        binding.btnQrcode.setOnClickListener {
-            startQRScanner(BaseParam.BARCODE_REQUEST_CODE)
-        }
-
         binding.btnSave.setOnClickListener {
-            //TODO Save Record
-            materialEntity.whatIfNotNull {
-                viewModel.saveMaterialCache(
-                    it,
-                    intentWorkorderId.toString(),
-                    binding.includeMaterialPlanForm.etQty.text.toString()
-                )
+            val isValid = locomotifBuilder?.validate()
+            Timber.tag(TAG).d("setupListener() isValid: %s", isValid)
+            if (isValid == true) {
+                wpmaterialEntity = locomotifBuilder?.getDataAsEntity()
+                wpmaterialEntity.whatIfNotNull {
+                    val selectedRadioButton: RadioButton =
+                        lineType.findViewById(lineType.checkedRadioButtonId)
+                    it.lineType = selectedRadioButton.text.toString()
+                    viewModel.saveMaterialCache(it)
+                }
             }
         }
 
-        binding.btnSearch.setOnClickListener {
-            val intent = Intent(this, MaterialPlanItem::class.java)
-            startActivityForResult(intent, BaseParam.REQUEST_CODE_MATERIAL_PLAN)
+        binding.btnDelete.setOnClickListener {
+            customDialogUtils.setTitle(R.string.wo_material_plan)
+            customDialogUtils.setDescription(R.string.material_plan_delete)
+            customDialogUtils.setRightButtonText(R.string.dialog_yes)
+            customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            customDialogUtils.setListener(this)
+            customDialogUtils.show()
         }
     }
 
     override fun setupObserver() {
         super.setupObserver()
-        viewModel.materialCache.observe(this, Observer {
-            binding.etMaterial.setText(it.itemNum)
-            binding.includeMaterialPlanForm.etDescription.setText(it.description)
-            materialEntity = it
+        viewModel.lineTypeItems.observe(this, {
+            lineTypeItems = it
+        })
+        viewModel.storeroomItems.observe(this, {
+            storeroomItems = it
+        })
+        viewModel.materialItems.observe(this, {
+            materialItems = it
+        })
+        viewModel.materialItem.observe(this, {
+            materialLovBox.value = it.itemNum
+            materialLovBox.setText(it.itemNum)
+            description.setText(it.description)
+        })
+        viewModel.wpMaterialCache.observe(this, {
+            setupForm(it)
+
+            /**
+             * To trigger Radio Group Event,
+             * need to reset Radio Group first
+             */
+            lineType.clearCheck()
+            for (view in lineType.children) {
+                if (view is RadioButton) {
+                    if (view.text.equals(it.lineType)) {
+                        lineType.check(view.id)
+                    }
+                }
+            }
         })
 
         viewModel.result.observe(this, Observer {
@@ -157,41 +242,6 @@ class MaterialPlanFormActivity : BaseActivity() {
                 gotoMaterialPlan()
             }
         })
-    }
-
-    fun onItemTypeClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-
-            // Check which radio button was clicked
-            when (view.getId()) {
-                R.id.radio_item ->
-                    if (checked) {
-
-                    }
-                R.id.radio_material ->
-                    if (checked) {
-
-                    }
-            }
-        }
-    }
-
-    fun onIssueTypeCheckec(view: View) {
-        if (view is CheckBox) {
-            val checked: Boolean = view.isChecked
-
-            when (view.id) {
-                R.id.checkbox_direct -> {
-                    if (checked) {
-
-                    } else {
-
-                    }
-                }
-            }
-        }
     }
 
     private fun startQRScanner(requestCode: Int) {
@@ -218,11 +268,92 @@ class MaterialPlanFormActivity : BaseActivity() {
     }
 
     private fun gotoMaterialPlan() {
+        Timber.tag(TAG).d("gotoMaterialPlan() woId: %s", intentWoId)
         val intent = Intent(this, MaterialPlanActivity::class.java)
-        intent.putExtra(BaseParam.WORKORDERID, intentWorkorderId?.toInt())
+        intent.putExtra(BaseParam.WORKORDERID, intentWoId)
+        intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_EDIT)
         startActivity(intent)
         finish()
     }
 
+    private fun widgetListener() {
+        storeroomLovBox = locomotifBuilder?.getWidgetByTag("storeroom") as LocomotifLovBox
+        storeroomLovBox.setOnClickListener {
+            val storeroomAdapter = LocomotifAdapter("storeroom", storeroomItems, this)
+            storeroomLov = LocomotifLov(this, storeroomAdapter)
+            storeroomLov.show()
+        }
 
+        materialLovBox = locomotifBuilder?.getWidgetByTag("itemNum") as LocomotifLovBox
+        materialLovBox.setOnClickListener {
+            val materialAdapter = LocomotifAdapter("itemNum", materialItems, this)
+            materialLov = LocomotifLov(this, materialAdapter)
+            materialLov.show()
+        }
+
+        itemNumGroup = locomotifBuilder?.getWidgetGroupByTag("itemNum") as View
+        lineType = locomotifBuilder?.getWidgetByTag("lineType") as LocomotifRadio
+        direqReq = locomotifBuilder?.getWidgetByTag("direqReq") as CheckBox
+        description = locomotifBuilder?.getWidgetByTag("description") as AppCompatEditText
+
+        val rfidButton: AppCompatButton = itemNumExtension.findViewById(R.id.btn_rfid)
+        rfidButton.setOnClickListener {
+            gotoRfidMaterial()
+        }
+
+        val qrButton: AppCompatButton = itemNumExtension.findViewById(R.id.btn_qrcode)
+        qrButton.setOnClickListener {
+            startQRScanner(BaseParam.BARCODE_REQUEST_CODE)
+        }
+    }
+
+    override fun clickOnItem(fieldName: String, data: LocomotifAttribute) {
+        Timber.tag(TAG).d("clickOnItem() fieldName: %s", fieldName)
+        when (fieldName) {
+            "itemNum" -> {
+                materialLovBox.setText(data.value)
+                materialLovBox.value = data.value
+                description.setText(data.name)
+                materialLov.destroy()
+            }
+            "storeroom" -> {
+                storeroomLovBox.setText(data.name)
+                storeroomLovBox.value = data.value
+                storeroomLov.destroy()
+            }
+        }
+    }
+
+    override fun onValueChange(fieldName: String, value: String) {
+        Timber.tag(TAG).d("onValueChange() fieldName: %s, value: %s", fieldName, value)
+        if (fieldName.equals("lineType")) {
+            if (value.equals("ITEM")) {
+                itemNumGroup.visibility = View.VISIBLE
+                direqReq.isEnabled = true
+            } else if (value.equals("MATERIAL")) {
+                itemNumGroup.visibility = View.GONE
+                direqReq.isChecked = true
+                direqReq.isEnabled = false
+            }
+        }
+    }
+
+    /**
+     * Delete Material Plan record
+     */
+    override fun onRightButton() {
+        wpmaterialEntity = locomotifBuilder?.getDataAsEntity()
+        wpmaterialEntity.whatIfNotNull {
+            viewModel.deleteMaterialCache(it)
+        }
+        customDialogUtils.dismiss()
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
 }

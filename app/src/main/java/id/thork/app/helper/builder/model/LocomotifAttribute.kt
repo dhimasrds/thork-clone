@@ -1,4 +1,4 @@
-package id.thork.app.helper.builder
+package id.thork.app.helper.builder.model
 
 data class LocomotifAttribute(
     var name: String? = null,

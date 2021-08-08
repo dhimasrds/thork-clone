@@ -21,7 +21,7 @@ import java.util.*
 class Person {
     var id: Long = 0
     var name: String? = ""
-    var address: String? = ""
+    var address: String? = null
     var nik: String? = ""
     var email: String? = ""
     var phone: String? = ""

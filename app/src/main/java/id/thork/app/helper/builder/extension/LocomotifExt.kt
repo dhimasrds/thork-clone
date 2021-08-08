@@ -4,6 +4,9 @@ package id.thork.app.helper.builder
 annotation class LocoLov
 
 @Target(AnnotationTarget.FIELD)
+annotation class LocoLovExtension
+
+@Target(AnnotationTarget.FIELD)
 annotation class LocoRadioButton
 
 @Target(AnnotationTarget.FIELD)

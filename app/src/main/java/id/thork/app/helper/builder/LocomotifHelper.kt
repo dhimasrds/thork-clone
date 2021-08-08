@@ -8,9 +8,34 @@ import android.graphics.Color
 import android.util.TypedValue
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.Activity
+
+import android.util.DisplayMetrics
+
+
+
 
 
 class LocomotifHelper {
+
+    fun getScreenWidth(context: Context): Int {
+//        val displayMetrics = DisplayMetrics()
+//        (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+//        return displayMetrics.widthPixels
+
+        val outMetrics = DisplayMetrics()
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            val display =  (context as Activity).display
+            display?.getRealMetrics(outMetrics)
+        } else {
+            @Suppress("DEPRECATION")
+            val display =  (context as Activity).windowManager.defaultDisplay
+            @Suppress("DEPRECATION")
+            display.getMetrics(outMetrics)
+        }
+        return outMetrics.widthPixels
+    }
 
     fun fetchAccentColor(context: Context): Int {
         val typedValue = TypedValue()
@@ -34,7 +59,7 @@ class LocomotifHelper {
         val colorStateList = ColorStateList(
             arrayOf(intArrayOf(-R.attr.state_enabled), intArrayOf(R.attr.state_enabled)),
             intArrayOf(
-                Color.BLACK, // disabled
+                getPrimaryColor(context), // disabled
                 getPrimaryColor(context)
             )
         )
@@ -57,5 +82,21 @@ class LocomotifHelper {
         return if (originText != null && !originText.isEmpty()) {
             originText
         } else replacementText
+    }
+
+    fun convertNullToEmpty(originText: String): String {
+        return if (originText != null && !originText.isEmpty() && originText.equals("null")) {
+            ""
+        }else if (originText != null && !originText.isEmpty()) {
+            originText
+        } else ""
+    }
+
+    fun convertNullToZero(originText: String): String {
+        return if (originText != null && !originText.isEmpty() && originText.equals("null")) {
+            "0"
+        }else if (originText != null && !originText.isEmpty()) {
+            originText
+        } else "0"
     }
 }

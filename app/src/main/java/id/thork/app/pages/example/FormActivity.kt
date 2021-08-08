@@ -12,28 +12,26 @@
 
 package id.thork.app.pages.example
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Adapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.skydoves.whatif.whatIfNotNull
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import id.thork.app.R
-import id.thork.app.base.BaseParam
 import id.thork.app.helper.builder.*
+import id.thork.app.helper.builder.adapter.LocomotifAdapter
+import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.helper.builder.widget.*
 import timber.log.Timber
 import java.util.*
 
 
-class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemClickListener {
+class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemClickListener,
+OnValueChangeListener {
     private val TAG = FormActivity::class.java.name
 
     var locomotifBuilder: LocomotifBuilder<Person>? = null
@@ -55,12 +53,18 @@ class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemCl
         var person: Person? = null
         if (intentData.equals("NEW")) {
             person = Person()
+            person.name = "REJA NEW"
+            person.country = "Malaysia"
+            person.gender = "Female"
         } else {
             person = Person()
             person.name = "REJA LUO"
+            person.country = "Malaysia"
+            person.gender = "Female"
         }
         person.whatIfNotNull { person ->
             locomotifBuilder = LocomotifBuilder(person, this)
+            locomotifBuilder?.listener = this
             locomotifBuilder?.setupFields(
                 arrayOf(
                     "birthDate",
@@ -146,7 +150,7 @@ class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemCl
             locomotifAttributes.add(locomotifAttribute2)
             locomotifAttributes.add(locomotifAttribute3)
 
-            val locomotifAdapter = LocomotifAdapter(locomotifAttributes, this)
+            val locomotifAdapter = LocomotifAdapter("country",locomotifAttributes, this)
             locomotifLov = LocomotifLov(this,                locomotifAdapter)
             locomotifLov.show()
         }
@@ -169,6 +173,22 @@ class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemCl
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
+
+//        val gender = locomotifBuilder?.getWidgetByTag("gender") as LocomotifRadio
+//        gender.setListener( object : LocomotifRadio.OnValueChangeListener {
+//            override fun onChecked(value: String) {
+//                Timber.tag(TAG).d("onValueChangeListener() on form: %s", value)
+//            }
+//        })
+
+//        gender.onValueChangeListener = object : LocomotifRadio.OnValueChangeListener {
+//            override fun onChecked(value: String) {
+//                Timber.tag(TAG).d("onValueChangeListener() on form")
+//            }
+//        }
+//        gender.setOnCheckedChangeListener { radioGroup, i ->
+//            Timber.tag(TAG).d("setOnCheckedChangeListener() on form")
+//        }
     }
 
     fun getData(view: View) {
@@ -194,10 +214,14 @@ class FormActivity : AppCompatActivity(), LocomotifAdapter.LocomotifDialogItemCl
         locomotifLov.destroy()
     }
 
-    override fun clickOnItem(data: LocomotifAttribute) {
+    override fun clickOnItem(fieldName: String, data: LocomotifAttribute) {
         Timber.tag("TAG").d("clickOnItem() data: %s", data.name)
         locomotifLov.destroy()
         country.setText(data.name)
         country.value = data.value
+    }
+
+    override fun onValueChange(fieldName: String, value: String) {
+        Timber.tag(TAG).d("onValueChange() Form fieldName: %s value: %s", fieldName, value)
     }
 }

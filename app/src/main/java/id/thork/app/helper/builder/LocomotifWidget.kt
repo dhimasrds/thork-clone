@@ -6,6 +6,7 @@ import android.text.InputType
 import android.util.TypedValue
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
@@ -16,8 +17,14 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
+import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.helper.builder.widget.LocomotifLovBox
+import id.thork.app.helper.builder.widget.LocomotifRadio
+import timber.log.Timber
 
 class LocomotifWidget constructor(val context: Context) {
+    private val TAG = LocomotifWidget::class.java.name
+
     private val LOCOMOTIF = "LOCOMOTIF"
     private val WIDGET_HINT_SELECT = "Select "
     private val WIDGET_HINT_TYPE = "Type "
@@ -64,6 +71,7 @@ class LocomotifWidget constructor(val context: Context) {
      * Lov only edittext as component
      */
     fun createLovWidget(fieldName: String, widgetValue: String): LocomotifLovBox {
+        Timber.tag(TAG).d("createLovWidget() fieldName: %s widgetValue: %s", fieldName, widgetValue)
         val editText = LocomotifLovBox(context)
         editText.apply {
             tag = LOCOMOTIF.plus(fieldName)
@@ -93,7 +101,7 @@ class LocomotifWidget constructor(val context: Context) {
 //                )
 //            }
             //setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-            setText(widgetValue)
+            setText(LocomotifHelper().convertNullToEmpty(widgetValue))
         }
         return editText
     }
@@ -105,8 +113,8 @@ class LocomotifWidget constructor(val context: Context) {
         fieldName: String,
         widgetValue: String,
         items: List<LocomotifAttribute>
-    ): RadioGroup {
-        val radioGroup = RadioGroup(context)
+    ): LocomotifRadio {
+        val radioGroup = LocomotifRadio(context)
         radioGroup.apply {
             tag = LOCOMOTIF.plus(fieldName)
             orientation = RadioGroup.HORIZONTAL
@@ -129,8 +137,12 @@ class LocomotifWidget constructor(val context: Context) {
                     ContextCompat.getColor(context, R.color.black)
                 )
             }
+            clearCheck()
         }
+        return radioGroup
+    }
 
+    fun createRadioDefaultValue(radioGroup: LocomotifRadio,  widgetValue: String, items: List<LocomotifAttribute>) {
         var index = 0
         for (attrib in items) {
             val radioButton = AppCompatRadioButton(context)
@@ -146,7 +158,6 @@ class LocomotifWidget constructor(val context: Context) {
             }
             index++
         }
-        return radioGroup
     }
 
     /**
@@ -205,7 +216,8 @@ class LocomotifWidget constructor(val context: Context) {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             )
-            setText(widgetValue)
+            Timber.tag(TAG).d("createTextWidget() fieldName: %s widgetValue: %s", fieldName, widgetValue)
+            setText(LocomotifHelper().convertNullToEmpty(widgetValue))
         }
         return editText
     }
@@ -226,7 +238,7 @@ class LocomotifWidget constructor(val context: Context) {
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             )
-            setText(widgetValue.toString())
+            setText(LocomotifHelper().convertNullToZero(widgetValue))
         }
         return editText
     }

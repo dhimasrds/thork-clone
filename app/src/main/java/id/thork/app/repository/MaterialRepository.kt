@@ -31,7 +31,6 @@ class MaterialRepository @Inject constructor(
     private val appSession: AppSession
 ) : BaseRepository {
 
-    //TODO mateial Back Entitu
     fun saveMaterial(materialBackupEntity: MaterialBackupEntity): MaterialBackupEntity? {
         return materialBackupDao.saveMaterial(materialBackupEntity)
     }
@@ -63,7 +62,6 @@ class MaterialRepository @Inject constructor(
     /**
      * Item Master
      */
-
     fun saveItemMaster(materialEntity: MaterialEntity, username: String) {
         materialDao.save(materialEntity, username)
     }
@@ -126,18 +124,18 @@ class MaterialRepository @Inject constructor(
         return wpmaterialDao.remove()
     }
 
-    fun getListMaterialPlanByWoid(workorderid: String): List<WpmaterialEntity> {
+    fun getListMaterialPlanByWoid(workorderid: Int): List<WpmaterialEntity> {
         return wpmaterialDao.findListMaterialActualByWoid(workorderid)
     }
 
-    fun getMaterialPlanByWoidAndItemnum(workorderid: String, itemnum: String) : WpmaterialEntity? {
+    fun getMaterialPlanByWoidAndItemnum(workorderid: Int, itemnum: String) : WpmaterialEntity? {
         return wpmaterialDao.findByWoidAndItemnum(workorderid, itemnum)
     }
 
     fun addListMaterialPlanToObjectBox(
         wpMaterialList: List<Wpmaterial>,
         wonum: String,
-        workorderid: String
+        workorderid: Int
     ) {
         val templistMaterialPlan = mutableListOf<WpmaterialEntity>()
         wpMaterialList.whatIfNotNull { listMaterialPlan ->
@@ -146,28 +144,28 @@ class MaterialRepository @Inject constructor(
                 matPlanCache.itemId = it.wpitemid
                 matPlanCache.itemNum = it.itemnum
                 matPlanCache.description = it.description
-                matPlanCache.itemType = it.linetype
+                matPlanCache.lineType = it.linetype
                 matPlanCache.itemsetId = it.itemsetid
                 matPlanCache.wonum = wonum
                 matPlanCache.workorderId = workorderid
                 matPlanCache.siteid = appSession.siteId
                 matPlanCache.orgid = appSession.orgId
                 matPlanCache.storeroom = it.location
-                matPlanCache.itemqty = it.itemqty?.toInt()
+                matPlanCache.itemQty= it.itemqty?.toInt()
                 templistMaterialPlan.add(matPlanCache)
             }
             saveListMaterialPlan(templistMaterialPlan)
         }
     }
 
-    fun addMaterialPlanToObjectBox(wpmaterial: Wpmaterial, wonum: String, workorderid: String) {
+    fun addMaterialPlanToObjectBox(wpmaterial: Wpmaterial, wonum: String, workorderid: Int) {
         val username = appSession.userEntity.username
         wpmaterial.whatIfNotNull {
             val matPlanCache = WpmaterialEntity()
             matPlanCache.itemId = it.wpitemid
             matPlanCache.itemNum = it.itemnum
             matPlanCache.description = it.description
-            matPlanCache.itemType = it.linetype
+            matPlanCache.lineType = it.linetype
             matPlanCache.itemsetId = it.itemsetid
             matPlanCache.wonum = wonum
             matPlanCache.workorderId = workorderid

@@ -1,4 +1,4 @@
-package id.thork.app.helper.builder
+package id.thork.app.helper.builder.widget
 
 import android.app.Activity
 import android.app.Dialog
@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.R
+import id.thork.app.helper.builder.adapter.LocomotifAdapter
 
 class LocomotifLov(var activity: Activity, internal var adapter: LocomotifAdapter) :
     Dialog(activity, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen) {

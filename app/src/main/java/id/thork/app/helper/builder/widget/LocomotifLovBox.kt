@@ -1,4 +1,4 @@
-package id.thork.app.helper.builder
+package id.thork.app.helper.builder.widget
 
 import android.content.Context
 import android.util.AttributeSet

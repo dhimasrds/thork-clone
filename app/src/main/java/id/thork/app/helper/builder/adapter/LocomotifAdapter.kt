@@ -1,4 +1,4 @@
-package id.thork.app.helper.builder
+package id.thork.app.helper.builder.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,12 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.R
+import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.helper.builder.LocomotifHelper
 import timber.log.Timber
 
 class LocomotifAdapter(
+    private val fieldName: String,
     private val dataset: MutableList<LocomotifAttribute>,
     internal var locomotifDialogItemClickListener: LocomotifDialogItemClickListener,
 ) : RecyclerView.Adapter<LocomotifAdapter.LocomotifViewHolder>(), Filterable {
@@ -43,12 +46,12 @@ class LocomotifAdapter(
 
         override fun onClick(v: View) {
             Timber.tag(TAG).d("onClick() record: %s", datasetFilter[this.bindingAdapterPosition])
-            locomotifDialogItemClickListener.clickOnItem(datasetFilter[this.bindingAdapterPosition])
+            locomotifDialogItemClickListener.clickOnItem(fieldName, datasetFilter[this.bindingAdapterPosition])
         }
     }
 
     interface LocomotifDialogItemClickListener {
-        fun clickOnItem(data: LocomotifAttribute)
+        fun clickOnItem(fieldName: String, data: LocomotifAttribute)
     }
 
     override fun getFilter(): Filter {
