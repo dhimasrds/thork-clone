@@ -5,6 +5,7 @@ import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.CraftMasterEntity_
 import io.objectbox.Box
+import io.objectbox.query.PropertyQuery
 import timber.log.Timber
 import java.util.*
 
@@ -64,9 +65,8 @@ class CraftMasterDaoImp : CraftMasterDao {
         return null
     }
 
-    override fun getCraft() : List<CraftMasterEntity> {
-        return craftMasterEntityBox.query().notNull(CraftMasterEntity_.craft).build().find()
-
+    override fun getCraft() : Array<out String>? {
+        return craftMasterEntityBox.query().build().property(CraftMasterEntity_.craft).distinct().findStrings()
 
     }
 }

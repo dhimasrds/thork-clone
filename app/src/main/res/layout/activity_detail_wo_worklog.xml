@@ -18,11 +18,12 @@
         android:id="@+id/worklog"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="@dimen/menu_wo_margin_bottom"
+        android:layout_marginLeft="@dimen/general_margin_10dp"
+        android:layout_marginRight="@dimen/general_margin_10dp"
+        android:layout_marginBottom="@dimen/general_margin_10dp"
         android:clickable="true"
         android:elevation="30dp"
+        app:cardCornerRadius="@dimen/general_margin_10dp"
         android:foreground="?android:attr/selectableItemBackground">
 
         <LinearLayout
