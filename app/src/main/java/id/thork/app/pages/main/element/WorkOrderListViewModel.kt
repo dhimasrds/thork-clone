@@ -109,7 +109,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
                 workOrderRepository,
                 preferenceManager,
                 appResourceMx
-            )
+            ).cachedIn(viewModelScope)
         }
     }
 
