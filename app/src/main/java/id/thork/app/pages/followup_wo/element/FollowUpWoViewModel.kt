@@ -266,12 +266,12 @@ class FollowUpWoViewModel @ViewModelInject constructor(
     }
 
     private fun prepareMaterialTrans(woid: String): List<Wpmaterial> {
-        val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
+        val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid.toInt())
         val listMaterialPlan = mutableListOf<Wpmaterial>()
         materialPlanCache.forEach {
             val wpmaterial = Wpmaterial()
             wpmaterial.itemnum = it.itemNum
-            wpmaterial.itemqty = it.itemqty?.toDouble()
+            wpmaterial.itemqty = it.itemQty?.toDouble()
             wpmaterial.description = it.description
             wpmaterial.location = it.storeroom
             listMaterialPlan.add(wpmaterial)

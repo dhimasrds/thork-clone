@@ -25,7 +25,7 @@ class MaterialPlanDetailViewModel @ViewModelInject constructor(
     val wpmaterialCache: LiveData<WpmaterialEntity> get() = _wpmaterialCache
 
     fun checkResultMaterial(itemnum: String, workorderid: String) {
-        val materialCache = materialRepository.getMaterialPlanByWoidAndItemnum(workorderid, itemnum)
+        val materialCache = materialRepository.getMaterialPlanByWoidAndItemnum(workorderid.toInt(), itemnum)
         materialCache.whatIfNotNull {
             _wpmaterialCache.value = it
         }

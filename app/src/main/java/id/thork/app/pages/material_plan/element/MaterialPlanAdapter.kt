@@ -15,6 +15,7 @@ package id.thork.app.pages.material_plan.element
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater.from
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
@@ -26,9 +27,11 @@ import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.helper.builder.model.LocomotifAttribute
 import id.thork.app.network.response.work_order.Wpmaterial
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.material_plan.element.detail_material_plan.MaterialPlanDetail
+import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.utils.StringUtils
@@ -41,7 +44,7 @@ class MaterialPlanAdapter constructor(
     private val preferenceManager: PreferenceManager,
     private val requestOptions: RequestOptions,
     private val wpmaterialEntityList: List<WpmaterialEntity>,
-    private val activity: MaterialPlanActivity
+    internal val materialPlanAdapterItemClickListener: MaterialPlanAdapterItemClickListener
 ) : RecyclerView.Adapter<MaterialPlanAdapter.MaterialPlanHolder>() , Filterable {
     val TAG = MaterialPlanAdapter::class.java.name
 
@@ -68,25 +71,36 @@ class MaterialPlanAdapter constructor(
     override fun getItemCount(): Int = wpmaterialEntityListFilter.size
 
     inner class MaterialPlanHolder(val binding: MaterialPlanItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root),  View.OnClickListener {
+
+        init {
+            binding.root.setOnClickListener(this)
+        }
+
         fun bind(wpmaterialEntity: WpmaterialEntity) {
             with(binding) {
                 tvItemNum.text = StringUtils.truncate(wpmaterialEntity.itemNum, 30)
-                tvItemType.text = StringUtils.truncate(wpmaterialEntity.itemType, 30)
+                tvItemType.text = StringUtils.truncate(wpmaterialEntity.lineType, 30)
                 tvDescription.text = StringUtils.truncate(wpmaterialEntity.description, 30)
 
-                root.setOnClickListener {
-                    val intent =
-                        Intent(BaseApplication.context, MaterialPlanDetail::class.java)
-                    intent.putExtra(BaseParam.WORKORDERID, wpmaterialEntity.workorderId)
-                    intent.putExtra(BaseParam.MATERIAL, wpmaterialEntity.itemNum)
-                    activity.startActivity(intent)
-                    activity.finish()
-
-                }
+//                root.setOnClickListener {
+//                    val intent =
+//                        Intent(BaseApplication.context, MaterialPlanFormActivity::class.java)
+//                    intent.putExtra(BaseParam.WORKORDERID, wpmaterialEntity.workorderId)
+//                    intent.putExtra(BaseParam.ID, wpmaterialEntity.id)
+//                    activity.startActivity(intent)
+//                    activity.finish()
+//                }
             }
         }
 
+        override fun onClick(view: View?) {
+            materialPlanAdapterItemClickListener.onClickItem(wpmaterialEntityList[this.bindingAdapterPosition])
+        }
+    }
+
+    interface MaterialPlanAdapterItemClickListener {
+        fun onClickItem(wpmaterialEntity: WpmaterialEntity)
     }
 
     override fun getFilter(): Filter {

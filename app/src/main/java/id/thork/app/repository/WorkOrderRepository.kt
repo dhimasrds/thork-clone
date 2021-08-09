@@ -361,11 +361,13 @@ class WorkOrderRepository @Inject constructor(
             }
 
             wo.wpmaterial.whatIfNotNullOrEmpty {
-                materialRepository.addListMaterialPlanToObjectBox(
-                    it,
-                    wo.wonum.toString(),
-                    wo.workorderid.toString()
-                )
+                wo.workorderid?.let { woId ->
+                    materialRepository.addListMaterialPlanToObjectBox(
+                        it,
+                        wo.wonum.toString(),
+                        woId
+                    )
+                }
             }
 
             wo.woactivity.whatIfNotNullOrEmpty {
@@ -424,11 +426,13 @@ class WorkOrderRepository @Inject constructor(
         }
 
         member.wpmaterial.whatIfNotNullOrEmpty {
-            materialRepository.addListMaterialPlanToObjectBox(
-                it,
-                member.wonum.toString(),
-                member.workorderid.toString()
-            )
+            member.workorderid?.let { woId ->
+                materialRepository.addListMaterialPlanToObjectBox(
+                    it,
+                    member.wonum.toString(),
+                    woId
+                )
+            }
         }
 
         member.woactivity.whatIfNotNullOrEmpty {

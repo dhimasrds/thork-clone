@@ -55,7 +55,7 @@ class MaterialPlanDetail : BaseActivity() {
         viewModel.wpmaterialCache.observe(this, Observer {
             binding.etMaterial.setText(it.itemNum)
             binding.includeMaterialPlanForm.etDescription.setText(it.description)
-            binding.includeMaterialPlanForm.etQty.setText(it.itemqty.toString())
+            binding.includeMaterialPlanForm.etQty.setText(it.itemQty.toString())
             binding.includeMaterialPlanForm.etStoreroom.setText(it.storeroom.toString())
         })
 

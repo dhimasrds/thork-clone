@@ -144,4 +144,8 @@ class TaskDaoImp : TaskDao {
             .find()
     }
 
+    override fun removeTaskByWoidTask(woidTask: Int): Long {
+        return taskEntityBox.query().equal(TaskEntity_.workorderIdTask, woidTask).build().remove()
+    }
+
 }

@@ -63,9 +63,9 @@ class CreateWoViewModel @ViewModelInject constructor(
         }
     }
 
-    fun getTempWonum(): String? {
+    fun getTempWonum(woId: Int): String? {
         if (tempWonum == null) {
-            tempWonum = "WO-" + StringUtils.generateUUID()
+            tempWonum = "WO-$woId"
             Timber.d("getTempWonum %s", tempWonum)
         }
         return tempWonum
@@ -73,7 +73,7 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     fun getTempWoId(): Int? {
         if (tempWoId == null) {
-            tempWoId = ThreadLocalRandom.current().nextInt()
+            tempWoId = (System.currentTimeMillis()/1000).toInt();
             Timber.d("getTempWoId %s", tempWoId)
         }
         return tempWoId
@@ -276,12 +276,12 @@ class CreateWoViewModel @ViewModelInject constructor(
     }
 
     private fun prepareMaterialTrans(woid: String): List<Wpmaterial> {
-        val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid)
+        val materialPlanCache = materialRepository.getListMaterialPlanByWoid(woid.toInt())
         val listMaterialPlan = mutableListOf<Wpmaterial>()
         materialPlanCache.forEach {
             val wpmaterial = Wpmaterial()
             wpmaterial.itemnum = it.itemNum
-            wpmaterial.itemqty = it.itemqty?.toDouble()
+            wpmaterial.itemqty = it.itemQty?.toDouble()
             wpmaterial.description = it.description
             wpmaterial.location = it.storeroom
             listMaterialPlan.add(wpmaterial)

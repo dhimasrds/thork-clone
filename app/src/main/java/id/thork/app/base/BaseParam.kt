@@ -21,6 +21,7 @@ object BaseParam {
     const val FIREBASE_NOTIFICATION_TOPIC = "thor-notif"
     const val FIREBASE_LOCATION_TOPIC = "thor-location"
 
+    const val APP_EMPTY_ID = -1
     const val APP_TRUE = 1
     const val APP_FALSE = 0
 
@@ -253,4 +254,13 @@ object BaseParam {
     const val ATTACHMENTURI = "ATTACHMENTURI"
     const val ATTACHMENT_FOLDER = "Attachments"
     const val IMAGES_FOLDER = "Images"
+
+    /**
+     * Form State
+     */
+    const val FORM_STATE = "FORM_STATE"
+    const val FORM_STATE_NEW = "FORM_STATE_NEW"
+    const val FORM_STATE_EDIT = "FORM_STATE_EDIT"
+    const val FORM_STATE_READ_ONLY= "FORM_STATE_READ_ONLY"
+
 }

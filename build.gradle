@@ -10,6 +10,7 @@ buildscript {
         assistedInjectVersion = "0.5.2"
         okHttpUrlConnectionVersion = "3.0.0-RC1"
         circleImageViewVersion= "3.1.0"
+        commonsTextVersion = "1.9"
         essentialsVersion = "3.1.0"
         whatIfVersion = '1.0.8'
         timberVersion = "4.7.1"

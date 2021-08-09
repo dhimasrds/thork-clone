@@ -14,7 +14,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="id.thork.app.pages.material_plan.element.MaterialPlanViewModel" />

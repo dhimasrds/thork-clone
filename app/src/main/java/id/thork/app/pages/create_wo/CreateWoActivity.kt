@@ -88,8 +88,12 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             vm = viewModel
         }
         retrieveFromIntent()
-        tempWonum = viewModel.getTempWonum()!!
-        tempWorkOrderId = viewModel.getTempWoId()!!
+        viewModel.getTempWoId().whatIfNotNull {
+            tempWorkOrderId = it
+        }
+        viewModel.getTempWonum(tempWorkOrderId).whatIfNotNull {
+            tempWonum = it
+        }
         binding.complaintDate.setText(DateUtils.getDateTime())
         locationManager = (getSystemService(LOCATION_SERVICE) as LocationManager)
         customDialogUtils = CustomDialogUtils(this)
@@ -353,6 +357,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private fun goToMaterialPlan() {
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_EDIT)
         startActivity(intent)
     }
 

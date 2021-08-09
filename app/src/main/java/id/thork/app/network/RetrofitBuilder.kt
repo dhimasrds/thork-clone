@@ -19,7 +19,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import timber.log.Timber
 
 class RetrofitBuilder constructor(
     private val preferenceManager: PreferenceManager,
@@ -33,8 +32,6 @@ class RetrofitBuilder constructor(
         if (serverAddress.isNullOrEmpty()) {
             serverAddress = "https://www.google.com"
         }
-        Timber.tag(TAG).i("provideRetrofit() server address: %s", serverAddress)
-
         var retrofit = Retrofit.Builder()
             .baseUrl(serverAddress)
             .addConverterFactory(MoshiConverterFactory.create())
@@ -52,8 +49,6 @@ class RetrofitBuilder constructor(
         if (serverAddress.isNullOrEmpty()) {
             serverAddress = "https://www.google.com"
         }
-        Timber.tag(TAG)
-            .i("provideOkHttpClient() init server address: %s", serverAddress)
         val httpRequestInterceptor = HttpRequestInterceptor()
         httpRequestInterceptor.setHost(serverAddress)
 //        val okHttpClient: OkHttpClient = OkHttpClient.Builder()

@@ -334,7 +334,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private fun goToMaterialPlan() {
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
-        intent.putExtra(BaseParam.APP_DETAIL, BaseParam.APP_DETAIL)
+        intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_READ_ONLY)
         startActivity(intent)
     }
 

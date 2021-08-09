@@ -15,7 +15,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="id.thork.app.pages.material_plan.element.form.MaterialPlanFormViewModel" />
@@ -32,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/general_margin_15dp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,92 +41,41 @@
                 layout="@layout/toolbar" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Item Name -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/general_padding_15dp"
-            android:paddingRight="@dimen/general_padding_15dp"
-            android:text="Item Name" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/general_padding_15dp"
-            android:paddingRight="@dimen/general_padding_15dp"
-            android:paddingTop="@dimen/general_padding_15dp"
-            android:weightSum="3">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_marginBottom="@dimen/general_margin_8dp"
+            android:paddingEnd="@dimen/general_padding_10dp"
+            android:background="@color/form_base_color"
+            android:gravity="end">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="6">
-
-                <EditText
-                    android:id="@+id/et_material"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="@dimen/general_padding_5dp">
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btn_search"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_search"
-                        tools:ignore="NestedWeights" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:weightSum="8">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_rfid"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:background="@drawable/ic_rfid_detail_wo"
-                    tools:ignore="NestedWeights" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_qrcode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:background="@drawable/ic_qrcode_detail_wo" />
-            </LinearLayout>
+                android:background="@color/transparant"
+                android:drawableLeft="@drawable/ic_delete"
+                android:drawablePadding="@dimen/general_padding_5dp"
+                android:text="@string/delete"
+                android:textColor="@color/colorRed" />
         </LinearLayout>
-
-        <include
-            android:id="@+id/include_material_plan_form"
-            layout="@layout/activity_material_plan_form_detail" />
+        <LinearLayout
+            android:id="@+id/root_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_margin_12dp"
+            android:layout_marginBottom="@dimen/general_margin_12dp"
+            android:orientation="vertical"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/general_margin_12dp"
             android:layout_marginTop="@dimen/general_margin_12dp"
             android:layout_marginEnd="@dimen/general_margin_12dp"
             android:layout_marginBottom="@dimen/general_margin_12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:background="@drawable/ic_rectangle_528"
-            android:textColor="@color/white"
-            android:text="Save"/>
+            android:text="@string/general_save"
+            android:textColor="@color/white" />
     </LinearLayout>
 </layout>

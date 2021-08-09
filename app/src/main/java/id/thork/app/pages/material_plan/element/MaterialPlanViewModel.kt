@@ -33,7 +33,7 @@ class MaterialPlanViewModel @ViewModelInject constructor(
 
 
     fun initListMaterialPlan(workorderid: String) {
-        val materialPlan = materialRepository.getListMaterialPlanByWoid(workorderid)
+        val materialPlan = materialRepository.getListMaterialPlanByWoid(workorderid.toInt())
         materialPlan.whatIfNotNull {
             _listMaterial.value = it
         }
