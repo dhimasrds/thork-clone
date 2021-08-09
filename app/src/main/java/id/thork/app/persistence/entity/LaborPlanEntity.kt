@@ -18,4 +18,5 @@ class LaborPlanEntity : BaseEntity(){
     var wonumHeader: String? = null
     var workorderid: String? = null
     var wonumTask: String? = null
+    var syncUpdate: Int? = null
 }

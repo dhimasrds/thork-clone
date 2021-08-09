@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.persistence.entity.*
 import id.thork.app.repository.LaborRepository
@@ -105,6 +106,27 @@ class LaborPlanViewModel @ViewModelInject constructor(
     fun fetchMasterCraft() {
         val list = laborRepository.fetchMasterCraft()
         Timber.d("fetchMasterCraft() :%s", list.size)
+    }
+
+    fun saveToLocalCache(
+        laborCode: String,
+        taskid: String,
+        taskdesc: String,
+        craft: String,
+        skillLevel: String,
+        wonum: String,
+        workroderid: String
+    ) {
+        val laborPlanCache = LaborPlanEntity()
+        laborPlanCache.laborcode = laborCode
+        laborPlanCache.taskid = taskid
+        laborPlanCache.taskDescription = taskdesc
+        laborPlanCache.craft = craft
+        laborPlanCache.skillLevel = skillLevel
+        laborPlanCache.wonumHeader = wonum
+        laborPlanCache.workorderid = workroderid
+        laborPlanCache.syncUpdate = BaseParam.APP_FALSE
+        laborRepository.saveLaborPlanCache(laborPlanCache)
     }
 
 }

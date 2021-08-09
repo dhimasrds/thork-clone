@@ -2,10 +2,12 @@ package id.thork.app.repository
 
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.labor_response.Laborcraftrate
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.Wplabor
 import id.thork.app.persistence.dao.CraftMasterDao
 import id.thork.app.persistence.dao.LaborActualDao
 import id.thork.app.persistence.dao.LaborMasterDao
@@ -64,6 +66,10 @@ class LaborRepository @Inject constructor(
         return craftMasterDao.getListCraftByLaborcode(laborcode)
     }
 
+    fun findLaborPlanbyTaskid(workroderid: String, taskid: String) : List<LaborPlanEntity>  {
+        return laborPlanDao.findListLaborPlanlbyTaskid(workroderid, taskid)
+    }
+
 
     fun addLaborPlanToObjectBox(member: Member) {
         val woact = member.woactivity
@@ -86,15 +92,30 @@ class LaborRepository @Inject constructor(
                         it.vendor.whatIfNotNull { vendor ->
                             laborCache.vendor = vendor
                         }
-                        laborCache.wplaborid = it.wplaborid
+                        laborCache.wplaborid = it.wplaborid.toString()
                         laborCache.wonumHeader = member.wonum
                         laborCache.workorderid = member.workorderid.toString()
                         laborCache.wonumTask = task.wonum
+                        laborCache.syncUpdate = BaseParam.APP_TRUE
                         saveLaborPlanCache(laborCache)
                     }
                 }
             }
         }
+    }
+
+    fun prepareBodyLaborPlan(workroderid: String, taskid: String) : List<Wplabor>{
+        val listLaborPlan = laborPlanDao.findListLaborPlanlbyTaskid(workroderid, taskid)
+        val wpLaborList = mutableListOf<Wplabor>()
+        listLaborPlan.whatIfNotNull { listCache ->
+            listCache.forEach { laborplan ->
+                val wplabor = Wplabor()
+                wplabor.wplaborid = 0
+                wplabor.laborcode = laborplan.laborcode
+                wpLaborList.add(wplabor)
+            }
+        }
+        return wpLaborList
     }
 
 
@@ -143,6 +164,7 @@ class LaborRepository @Inject constructor(
                         laborActual.wonumHeader = member.wonum
                         laborActual.workorderid = member.workorderid.toString()
                         laborActual.wonumTask = task.wonum
+                        laborActual.syncUpdate = BaseParam.APP_TRUE
 
                         //TODO Adjustment time
 //                        val finishdatetime = DateUtils.convertMaximoDateToMillisec(member.date)
@@ -151,7 +173,6 @@ class LaborRepository @Inject constructor(
                 }
             }
         }
-
     }
 
     /**

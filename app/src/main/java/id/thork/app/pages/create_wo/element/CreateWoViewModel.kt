@@ -39,6 +39,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val attachmentRepository: AttachmentRepository,
     private val taskRepository: TaskRepository,
     private val preferenceManager: PreferenceManager,
+    private val laborRepository: LaborRepository
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 

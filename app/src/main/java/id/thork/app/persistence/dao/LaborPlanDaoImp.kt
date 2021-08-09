@@ -96,4 +96,10 @@ class LaborPlanDaoImp : LaborPlanDao {
     }
 
 
+    override fun findListLaborPlanlbyTaskid(workorderid: String, taskid: String) : List<LaborPlanEntity> {
+        return laborPlanEntityBox.query().equal(LaborPlanEntity_.workorderid, workorderid).equal(LaborPlanEntity_.taskid, taskid).
+        build().find()
+    }
+
+
 }

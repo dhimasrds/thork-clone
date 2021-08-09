@@ -11,7 +11,7 @@ data class Wplabor(
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "laborcode")
-    val laborcode: String? = null,
+    var laborcode: String? = null,
     @Json(name = "laborhrs")
     val laborhrs: Double? = null,
     @Json(name = "localref")
@@ -27,7 +27,7 @@ data class Wplabor(
     @Json(name = "_rowstamp")
     val rowstamp: String? = null,
     @Json(name = "wplaborid")
-    val wplaborid: String? = null,
+    var wplaborid: Int? = null,
     @Json(name = "wplaboruid")
     val wplaboruid: Int? = null,
     @Json(name = "craft")

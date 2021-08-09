@@ -358,6 +358,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun goToLaborPlan() {
         val intent = Intent(this, LaborPlanActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        intent.putExtra(BaseParam.WONUM, tempWonum)
         startActivity(intent)
     }
 

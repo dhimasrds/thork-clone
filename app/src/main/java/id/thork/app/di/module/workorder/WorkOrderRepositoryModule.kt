@@ -104,7 +104,9 @@ object WorkOrderRepositoryModule {
             appSession,
             TaskDaoImp(),
             httpLoggingInterceptor,
-            preferenceManager
+            preferenceManager,
+            LaborPlanDaoImp(),
+            LaborActualDaoImp(),
         )
     }
 

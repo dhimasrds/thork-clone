@@ -4,6 +4,7 @@ import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
@@ -14,6 +15,9 @@ import id.thork.app.network.api.TaskClient
 import id.thork.app.network.response.task_response.TaskResponse
 import id.thork.app.network.response.task_response.Woactivity
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.Wplabor
+import id.thork.app.persistence.dao.LaborActualDao
+import id.thork.app.persistence.dao.LaborPlanDao
 import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.entity.TaskEntity
 import okhttp3.logging.HttpLoggingInterceptor
@@ -29,7 +33,10 @@ class TaskRepository @Inject constructor(
     private val taskDao: TaskDao,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
     private val preferenceManager: PreferenceManager,
+    private val laborPlanDao: LaborPlanDao,
+    private val laborActualDao: LaborActualDao,
 ) : BaseRepository {
+
     val TAG = TaskRepository::class.java.name
 
     private val taskClient: TaskClient
@@ -232,6 +239,7 @@ class TaskRepository @Inject constructor(
         val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
         taskEntity.forEach {
             val member = id.thork.app.network.response.work_order.Woactivity()
+            val listLaborPlan = prepareBodyLaborPlan(woid.toString(), it.taskId.toString())
             member.workorderid = 0
             member.taskid = it.taskId
             member.description = it.desc
@@ -239,6 +247,9 @@ class TaskRepository @Inject constructor(
             member.status = it.status
             member.schedstart = it.scheduleStart
             member.actstart = it.actualStart
+            listLaborPlan.whatIfNotNullOrEmpty {
+                member.wplabor = it
+            }
             memberTask.add(member)
         }
         return memberTask
@@ -307,5 +318,26 @@ class TaskRepository @Inject constructor(
                 saveTaskCache(taskEntity)
             }
         }
+    }
+
+    fun prepareBodyLaborPlan(workroderid: String, taskid: String): List<Wplabor> {
+        val listLaborPlan = laborPlanDao.findListLaborPlanlbyTaskid(workroderid, taskid)
+        val wpLaborList = mutableListOf<Wplabor>()
+        listLaborPlan.whatIfNotNull { listCache ->
+            listCache.forEach { laborplan ->
+                val wplabor = Wplabor()
+                wplabor.wplaborid = 0
+                laborplan.laborcode.whatIfNotNull(
+                    whatIf = {
+                        wplabor.laborcode = it
+                    },
+                    whatIfNot = {
+                        wplabor.craft = laborplan.craft
+                    }
+                )
+                wpLaborList.add(wplabor)
+            }
+        }
+        return wpLaborList
     }
 }

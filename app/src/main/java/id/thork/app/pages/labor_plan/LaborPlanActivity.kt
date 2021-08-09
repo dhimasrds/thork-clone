@@ -32,10 +32,7 @@ class LaborPlanActivity : BaseActivity() {
             lifecycleOwner = this@LaborPlanActivity
             vm = viewModels
 
-            btnCreate.setOnClickListener {
-                val intent = Intent(this@LaborPlanActivity, CreateLaborPlanActivity::class.java)
-                startActivity(intent)
-            }
+
         }
         laborPlanEntity = mutableListOf()
         laborPlanAdapter = LaborPlanAdapter(this, laborPlanEntity)
@@ -76,9 +73,21 @@ class LaborPlanActivity : BaseActivity() {
         })
     }
 
+    override fun setupListener() {
+        super.setupListener()
+        binding.btnCreate.setOnClickListener {
+            val intent = Intent(this@LaborPlanActivity, CreateLaborPlanActivity::class.java)
+            intent.putExtra(BaseParam.WORKORDERID, intentWorkorderid.toString())
+            intent.putExtra(BaseParam.WONUM, intentWonum.toString())
+            startActivity(intent)
+            finish()
+        }
+    }
+
     private fun retriveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentWorkorderid = intent.getIntExtra(BaseParam.WORKORDERID,0)
+        Timber.d("wonum: %s && woid: %s", intentWonum.toString(), intentWorkorderid.toString())
 
         intentWorkorderid.whatIfNotNull {
             viewModels.fetchListLaborPlan(it.toString())

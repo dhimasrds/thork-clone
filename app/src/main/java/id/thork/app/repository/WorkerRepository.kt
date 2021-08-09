@@ -68,7 +68,13 @@ class WorkerRepository constructor(
         )
 
         val taskRepository =
-            TaskRepository(appSession, taskDao, httpLoggingInterceptor, preferenceManager)
+            TaskRepository(
+                appSession,
+                taskDao,
+                httpLoggingInterceptor,
+                preferenceManager,
+                laborPlanDao,
+                laborActualDao,)
 
         val laborRepository = LaborRepository(
             appSession,
@@ -130,7 +136,12 @@ class WorkerRepository constructor(
 
     fun buildTaskRepository(): TaskRepository {
         return TaskRepository(
-            appSession, taskDao, httpLoggingInterceptor, preferenceManager
+            appSession,
+            taskDao,
+            httpLoggingInterceptor,
+            preferenceManager,
+            laborPlanDao,
+            laborActualDao,
         )
     }
 

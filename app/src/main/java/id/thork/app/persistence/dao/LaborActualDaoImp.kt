@@ -4,6 +4,8 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborActualEntity_
+import id.thork.app.persistence.entity.LaborPlanEntity
+import id.thork.app.persistence.entity.LaborPlanEntity_
 import io.objectbox.Box
 import timber.log.Timber
 import java.util.*
@@ -61,9 +63,7 @@ class LaborActualDaoImp : LaborActualDao {
 
     override fun findListLaborActual(workorderid: String): List<LaborActualEntity> {
         return laborActualEntityBox.query()
-            .order(LaborActualEntity_.workorderid)
+            .equal(LaborActualEntity_.workorderid, workorderid)
             .build().find()
     }
-
-
 }

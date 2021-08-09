@@ -13,4 +13,5 @@ interface LaborPlanDao {
     fun findListLaborPlan(workorderid: String): List<LaborPlanEntity>
     fun findlaborPlanByworkorderidandCraft(craft: String, workorderid: String): LaborPlanEntity?
     fun findlaborPlanBylaborcodedandCraft(laborcode: String, craft: String): LaborPlanEntity?
+    fun findListLaborPlanlbyTaskid(workorderid: String, taskid: String): List<LaborPlanEntity>
 }
