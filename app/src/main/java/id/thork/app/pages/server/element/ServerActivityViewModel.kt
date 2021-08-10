@@ -70,7 +70,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
             .replace("https://", "")
         completeUrl.append(tmpServerUrl)
         val url = Patterns.WEB_URL.matcher(completeUrl).matches()
-        Timber.d("raka validatorURL %s ", url)
+        Timber.d("validateUrl validatorURL %s ", url)
         if (url) {
             if (URLUtil.isValidUrl(completeUrl.toString())) {
                 Timber.tag(TAG).i("raka() serverUrl: %s", completeUrl.toString())
@@ -122,7 +122,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
                     connect()
                 }
                 Timber.tag(TAG).i(
-                    "raka() response code: %s content: %s",
+                    "doPingNetwork() response code: %s content: %s",
                     connection.responseCode, connection.contentLength
                 )
                 val isConnected = (connection.responseCode == 200
@@ -135,7 +135,7 @@ class ServerActivityViewModel @ViewModelInject constructor(
             } catch (e: Exception) {
                 _isReachable.postValue(BaseParam.APP_FALSE)
                 _state.postValue(BaseParam.APP_FALSE)
-                Timber.d("raka %s ", "error")
+                Timber.d("doPingNetwork %s ", "error")
                 if (connection != null) connection.disconnect()
             }
         }

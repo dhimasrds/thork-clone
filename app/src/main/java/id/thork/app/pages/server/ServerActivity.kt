@@ -69,13 +69,9 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             if (binding.includeServerContent.serverUrl.text != null && binding.includeServerContent.serverUrl.text.toString()
                     .isNotEmpty()
             ) {
-                Timber.d("raka checkURL %s ", checkURL)
-                Timber.d("raka serverReachable %s ", serverReachable)
-
                 viewModel.validateUrl(binding.includeServerContent.switchHttps.isChecked,
                     binding.includeServerContent.serverUrl.text.toString())
             }  else {
-                Timber.d("raka %s ", "error")
                 setDialogEmpty()
             }
         }
@@ -104,7 +100,6 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         })
 
         viewModel.isReachable.observe(this, {
-            Timber.d("raka %s ", it)
             if (it == BaseParam.APP_FALSE){
                 setDialogReachServer()
             } else {
