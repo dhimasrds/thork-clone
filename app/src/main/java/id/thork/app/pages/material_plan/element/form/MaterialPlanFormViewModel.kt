@@ -64,7 +64,8 @@ class MaterialPlanFormViewModel @ViewModelInject constructor(
             currentWpMaterial?.siteid = appSession.userEntity.siteid
             currentWpMaterial?.orgid = appSession.userEntity.orgid
             _wpMaterialCache.value = currentWpMaterial
-        } else if (formState.equals(BaseParam.FORM_STATE_EDIT)) {
+        } else if (formState.equals(BaseParam.FORM_STATE_EDIT)
+            || formState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
             currentWpMaterial = wpMaterialRepository.getMaterialPlanByIdAndWoId(id, woId)
             _wpMaterialCache.value = currentWpMaterial
         }

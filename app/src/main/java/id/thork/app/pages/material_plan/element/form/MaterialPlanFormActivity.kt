@@ -52,6 +52,8 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
     val viewModel: MaterialPlanFormViewModel by viewModels()
     private val binding: ActivityMaterialPlanFormBinding by binding(R.layout.activity_material_plan_form)
 
+    private var intentId:Long = 0
+    private var intentState: String? = null
     private var intentWoId = BaseParam.APP_EMPTY_ID
     private var wpmaterialEntity: WpmaterialEntity? = null
     private var lineTypeItems: List<LocomotifAttribute> = listOf()
@@ -98,23 +100,15 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
     }
 
     private fun retrieveFromIntent() {
-        val intentState = intent.getStringExtra(BaseParam.FORM_STATE)
+        intentState = intent.getStringExtra(BaseParam.FORM_STATE)
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
-        val intentId = intent.getLongExtra(BaseParam.ID, 0)
+        intentId = intent.getLongExtra(BaseParam.ID, 0)
         Timber.tag(TAG).d(
             "retrieveFromIntent() intentState: %s intentWoId: %s",
             intentState, intentWoId
         )
+
         intentState.whatIfNotNull { itState ->
-            if (itState.equals(BaseParam.FORM_STATE_NEW)) {
-                binding.btnDelete.visibility = View.GONE
-            } else if (itState.equals(BaseParam.FORM_STATE_EDIT)) {
-                binding.btnDelete.visibility = View.VISIBLE
-            } else if (itState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
-                binding.btnDelete.visibility = View.GONE
-                binding.btnSave.visibility = View.GONE
-                itemNumExtension.visibility = View.GONE
-            }
             intentWoId.whatIfNotNull { itWoId ->
                 viewModel.setupEntity(itState, itWoId, intentId)
             }
@@ -145,6 +139,7 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 rootView.addView(locomotifBuilder?.build())
 
                 widgetListener()
+                setupFormStateAfterBuild()
             }
         } catch (exception: Exception) {
             Timber.tag(TAG).e(exception)
@@ -306,6 +301,22 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
             startQRScanner(BaseParam.BARCODE_REQUEST_CODE)
         }
     }
+
+    private fun setupFormStateAfterBuild() {
+        intentState.whatIfNotNull { itState ->
+            if (itState.equals(BaseParam.FORM_STATE_NEW)) {
+                binding.btnDelete.visibility = View.GONE
+            } else if (itState.equals(BaseParam.FORM_STATE_EDIT)) {
+                binding.btnDelete.visibility = View.VISIBLE
+            } else if (itState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
+                binding.btnDelete.visibility = View.GONE
+                binding.btnSave.visibility = View.GONE
+                itemNumExtension.visibility = View.GONE
+            }
+        }
+    }
+
+
 
     override fun clickOnItem(fieldName: String, data: LocomotifAttribute) {
         Timber.tag(TAG).d("clickOnItem() fieldName: %s", fieldName)
