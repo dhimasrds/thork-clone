@@ -85,6 +85,18 @@
     <string name="login_failed">Login Gagal</string>
     <string name="login_massege">Username atau password salah, silahkan coba lagi</string>
 
+    <!-- Server Dialog Empty-->
+    <string name="server_dialog_empty_title">Peringatan</string>
+    <string name="server_dialog_empty_question">Alamat Server tidak boleh kosong</string>
+
+    <!-- Server Dialog Wrong URL-->
+    <string name="server_dialog_wrong_title">Peringatan</string>
+    <string name="server_dialog_wrong_question">Alamat Server Salah</string>
+
+    <!-- Server Dialog Reachable-->
+    <string name="server_dialog_reachable_title">Peringatan</string>
+    <string name="server_dialog_reachable_question">Koneksi server tidak dapat terjangkau</string>
+
     <!-- Logout Dialog -->
     <string name="logout_title">Keluar</string>
     <string name="logout_qustion">Anda yakin ingin keluar?</string>

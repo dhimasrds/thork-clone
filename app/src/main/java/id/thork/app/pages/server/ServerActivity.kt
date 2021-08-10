@@ -12,7 +12,6 @@
 package id.thork.app.pages.server
 
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -25,6 +24,8 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityServerBinding
+import id.thork.app.network.HttpsTrustManager
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.server.element.ServerActivityViewModel
@@ -33,19 +34,19 @@ import timber.log.Timber
 
 
 @AndroidEntryPoint
-class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
+class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
+    CustomDialogUtils.DialogActionListener {
     val TAG = ServerActivity::class.java.name
 
     val viewModel: ServerActivityViewModel by viewModels()
     private val binding: ActivityServerBinding by binding(R.layout.activity_server)
 
     private lateinit var dialogUtils: DialogUtils
+    private lateinit var customDialogUtils: CustomDialogUtils
     private lateinit var tryAgain: View
     private var exitApplication = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var checkURL = false
+    private var serverReachable = false
 
     override fun setupView() {
         super.setupView()
@@ -54,17 +55,29 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         }
         Timber.tag(TAG).i("onCreate() view model: %s", viewModel)
         viewModel.cacheServerUrl()
+        dialogUtils = DialogUtils(this)
+        customDialogUtils = CustomDialogUtils(this)
+
     }
 
     override fun setupListener() {
         super.setupListener()
         val pInfo = packageManager.getPackageInfo(packageName, 0)
         binding.tvVersion.text = BaseParam.APP_VERSION + pInfo.versionName
+        HttpsTrustManager.allowAllSSL()
         binding.includeServerContent.serverNext.setOnClickListener {
-            viewModel.validateUrl(
-                binding.includeServerContent.switchHttps.isChecked,
-                binding.includeServerContent.serverUrl.text.toString()
-            )
+            if (binding.includeServerContent.serverUrl.text != null && binding.includeServerContent.serverUrl.text.toString()
+                    .isNotEmpty()
+            ) {
+                Timber.d("raka checkURL %s ", checkURL)
+                Timber.d("raka serverReachable %s ", serverReachable)
+
+                viewModel.validateUrl(binding.includeServerContent.switchHttps.isChecked,
+                    binding.includeServerContent.serverUrl.text.toString())
+            }  else {
+                Timber.d("raka %s ", "error")
+                setDialogEmpty()
+            }
         }
     }
 
@@ -73,8 +86,6 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         viewModel.state.observe(this, {
             if (CommonUtils.isTrue(it)) {
                 onSuccess()
-            } else {
-                onError()
             }
         })
 
@@ -83,6 +94,23 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         })
 
         viewModel.outputWorkInfos.observe(this, workInfosObserver())
+
+        viewModel.checkURL.observe(this, {
+            if (it == BaseParam.APP_FALSE){
+                setDialogWrongURL()
+            } else {
+                checkURL = true
+            }
+        })
+
+        viewModel.isReachable.observe(this, {
+            Timber.d("raka %s ", it)
+            if (it == BaseParam.APP_FALSE){
+                setDialogReachServer()
+            } else {
+                serverReachable = true
+            }
+        })
     }
 
     // Add this functions
@@ -137,10 +165,8 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
     }
 
     fun showDialog() {
-        dialogUtils = DialogUtils(this)
         dialogUtils.setInflater(R.layout.activity_server_dialog, null, layoutInflater)
             .create()
-            .setRounded(true)
         tryAgain = dialogUtils.setViewId(R.id.try_again)
         tryAgain.setOnClickListener {
             dialogUtils.dismiss()
@@ -149,6 +175,32 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
         dialogUtils.show()
     }
 
+    private fun setDialogEmpty() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setMiddleButtonText(R.string.places_try_again)
+            .setTittle(R.string.server_dialog_empty_title)
+            .setDescription(R.string.server_dialog_empty_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogWrongURL() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setMiddleButtonText(R.string.places_try_again)
+            .setTittle(R.string.server_dialog_wrong_title)
+            .setDescription(R.string.server_dialog_wrong_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun setDialogReachServer() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setMiddleButtonText(R.string.places_try_again)
+            .setTittle(R.string.server_dialog_reachable_title)
+            .setDescription(R.string.server_dialog_reachable_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
 
     override fun onNotificationReceived(message: String) {
         super.onNotificationReceived(message)
@@ -165,5 +217,17 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener {
             return
         }
         this.exitApplication = true
+    }
+
+    override fun onRightButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
     }
 }
