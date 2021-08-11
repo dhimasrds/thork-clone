@@ -12,17 +12,22 @@
 
 package id.thork.app.example
 
+import id.thork.app.base.BaseParam
 import id.thork.app.utils.DateUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
 fun main () {
-    val tsLong = System.currentTimeMillis()
-    println(tsLong)
-    val tsLongs = tsLong / 1000
-    println(tsLongs)
-    val tsInt = tsLong.toInt()
-    println(tsInt)
+    val match = BaseParam.FORM_STATE_WO_READ_ONLY.filter {
+        "close".equals(it, ignoreCase = true)
+    }
+    println(match.size)
+//    val tsLong = System.currentTimeMillis()
+//    println(tsLong)
+//    val tsLongs = tsLong / 1000
+//    println(tsLongs)
+//    val tsInt = tsLong.toInt()
+//    println(tsInt)
 
     //TIME SAMPLE
 //    val timezone: TimeZone = TimeZone.getTimeZone("GMT+8")

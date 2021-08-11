@@ -98,6 +98,12 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         intentSchduleTime.whatIfNotNull {
             binding.tvTimeScheduleStart.setText(it)
         }
+        intentSchdule.whatIfNotNull(
+            whatIf = {
+                binding.tvScheduleStart.setText(it)
+            }, whatIfNot = {
+                updateDateInView(true)
+            })
         intentDetailTag.whatIfNotNull {
             setupDetailTask(intentDesc, intentSchdule, intentActual, intentEstDur, intentTag)
         }

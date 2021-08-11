@@ -760,7 +760,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                     fieldsEmptyValidator.size, fieldValidator)
                 textWidget.setError("$fieldValidator can't empty")
 
-                Toast.makeText(context,R.string.general_required_fields, Toast.LENGTH_LONG).show()
+                Toast.makeText(context,R.string.general_required_fields, Toast.LENGTH_SHORT).show()
             }
             return false
         }

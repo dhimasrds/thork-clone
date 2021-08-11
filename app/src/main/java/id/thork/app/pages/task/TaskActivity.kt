@@ -92,7 +92,6 @@ class TaskActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
             val currentDateString = DateUtils.getAppDateFormat(currentDate)
             val currentTimeString = DateUtils.getAppTimeFormat(currentDate)
             Timber.tag(TAG).d("setupListener() date String: %s", currentDateString)
-            intent.putExtra(BaseParam.SHEDULE_START, currentDateString)
             intent.putExtra(BaseParam.SHEDULE_START_TIME, currentTimeString)
             intentTag.whatIfNotNull {
                 intent.putExtra(BaseParam.TAG_TASK, it)

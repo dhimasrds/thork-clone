@@ -266,5 +266,10 @@ object BaseParam {
     const val FORM_STATE_NEW = "FORM_STATE_NEW"
     const val FORM_STATE_EDIT = "FORM_STATE_EDIT"
     const val FORM_STATE_READ_ONLY= "FORM_STATE_READ_ONLY"
+    /**
+     * For current condition, wo status hardcode in form state
+     */
+    val FORM_STATE_WO_READ_ONLY: Array<String> = arrayOf("CLOSE")
+    val FORM_STATE_WO_EDIT: Array<String> = arrayOf("WAPPR","APPR","INPRG", "COMP")
 
 }
