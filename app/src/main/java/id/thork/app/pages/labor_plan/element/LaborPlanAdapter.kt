@@ -47,6 +47,8 @@ class LaborPlanAdapter constructor(
         fun bind(laborPlanEntity: LaborPlanEntity) {
             val vendor = StringUtils.NVL(laborPlanEntity.vendor, BaseParam.APP_DASH)
             val laborcode = StringUtils.NVL(laborPlanEntity.laborcode, BaseParam.APP_DASH)
+            val taskid =  StringUtils.NVL(laborPlanEntity.taskid, BaseParam.APP_DASH)
+            val taskdesc =  StringUtils.NVL(laborPlanEntity.taskDescription, BaseParam.APP_DASH)
             binding.apply {
                 if (laborcode != BaseParam.APP_DASH) {
                     tvLabor.text = laborcode
@@ -54,7 +56,7 @@ class LaborPlanAdapter constructor(
                     tvLabor.text = laborPlanEntity.craft
                 }
 
-                tvType.text = laborPlanEntity.taskid.plus(BaseParam.APP_DASH).plus(laborPlanEntity.taskDescription)
+                tvType.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
                 tvStatus.text = vendor
                 cardLaborPlan.setOnClickListener {
                     val intent = Intent(activity, LaborPlanDetailsActivity::class.java)

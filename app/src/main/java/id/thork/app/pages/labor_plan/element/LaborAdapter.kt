@@ -20,8 +20,8 @@ import id.thork.app.persistence.entity.LaborPlanEntity
  * Jakarta, Indonesia.
  */
 class LaborAdapter constructor(
-    private val activity : Activity,
-    private val laborMasterEntity: List<LaborMasterEntity>
+        private val activity : Activity,
+        private val laborMasterEntity: List<LaborMasterEntity>
 
 ) :
     RecyclerView.Adapter<LaborAdapter.ViewHolder>() {

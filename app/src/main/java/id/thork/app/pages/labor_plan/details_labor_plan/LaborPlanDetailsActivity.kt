@@ -129,4 +129,9 @@ class LaborPlanDetailsActivity : BaseActivity() {
 
     }
 
+    override fun setupListener() {
+        super.setupListener()
+
+    }
+
 }

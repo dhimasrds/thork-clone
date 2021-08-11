@@ -19,6 +19,7 @@ import id.thork.app.network.response.work_order.Wplabor
 import id.thork.app.persistence.dao.LaborActualDao
 import id.thork.app.persistence.dao.LaborPlanDao
 import id.thork.app.persistence.dao.TaskDao
+import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.persistence.entity.TaskEntity
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
@@ -272,9 +273,9 @@ class TaskRepository @Inject constructor(
     fun handlingTaskSuccessFromCreateWo(
         member: Member,
         list: List<id.thork.app.network.response.work_order.Woactivity>,
-        wonum: String
+        tempwonum: String
     ) {
-        removeTaskByWonum(wonum)
+        removeTaskByWonum(tempwonum)
         val woid = member.workorderid
         val wonumber = member.wonum
         for (tasks in list) {
@@ -294,6 +295,11 @@ class TaskRepository @Inject constructor(
                 isFromWoDetail = BaseParam.APP_FALSE
             )
             saveTaskCache(taskEntity)
+            Timber.tag(TAG)
+                .d("handlingTaskSuccessFromCreateWo() size wplabor %s", tasks.wplabor?.size)
+            tasks.wplabor.whatIfNotNullOrEmpty {
+                handlingLaborPlan(it, member, tasks, tempwonum)
+            }
         }
     }
 
@@ -439,4 +445,80 @@ class TaskRepository @Inject constructor(
         }
         return wpLaborList
     }
+
+    fun handlingLaborPlan(
+        wpLaborList: List<Wplabor>,
+        member: Member,
+        task: id.thork.app.network.response.work_order.Woactivity,
+        tempwonum: String
+    ) {
+        val wonumheader = member.wonum
+        val woidHeader = member.workorderid
+        val taskid = task.taskid.toString()
+        Timber.tag(TAG).d("handlingLaborPlan() list size : %s", wpLaborList.size)
+        wpLaborList.whatIfNotNullOrEmpty { wplaborlist ->
+            wplaborlist.forEach { wpLabor ->
+                val laborcode = wpLabor.laborcode
+                Timber.tag(TAG).d("handlingLaborPlan() Laborcode %s", wpLabor.laborcode)
+                laborcode.whatIfNotNull(
+                    whatIf = {
+                        val laborCache = laborPlanDao.findlaborPlanByworkorderidAndTask(
+                            laborcode.toString(),
+                            tempwonum, taskid
+                        )
+                        Timber.tag(TAG).d("handlingLaborPlan() laborcache %s", laborCache)
+                        laborCache.whatIfNotNull { cache ->
+                            val wplaborid = wpLabor.wplaborid.toString()
+                            val taskwonum = task.wonum.toString()
+
+                            updateLaborPlanCache(
+                                cache,
+                                wplaborid,
+                                wonumheader.toString(),
+                                woidHeader.toString(),
+                                taskwonum
+                            )
+                        }
+                    },
+                    whatIfNot = {
+                        val laborCache = laborPlanDao.findlaborPlanBycraftAndTask(
+                            wpLabor.craft.toString(),
+                            tempwonum,
+                            taskid
+                        )
+                        Timber.d("handlingLaborPlan() laborcode not avail %s", laborCache)
+                        laborCache.whatIfNotNull { cache ->
+                            val wplaborid = wpLabor.wplaborid.toString()
+                            val taskwonum = task.wonum.toString()
+                            Timber.d("handlingLaborPlan() save to local")
+                            updateLaborPlanCache(
+                                cache,
+                                wplaborid,
+                                wonumheader.toString(),
+                                woidHeader.toString(),
+                                taskwonum
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    private fun updateLaborPlanCache(
+        laborPlanEntity: LaborPlanEntity,
+        wplaborid: String,
+        wonumheader: String,
+        woidHeader: String,
+        taskwonum: String
+    ) {
+        laborPlanEntity.wplaborid = wplaborid
+        laborPlanEntity.wonumHeader = wonumheader
+        laborPlanEntity.workorderid = woidHeader
+        laborPlanEntity.wonumTask = taskwonum
+        laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
+        laborPlanDao.createLaborPlanCache(laborPlanEntity, appSession.userEntity.username)
+    }
+
+
 }

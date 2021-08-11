@@ -46,6 +46,9 @@ class LaborPlanViewModel @ViewModelInject constructor(
     private val _craftEntity = MutableLiveData<CraftMasterEntity>()
     val craftEntity: LiveData<CraftMasterEntity> get() = _craftEntity
 
+    private val _listCraft = MutableLiveData<List<String>>()
+    val listCraft : LiveData<List<String>> get() = _listCraft
+
 
     fun fetchListLaborPlan(workroderid: String) {
         val listLabor = laborRepository.findListLaborplanWorkorderid(workroderid)
@@ -82,11 +85,18 @@ class LaborPlanViewModel @ViewModelInject constructor(
         }
     }
 
-    fun fetchMasterCraft(laborcode: String) {
+    fun fetchMasterCraftByLaborcode(laborcode: String) {
         val masterCraft = laborRepository.craftMaster(laborcode)
-        masterCraft.whatIfNotNullOrEmpty {
-            _getCraftMaster.value = it
-        }
+        masterCraft.whatIfNotNullOrEmpty (
+            whatIf = {
+                _getCraftMaster.value = it
+
+            },
+            whatIfNot = {
+                fetchMasterCraft()
+            }
+                )
+
     }
 
     fun fetchTask(wonum: String) {
@@ -105,10 +115,19 @@ class LaborPlanViewModel @ViewModelInject constructor(
 
     fun fetchMasterCraft() {
         val list = laborRepository.fetchMasterCraft()
-        for (a in list!!){
-            Timber.d("fetchMasterCraft() craft :%s", a)
+        val tempCraftMasterEntities = mutableListOf<CraftMasterEntity>()
+        list.whatIfNotNullOrEmpty { craftlist ->
+            craftlist.forEach {
+                val craftCache = CraftMasterEntity()
+                craftCache.craft = it
+                tempCraftMasterEntities.add(craftCache)
+            }
         }
-        Timber.d("fetchMasterCraft() :%s", list.size)
+
+        tempCraftMasterEntities.whatIfNotNullOrEmpty {
+            _getCraftMaster.value = it
+        }
+
     }
 
     fun saveToLocalCache(
@@ -121,15 +140,18 @@ class LaborPlanViewModel @ViewModelInject constructor(
         workroderid: String
     ) {
         val laborPlanCache = LaborPlanEntity()
-        laborPlanCache.laborcode = laborCode
+        if (laborCode != BaseParam.APP_DASH) {
+            laborPlanCache.laborcode = laborCode
+        } else {
+            laborPlanCache.craft = craft
+        }
         laborPlanCache.taskid = taskid
         laborPlanCache.taskDescription = taskdesc
-        laborPlanCache.craft = craft
-        laborPlanCache.skillLevel = skillLevel
         laborPlanCache.wonumHeader = wonum
         laborPlanCache.workorderid = workroderid
         laborPlanCache.syncUpdate = BaseParam.APP_FALSE
         laborRepository.saveLaborPlanCache(laborPlanCache)
     }
+
 
 }

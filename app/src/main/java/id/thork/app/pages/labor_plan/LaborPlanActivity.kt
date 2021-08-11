@@ -50,7 +50,6 @@ class LaborPlanActivity : BaseActivity() {
             historyAttendanceIcon = false
         )
         retriveFromIntent()
-        viewModels.fetchMasterCraft()
     }
 
     override fun setupObserver() {

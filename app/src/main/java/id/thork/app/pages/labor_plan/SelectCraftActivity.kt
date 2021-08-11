@@ -1,8 +1,10 @@
 package id.thork.app.pages.labor_plan
 
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivitySelectCraftBinding
 import id.thork.app.pages.labor_plan.element.CraftAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
@@ -23,11 +25,10 @@ class SelectCraftActivity : BaseActivity() {
             vm = viewModels
 
         }
-        craftAdapter = CraftAdapter()
 
         craftEntities = mutableListOf()
+        craftAdapter = CraftAdapter(this, craftEntities)
         binding.rvSelectCraft.adapter = craftAdapter
-
 
         setupToolbarWithHomeNavigation(
             getString(R.string.select_craft),
@@ -38,10 +39,22 @@ class SelectCraftActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
+        retriveFromIntent()
     }
 
     override fun setupObserver() {
         super.setupObserver()
+        viewModels.getCraftMaster.observe(this, Observer {
+            craftEntities.clear()
+            craftEntities.addAll(it)
+            craftAdapter.notifyDataSetChanged()
+        })
 
+    }
+
+
+    private fun retriveFromIntent() {
+        val intentLaborCode = intent.getStringExtra(BaseParam.LABORCODE)
+        viewModels.fetchMasterCraftByLaborcode(intentLaborCode.toString())
     }
 }

@@ -101,5 +101,48 @@ class LaborPlanDaoImp : LaborPlanDao {
         build().find()
     }
 
+    override fun findlaborPlanByworkorderidAndTask(
+        laborcode: String,
+        wonum: String,
+        taskid: String
+    ): LaborPlanEntity? {
+        val laborPlanEntity =
+            laborPlanEntityBox.query().equal(LaborPlanEntity_.laborcode, laborcode)
+                .equal(LaborPlanEntity_.wonumHeader, wonum)
+                .equal(LaborPlanEntity_.taskid, taskid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
+    override fun findListLaborPlanlbyWonumAndTaskid(wonum: String, taskid: String) : List<LaborPlanEntity> {
+        return laborPlanEntityBox.query().equal(LaborPlanEntity_.wonumHeader, wonum).equal(LaborPlanEntity_.taskid, taskid).
+        build().find()
+    }
+
+    override fun findlaborPlanBycraftAndTask(
+        craft: String,
+        wonum: String,
+        taskid: String
+    ): LaborPlanEntity? {
+        val laborPlanEntity =
+            laborPlanEntityBox.query().equal(LaborPlanEntity_.craft, craft)
+                .equal(LaborPlanEntity_.wonumHeader, wonum)
+                .equal(LaborPlanEntity_.taskid, taskid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
+
+
+
+
 
 }

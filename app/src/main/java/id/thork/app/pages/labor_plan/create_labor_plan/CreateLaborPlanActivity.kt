@@ -48,7 +48,6 @@ class CreateLaborPlanActivity : BaseActivity() {
 
     override fun setupObserver() {
         super.setupObserver()
-
         viewModels.craftEntity.observe(this, Observer {
             binding.apply {
                 tvLabor.text = it.laborcode
@@ -81,11 +80,13 @@ class CreateLaborPlanActivity : BaseActivity() {
 
     private fun goToSelectLabor() {
         val intent = Intent(this, SelectLaborActivity::class.java)
+        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
         startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
     }
 
     private fun goToSelectCraft() {
         val intent = Intent(this, SelectCraftActivity::class.java)
+        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
         startActivityForResult(intent, BaseParam.REQUEST_CODE_CRAFT)
     }
 
@@ -121,6 +122,12 @@ class CreateLaborPlanActivity : BaseActivity() {
 
                     BaseParam.REQUEST_CODE_CRAFT -> {
                         // Handling when choose craft
+                        data.whatIfNotNull {
+                            val craft = it.getStringExtra(BaseParam.CRAFT_FORM)
+                            val skill = it.getStringExtra(BaseParam.SKILL_FORM)
+                            binding.tvCraft.text = craft
+                            binding.tvSkillLevel.text = skill
+                        }
                     }
                 }
             }
@@ -147,6 +154,11 @@ class CreateLaborPlanActivity : BaseActivity() {
             navigateToLaborPlan()
 
         }
+    }
+
+    override fun goToPreviousActivity() {
+        super.goToPreviousActivity()
+        navigateToLaborPlan()
     }
 
     override fun onBackPressed() {

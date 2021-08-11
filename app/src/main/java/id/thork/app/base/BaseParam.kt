@@ -30,6 +30,9 @@ object BaseParam {
 
     const val APP_EMPTY_STRING = ""
     const val APP_DASH = "-"
+    const val APP_WHITESPACE = " "
+    const val APP_NULL = "null"
+
 
     const val APP_DEFAULT_LANG = "eng"
     const val APP_VERSION = "Version "
@@ -239,6 +242,7 @@ object BaseParam {
 
     const val LABORCODE_FORM = "LABORCODEP_FORM"
     const val CRAFT_FORM = "CRAFT_FORM"
+    const val SKILL_FORM = "SKILL_FORM"
     const val TASK_FORM = "TASK_FORM"
 
 
