@@ -86,6 +86,18 @@
     <string name="login_failed">Login Failed</string>
     <string name="login_massege">Incorrect username or password, please try again</string>
 
+    <!-- Server Dialog Empty-->
+    <string name="server_dialog_empty_title">Warning</string>
+    <string name="server_dialog_empty_question">Server Address cant empty</string>
+
+    <!-- Server Dialog Wrong URL-->
+    <string name="server_dialog_wrong_title">Warning</string>
+    <string name="server_dialog_wrong_question">Wrong Server Address</string>
+
+    <!-- Server Dialog Reachable-->
+    <string name="server_dialog_reachable_title">Warning</string>
+    <string name="server_dialog_reachable_question">Cant reach server connection</string>
+
     <!-- Logout Dialog -->
     <string name="logout_title">Logout</string>
     <string name="logout_qustion">Are you sure you want to logout?</string>
