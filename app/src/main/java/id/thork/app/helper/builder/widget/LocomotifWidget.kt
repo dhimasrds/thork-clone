@@ -193,7 +193,10 @@ class LocomotifWidget constructor(val context: Context) {
         val array: Array<String> = arrayList.toTypedArray()
         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(context, android.R.layout.simple_spinner_item, array)
         val spinner = AppCompatSpinner(context)
-        spinner.adapter = arrayAdapter
+        spinner.apply {
+            tag = LOCOMOTIF.plus(fieldName)
+            adapter = arrayAdapter
+        }
         return spinner
     }
 

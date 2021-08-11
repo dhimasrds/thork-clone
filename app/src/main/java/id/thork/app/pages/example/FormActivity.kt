@@ -105,6 +105,8 @@ OnValueChangeListener {
             rootView.addView(locomotifBuilder?.build())
 
             getWidgetListener()
+
+            locomotifBuilder?.setFieldsReadOnly(true)
         }
     }
 

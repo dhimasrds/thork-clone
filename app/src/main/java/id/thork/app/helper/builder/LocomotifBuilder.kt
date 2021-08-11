@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import android.widget.RadioButton
+import androidx.core.view.children
 import id.thork.app.base.BaseParam
 import id.thork.app.helper.builder.widget.*
 import id.thork.app.helper.builder.widget.view.LocomotifLovBox
@@ -69,6 +70,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
     private var currentField: String? = null
 
+    var locomotifValidator: LocomotifValidator<T> = LocomotifValidator(item)
     val locomotifWidget = LocomotifWidget(context)
     lateinit var listener: OnValueChangeListener
 
@@ -87,22 +89,9 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return this
     }
 
-    fun setReadOnly():LocomotifBuilder<T> {
+    fun setValue(value: String): LocomotifBuilder<T> {
         currentField?.let {
-            val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(it))
-            val typeName = getFieldTypeByFieldName(it)
-                if (typeName.equals("java.util.Date")) {
-                    editText.setOnClickListener(null)
-                } else {
-                    editText.inputType = InputType.TYPE_NULL
-                    editText.setTextIsSelectable(true);
-                }
-        }
-        return this
-    }
-
-    fun setValue(value: String):LocomotifBuilder<T> {
-        currentField?.let {fieldValueMap.put(it, value)
+            fieldValueMap.put(it, value)
             val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(it))
             val typeName = getFieldTypeByFieldName(it)
             if (!typeName.equals("java.util.Date")) {
@@ -112,18 +101,18 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return this
     }
 
-    fun setValue(value: Int):LocomotifBuilder<T> {
-        currentField?.let {fieldValueMap.put(it, value)}
+    fun setValue(value: Int): LocomotifBuilder<T> {
+        currentField?.let { fieldValueMap.put(it, value) }
         return this
     }
 
-    fun setValue(value: Boolean):LocomotifBuilder<T> {
-        currentField?.let {fieldValueMap.put(it, value)}
+    fun setValue(value: Boolean): LocomotifBuilder<T> {
+        currentField?.let { fieldValueMap.put(it, value) }
         return this
     }
 
-    fun setValue(value: Any):LocomotifBuilder<T> {
-        currentField?.let {fieldValueMap.put(it, value)}
+    fun setValue(value: Any): LocomotifBuilder<T> {
+        currentField?.let { fieldValueMap.put(it, value) }
         return this
     }
 
@@ -177,31 +166,18 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         params.setMargins(getRealDp(10), getRealDp(10), getRealDp(10), getRealDp(10))
         formLayout.setLayoutParams(params)
 
-        val locomotifValidator = LocomotifValidator(item)
         var view: View? = null
         fields.forEachIndexed { index, field ->
             fieldValueMap.put(field, "")
             val fieldName = item!!::class.java.getDeclaredField(field)
-
-            val isLovField = locomotifValidator.isListOfValues(field) as Boolean
-            val isLovWithExtField = locomotifValidator.isListOfValuesExtension(field) as Boolean
-            val isRadioButtonField = locomotifValidator.isRadioButton(field) as Boolean
-            val isCheckBoxField = locomotifValidator.isCheckBox(field) as Boolean
-            val isSpinnerField = locomotifValidator.isSpinner(field) as Boolean
-
             val type = fieldName.type
             val typeName = type.name
 
-            Log.d(
-                TAG,
-                "buildField() $field type $type isLovField $isLovField isLovExtField $isLovWithExtField isRadioButton $isRadioButtonField" +
-                        " isSpinner $isSpinnerField"
-            )
-            if (isLovField) {
+            if (isLovField(field)) {
                 view = createLovWidget(context, field, index)
-            } else if (isLovWithExtField) {
+            } else if (isLovWithExtField(field)) {
                 view = createLovWidgetWithExtension(context, field, index, extensionView)
-            } else if (isRadioButtonField) {
+            } else if (isRadioButtonField(field)) {
                 view =
                     fieldItems.get(field)?.let {
                         createRadioButtonWidget(
@@ -209,9 +185,9 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                             it, index
                         )
                     }
-            } else if (isCheckBoxField) {
+            } else if (isCheckBoxField(field)) {
                 view = createCheckBoxWidget(context, field, index)
-            } else if (isSpinnerField) {
+            } else if (isSpinnerField(field)) {
                 view =
                     fieldItems.get(field)?.let {
                         createSpinnerWidget(
@@ -219,11 +195,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                             it, index
                         )
                     }
-            } else if (typeName.equals("java.lang.String")) {
+            } else if (isTextField(typeName)) {
                 view = createTextWidget(context, field, index)
-            } else if (typeName.equals("java.lang.Integer")) {
+            } else if (isNumberField(typeName)) {
                 view = createNumberWidget(context, field, index)
-            } else if (typeName.equals("java.util.Date")) {
+            } else if (isDateField(typeName)) {
                 view = createDateWidget(context, field, index)
             }
             formLayout.addView(view)
@@ -238,7 +214,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return scrollLayout
     }
 
-    private fun createLovWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+    private fun createLovWidget(
+        context: Context,
+        fieldName: String,
+        fieldIndex: Int
+    ): LinearLayout {
         val lovWidget = LovWidget(item, context)
         lovWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
         lovWidget.setupFieldsTypeMap(fieldTypeMap)
@@ -423,7 +403,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     /**
      * Text Widget
      */
-    private fun createTextWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+    private fun createTextWidget(
+        context: Context,
+        fieldName: String,
+        fieldIndex: Int
+    ): LinearLayout {
         val textWidget = TextWidget(item, context)
         textWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
         textWidget.setupFieldsTypeMap(fieldTypeMap)
@@ -434,7 +418,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     /**
      * Number Widget
      */
-    private fun createNumberWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+    private fun createNumberWidget(
+        context: Context,
+        fieldName: String,
+        fieldIndex: Int
+    ): LinearLayout {
         val numberWidget = NumberWidget(item, context)
         numberWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
         numberWidget.setupFieldsTypeMap(fieldTypeMap)
@@ -442,7 +430,11 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return numberWidget.create()
     }
 
-    private fun createDateWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+    private fun createDateWidget(
+        context: Context,
+        fieldName: String,
+        fieldIndex: Int
+    ): LinearLayout {
         val dateWidget = DateWidget(item, context)
         dateWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
         dateWidget.setupFieldsTypeMap(fieldTypeMap)
@@ -450,6 +442,44 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return dateWidget.create()
     }
 
+    /**
+     * Check and define widget type
+     */
+    private fun isLovField(field: String): Boolean {
+        return locomotifValidator.isListOfValues(field) as Boolean
+    }
+
+    private fun isLovWithExtField(field: String): Boolean {
+        return locomotifValidator.isListOfValuesExtension(field) as Boolean
+    }
+
+    private fun isRadioButtonField(field: String): Boolean {
+        return locomotifValidator.isRadioButton(field) as Boolean
+    }
+
+    private fun isCheckBoxField(field: String): Boolean {
+        return locomotifValidator.isCheckBox(field) as Boolean
+    }
+
+    private fun isSpinnerField(field: String): Boolean {
+        return locomotifValidator.isSpinner(field) as Boolean
+    }
+
+    private fun isTextField(typeName: String): Boolean {
+        return typeName.equals("java.lang.String");
+    }
+
+    private fun isNumberField(typeName: String): Boolean {
+        return typeName.equals("java.lang.Integer");
+    }
+
+    private fun isDateField(typeName: String): Boolean {
+        return typeName.equals("java.util.Date");
+    }
+
+    /**
+     * Setup widget listener
+     */
     private fun setupLovListener(lovBox: LocomotifLovBox, fieldName: String) {
         lovBox.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -611,9 +641,40 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     fun setFieldsReadOnly(readOnly: Boolean) {
         //TODO
         //All widget readonly
-        fields.forEach {  field ->
-            val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(field))
+        fields.forEach { field ->
+            val fieldName = item!!::class.java.getDeclaredField(field)
+            val type = fieldName.type
+            val typeName = type.name
 
+            if (isLovField(field)) {
+                val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(field))
+                editText.inputType = InputType.TYPE_NULL
+                editText.setOnClickListener(null)
+            } else if (isLovWithExtField(field)) {
+                val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(field))
+                editText.inputType = InputType.TYPE_NULL
+                editText.setOnClickListener(null)
+            } else if (isRadioButtonField(field)) {
+                val radioGroup = formLayout.findViewWithTag<LocomotifRadio>(LOCOMOTIF.plus(field))
+                radioGroup.isEnabled = false
+                for (view in radioGroup.children) {
+                    if (view is RadioButton) {
+                        view.isEnabled = false
+                    }
+                }
+            } else if (isCheckBoxField(field)) {
+                val checkBox = formLayout.findViewWithTag<AppCompatCheckBox>(LOCOMOTIF.plus(field))
+                checkBox.isEnabled = false
+            } else if (isSpinnerField(field)) {
+                val spinner = formLayout.findViewWithTag<AppCompatSpinner>(LOCOMOTIF.plus(field))
+                spinner.isEnabled = false
+            } else if (isTextField(typeName) || isNumberField(typeName)) {
+                val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(field))
+                editText.inputType = InputType.TYPE_NULL
+            } else if (isDateField(typeName)) {
+                val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(field))
+                editText.setOnClickListener(null)
+            }
         }
     }
 
