@@ -215,7 +215,7 @@ class WorkerCoordinator @Inject constructor(
 
     private fun searchWoFromServer(workorderid: Int, remoteMessageString: String) {
         val laborcode: String? = appSession.laborCode
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val where: String =
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_WOID + workorderid
 

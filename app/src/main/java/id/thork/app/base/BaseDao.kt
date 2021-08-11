@@ -18,6 +18,20 @@ import id.thork.app.persistence.entity.BaseEntity
 import timber.log.Timber
 import java.util.*
 
-abstract class BaseRepository {
-    private val TAG = BaseRepository::class.java.name
+abstract class BaseDao {
+    private val TAG = BaseDao::class.java.name
+
+    protected fun addUpdateInfo(baseEntity: BaseEntity, username: String?) {
+        baseEntity.createdBy.whatIfNotNullOrEmpty(
+            whatIf = {
+                Timber.tag(TAG).d("addUpdateInfo() update entity")
+            },
+            whatIfNot = {
+                baseEntity.createdDate = Date()
+                baseEntity.createdBy = username
+            }
+        )
+        baseEntity.updatedDate = Date()
+        baseEntity.updatedBy = username
+    }
 }

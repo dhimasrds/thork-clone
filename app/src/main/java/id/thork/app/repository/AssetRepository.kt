@@ -15,7 +15,7 @@ import javax.inject.Inject
 class AssetRepository @Inject constructor(
     private val assetDao: AssetDao,
     private val locationDao: LocationDao
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = AssetRepository::class.java.name
 
     fun findbyAssetnum(assetnum : String): AssetEntity? {

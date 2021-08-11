@@ -31,7 +31,7 @@ class AttachmentRepository constructor(
     private val appSession: AppSession,
     private val attachmentDao: AttachmentDao,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = AttachmentRepository::class.java.name
 
     private val doclinksClient: DoclinksClient

@@ -10,14 +10,19 @@
  * permission of This.ID.
  */
 
-package id.thork.app.base
+package id.thork.app.network.api
 
-import com.skydoves.whatif.whatIfNotNullOrEmpty
-import id.thork.app.persistence.dao.WpmaterialDaoImp
-import id.thork.app.persistence.entity.BaseEntity
-import timber.log.Timber
-import java.util.*
+import id.thork.app.network.ApiParam
+import javax.inject.Inject
 
-abstract class BaseRepository {
-    private val TAG = BaseRepository::class.java.name
+class StoreroomClient @Inject constructor(
+    private val storeroomApi: StoreroomApi
+) {
+
+    suspend fun getStorerooms(cookie: String) =
+        storeroomApi.getStorerooms(cookie, LEAN, ApiParam.API_SELECT_ALL)
+
+    companion object {
+        private const val LEAN = 1
+    }
 }

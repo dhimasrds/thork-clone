@@ -46,9 +46,10 @@ class WorkOrderRepository @Inject constructor(
     private val assetDao: AssetDao,
     private val attachmentRepository: AttachmentRepository,
     private val materialRepository: MaterialRepository,
+    private val storeroomRepository: StoreroomRepository,
     private val worklogRepository: WorklogRepository,
     private val taskRepository: TaskRepository
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
     private val multiAssetDao: MultiAssetDao
@@ -513,7 +514,6 @@ class WorkOrderRepository @Inject constructor(
             Timber.tag(TAG).i("getItemMaster() code: %s error: %s", statusCode.code, message())
             onError(message())
         }
-
     }
 
     suspend fun getWorklogType(
@@ -532,7 +532,25 @@ class WorkOrderRepository @Inject constructor(
             Timber.tag(TAG).i("getWorklogType() code: %s error: %s", statusCode.code, message())
             onError(message())
         }
+    }
 
+    suspend fun getStoreroom(
+        cookie: String,
+        select: String,
+        onSuccess: (MaterialResponse) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val response = workOrderClient.getItemMaster(cookie, select)
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+                Timber.tag(TAG).i("repository getItemMaster() code:%s", it.member)
+                Timber.tag(TAG).i("repository getItemMaster() code:%s", statusCode.code)
+            }
+        }.onError {
+            Timber.tag(TAG).i("getItemMaster() code: %s error: %s", statusCode.code, message())
+            onError(message())
+        }
     }
 
     fun addLocationToObjectBox(member: List<id.thork.app.network.response.fsm_location.Member>) {

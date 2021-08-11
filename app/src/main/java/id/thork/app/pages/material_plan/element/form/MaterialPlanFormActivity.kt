@@ -263,7 +263,7 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
         Timber.tag(TAG).d("gotoMaterialPlan() woId: %s", intentWoId)
         val intent = Intent(this, MaterialPlanActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, intentWoId)
-        intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_EDIT)
+        intent.putExtra(BaseParam.FORM_STATE, intentState)
         startActivity(intent)
         finish()
     }
@@ -309,6 +309,7 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 binding.btnDelete.visibility = View.GONE
                 binding.btnSave.visibility = View.GONE
                 itemNumExtension.visibility = View.GONE
+                locomotifBuilder?.setFieldsReadOnly()
             }
         }
     }
@@ -322,6 +323,9 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 materialLovBox.setText(data.value)
                 materialLovBox.value = data.value
                 description.setText(data.name)
+
+                storeroomLovBox.value = ""
+                storeroomLovBox.setText("")
                 materialLov.destroy()
             }
             "storeroom" -> {
@@ -339,9 +343,12 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 itemNumGroup.visibility = View.VISIBLE
                 direqReq.isEnabled = true
 
-                locomotifBuilder?.forField("itemNum")?.
-                isRequired(true)?.
-                setValue("LOL")
+                if (intentState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
+                    direqReq.isEnabled = false
+                }
+//                locomotifBuilder?.forField("itemNum")?.
+//                isRequired(true)?.
+//                setValue("")
             } else if (value.equals("MATERIAL")) {
                 itemNumGroup.visibility = View.GONE
                 direqReq.isChecked = true
@@ -350,6 +357,10 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 locomotifBuilder?.forField("itemNum")?.
                 isRequired(false)?.
                 setValue("")
+            }
+        } else if (fieldName.equals("itemNum")) {
+            value.whatIfNotNull {
+                viewModel.getStoreroomsByItem(it)
             }
         }
     }

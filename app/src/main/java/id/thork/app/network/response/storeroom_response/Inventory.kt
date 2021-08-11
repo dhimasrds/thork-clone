@@ -1,15 +1,3 @@
-/*
- * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
- *
- * This software is the confidential and proprietary information of
- * This.ID. ("Confidential Information").
- *
- * Such Confidential Information shall not be disclosed and shall
- * use it only	 in accordance with the terms of the license agreement
- * entered into with This.ID; other than in accordance with the written
- * permission of This.ID.
- */
-
 package id.thork.app.network.response.storeroom_response
 
 
@@ -50,10 +38,16 @@ data class Inventory(
     val issueunit: String? = null,
     @Json(name = "issueytd")
     val issueytd: Double? = null,
+    @Json(name = "item")
+    val item: List<Item>? = null,
+    @Json(name = "item_collectionref")
+    val itemCollectionref: String? = null,
     @Json(name = "itemnum")
     val itemnum: String? = null,
     @Json(name = "itemsetid")
     val itemsetid: String? = null,
+    @Json(name = "lastissuedate")
+    val lastissuedate: String? = null,
     @Json(name = "localref")
     val localref: String? = null,
     @Json(name = "maxlevel")

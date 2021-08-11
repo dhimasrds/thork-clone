@@ -16,7 +16,7 @@ class MultiAssetRepository @Inject constructor(
     private val multiAssetDao: MultiAssetDao,
     private val preferenceManager: PreferenceManager,
     private val appSession: AppSession
-) :BaseRepository {
+) :BaseRepository() {
 
     fun getAllMultiAsset() : List<MultiAssetEntity>{
        return multiAssetDao.findAllMultiAsset()

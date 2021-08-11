@@ -29,7 +29,7 @@ class MaterialRepository @Inject constructor(
     private val wpmaterialDao: WpmaterialDao,
     private val materialDao: MaterialDao,
     private val appSession: AppSession
-) : BaseRepository {
+) : BaseRepository() {
 
     fun saveMaterial(materialBackupEntity: MaterialBackupEntity): MaterialBackupEntity? {
         return materialBackupDao.saveMaterial(materialBackupEntity)

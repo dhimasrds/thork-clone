@@ -76,7 +76,7 @@ class ProfileViewModel @ViewModelInject constructor(
 //        val cookie = appSession.cookie
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val savedQuery = appResourceMx.fsmResAttendace
-        val select = ApiParam.LOGIN_SELECT_ENDPOINT
+        val select = ApiParam.API_SELECT_ALL
         viewModelScope.launch(Dispatchers.IO) {
             cookie.whatIfNotNull { cookie ->
                 savedQuery.whatIfNotNull { savedQuery ->

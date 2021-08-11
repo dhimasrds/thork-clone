@@ -93,7 +93,7 @@ class WoActivityPagingSource @Inject constructor(
 
     private suspend fun fetchWo(position: Int): Boolean {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val savedQuery = appResourceMx.fsmResWorkorderHistory
 
         Timber.tag(TAG).d("fetchWo() saved Query: %s", savedQuery)
@@ -121,7 +121,7 @@ class WoActivityPagingSource @Inject constructor(
 
     private suspend fun searchWoFromServer(): Boolean {
         val laborcode: String? = appSession.laborCode
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val wonum: String = query.toString()
         val where: String =
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_SEARCH_COMP + wonum + "%\"" + "}"

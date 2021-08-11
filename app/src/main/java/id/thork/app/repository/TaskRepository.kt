@@ -29,7 +29,7 @@ class TaskRepository @Inject constructor(
     private val taskDao: TaskDao,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
     private val preferenceManager: PreferenceManager,
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = TaskRepository::class.java.name
 
     private val taskClient: TaskClient

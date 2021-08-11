@@ -34,7 +34,7 @@ class LoginRepository constructor(
     private val assetDao: AssetDao,
     private val woCacheDao: WoCacheDao,
     private val multiAssetDao: MultiAssetDao
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = LoginRepository::class.java.name
 
     fun findActiveSession(): UserEntity? {

@@ -91,7 +91,7 @@ class WoPagingSource @Inject constructor(
 
 
     private suspend fun fetchWo(position: Int): Boolean {
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val savedQuery = appResourceMx.fsmResWorkorder
         Timber.tag(TAG).d("fetchWo() position: %s savedQuery: %s", position, savedQuery)
         savedQuery?.let {
@@ -121,7 +121,7 @@ class WoPagingSource @Inject constructor(
 
     private suspend fun searchWoFromServer(): Boolean {
         val laborcode: String? = appSession.laborCode
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val wonum: String = query.toString()
         val where: String =
             ApiParam.WORKORDER_WHERE_LABORCODE_NEW + "\"" + laborcode + "\"" + ApiParam.WORKORDER_WHERE_STATUS_SEARCH + wonum + "%\"" + "}"

@@ -106,7 +106,7 @@ OnValueChangeListener {
 
             getWidgetListener()
 
-            locomotifBuilder?.setFieldsReadOnly(true)
+            locomotifBuilder?.setFieldsReadOnly()
         }
     }
 

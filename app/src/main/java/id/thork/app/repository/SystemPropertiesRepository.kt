@@ -10,7 +10,7 @@ import id.thork.app.persistence.entity.SysPropEntity
  */
 class SystemPropertiesRepository constructor(
     private val sysPropDao: SysPropDao
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = SystemPropertiesRepository::class.java.name
 
     fun findAppKey(propertiesKey: String): SysPropEntity? {

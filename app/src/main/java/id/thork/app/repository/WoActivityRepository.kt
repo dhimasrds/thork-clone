@@ -25,7 +25,7 @@ import timber.log.Timber
 class WoActivityRepository constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = WorkOrderRepository::class.java.name
 
     suspend fun getWorkOrderList(

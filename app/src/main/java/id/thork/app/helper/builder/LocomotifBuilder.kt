@@ -638,7 +638,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         }
     }
 
-    fun setFieldsReadOnly(readOnly: Boolean) {
+    fun setFieldsReadOnly() {
         //TODO
         //All widget readonly
         fields.forEach { field ->
