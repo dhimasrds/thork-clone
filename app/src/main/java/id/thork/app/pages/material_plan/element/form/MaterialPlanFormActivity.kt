@@ -13,8 +13,6 @@
 package id.thork.app.pages.material_plan.element.form
 
 import android.content.Intent
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -32,12 +30,11 @@ import id.thork.app.databinding.ActivityMaterialPlanFormBinding
 import id.thork.app.helper.builder.*
 import id.thork.app.helper.builder.adapter.LocomotifAdapter
 import id.thork.app.helper.builder.model.LocomotifAttribute
-import id.thork.app.helper.builder.widget.LocomotifLov
-import id.thork.app.helper.builder.widget.LocomotifLovBox
-import id.thork.app.helper.builder.widget.LocomotifRadio
+import id.thork.app.helper.builder.widget.view.LocomotifLov
+import id.thork.app.helper.builder.widget.view.LocomotifLovBox
+import id.thork.app.helper.builder.widget.view.LocomotifRadio
 import id.thork.app.helper.builder.widget.OnValueChangeListener
 import id.thork.app.pages.CustomDialogUtils
-import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_material.RfidMaterialctivity
@@ -341,10 +338,18 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
             if (value.equals("ITEM")) {
                 itemNumGroup.visibility = View.VISIBLE
                 direqReq.isEnabled = true
+
+                locomotifBuilder?.forField("itemNum")?.
+                isRequired(true)?.
+                setValue("LOL")
             } else if (value.equals("MATERIAL")) {
                 itemNumGroup.visibility = View.GONE
                 direqReq.isChecked = true
                 direqReq.isEnabled = false
+
+                locomotifBuilder?.forField("itemNum")?.
+                isRequired(false)?.
+                setValue("")
             }
         }
     }

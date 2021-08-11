@@ -13,7 +13,6 @@
 package id.thork.app.helper.builder
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -29,25 +28,23 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.children
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.helper.builder.model.LocomotifAttribute
-import id.thork.app.helper.builder.widget.LocomotifLovBox
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.*
 
-import id.thork.app.helper.builder.widget.LocomotifRadio
-import id.thork.app.helper.builder.widget.OnValueChangeListener
 import android.widget.RadioButton
 import id.thork.app.base.BaseParam
+import id.thork.app.helper.builder.widget.*
+import id.thork.app.helper.builder.widget.view.LocomotifLovBox
+import id.thork.app.helper.builder.widget.view.LocomotifRadio
 
 
 class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
@@ -64,13 +61,71 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     var extensionView = View(context)
 
     var fieldValueMap = hashMapOf<String, Any>()
-    var fieldTypeMap = hashMapOf<String, Any>()
+    var fieldTypeMap = hashMapOf<String, String>()
+    var fieldRequired = hashMapOf<String, Boolean>()
     var fieldItems = hashMapOf<String, List<LocomotifAttribute>>()
     var fields: Array<String> = arrayOf()
     var fieldsCaption: Array<String> = arrayOf()
 
+    private var currentField: String? = null
+
     val locomotifWidget = LocomotifWidget(context)
     lateinit var listener: OnValueChangeListener
+
+    fun forField(fieldName: String): LocomotifBuilder<T> {
+        this.currentField = fieldName
+        return this
+    }
+
+    fun items(items: List<LocomotifAttribute>): LocomotifBuilder<T> {
+        currentField?.let { fieldItems.put(it, items) }
+        return this
+    }
+
+    fun isRequired(required: Boolean): LocomotifBuilder<T> {
+        currentField?.let { fieldRequired.put(it, required) }
+        return this
+    }
+
+    fun setReadOnly():LocomotifBuilder<T> {
+        currentField?.let {
+            val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(it))
+            val typeName = getFieldTypeByFieldName(it)
+                if (typeName.equals("java.util.Date")) {
+                    editText.setOnClickListener(null)
+                } else {
+                    editText.inputType = InputType.TYPE_NULL
+                    editText.setTextIsSelectable(true);
+                }
+        }
+        return this
+    }
+
+    fun setValue(value: String):LocomotifBuilder<T> {
+        currentField?.let {fieldValueMap.put(it, value)
+            val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(it))
+            val typeName = getFieldTypeByFieldName(it)
+            if (!typeName.equals("java.util.Date")) {
+                editText.setText(value)
+            }
+        }
+        return this
+    }
+
+    fun setValue(value: Int):LocomotifBuilder<T> {
+        currentField?.let {fieldValueMap.put(it, value)}
+        return this
+    }
+
+    fun setValue(value: Boolean):LocomotifBuilder<T> {
+        currentField?.let {fieldValueMap.put(it, value)}
+        return this
+    }
+
+    fun setValue(value: Any):LocomotifBuilder<T> {
+        currentField?.let {fieldValueMap.put(it, value)}
+        return this
+    }
 
     fun forFieldItems(fieldName: String, items: List<LocomotifAttribute>) {
         fieldItems.put(fieldName, items)
@@ -183,44 +238,12 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         return scrollLayout
     }
 
-    /**
-     * Lov Builder
-     */
-    private fun createLovWidget(context: Context, fieldName: String, index: Int): LinearLayout {
-        val widgetValue = item?.getPrivateProperty(fieldName)
-        Timber.tag(TAG).d("createLovWidget() fieldName: %s widgetValue: %s", fieldName, widgetValue)
-        widgetValue.whatIfNotNull {
-            fieldValueMap.put(fieldName, it)
-        }
-
-        val title = createFieldLabel(fieldName, index)
-
-        val separator = View(context)
-        separator.setBackgroundColor(Color.LTGRAY)
-        separator.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            getRealDp(1)
-        )
-        setMargins(separator, 0, 0, 0, getRealDp(0))
-
-        val lovBox = locomotifWidget.createLovWidget(fieldName, widgetValue.toString())
-        fieldTypeMap.put(fieldName, "lovBox")
-        setupLovListener(lovBox, fieldName)
-
-        val lovWrapper = LinearLayout(context)
-        val outValue = TypedValue()
-        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
-        lovWrapper.setBackgroundResource(outValue.resourceId)
-        lovWrapper.isClickable = true
-        lovWrapper.orientation = LinearLayout.HORIZONTAL
-        lovWrapper.addView(lovBox)
-
-        val fieldWrapper = createFieldWrapper()
-        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
-        fieldWrapper.addView(title)
-        fieldWrapper.addView(separator)
-        fieldWrapper.addView(lovWrapper)
-        return fieldWrapper
+    private fun createLovWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+        val lovWidget = LovWidget(item, context)
+        lovWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
+        lovWidget.setupFieldsTypeMap(fieldTypeMap)
+        lovWidget.listener = listener
+        return lovWidget.create()
     }
 
     /**
@@ -400,136 +423,31 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     /**
      * Text Widget
      */
-    private fun createTextWidget(context: Context, fieldName: String, index: Int): LinearLayout {
-        val widgetValue = item?.getPrivateProperty(fieldName)
-        widgetValue.whatIfNotNull {
-            fieldValueMap.put(fieldName, it)
-        }
-
-        val title = createFieldLabel(fieldName, index)
-
-        val separator = View(context)
-        separator.setBackgroundColor(Color.LTGRAY)
-        separator.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            getRealDp(1)
-        )
-        setMargins(separator, 0, 0, 0, getRealDp(0))
-
-        val editText = locomotifWidget.createTextWidget(fieldName, widgetValue.toString())
-        fieldTypeMap.put(fieldName, "editText")
-        setupEditTextListener(editText, fieldName)
-        editText.setText(LocomotifHelper().convertNullToEmpty(widgetValue.toString()))
-
-        val fieldWrapper = createFieldWrapper()
-        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
-        fieldWrapper.addView(title)
-        fieldWrapper.addView(separator)
-        fieldWrapper.addView(editText)
-        return fieldWrapper
+    private fun createTextWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+        val textWidget = TextWidget(item, context)
+        textWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
+        textWidget.setupFieldsTypeMap(fieldTypeMap)
+        textWidget.listener = listener
+        return textWidget.create()
     }
 
-    private fun createNumberWidget(context: Context, fieldName: String, index: Int): LinearLayout {
-        val widgetValue = item?.getPrivateProperty(fieldName)
-        widgetValue.whatIfNotNull {
-            fieldValueMap.put(fieldName, it)
-        }
-
-        val title = createFieldLabel(fieldName, index)
-
-        val separator = View(context)
-        separator.setBackgroundColor(Color.LTGRAY)
-        separator.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            getRealDp(1)
-        )
-        setMargins(separator, 0, 0, 0, getRealDp(0))
-
-        val editText = locomotifWidget.createNumberWidget(fieldName, widgetValue.toString())
-        fieldTypeMap.put(fieldName, "editText")
-        setupEditTextListener(editText, fieldName)
-        editText.setText(LocomotifHelper().convertNullToZero(widgetValue.toString()))
-
-        val fieldWrapper = createFieldWrapper()
-        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
-        fieldWrapper.addView(title)
-        fieldWrapper.addView(separator)
-        fieldWrapper.addView(editText)
-        return fieldWrapper
+    /**
+     * Number Widget
+     */
+    private fun createNumberWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+        val numberWidget = NumberWidget(item, context)
+        numberWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
+        numberWidget.setupFieldsTypeMap(fieldTypeMap)
+        numberWidget.listener = listener
+        return numberWidget.create()
     }
 
-    private fun createDateWidget(context: Context, fieldName: String, index: Int): LinearLayout {
-        val widgetValue = item?.getPrivateProperty(fieldName)
-        var currentDate = ""
-        widgetValue.whatIfNotNull {
-            fieldValueMap.put(fieldName, it)
-        }
-        widgetValue.whatIfNotNull(
-            whatIf = {
-                currentDate = locomotifDateFormat.format(it)
-                fieldValueMap.put(fieldName, currentDate)
-            },
-            whatIfNot = {
-                currentDate = locomotifDateFormat.format(Calendar.getInstance().getTime())
-                fieldValueMap.put(fieldName, currentDate)
-            }
-        )
-
-        val title = createFieldLabel(fieldName, index)
-
-        val separator = View(context)
-        separator.setBackgroundColor(Color.LTGRAY)
-        separator.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            getRealDp(1)
-        )
-        setMargins(separator, 0, 0, 0, getRealDp(0))
-
-        val editText = locomotifWidget.createDateWidget(fieldName, currentDate)
-        fieldTypeMap.put(fieldName, "editText")
-        setupEditTextListener(editText, fieldName)
-        editText.setText(currentDate)
-        setupDateWidgetListener(editText)
-
-        val fieldWrapper = createFieldWrapper()
-        fieldWrapper.tag = LOCOMOTIF_GROUP.plus(LOCOMOTIF).plus(fieldName)
-        fieldWrapper.addView(title)
-        fieldWrapper.addView(separator)
-        fieldWrapper.addView(editText)
-        return fieldWrapper
-    }
-
-    private fun setupEditTextListener(editText: EditText, fieldName: String) {
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                Timber.tag(TAG).d("setupEditTextListener()")
-                fieldValueMap.put(fieldName, s)
-
-                val typeName = getFieldTypeByFieldName(fieldName)
-                if (typeName.equals("java.util.Date")) {
-                    item?.setAndReturnPrivateProperty(
-                        fieldName,
-                        LocomotifHelper().getAppDateFormat(s.toString())
-                    )
-                    listener.onValueChange(fieldName, s.toString())
-                } else if (typeName.equals("java.lang.Integer")) {
-                    var fieldIntValue: Int = 0
-                    if (s.toString().equals("")) {
-                        fieldIntValue = 0
-                    } else {
-                        fieldIntValue = s.toString().toInt()
-                    }
-                    item?.setAndReturnPrivateProperty(fieldName, fieldIntValue)
-                    listener.onValueChange(fieldName, fieldIntValue.toString())
-                } else {
-                    item?.setAndReturnPrivateProperty(fieldName, s.toString())
-                    listener.onValueChange(fieldName, s.toString())
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-        })
+    private fun createDateWidget(context: Context, fieldName: String, fieldIndex: Int): LinearLayout {
+        val dateWidget = DateWidget(item, context)
+        dateWidget.setupField(fieldName, fieldsCaption, fieldIndex, fieldValueMap)
+        dateWidget.setupFieldsTypeMap(fieldTypeMap)
+        dateWidget.listener = listener
+        return dateWidget.create()
     }
 
     private fun setupLovListener(lovBox: LocomotifLovBox, fieldName: String) {
@@ -564,8 +482,6 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                 listener.onValueChange(fieldName, checkedRadioButton.text.toString())
             }
         })
-
-
     }
 
     private fun setupCheckBoxListener(checkBox: AppCompatCheckBox, fieldName: String) {
@@ -594,27 +510,6 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                 listener.onValueChange(fieldName, "")
             }
         }
-    }
-
-    private fun setupDateWidgetListener(editText: EditText) {
-        val calendar = Calendar.getInstance()
-        val date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, monthOfYear)
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateLabel(editText, calendar)
-        }
-
-        editText.setOnClickListener {
-            DatePickerDialog(
-                context, date, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-    }
-
-    private fun updateLabel(editText: EditText, calendar: Calendar) {
-        editText.setText(locomotifDateFormat.format(calendar.getTime()))
     }
 
     private fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
@@ -716,6 +611,10 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     fun setFieldsReadOnly(readOnly: Boolean) {
         //TODO
         //All widget readonly
+        fields.forEach {  field ->
+            val editText = formLayout.findViewWithTag<AppCompatEditText>(LOCOMOTIF.plus(field))
+
+        }
     }
 
     fun setWidgetValueByTag(tag: String, value: String) {
@@ -740,32 +639,40 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
 
     fun validate(): Boolean {
         var fieldsEmptyValidator: MutableList<String> = mutableListOf()
-        fieldValueMap.forEach{(field, value) ->
+        fieldValueMap.forEach { (field, value) ->
             Timber.tag(TAG).d("validate() field: %s value: %s", field, value)
-            if (!(value != null && !value.toString().isEmpty() && !value.toString().equals("null"))) {
-                fieldsEmptyValidator.add(field)
+            if (!(value != null && !value.toString().isEmpty() && !value.toString()
+                    .equals("null"))
+            ) {
+                val isRequired = fieldRequired.get(field)
+                if (isRequired == true) {
+                    fieldsEmptyValidator.add(field)
+                }
             }
         }
 
         Timber.tag(TAG).d("validate() fieldsEmptyValidator: %s", fieldsEmptyValidator.size)
         if (fieldsEmptyValidator.size > 0) {
-            fieldsEmptyValidator.forEach {field->
+            fieldsEmptyValidator.forEach { field ->
                 val textWidget = getWidgetByTag(field) as AppCompatEditText
                 var fieldValidator = StringUtils.capitalize(
                     StringUtils.join(
                         StringUtils.splitByCharacterTypeCamelCase(field), ' '
                     )
                 )
-                Timber.tag(TAG).d("validate() fieldsEmptyValidator: %s field: %s",
-                    fieldsEmptyValidator.size, fieldValidator)
+                Timber.tag(TAG).d(
+                    "validate() fieldsEmptyValidator: %s field: %s",
+                    fieldsEmptyValidator.size, fieldValidator
+                )
                 textWidget.setError("$fieldValidator can't empty")
 
-                Toast.makeText(context,R.string.general_required_fields, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.general_required_fields, Toast.LENGTH_SHORT).show()
             }
             return false
         }
         return true
     }
+
     /**
      * Convert to JSON have bugs issue after update field
      */
