@@ -5,10 +5,13 @@
       <map>
         <entry key="../../Android/Sdk/platforms/android-30/data/res/layout/simple_spinner_item.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/drawable-v24/ic_line.xml" value="0.14583333333333334" />
+        <entry key="app/src/main/res/drawable-v24/ic_rectangle_528.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/bg_edit_text.xml" value="0.15104166666666666" />
+        <entry key="app/src/main/res/drawable/bg_rounded.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_line.xml" value="0.14583333333333334" />
         <entry key="app/src/main/res/drawable/ic_loco_search.xml" value="0.14739583333333334" />
         <entry key="app/src/main/res/drawable/ic_rectangle_528.xml" value="0.15104166666666666" />
+        <entry key="app/src/main/res/drawable/ic_rectangle_border_blue.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.14739583333333334" />
         <entry key="app/src/main/res/drawable/locomotif_dialog.xml" value="0.14375" />
         <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.13489583333333333" />
@@ -25,7 +28,9 @@
         <entry key="app/src/main/res/layout/activity_material_plan_form_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_material_plan_item_extension.xml" value="0.1046875" />
         <entry key="app/src/main/res/layout/activity_person_list.xml" value="0.12604166666666666" />
+        <entry key="app/src/main/res/layout/activity_server.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />
+        <entry key="app/src/main/res/layout/activity_work_log.xml" value="0.25" />
         <entry key="app/src/main/res/layout/cardview_findmaterial.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/form_list_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/locomotif_dialog.xml" value="0.33" />
@@ -39,7 +44,7 @@
       <item index="0" class="java.lang.String" itemvalue="io.objectbox.annotation.Entity" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
