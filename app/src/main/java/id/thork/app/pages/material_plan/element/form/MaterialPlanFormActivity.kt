@@ -211,6 +211,10 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
             materialLovBox.value = it.itemNum
             materialLovBox.setText(it.itemNum)
             description.setText(it.description)
+
+//            storeroomLovBox.value = ""
+//            storeroomLovBox.setText("")
+//            materialLov.destroy()
         })
         viewModel.wpMaterialCache.observe(this, {
             setupForm(it)
@@ -324,12 +328,12 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 materialLovBox.value = data.value
                 description.setText(data.name)
 
-                storeroomLovBox.value = ""
-                storeroomLovBox.setText("")
+//                storeroomLovBox.value = ""
+//                storeroomLovBox.setText("")
                 materialLov.destroy()
             }
             "storeroom" -> {
-                storeroomLovBox.setText(data.name)
+                storeroomLovBox.setText(data.value)
                 storeroomLovBox.value = data.value
                 storeroomLov.destroy()
             }

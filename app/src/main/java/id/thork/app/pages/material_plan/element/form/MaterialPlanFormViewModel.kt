@@ -87,11 +87,7 @@ class MaterialPlanFormViewModel @ViewModelInject constructor(
     fun getStoreroomItems() {
         val mutableList = mutableListOf<LocomotifAttribute>()
         val storeroomA = LocomotifAttribute("STOREROOMGST", "STOREROOMGST")
-        val storeroomB = LocomotifAttribute("STOREROOMKBN", "STOREROOMKBN")
-        val storeroomC = LocomotifAttribute("STOREROOMPJG", "STOREROOMPJG")
         mutableList.add(storeroomA)
-        mutableList.add(storeroomB)
-        mutableList.add(storeroomC)
         _storeroomItems.value = mutableList
     }
 
