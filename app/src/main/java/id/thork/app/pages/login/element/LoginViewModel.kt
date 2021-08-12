@@ -101,6 +101,8 @@ class LoginViewModel @ViewModelInject constructor(
 
     fun connectionNotAvailable() {
         _error.postValue(resourceProvider.getString(R.string.connection_not_available))
+        _progressVisible.postValue(false)
+
     }
 
     fun validateUsername() {
@@ -129,7 +131,7 @@ class LoginViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
                     _error.postValue(it)
                 })
-            _progressVisible.postValue(false)
+            _progressVisible.postValue(true)
         }
     }
 

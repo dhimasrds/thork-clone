@@ -1,5 +1,6 @@
 package id.thork.app.repository
 
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.message
@@ -8,6 +9,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.MxResponse
@@ -128,8 +130,9 @@ class LoginRepository constructor(
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 //Save user session into local cache
-                onSuccess(response)
                 val cookielist: List<String> = headers.values("Set-Cookie")
+                onSuccess(response)
+                Timber.tag(TAG).i("loginCookie() cookielist: %s",cookielist)
                 val jsessionid = cookielist[0].split(";").toTypedArray()[0]
                 preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
                 preferenceManager.putInt(
