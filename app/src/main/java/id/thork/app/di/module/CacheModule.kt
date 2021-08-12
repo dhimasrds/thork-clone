@@ -126,4 +126,15 @@ object CacheModule {
         return CraftMasterDaoImp()
     }
 
+    @Singleton
+    @Provides
+    fun provideStoreroomDao(): StoreroomDao{
+        return StoreroomDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMaterialStoreroomDaoImp(): MaterialStoreroomDao{
+        return MaterialStoreroomDaoImp()
+    }
 }

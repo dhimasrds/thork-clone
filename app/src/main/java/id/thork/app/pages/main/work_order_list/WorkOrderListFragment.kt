@@ -78,7 +78,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewModel.fetchLocationMarker()
         viewModel.fetchItemMaster()
         viewModel.fetchWorklogType()
-
+        viewModel.fetchStoreroomMaster()
     }
 
     private fun setupView() {

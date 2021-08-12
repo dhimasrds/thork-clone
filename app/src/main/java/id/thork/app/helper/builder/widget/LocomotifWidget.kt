@@ -1,4 +1,4 @@
-package id.thork.app.helper.builder
+package id.thork.app.helper.builder.widget
 
 import android.content.Context
 import android.graphics.Color
@@ -6,7 +6,6 @@ import android.text.InputType
 import android.util.TypedValue
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
@@ -17,9 +16,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
+import id.thork.app.helper.builder.LocomotifHelper
 import id.thork.app.helper.builder.model.LocomotifAttribute
-import id.thork.app.helper.builder.widget.LocomotifLovBox
-import id.thork.app.helper.builder.widget.LocomotifRadio
+import id.thork.app.helper.builder.widget.view.LocomotifLovBox
+import id.thork.app.helper.builder.widget.view.LocomotifRadio
 import timber.log.Timber
 
 class LocomotifWidget constructor(val context: Context) {
@@ -142,7 +142,7 @@ class LocomotifWidget constructor(val context: Context) {
         return radioGroup
     }
 
-    fun createRadioDefaultValue(radioGroup: LocomotifRadio,  widgetValue: String, items: List<LocomotifAttribute>) {
+    fun createRadioDefaultValue(radioGroup: LocomotifRadio, widgetValue: String, items: List<LocomotifAttribute>) {
         var index = 0
         for (attrib in items) {
             val radioButton = AppCompatRadioButton(context)
@@ -193,7 +193,10 @@ class LocomotifWidget constructor(val context: Context) {
         val array: Array<String> = arrayList.toTypedArray()
         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(context, android.R.layout.simple_spinner_item, array)
         val spinner = AppCompatSpinner(context)
-        spinner.adapter = arrayAdapter
+        spinner.apply {
+            tag = LOCOMOTIF.plus(fieldName)
+            adapter = arrayAdapter
+        }
         return spinner
     }
 

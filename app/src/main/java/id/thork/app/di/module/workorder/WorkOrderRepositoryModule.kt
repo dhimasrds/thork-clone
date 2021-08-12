@@ -8,6 +8,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.api.StoreroomClient
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.*
 import id.thork.app.repository.*
@@ -30,6 +31,7 @@ object WorkOrderRepositoryModule {
         appSession: AppSession,
         attachmentRepository: AttachmentRepository,
         materialRepository: MaterialRepository,
+        storeroomRepository: StoreroomRepository,
         worklogRepository: WorklogRepository,
         taskRepository: TaskRepository,
         laborRepository: LaborRepository
@@ -37,8 +39,8 @@ object WorkOrderRepositoryModule {
         return WorkOrderRepository(
             context,
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
-            attachmentRepository, materialRepository, worklogRepository, taskRepository,
-            laborRepository
+            attachmentRepository, materialRepository, worklogRepository, storeroomRepository,
+            taskRepository, laborRepository
         )
     }
 
@@ -107,6 +109,30 @@ object WorkOrderRepositoryModule {
             preferenceManager,
             LaborPlanDaoImp(),
             LaborActualDaoImp(),
+        )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideStoreroomRepository(
+        context: Context,
+        storeroomClient: StoreroomClient,
+        appSession: AppSession
+    ): StoreroomRepository {
+        return StoreroomRepository(context, storeroomClient,
+            StoreroomDaoImp(), MaterialStoreroomDaoImp(), appSession
+        )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideMaterialStoreroomRepository(
+        appSession: AppSession,
+        preferenceManager: PreferenceManager,
+        httpLoggingInterceptor: HttpLoggingInterceptor
+    ): MaterialStoreroomRepository {
+        return MaterialStoreroomRepository(
+            MaterialStoreroomDaoImp(), appSession
         )
     }
 

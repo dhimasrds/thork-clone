@@ -7,10 +7,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
-import id.thork.app.network.api.DoclinksApi
-import id.thork.app.network.api.TaskApi
-import id.thork.app.network.api.WorkOrderApi
-import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.api.*
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 
@@ -48,11 +45,24 @@ object WorkOrderModule {
         return retrofit.create(TaskApi::class.java)
     }
 
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideStoreroomApi(preferenceManager: PreferenceManager, httpLoggingInterceptor: HttpLoggingInterceptor): StoreroomApi {
+        Timber.tag(TAG).i("provideStoreroomApi() init")
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        return retrofit.create(StoreroomApi::class.java)
+    }
+
     @Provides
     @ActivityRetainedScoped
     fun provideWorkOrderClient(workOrderApi: WorkOrderApi): WorkOrderClient {
         return WorkOrderClient(workOrderApi)
     }
 
-
+    @Provides
+    @ActivityRetainedScoped
+    fun provideStoreroomClient(storeroomApi: StoreroomApi): StoreroomClient {
+        return StoreroomClient(storeroomApi)
+    }
 }

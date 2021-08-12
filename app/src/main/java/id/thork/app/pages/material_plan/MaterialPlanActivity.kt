@@ -147,6 +147,9 @@ class MaterialPlanActivity : BaseActivity(), MaterialPlanAdapter.MaterialPlanAda
         val intent = Intent(this, MaterialPlanFormActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, wpmaterialEntity.workorderId)
         intent.putExtra(BaseParam.ID, wpmaterialEntity.id)
+        if (intentState.equals(BaseParam.FORM_STATE_NEW)) {
+            intentState = BaseParam.FORM_STATE_EDIT
+        }
         intent.putExtra(BaseParam.FORM_STATE, intentState)
         startActivity(intent)
         finish()

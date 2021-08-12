@@ -8,8 +8,7 @@ import javax.inject.Inject
  * Jakarta, Indonesia.
  */
 class WorkOrderClient @Inject constructor(
-    private val workOrderApi: WorkOrderApi,
-) {
+    private val workOrderApi: WorkOrderApi) {
 
     suspend fun getWorkOrderList(
         cookie: String,

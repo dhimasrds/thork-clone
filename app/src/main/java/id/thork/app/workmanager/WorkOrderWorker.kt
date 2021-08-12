@@ -26,7 +26,10 @@ import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppResourceMx
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.RetrofitBuilder
 import id.thork.app.network.api.DoclinksClient
+import id.thork.app.network.api.StoreroomApi
+import id.thork.app.network.api.StoreroomClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.*
@@ -40,6 +43,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
 import timber.log.Timber
 import java.util.*
 
@@ -58,6 +62,7 @@ class WorkOrderWorker @WorkerInject constructor(
     val matusetransDao: MatusetransDao,
     val wpmaterialDao: WpmaterialDao,
     val materialDao: MaterialDao,
+    val storeroomDao: StoreroomDao,
     val worklogDao: WorklogDao,
     val worklogTypeDao: WorklogTypeDao,
     val taskDao: TaskDao,
@@ -77,9 +82,18 @@ class WorkOrderWorker @WorkerInject constructor(
     var taskRepository: TaskRepository
     var laborRepository: LaborRepository
 
+    lateinit  var retrofit: Retrofit
+    //val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
+    private fun provideStoreroomClient(): StoreroomClient {
+        val  retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        val storeroomApi = retrofit.create(StoreroomApi::class.java)
+        val storeroomClient = StoreroomClient(storeroomApi)
+        return storeroomClient
+    }
     init {
+        val storeroomClient = provideStoreroomClient()
         val workerRepository =
             WorkerRepository(
                 context,
@@ -90,7 +104,8 @@ class WorkOrderWorker @WorkerInject constructor(
                 assetDao,
                 attachmentDao,
                 doclinksClient,
-                materialBackupDao, matusetransDao, wpmaterialDao, materialDao, worklogDao,
+                materialBackupDao, matusetransDao,
+                wpmaterialDao, materialDao,worklogDao,
                 worklogTypeDao,
                 taskDao, laborPlanDao, laborActualDao, laborMasterDao, craftMasterDao
             )
@@ -319,4 +334,5 @@ class WorkOrderWorker @WorkerInject constructor(
             }
         }
     }
+
 }

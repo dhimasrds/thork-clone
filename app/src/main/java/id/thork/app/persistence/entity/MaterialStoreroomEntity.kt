@@ -10,14 +10,12 @@
  * permission of This.ID.
  */
 
-package id.thork.app.base
+package id.thork.app.persistence.entity
 
-import com.skydoves.whatif.whatIfNotNullOrEmpty
-import id.thork.app.persistence.dao.WpmaterialDaoImp
-import id.thork.app.persistence.entity.BaseEntity
-import timber.log.Timber
-import java.util.*
+import io.objectbox.annotation.Entity
 
-abstract class BaseRepository {
-    private val TAG = BaseRepository::class.java.name
-}
+@Entity
+class MaterialStoreroomEntity(
+    var itemNum: String? = null,
+    var location: String? = null
+) : BaseEntity()

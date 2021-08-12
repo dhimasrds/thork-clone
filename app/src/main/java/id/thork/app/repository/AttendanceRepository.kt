@@ -33,7 +33,7 @@ class AttendanceRepository @Inject constructor(
     private val appSession: AppSession,
     private val attendanceDao: AttendanceDao,
     private val httpLoggingInterceptor: HttpLoggingInterceptor,
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = AttendanceRepository::class.java.name
 
 

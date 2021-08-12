@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.MatusetransEntity_
@@ -14,27 +15,13 @@ import java.util.*
  * Created by M.Reza Sulaiman on 28/05/2021
  * Jakarta, Indonesia.
  */
-class WpmaterialDaoImp : WpmaterialDao {
+class WpmaterialDaoImp : WpmaterialDao, BaseDao() {
     val TAG = WpmaterialDaoImp::class.java.name
 
     var wpmaterialEntityBox: Box<WpmaterialEntity>
 
     init {
         wpmaterialEntityBox = ObjectBox.boxStore.boxFor(WpmaterialEntity::class.java)
-    }
-
-    private fun addUpdateInfo(wpmaterialEntity: WpmaterialEntity, username: String) {
-        wpmaterialEntity.createdBy.whatIfNotNullOrEmpty(
-            whatIf = {
-                Timber.tag(TAG).d("addUpdateInfo() update entity")
-            },
-            whatIfNot = {
-                wpmaterialEntity.createdDate = Date()
-                wpmaterialEntity.createdBy = username
-            }
-        )
-        wpmaterialEntity.updatedDate = Date()
-        wpmaterialEntity.updatedBy = username
     }
 
     override fun save(

@@ -8,16 +8,18 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateWorkLogBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.work_log.WorkLogActivity
 import id.thork.app.pages.work_log.element.WorkLogViewModel
 import id.thork.app.pages.work_log.type.WorkLogTypeActivity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
-class CreateWorkLogActivity : BaseActivity() {
+class CreateWorkLogActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = CreateWorkLogActivity::class.java.name
     private val viewModels: WorkLogViewModel by viewModels()
     private val binding: ActivityCreateWorkLogBinding by binding(R.layout.activity_create_work_log)
+    private lateinit var customDialogUtils: CustomDialogUtils
     private var intentWonum: String? = null
     private var intentWoid: String? = null
 
@@ -36,6 +38,7 @@ class CreateWorkLogActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
+        customDialogUtils = CustomDialogUtils(this)
 
         retrieveFromIntent()
     }
@@ -67,16 +70,7 @@ class CreateWorkLogActivity : BaseActivity() {
         }
 
         binding.btnCreate.setOnClickListener {
-            val summary = StringUtils.checkingString(binding.tvSummary.text.toString())
-            val desc = StringUtils.checkingString(binding.tvDesc.text.toString())
-            val type = binding.tvType.text.toString()
-            viewModels.saveWorklog(
-                summary,
-                desc,
-                type,
-                intentWonum.toString(),
-                intentWoid.toString()
-            )
+            setDialogSave()
         }
 
     }
@@ -100,6 +94,36 @@ class CreateWorkLogActivity : BaseActivity() {
 
             }
         }
+    }
+
+    private fun setDialogSave() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setMiddleButtonText(R.string.places_try_again)
+            .setTittle(R.string.task_title)
+            .setDescription(R.string.task_qustion)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        val summary = StringUtils.checkingString(binding.tvSummary.text.toString())
+        val desc = StringUtils.checkingString(binding.tvDesc.text.toString())
+        val type = binding.tvType.text.toString()
+        viewModels.saveWorklog(
+            summary,
+            desc,
+            type,
+            intentWonum.toString(),
+            intentWoid.toString()
+        )
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
     }
 
 

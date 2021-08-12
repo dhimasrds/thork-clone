@@ -20,6 +20,7 @@ import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.persistence.entity.WoCacheEntity
 import id.thork.app.repository.MaterialRepository
+import id.thork.app.repository.StoreroomRepository
 import id.thork.app.repository.WorkOrderRepository
 import id.thork.app.repository.WorklogRepository
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +34,7 @@ import timber.log.Timber
 class WorkOrderListViewModel @ViewModelInject constructor(
     private val appSession: AppSession,
     private val workOrderRepository: WorkOrderRepository,
+    private val storeroomRepository: StoreroomRepository,
     private val preferenceManager: PreferenceManager,
     private val appResourceMx: AppResourceMx,
     private val materialRepository: MaterialRepository,
@@ -126,7 +128,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
 
     fun fetchLocationMarker() {
         val cookie = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val savedQuery = appResourceMx.fsmResLocations
         Timber.tag(TAG).d("fetchLocationMarker() savedQuery %s", savedQuery)
         savedQuery.whatIfNotNull {
@@ -156,7 +158,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
 
     fun fetchAsset() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val savedQuery = appResourceMx.fsmResAsset
         savedQuery.whatIfNotNull {
             viewModelScope.launch(Dispatchers.IO) {
@@ -186,7 +188,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
 
     fun fetchItemMaster() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.getItemMaster(cookie, select,
                 onSuccess = {
@@ -204,7 +206,7 @@ class WorkOrderListViewModel @ViewModelInject constructor(
 
     fun fetchWorklogType() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val where: String = ApiParam.WORKLOGTYPE_WHERE
         viewModelScope.launch(Dispatchers.IO) {
             workOrderRepository.getWorklogType(cookie, select, where,
@@ -221,5 +223,23 @@ class WorkOrderListViewModel @ViewModelInject constructor(
         }
     }
 
+    fun fetchStoreroomMaster() {
+        viewModelScope.launch(Dispatchers.IO) {
+            storeroomRepository.fetchStoreroom(
+                onSuccess = {
+                    it.member.whatIfNotNullOrEmpty { members ->
+                        Timber.tag(TAG).d("fetchStoreroomMaster() onSuccess :%s", it)
+                        storeroomRepository.addStoreroomCache(members)
+                    }
+                },
+                onError = {
+                    Timber.tag(TAG).d("fetchStoreroomMaster() onError :%s", it)
+                },
+                onException = {
+                    Timber.tag(TAG).d("fetchStoreroomMaster() onException :%s", it)
+                }
+            )
+        }
+    }
 
 }

@@ -36,8 +36,7 @@ class TaskRepository @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val laborPlanDao: LaborPlanDao,
     private val laborActualDao: LaborActualDao,
-) : BaseRepository {
-
+) : BaseRepository() {
     val TAG = TaskRepository::class.java.name
 
     private val taskClient: TaskClient

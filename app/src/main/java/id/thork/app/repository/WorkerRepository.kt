@@ -16,10 +16,7 @@ import android.content.Context
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.RetrofitBuilder
-import id.thork.app.network.api.DoclinksApi
-import id.thork.app.network.api.DoclinksClient
-import id.thork.app.network.api.WorkOrderApi
-import id.thork.app.network.api.WorkOrderClient
+import id.thork.app.network.api.*
 import id.thork.app.persistence.dao.*
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -62,6 +59,13 @@ class WorkerRepository constructor(
             materialDao,
             appSession
         )
+        val storeroomRepository = StoreroomRepository(
+            context,
+            provideStoreroomClient(),
+            provideStoreroomDao(),
+            provideMaterialStoreroomDao(),
+            appSession
+        )
 
         val worklogRepository = WorklogRepository(
             worklogDao, worklogTypeDao, appSession
@@ -92,6 +96,7 @@ class WorkerRepository constructor(
             assetDao,
             attachmentRepository,
             materialRepository,
+            storeroomRepository,
             worklogRepository,
             taskRepository,
             laborRepository
@@ -155,5 +160,18 @@ class WorkerRepository constructor(
         )
     }
 
+    private fun provideStoreroomClient(): StoreroomClient {
+        val  retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        val storeroomApi = retrofit.create(StoreroomApi::class.java)
+        val storeroomClient = StoreroomClient(storeroomApi)
+        return storeroomClient
+    }
 
+    private fun provideStoreroomDao(): StoreroomDao {
+        return StoreroomDaoImp()
+    }
+
+    private fun provideMaterialStoreroomDao(): MaterialStoreroomDao {
+        return MaterialStoreroomDaoImp()
+    }
 }

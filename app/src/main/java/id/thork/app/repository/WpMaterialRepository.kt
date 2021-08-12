@@ -25,14 +25,13 @@ import javax.inject.Inject
 class WpMaterialRepository @Inject constructor(
     private val wpmaterialDao: WpmaterialDao,
     private val appSession: AppSession
-) : BaseRepository {
+) : BaseRepository() {
     private val TAG = WpMaterialRepository::class.java.name
 
     /**
      * Material Plan
      */
     fun saveMaterialPlan(wpmaterialEntity: WpmaterialEntity, username: String) {
-        addUpdateInfo(wpmaterialEntity, username)
         wpmaterialDao.save(wpmaterialEntity, username)
     }
 
@@ -42,19 +41,5 @@ class WpMaterialRepository @Inject constructor(
 
     fun getMaterialPlanByIdAndWoId(id: Long, woId: Int): WpmaterialEntity? {
         return wpmaterialDao.findByIdAndWoId(id, woId)
-    }
-
-    private fun addUpdateInfo(baseEntity: BaseEntity, username: String?) {
-        baseEntity.createdBy.whatIfNotNullOrEmpty(
-            whatIf = {
-                Timber.tag(TAG).d("addUpdateInfo() update entity")
-            },
-            whatIfNot = {
-                baseEntity.createdDate = Date()
-                baseEntity.createdBy = username
-            }
-        )
-        baseEntity.updatedDate = Date()
-        baseEntity.updatedBy = username
     }
 }

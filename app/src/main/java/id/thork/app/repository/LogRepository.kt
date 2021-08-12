@@ -8,7 +8,7 @@ import id.thork.app.persistence.entity.LogEntity
  * Created by Raka Putra on 2/25/21
  * Jakarta, Indonesia.
  */
-class LogRepository constructor(private val logDao: LogDao) : BaseRepository {
+class LogRepository constructor(private val logDao: LogDao) : BaseRepository() {
     fun getAllLog(): List<LogEntity> {
         return logDao.findLogs()
     }

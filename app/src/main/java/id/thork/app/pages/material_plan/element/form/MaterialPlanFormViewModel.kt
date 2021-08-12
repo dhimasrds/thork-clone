@@ -24,12 +24,16 @@ import id.thork.app.helper.builder.model.LocomotifAttribute
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
+import id.thork.app.repository.MaterialStoreroomRepository
+import id.thork.app.repository.StoreroomRepository
 import id.thork.app.repository.WpMaterialRepository
 import timber.log.Timber
 
 class MaterialPlanFormViewModel @ViewModelInject constructor(
     private val context: Context,
     private val materialRepository: MaterialRepository,
+    private val storeroomRepository: StoreroomRepository,
+    private val materialStoreroomRepository: MaterialStoreroomRepository,
     private val wpMaterialRepository: WpMaterialRepository,
     private val appSession: AppSession
 ) : LiveCoroutinesViewModel() {
@@ -83,11 +87,7 @@ class MaterialPlanFormViewModel @ViewModelInject constructor(
     fun getStoreroomItems() {
         val mutableList = mutableListOf<LocomotifAttribute>()
         val storeroomA = LocomotifAttribute("STOREROOMGST", "STOREROOMGST")
-        val storeroomB = LocomotifAttribute("STOREROOMKBN", "STOREROOMKBN")
-        val storeroomC = LocomotifAttribute("STOREROOMPJG", "STOREROOMPJG")
         mutableList.add(storeroomA)
-        mutableList.add(storeroomB)
-        mutableList.add(storeroomC)
         _storeroomItems.value = mutableList
     }
 
@@ -100,6 +100,22 @@ class MaterialPlanFormViewModel @ViewModelInject constructor(
             }
         }
         _materialItems.value = mutableList
+    }
+
+    fun getStoreroomsByItem(itemnum: String) {
+        val mutableList = mutableListOf<LocomotifAttribute>()
+        val materialStoreroomEntities = materialStoreroomRepository.getStoreroomByItemNum(itemnum)
+        materialStoreroomEntities.whatIfNotNull { matStorerooms ->
+            for (matStoreroom in matStorerooms) {
+                matStoreroom.location.whatIfNotNull { location ->
+                    val listStoreroom = storeroomRepository.getStoreroom(location)
+                    for (storeroom in listStoreroom) {
+                        mutableList.add(LocomotifAttribute(storeroom.description, storeroom.location))
+                    }
+                }
+            }
+        }
+        _storeroomItems.value = mutableList
     }
 
     fun saveMaterialCache(wpmaterialEntity: WpmaterialEntity) {

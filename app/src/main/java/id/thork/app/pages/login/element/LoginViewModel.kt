@@ -139,7 +139,7 @@ class LoginViewModel @ViewModelInject constructor(
 
     private fun fetchUserData(userHash: String, username: String) {
         Timber.tag(TAG).i("fetchUserData()")
-        val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
+        val selectQuery = ApiParam.API_SELECT_ALL
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
         var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
@@ -254,7 +254,7 @@ class LoginViewModel @ViewModelInject constructor(
         Timber.tag(TAG).i("fetchSystemProperties()")
         _fetchProgressVisible.postValue(true)
         _progressVisible.postValue(true)
-        val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
+        val selectQuery = ApiParam.API_SELECT_ALL
         var systemProperties = id.thork.app.network.response.system_properties.SystemProperties()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch system properties

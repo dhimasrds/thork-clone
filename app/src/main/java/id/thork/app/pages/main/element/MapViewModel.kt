@@ -175,7 +175,7 @@ class MapViewModel @ViewModelInject constructor(
     suspend fun fectlistWoOnline() {
         Timber.d("MapViewModel() fetchListWo Online")
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
-        val select: String = ApiParam.WORKORDER_SELECT
+        val select: String = ApiParam.API_SELECT_ALL
         val savedQuery = appResourceMx.fsmResWorkorder
         var response = WorkOrderResponse()
 
