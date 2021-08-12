@@ -74,7 +74,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         setupObserver2()
         setUpFilterListener()
         swipeRefresh()
-//        progressBarOnFirstLoad()
+        progressBarOnFirstLoad()
         viewModel.fetchLocationMarker()
         viewModel.fetchItemMaster()
         viewModel.fetchWorklogType()
