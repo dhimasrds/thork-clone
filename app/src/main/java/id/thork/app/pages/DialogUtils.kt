@@ -80,7 +80,7 @@ class DialogUtils {
         }
         dialogView = inflater!!.inflate(resource!!, root)
         builder.setView(dialogView)
-        builder.setCancelable(isCancelable)
+        setCancelable(isCancelable)
         return this
     }
 

@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
@@ -378,6 +379,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         esdurMinutes.filters = arrayOf<InputFilter>(InputFilterMinMaxUtils(0, 60))
         val saveEst = dialogUtils.setViewId(R.id.save_est) as Button
         saveEst.setOnClickListener {
+            dialogUtils.setCancelable(false)
             if (esdurHours.text.toString().isEmpty() && esdurMinutes.text.toString().isEmpty()) {
                 Toast.makeText(
                     this,
