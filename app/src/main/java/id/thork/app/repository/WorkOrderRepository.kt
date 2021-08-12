@@ -50,7 +50,7 @@ class WorkOrderRepository @Inject constructor(
     private val worklogRepository: WorklogRepository,
     private val taskRepository: TaskRepository,
     private val laborRepository: LaborRepository
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
     private val multiAssetDao: MultiAssetDao

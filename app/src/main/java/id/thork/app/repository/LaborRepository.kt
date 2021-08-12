@@ -29,7 +29,7 @@ class LaborRepository @Inject constructor(
     private val laborActualDao: LaborActualDao,
     private val laborMasterDao: LaborMasterDao,
     private val craftMasterDao: CraftMasterDao
-) : BaseRepository {
+) : BaseRepository() {
     val TAG = LaborRepository::class.java.name
 
     var usernameGlobal: String? = null

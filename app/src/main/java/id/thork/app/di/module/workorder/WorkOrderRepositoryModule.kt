@@ -39,7 +39,7 @@ object WorkOrderRepositoryModule {
         return WorkOrderRepository(
             context,
             workOrderClient, WoCacheDaoImp(), appSession, AssetDaoImp(),
-            attachmentRepository, materialRepository, worklogRepository, storeroomRepository,
+            attachmentRepository, materialRepository, storeroomRepository, worklogRepository,
             taskRepository, laborRepository
         )
     }

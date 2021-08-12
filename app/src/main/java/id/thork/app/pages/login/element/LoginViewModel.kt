@@ -282,7 +282,7 @@ class LoginViewModel @ViewModelInject constructor(
     }
 
     private fun fetchMasterDataLabor(userHash: String, username: String) {
-        val selectQuery = ApiParam.LOGIN_SELECT_ENDPOINT
+        val selectQuery = ApiParam.API_SELECT_ALL
         viewModelScope.launch(Dispatchers.IO) {
             //fetch Master Data Labor
             loginRepository.fetchMasterDataLabor(userHash, selectQuery,
