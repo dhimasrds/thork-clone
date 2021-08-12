@@ -30,10 +30,10 @@ import id.thork.app.databinding.ActivityMaterialPlanFormBinding
 import id.thork.app.helper.builder.*
 import id.thork.app.helper.builder.adapter.LocomotifAdapter
 import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.helper.builder.widget.OnValueChangeListener
 import id.thork.app.helper.builder.widget.view.LocomotifLov
 import id.thork.app.helper.builder.widget.view.LocomotifLovBox
 import id.thork.app.helper.builder.widget.view.LocomotifRadio
-import id.thork.app.helper.builder.widget.OnValueChangeListener
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity

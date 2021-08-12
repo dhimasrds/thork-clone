@@ -27,6 +27,8 @@
         <entry key="app/src/main/res/layout/activity_material_plan_form.xml" value="0.24170616113744076" />
         <entry key="app/src/main/res/layout/activity_material_plan_form_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_material_plan_item_extension.xml" value="0.1046875" />
+        <entry key="app/src/main/res/layout/activity_material_plan_list.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_material_plan_subdetail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_person_list.xml" value="0.12604166666666666" />
         <entry key="app/src/main/res/layout/activity_server.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />

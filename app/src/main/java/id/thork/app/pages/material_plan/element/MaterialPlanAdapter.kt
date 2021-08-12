@@ -13,7 +13,6 @@
 package id.thork.app.pages.material_plan.element
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater.from
 import android.view.View
 import android.view.ViewGroup
@@ -23,20 +22,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import id.thork.app.R
-import id.thork.app.base.BaseApplication
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.MaterialPlanItemBinding
 import id.thork.app.di.module.PreferenceManager
-import id.thork.app.helper.builder.model.LocomotifAttribute
-import id.thork.app.network.response.work_order.Wpmaterial
-import id.thork.app.pages.material_plan.MaterialPlanActivity
-import id.thork.app.pages.material_plan.element.detail_material_plan.MaterialPlanDetail
-import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
-import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
-import java.util.ArrayList
+import java.util.*
 
 
 class MaterialPlanAdapter constructor(
@@ -82,15 +73,6 @@ class MaterialPlanAdapter constructor(
                 tvItemNum.text = StringUtils.truncate(wpmaterialEntity.itemNum, 30)
                 tvItemType.text = StringUtils.truncate(wpmaterialEntity.lineType, 30)
                 tvDescription.text = StringUtils.truncate(wpmaterialEntity.description, 30)
-
-//                root.setOnClickListener {
-//                    val intent =
-//                        Intent(BaseApplication.context, MaterialPlanFormActivity::class.java)
-//                    intent.putExtra(BaseParam.WORKORDERID, wpmaterialEntity.workorderId)
-//                    intent.putExtra(BaseParam.ID, wpmaterialEntity.id)
-//                    activity.startActivity(intent)
-//                    activity.finish()
-//                }
             }
         }
 
