@@ -47,7 +47,7 @@ class CraftAdapter constructor(
                 cardLaborPlan.setOnClickListener {
                     val intent = Intent(BaseApplication.context, CreateLaborPlanActivity::class.java)
                     intent.putExtra(BaseParam.CRAFT_FORM, craft)
-                    intent.putExtra(BaseParam.SKILL_FORM, skill)
+//                    intent.putExtra(BaseParam.SKILL_FORM, skill)
                     activity.setResult(AppCompatActivity.RESULT_OK, intent)
                     activity.finish()
                 }

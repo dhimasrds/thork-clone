@@ -119,6 +119,7 @@ object BaseParam {
     const val APP_TAG_MARKER_CREW_LOGOUT = "logout"
     const val APP_LOCATION_LONGITUDE = "LONGITUDE"
     const val APP_LOCATION_LATITUDE = "LATITUDE"
+    const val APP_CREATE = "Create"
 
     /**
      * Base Parameter Priority Workorder

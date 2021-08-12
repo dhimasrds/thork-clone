@@ -47,7 +47,7 @@ class LaborPlanViewModel @ViewModelInject constructor(
     val craftEntity: LiveData<CraftMasterEntity> get() = _craftEntity
 
     private val _listCraft = MutableLiveData<List<String>>()
-    val listCraft : LiveData<List<String>> get() = _listCraft
+    val listCraft: LiveData<List<String>> get() = _listCraft
 
 
     fun fetchListLaborPlan(workroderid: String) {
@@ -87,7 +87,7 @@ class LaborPlanViewModel @ViewModelInject constructor(
 
     fun fetchMasterCraftByLaborcode(laborcode: String) {
         val masterCraft = laborRepository.craftMaster(laborcode)
-        masterCraft.whatIfNotNullOrEmpty (
+        masterCraft.whatIfNotNullOrEmpty(
             whatIf = {
                 _getCraftMaster.value = it
 
@@ -95,7 +95,7 @@ class LaborPlanViewModel @ViewModelInject constructor(
             whatIfNot = {
                 fetchMasterCraft()
             }
-                )
+        )
 
     }
 
@@ -142,7 +142,9 @@ class LaborPlanViewModel @ViewModelInject constructor(
         val laborPlanCache = LaborPlanEntity()
         if (laborCode != BaseParam.APP_DASH) {
             laborPlanCache.laborcode = laborCode
+            laborPlanCache.craft = BaseParam.APP_DASH
         } else {
+            laborPlanCache.laborcode = BaseParam.APP_DASH
             laborPlanCache.craft = craft
         }
         laborPlanCache.taskid = taskid
@@ -151,6 +153,38 @@ class LaborPlanViewModel @ViewModelInject constructor(
         laborPlanCache.workorderid = workroderid
         laborPlanCache.syncUpdate = BaseParam.APP_FALSE
         laborRepository.saveLaborPlanCache(laborPlanCache)
+    }
+
+    fun updateToLocalCache(
+        laborPlanEntity: LaborPlanEntity,
+        laborCode: String,
+        taskid: String,
+        taskdesc: String,
+        craft: String,
+    ) {
+        if (laborPlanEntity.syncUpdate == BaseParam.APP_TRUE) {
+            //TODO udpate to Maximo
+        }
+
+        if (!taskid.equals(BaseParam.APP_DASH)) {
+            laborPlanEntity.taskid = taskid
+            laborPlanEntity.taskDescription = taskdesc
+        }
+
+        if (laborCode != BaseParam.APP_DASH) {
+            laborPlanEntity.laborcode = laborCode
+            laborPlanEntity.craft = BaseParam.APP_DASH
+        } else {
+            laborPlanEntity.laborcode = BaseParam.APP_DASH
+            laborPlanEntity.craft = craft
+        }
+
+        Timber.tag(TAG).i("update local cache")
+        laborRepository.saveLaborPlanCache(laborPlanEntity)
+    }
+
+    fun updateToMaximo() {
+        //TODO update to maximo
     }
 
 

@@ -51,8 +51,7 @@ class CreateLaborPlanActivity : BaseActivity() {
         viewModels.craftEntity.observe(this, Observer {
             binding.apply {
                 tvLabor.text = it.laborcode
-                tvCraft.text = it.craft
-                tvSkillLevel.text = it.skillLevel
+                tvCraft.text = BaseParam.APP_DASH
             }
         })
     }
@@ -80,7 +79,8 @@ class CreateLaborPlanActivity : BaseActivity() {
 
     private fun goToSelectLabor() {
         val intent = Intent(this, SelectLaborActivity::class.java)
-        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
+//        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
+        intent.putExtra(BaseParam.LABORCODE_FORM, BaseParam.APP_CREATE)
         startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
     }
 
@@ -115,7 +115,9 @@ class CreateLaborPlanActivity : BaseActivity() {
                         // Handling when choose Labor dan fill craft
                         data.whatIfNotNull {
                             val laborcode = it.getStringExtra(BaseParam.LABORCODE_FORM)
-                            viewModels.fetchLaborAndCraft(laborcode.toString())
+                            binding.tvLabor.text = laborcode
+                            binding.tvCraft.text = BaseParam.APP_DASH
+
 
                         }
                     }
@@ -126,7 +128,8 @@ class CreateLaborPlanActivity : BaseActivity() {
                             val craft = it.getStringExtra(BaseParam.CRAFT_FORM)
                             val skill = it.getStringExtra(BaseParam.SKILL_FORM)
                             binding.tvCraft.text = craft
-                            binding.tvSkillLevel.text = skill
+//                            binding.tvSkillLevel.text = skill
+                            binding.tvLabor.text = BaseParam.APP_DASH
                         }
                     }
                 }
@@ -136,7 +139,6 @@ class CreateLaborPlanActivity : BaseActivity() {
 
     override fun setupListener() {
         super.setupListener()
-
         binding.btnSaveLaborActual.setOnClickListener {
             val laborcode = binding.tvLabor.text
             val craft = binding.tvCraft.text

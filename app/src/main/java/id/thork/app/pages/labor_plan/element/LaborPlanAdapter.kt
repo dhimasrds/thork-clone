@@ -8,14 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewLaborPlanBinding
-import id.thork.app.databinding.CardviewListWorklogBinding
-import id.thork.app.pages.find_asset_location.element.FindAssetAdapter
-import id.thork.app.pages.labor_plan.create_labor_plan.CreateLaborPlanActivity
 import id.thork.app.pages.labor_plan.details_labor_plan.LaborPlanDetailsActivity
-import id.thork.app.pages.work_log.detail_work_log.DetailWorkLogActivity
-import id.thork.app.pages.work_log.element.WorkLogAdapter
 import id.thork.app.persistence.entity.LaborPlanEntity
-import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.utils.StringUtils
 
 /**
@@ -23,7 +17,7 @@ import id.thork.app.utils.StringUtils
  * Jakarta, Indonesia.
  */
 class LaborPlanAdapter constructor(
-    private val activity : Activity,
+    private val activity: Activity,
     private val laborPlanEntity: List<LaborPlanEntity>
 
 ) :
@@ -47,8 +41,8 @@ class LaborPlanAdapter constructor(
         fun bind(laborPlanEntity: LaborPlanEntity) {
             val vendor = StringUtils.NVL(laborPlanEntity.vendor, BaseParam.APP_DASH)
             val laborcode = StringUtils.NVL(laborPlanEntity.laborcode, BaseParam.APP_DASH)
-            val taskid =  StringUtils.NVL(laborPlanEntity.taskid, BaseParam.APP_DASH)
-            val taskdesc =  StringUtils.NVL(laborPlanEntity.taskDescription, BaseParam.APP_DASH)
+            val taskid = StringUtils.NVL(laborPlanEntity.taskid, BaseParam.APP_DASH)
+            val taskdesc = StringUtils.NVL(laborPlanEntity.taskDescription, BaseParam.APP_DASH)
             binding.apply {
                 if (laborcode != BaseParam.APP_DASH) {
                     tvLabor.text = laborcode
@@ -56,7 +50,11 @@ class LaborPlanAdapter constructor(
                     tvLabor.text = laborPlanEntity.craft
                 }
 
-                tvType.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
+                if (taskid != BaseParam.APP_NULL) {
+                    tvType.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
+
+                }
+
                 tvStatus.text = vendor
                 cardLaborPlan.setOnClickListener {
                     val intent = Intent(activity, LaborPlanDetailsActivity::class.java)
@@ -65,6 +63,7 @@ class LaborPlanAdapter constructor(
                     intent.putExtra(BaseParam.LABORCODE, laborPlanEntity.laborcode)
                     intent.putExtra(BaseParam.CRAFT, laborPlanEntity.craft)
                     activity.startActivity(intent)
+                    activity.finish()
                 }
             }
         }

@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewLaborAndCraftBinding
-import id.thork.app.databinding.CardviewLaborPlanBinding
 import id.thork.app.pages.labor_plan.create_labor_plan.CreateLaborPlanActivity
+import id.thork.app.pages.labor_plan.details_labor_plan.LaborPlanDetailsActivity
 import id.thork.app.persistence.entity.LaborMasterEntity
-import id.thork.app.persistence.entity.LaborPlanEntity
 
 /**
  * Created by Dhimas Saputra on 23/06/21
  * Jakarta, Indonesia.
  */
 class LaborAdapter constructor(
-        private val activity : Activity,
-        private val laborMasterEntity: List<LaborMasterEntity>
+    private val activity: Activity,
+    private val laborMasterEntity: List<LaborMasterEntity>,
+    private val intentTag: String
 
 ) :
     RecyclerView.Adapter<LaborAdapter.ViewHolder>() {
@@ -44,15 +44,31 @@ class LaborAdapter constructor(
         fun bind(laborMasterEntity: LaborMasterEntity) {
             binding.apply {
                 tvLaborOrCraft.text = laborMasterEntity.laborcode
-                cardLaborPlan.setOnClickListener {
-                    val intent = Intent(BaseApplication.context, CreateLaborPlanActivity::class.java)
-                    intent.putExtra(BaseParam.LABORCODE_FORM, laborMasterEntity.laborcode)
-                    activity.setResult(AppCompatActivity.RESULT_OK, intent)
-                    activity.finish()
+                when (intentTag) {
+                    BaseParam.APP_CREATE -> {
+                        cardLaborPlan.setOnClickListener {
+                            val intent =
+                                Intent(BaseApplication.context, CreateLaborPlanActivity::class.java)
+                            intent.putExtra(BaseParam.LABORCODE_FORM, laborMasterEntity.laborcode)
+                            activity.setResult(AppCompatActivity.RESULT_OK, intent)
+                            activity.finish()
+                        }
+                    }
+
+                    BaseParam.APP_DETAIL -> {
+                        cardLaborPlan.setOnClickListener {
+                            val intent = Intent(
+                                BaseApplication.context,
+                                LaborPlanDetailsActivity::class.java
+                            )
+                            intent.putExtra(BaseParam.LABORCODE_FORM, laborMasterEntity.laborcode)
+                            activity.setResult(AppCompatActivity.RESULT_OK, intent)
+                            activity.finish()
+                        }
+                    }
                 }
             }
         }
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

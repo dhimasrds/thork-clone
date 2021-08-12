@@ -4,7 +4,6 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivitySelectCraftBinding
 import id.thork.app.pages.labor_plan.element.CraftAdapter
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
@@ -54,7 +53,6 @@ class SelectCraftActivity : BaseActivity() {
 
 
     private fun retriveFromIntent() {
-        val intentLaborCode = intent.getStringExtra(BaseParam.LABORCODE)
-        viewModels.fetchMasterCraftByLaborcode(intentLaborCode.toString())
+        viewModels.fetchMasterCraft()
     }
 }

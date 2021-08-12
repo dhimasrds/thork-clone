@@ -641,7 +641,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     }
 
     override fun goToPreviousActivity() {
-        detailWoViewModel.removeScanner(workorderId!!)
         //finish()
         super.goToPreviousActivity()
     }
