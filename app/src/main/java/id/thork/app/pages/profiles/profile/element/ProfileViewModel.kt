@@ -36,7 +36,8 @@ class ProfileViewModel @ViewModelInject constructor(
     private val worklogRepository: WorklogRepository,
     private val attendanceRepository: AttendanceRepository,
     private val taskRepository: TaskRepository,
-    private val appResourceMx: AppResourceMx
+    private val appResourceMx: AppResourceMx,
+    private val laborRepository: LaborRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = ProfileViewModel::class.java.name
 
@@ -116,6 +117,7 @@ class ProfileViewModel @ViewModelInject constructor(
         worklogRepository.removeWorklog()
         attendanceRepository.removeAttendance()
         taskRepository.removeAllTask()
+        laborRepository.removeCacheLabor()
         _logout.postValue(BaseParam.APP_TRUE)
     }
 

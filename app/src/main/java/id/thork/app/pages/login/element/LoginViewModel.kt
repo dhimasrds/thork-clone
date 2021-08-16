@@ -27,9 +27,11 @@ import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
+import id.thork.app.network.response.labor_response.LaborResponse
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
+import id.thork.app.repository.LaborRepository
 import id.thork.app.repository.LoginRepository
 import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.StringUtils
@@ -41,7 +43,8 @@ import java.util.*
 class LoginViewModel @ViewModelInject constructor(
     private val loginRepository: LoginRepository,
     private val resourceProvider: ResourceProvider,
-    private val appSession: AppSession
+    private val appSession: AppSession,
+    private val laborRepository: LaborRepository
 ) : LiveCoroutinesViewModel() {
     val TAG = LoginViewModel::class.java.name
 
@@ -101,6 +104,8 @@ class LoginViewModel @ViewModelInject constructor(
 
     fun connectionNotAvailable() {
         _error.postValue(resourceProvider.getString(R.string.connection_not_available))
+        _progressVisible.postValue(false)
+
     }
 
     fun validateUsername() {
@@ -121,15 +126,17 @@ class LoginViewModel @ViewModelInject constructor(
 
     private fun loginCookie(userHash: String, username: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _progressVisible.postValue(true)
             loginRepository.loginCookie(userHash,
                 onSuccess = {
                     fetchUserData(userHash, username)
+                    _progressVisible.postValue(false)
                     Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
+                    _progressVisible.postValue(false)
                     _error.postValue(it)
                 })
-            _progressVisible.postValue(false)
         }
     }
 
@@ -177,6 +184,7 @@ class LoginViewModel @ViewModelInject constructor(
             )
 
             fetchSystemProperties(userHash)
+            fetchMasterDataLabor(userHash, username)
             // When user founded and stored into cache, then hide progressbarSet
             _progressVisible.postValue(false)
         }
@@ -274,6 +282,27 @@ class LoginViewModel @ViewModelInject constructor(
                     saveSystemResource(member)
                     saveSystemProperties(member)
                 })
+        }
+    }
+
+    private fun fetchMasterDataLabor(userHash: String, username: String) {
+        val selectQuery = ApiParam.API_SELECT_ALL
+        viewModelScope.launch(Dispatchers.IO) {
+            //fetch Master Data Labor
+            loginRepository.fetchMasterDataLabor(userHash, selectQuery,
+            onSuccess = {
+                        it.member.whatIfNotNullOrEmpty {
+                            laborRepository.addMasterDataLaborToObjectBox(it, username)
+                        }
+            },
+            onError = {
+                Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
+                _error.postValue(it)
+            },
+            onException = {
+                Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
+                _error.postValue(it)
+            })
         }
     }
 

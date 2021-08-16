@@ -35,8 +35,11 @@ class WorkerRepository constructor(
     private val materialDao: MaterialDao,
     private val worklogDao: WorklogDao,
     private val worklogTypeDao: WorklogTypeDao,
-    private val taskDao: TaskDao
-
+    private val taskDao: TaskDao,
+    private val laborPlanDao: LaborPlanDao,
+    private val laborActualDao: LaborActualDao,
+    private val laborMasterDao: LaborMasterDao,
+    private val craftMasterDao: CraftMasterDao
 ) {
 
     fun buildWorkorderRepository(): WorkOrderRepository {
@@ -68,7 +71,22 @@ class WorkerRepository constructor(
             worklogDao, worklogTypeDao, appSession
         )
 
-        val taskRepository = TaskRepository(appSession, taskDao, httpLoggingInterceptor, preferenceManager)
+        val taskRepository =
+            TaskRepository(
+                appSession,
+                taskDao,
+                httpLoggingInterceptor,
+                preferenceManager,
+                laborPlanDao,
+                laborActualDao,)
+
+        val laborRepository = LaborRepository(
+            appSession,
+            laborPlanDao,
+            laborActualDao,
+            laborMasterDao,
+            craftMasterDao
+        )
 
         return WorkOrderRepository(
             context,
@@ -80,7 +98,8 @@ class WorkerRepository constructor(
             materialRepository,
             storeroomRepository,
             worklogRepository,
-            taskRepository
+            taskRepository,
+            laborRepository
         )
     }
 
@@ -122,7 +141,22 @@ class WorkerRepository constructor(
 
     fun buildTaskRepository(): TaskRepository {
         return TaskRepository(
-            appSession, taskDao, httpLoggingInterceptor, preferenceManager
+            appSession,
+            taskDao,
+            httpLoggingInterceptor,
+            preferenceManager,
+            laborPlanDao,
+            laborActualDao,
+        )
+    }
+
+    fun buildLaborRepository(): LaborRepository {
+        return LaborRepository(
+            appSession,
+            laborPlanDao,
+            laborActualDao,
+            laborMasterDao,
+            craftMasterDao
         )
     }
 

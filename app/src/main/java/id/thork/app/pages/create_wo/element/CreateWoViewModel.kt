@@ -39,6 +39,7 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val attachmentRepository: AttachmentRepository,
     private val taskRepository: TaskRepository,
     private val preferenceManager: PreferenceManager,
+    private val laborRepository: LaborRepository
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
@@ -105,6 +106,7 @@ class CreateWoViewModel @ViewModelInject constructor(
 
         val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
         val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempWoId)
+        val laborplanList = laborRepository.prepareBodyLaborPlan(tempWoId.toString())
 
         val member = Member()
         member.siteid = appSession.siteId
@@ -134,6 +136,10 @@ class CreateWoViewModel @ViewModelInject constructor(
             member.externalrefid = it
         }
 
+        laborplanList.whatIfNotNullOrEmpty {
+            member.wplabor = it
+        }
+
         //save create Wo to local when online
         workOrderRepository.saveCreatedWoLocally(
             member, tempWonum, externalrefid
@@ -161,6 +167,12 @@ class CreateWoViewModel @ViewModelInject constructor(
                         Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
                         taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
                     }
+
+                    woMember.wplabor.whatIfNotNullOrEmpty {
+                        Timber.tag(TAG).i("createWorkOrderOnline() list wp labor %s", it.size)
+                        laborRepository.handlingLaborPlan(it, woMember, tempWoId.toString())
+                    }
+
 //                    workorderid.whatIfNotNull {
 //                        uploadAttachments(it)
 //                    }
@@ -197,6 +209,7 @@ class CreateWoViewModel @ViewModelInject constructor(
         tempWoId.whatIfNotNull { tempwoid ->
             val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
             val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val laborplanList = laborRepository.prepareBodyLaborPlan(tempwoid.toString())
             val member = Member()
             member.siteid = appSession.siteId
             if (!location.equals(BaseParam.APP_DASH)) {
@@ -218,6 +231,10 @@ class CreateWoViewModel @ViewModelInject constructor(
             }
             taskList.whatIfNotNullOrEmpty { tasklist ->
                 member.woactivity = tasklist
+            }
+
+            laborplanList.whatIfNotNullOrEmpty {
+                member.wplabor = it
             }
 
             val tWoCacheEntity = WoCacheEntity()

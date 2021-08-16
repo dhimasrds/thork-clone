@@ -43,7 +43,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimary"
+                    android:background="#f1f1f1"
                     android:orientation="vertical"
                     android:padding="7dp">
 
@@ -90,106 +90,146 @@
 
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="Status" />
-
                     <LinearLayout
-                        android:id="@+id/bg_status"
-                        android:layout_width="94dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
                             android:fontFamily="@font/poppins"
-                            android:paddingTop="@dimen/general_padding_2dp"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_wo_detail_16" />
+                            android:text="Status" />
+
+                        <LinearLayout
+                            android:id="@+id/bg_status"
+                            android:layout_width="94dp"
+                            android:layout_height="28dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="20dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:fontFamily="@font/poppins"
+                                android:paddingTop="@dimen/general_padding_2dp"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/text_size_wo_detail_16" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="Priority" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/priority"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_marginLeft="@dimen/margin_left_wo_detail"-->
-                    <!--                        android:layout_marginBottom="20dp"-->
-                    <!--                        android:fontFamily="@font/poppins"-->
-                    <!--                        android:textColor="@color/colorBlack"-->
-                    <!--                        android:textSize="@dimen/text_size_wo_detail_16" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:fontFamily="@font/poppins"
+                            android:text="Priority" />
 
-                    <TextView
-                        android:id="@+id/priority"
-                        android:layout_width="85dp"
+                        <!--                    <TextView-->
+                        <!--                        android:id="@+id/priority"-->
+                        <!--                        android:layout_width="wrap_content"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        android:layout_marginLeft="@dimen/margin_left_wo_detail"-->
+                        <!--                        android:layout_marginBottom="20dp"-->
+                        <!--                        android:fontFamily="@font/poppins"-->
+                        <!--                        android:textColor="@color/colorBlack"-->
+                        <!--                        android:textSize="@dimen/text_size_wo_detail_16" />-->
+
+                        <TextView
+                            android:id="@+id/priority"
+                            android:layout_width="85dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/bg_priority_normal"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center"
+                            android:padding="@dimen/general_padding_8dp"
+                            android:singleLine="false"
+                            android:text="@string/strip"
+                            android:textColor="@color/priority_normal"
+                            app:setPriority="@{vm.priority}" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:background="@drawable/bg_priority_normal"
-                        android:fontFamily="@font/roboto_regular"
-                        android:gravity="center"
-                        android:padding="@dimen/general_padding_8dp"
-                        android:singleLine="false"
-                        android:text="@string/strip"
-                        android:textColor="@color/priority_normal"
-                        app:setPriority="@{vm.priority}" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/workorder" />
+
+                        <TextView
+                            android:id="@+id/wonum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:layout_marginBottom="20dp"
+                            android:fontFamily="@font/poppins"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/workorder" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/wonum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/desc" />
 
+                        <TextView
+                            android:id="@+id/description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:fontFamily="@font/poppins"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/desc" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="@dimen/general_margin_20dp"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
 
                     <!-- Asset Content RFID -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:orientation="vertical">
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/general_padding_5dp">
 
                         <!-- Text View Asset 1-->
                         <LinearLayout
@@ -309,11 +349,14 @@
 
 
                     <!-- Location Content RFID -->
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:orientation="vertical">
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/general_padding_5dp">
 
                         <!-- Text View Location 1-->
                         <LinearLayout
@@ -432,43 +475,63 @@
                     </LinearLayout>
 
                     <!--Service Address-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/service_address" />
 
-                    <TextView
-                        android:id="@+id/serviceaddress"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/line"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/general_padding_5dp">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/service_address" />
+
+                        <TextView
+                            android:id="@+id/serviceaddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:layout_marginBottom="20dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/line"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    </LinearLayout>
 
                     <!--Estimated work duration-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/estimatedwork" />
 
-                    <TextView
-                        android:id="@+id/estimated_duration"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="20dp"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/line"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="@dimen/general_padding_5dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/estimatedwork" />
+
+                        <TextView
+                            android:id="@+id/estimated_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:layout_marginBottom="20dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/line"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+                    </LinearLayout>
 
                     <include
                         android:id="@+id/include_worklog"
@@ -481,11 +544,11 @@
 
                     <include
                         android:id="@+id/include_attachments"
-                        layout="@layout/activity_detail_wo_attachments" />
+                        layout="@layout/activity_create_wo_attachments" />
 
                     <include
                         android:id="@+id/include_material_plan"
-                        layout="@layout/activity_detail_wo_material_plan" />
+                        layout="@layout/activity_create_wo_material_plan" />
 
                     <include
                         android:id="@+id/include_material_actual"
@@ -493,31 +556,46 @@
 
                     <include
                         android:id="@+id/include_assets"
-                        layout="@layout/activity_detail_wo_assets" />
+                        layout="@layout/activity_create_wo_assets" />
 
                     <include
                         android:id="@+id/include_task"
-                        layout="@layout/activity_detail_wo_task"/>
+                        layout="@layout/activity_create_wo_task" />
+
+                    <!--Labor plan-->
+                    <include
+                        android:id="@+id/include_laborplan"
+                        layout="@layout/activity_create_wo_laborplan" />
 
 
                     <!--REPORT DATE-->
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/reportDate" />
+                        android:layout_marginBottom="@dimen/general_margin_10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/report_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left_wo_detail"
-                        android:layout_marginBottom="@dimen/general_margin_20dp"
-                        android:fontFamily="@font/poppins"
-                        android:text="@string/line"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_wo_detail_16" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/reportDate" />
+
+                        <TextView
+                            android:id="@+id/report_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_left_wo_detail"
+                            android:layout_marginBottom="@dimen/general_margin_20dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="@string/line"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_wo_detail_16" />
+
+                    </LinearLayout>
+
 
                     <!--MARGIN-->
                     <LinearLayout

@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /**
+  ~  * Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved. <BR>
+  ~  * <BR>
+  ~  * This software is the confidential and proprietary information of
+  ~  * This.ID. ("Confidential Information").<BR>
+  ~  * <BR>
+  ~  * Such Confidential Information shall not be disclosed and shall
+  ~  * use it only	 in accordance with the terms of the license agreement
+  ~  * entered into with This.ID; other than in accordance with the written
+  ~  * permission of This.ID. <BR>
+  ~  **/
+  ~
+  ~
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="id.thork.app.pages.labor_actual.element.LaborActualViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="id.thork.app.pages.labor_actual.create_labor_actual.CreateLaborActualActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/toolbar" />
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/app_bar"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparant"
+                    android:layout_marginBottom="@dimen/general_margin_10dp"
+                    android:layout_marginTop="@dimen/general_margin_10dp"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/labor"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_labor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:text="-"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/task"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_task"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:text="-"
+                                android:textAllCaps="false"
+                                android:textColor="@color/blue_nav"
+                                android:textSize="@dimen/base_text_size_16" />
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/start_date"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_start_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_date_black"
+                                android:drawablePadding="@dimen/general_padding_5dp"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:hint="@string/date"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/start_time"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_start_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:hint="@string/time"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/end_date"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_end_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_date_black"
+                                android:drawablePadding="@dimen/general_padding_5dp"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:hint="@string/date"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/end_time"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_end_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:hint="@string/time"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/craft"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_craft"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:text=" - "
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/skill_level"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_skill_level"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:text="-"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/general_margin_15dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/general_padding_10dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_5dp"
+                                    android:text="@string/vendor"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textFontWeight="700"
+                                    android:textSize="21sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="@dimen/general_margin_5dp"
+                                android:background="@drawable/ic_line" />
+
+                            <TextView
+                                android:id="@+id/tv_vendor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/general_margin_5dp"
+                                android:fontFamily="@font/roboto_regular"
+                                android:padding="@dimen/general_padding_5dp"
+                                android:text="-"
+                                android:textAllCaps="false"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/base_text_size_16" />
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btn_save_labor_actual"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/general_margin_20dp"
+                                android:layout_marginTop="@dimen/general_margin_20dp"
+                                android:layout_marginEnd="@dimen/general_margin_20dp"
+                                android:layout_marginBottom="@dimen/general_margin_20dp"
+                                android:background="@color/colorPrimaryBackground"
+                                android:text="@string/button_estdur_save"
+                                android:textColor="@color/white"
+                                tools:ignore="NotSibling" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+            </ScrollView>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

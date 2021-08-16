@@ -11,6 +11,8 @@ import id.thork.app.base.BaseParam
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.network.response.task_response.TaskResponse
+import id.thork.app.persistence.dao.LaborActualDao
+import id.thork.app.persistence.dao.LaborPlanDao
 import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.repository.TaskRepository
@@ -32,6 +34,8 @@ class TaskWorker @WorkerInject constructor(
     val preferenceManager: PreferenceManager,
     val httpLoggingInterceptor: HttpLoggingInterceptor,
     val taskDao: TaskDao,
+    val laborPlanDao: LaborPlanDao,
+    val laborActualDao: LaborActualDao,
 ) : Worker(context, workerParameters) {
 
     private val TAG = TaskWorker::class.java.name
@@ -40,7 +44,7 @@ class TaskWorker @WorkerInject constructor(
 
     init {
         val workTaskRepository = WorkerTaskRepository(
-            appSession, taskDao, httpLoggingInterceptor, preferenceManager
+            appSession, taskDao, httpLoggingInterceptor, preferenceManager, laborPlanDao, laborActualDao
 
         )
         taskRepository = workTaskRepository.buildTaskRepository()

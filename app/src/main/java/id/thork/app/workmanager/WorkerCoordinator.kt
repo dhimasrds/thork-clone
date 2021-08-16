@@ -52,7 +52,11 @@ class WorkerCoordinator @Inject constructor(
     val materialDao: MaterialDao,
     val worklogDao: WorklogDao,
     val worklogTypeDao: WorklogTypeDao,
-    val taskDao: TaskDao
+    val taskDao: TaskDao,
+    val laborPlanDao: LaborPlanDao,
+    val laborActualDao: LaborActualDao,
+    val laborMasterDao: LaborMasterDao,
+    val craftMasterDao: CraftMasterDao
 ) {
     private val TAG = WorkerCoordinator::class.java.name
 
@@ -61,6 +65,7 @@ class WorkerCoordinator @Inject constructor(
     var materialRepository: MaterialRepository
     var worklogRepository: WorklogRepository
     var taskRepository: TaskRepository
+    var laborRepository: LaborRepository
     var response = WorkOrderResponse()
 
     //Work manager only execute when connected to internet
@@ -85,13 +90,15 @@ class WorkerCoordinator @Inject constructor(
                 materialDao,
                 worklogDao,
                 worklogTypeDao,
-                taskDao
+                taskDao,
+                laborPlanDao, laborActualDao, laborMasterDao, craftMasterDao
             )
         workOrderRepository = workerRepository.buildWorkorderRepository()
         attachmentRepository = workerRepository.buildAttachmentRepository()
         materialRepository = workerRepository.buildMaterialRepository()
         worklogRepository = workerRepository.buildWorklogRepository()
         taskRepository = workerRepository.buildTaskRepository()
+        laborRepository = workerRepository.buildLaborRepository()
 
         Timber.tag(TAG).i("WorkerCoordinator() workOrderRepository: %s", workOrderRepository)
     }

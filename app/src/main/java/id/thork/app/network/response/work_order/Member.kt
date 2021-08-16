@@ -262,4 +262,8 @@ data class Member(
     var woactivity: List<Woactivity>? = null,
     @Json(name = "externalrefid")
     var externalrefid: String? = null,
+    @Json(name = "wplabor")
+    var wplabor: List<Wplabor>? = null,
+    @Json(name = "labtrans")
+    val labtrans: List<Labtran>? = null,
 )

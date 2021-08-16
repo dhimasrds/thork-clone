@@ -1,5 +1,6 @@
 package id.thork.app.repository
 
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.message
@@ -8,6 +9,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.MxResponse
@@ -17,6 +19,7 @@ import id.thork.app.network.model.user.LoginCookie
 import id.thork.app.network.model.user.Logout
 import id.thork.app.network.model.user.UserResponse
 import id.thork.app.network.response.ErrorResponse.ErrorResponse
+import id.thork.app.network.response.labor_response.LaborResponse
 import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
@@ -128,18 +131,22 @@ class LoginRepository constructor(
         response.suspendOnSuccess {
             data.whatIfNotNull { response ->
                 //Save user session into local cache
-                onSuccess(response)
                 val cookielist: List<String> = headers.values("Set-Cookie")
-                val jsessionid = cookielist[0].split(";").toTypedArray()[0]
-                preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
-                preferenceManager.putInt(
-                    BaseParam.APP_MX_COOKIE_TIMEOUT,
-                    response.sessiontimeout
-                )
-                preferenceManager.putLong(
-                    BaseParam.APP_MX_COOKIE_LAST_UPDATE,
-                    Date().time
-                )
+                onSuccess(response)
+                Timber.tag(TAG).i("loginCookie() cookielist: %s",cookielist)
+                if (!cookielist.isEmpty()) {
+                    val jsessionid = cookielist[0].split(";").toTypedArray()[0]
+                    preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
+                    preferenceManager.putInt(
+                        BaseParam.APP_MX_COOKIE_TIMEOUT,
+                        response.sessiontimeout
+                    )
+                    preferenceManager.putLong(
+                        BaseParam.APP_MX_COOKIE_LAST_UPDATE,
+                        Date().time
+                    )
+                }
+
             }
         }.onError {
             Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())
@@ -221,5 +228,27 @@ class LoginRepository constructor(
             .onException {
                 onException(message())
             }
+    }
+
+    suspend fun fetchMasterDataLabor(
+        headerParam: String,
+        select: String,
+        onSuccess: (LaborResponse) -> Unit,
+        onError: (String) -> Unit,
+        onException: (String) -> Unit
+    ) {
+        val response = loginClient.getMasterDataLabor(headerParam, select)
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+        }
+            .onError {
+                onError(message())
+            }
+            .onException {
+                onException(message())
+            }
+
     }
 }

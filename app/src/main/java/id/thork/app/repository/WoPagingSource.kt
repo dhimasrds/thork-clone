@@ -109,7 +109,7 @@ class WoPagingSource @Inject constructor(
                     error = false
                 },
                 onException = {
-                    error = false
+                    error = true
                 })
         }
         return error

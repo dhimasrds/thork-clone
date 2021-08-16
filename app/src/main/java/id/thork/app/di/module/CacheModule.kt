@@ -104,6 +104,30 @@ object CacheModule {
 
     @Singleton
     @Provides
+    fun provideLaborPlanDao(): LaborPlanDao{
+        return LaborPlanDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideLaborActualDao(): LaborActualDao{
+        return LaborActualDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideLaborMasterDao(): LaborMasterDao{
+        return LaborMasterDaoImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCraftMasterDao(): CraftMasterDao{
+        return CraftMasterDaoImp()
+    }
+
+    @Singleton
+    @Provides
     fun provideStoreroomDao(): StoreroomDao{
         return StoreroomDaoImp()
     }

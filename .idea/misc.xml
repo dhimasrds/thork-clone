@@ -14,16 +14,23 @@
         <entry key="app/src/main/res/drawable/ic_rectangle_border_blue.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.14739583333333334" />
         <entry key="app/src/main/res/drawable/locomotif_dialog.xml" value="0.14375" />
-        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.13489583333333333" />
-        <entry key="app/src/main/res/layout/activity_create_task.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.2431924882629108" />
-        <entry key="app/src/main/res/layout/activity_create_workorder_menu.xml" value="0.1296875" />
+        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/activity_create_wo_assets.xml" value="0.10326086956521739" />
+        <entry key="app/src/main/res/layout/activity_create_wo_attachments.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_create_wo_laborplan.xml" value="0.1068840579710145" />
+        <entry key="app/src/main/res/layout/activity_create_wo_material_plan.xml" value="0.10326086956521739" />
+        <entry key="app/src/main/res/layout/activity_create_wo_task.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_create_workorder.xml" value="0.19350282485875706" />
         <entry key="app/src/main/res/layout/activity_detail_wo.xml" value="0.1046875" />
+        <entry key="app/src/main/res/layout/activity_detail_wo_material_actual.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_detail_wo_worklog.xml" value="0.21" />
         <entry key="app/src/main/res/layout/activity_form_main.xml" value="0.12604166666666666" />
-        <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.13489583333333333" />
-        <entry key="app/src/main/res/layout/activity_material_actual_detail.xml" value="0.13489583333333333" />
-        <entry key="app/src/main/res/layout/activity_material_plan.xml" value="0.13489583333333333" />
-        <entry key="app/src/main/res/layout/activity_material_plan_detail.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_labor_actual_details.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_material_actual.xml" value="0.11639400136332652" />
         <entry key="app/src/main/res/layout/activity_material_plan_form.xml" value="0.24170616113744076" />
         <entry key="app/src/main/res/layout/activity_material_plan_form_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_material_plan_item_extension.xml" value="0.1046875" />
@@ -33,7 +40,14 @@
         <entry key="app/src/main/res/layout/activity_server.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_work_log.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_select_labor.xml" value="0.10733695652173914" />
+        <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_task.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_work_log.xml" value="0.5" />
         <entry key="app/src/main/res/layout/cardview_findmaterial.xml" value="0.12604166666666666" />
+        <entry key="app/src/main/res/layout/cardview_labor_and_craft.xml" value="0.210724043715847" />
+        <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/cardview_list_worklog.xml" value="0.21" />
         <entry key="app/src/main/res/layout/form_list_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/locomotif_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/layout/locomotif_dialog_item.xml" value="0.22" />

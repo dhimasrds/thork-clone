@@ -48,7 +48,8 @@ class WorkOrderRepository @Inject constructor(
     private val materialRepository: MaterialRepository,
     private val storeroomRepository: StoreroomRepository,
     private val worklogRepository: WorklogRepository,
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val laborRepository: LaborRepository
 ) : BaseRepository() {
     val TAG = WorkOrderRepository::class.java.name
     private val locationDao: LocationDao
@@ -337,6 +338,8 @@ class WorkOrderRepository @Inject constructor(
             woCacheEntity.createdDate = Date()
             woCacheEntity.createdBy = appSession.userEntity.username
             woCacheEntity.updatedBy = appSession.userEntity.username
+            laborRepository.addLaborPlanToObjectBox(wo)
+            laborRepository.addLaborActualToObjectBox(wo)
             saveWoList(woCacheEntity, appSession.userEntity.username)
 
             runBlocking {
@@ -400,6 +403,8 @@ class WorkOrderRepository @Inject constructor(
         woCacheEntity.createdDate = Date()
         woCacheEntity.createdBy = appSession.userEntity.username
         woCacheEntity.updatedBy = appSession.userEntity.username
+        laborRepository.addLaborPlanToObjectBox(member)
+        laborRepository.addLaborActualToObjectBox(member)
         saveWoList(woCacheEntity, appSession.userEntity.username)
 
         runBlocking {

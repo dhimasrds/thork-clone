@@ -30,6 +30,9 @@ object BaseParam {
 
     const val APP_EMPTY_STRING = ""
     const val APP_DASH = "-"
+    const val APP_WHITESPACE = " "
+    const val APP_NULL = "null"
+
 
     const val APP_DEFAULT_LANG = "eng"
     const val APP_VERSION = "Version "
@@ -116,6 +119,7 @@ object BaseParam {
     const val APP_TAG_MARKER_CREW_LOGOUT = "logout"
     const val APP_LOCATION_LONGITUDE = "LONGITUDE"
     const val APP_LOCATION_LATITUDE = "LATITUDE"
+    const val APP_CREATE = "Create"
 
     /**
      * Base Parameter Priority Workorder
@@ -183,6 +187,8 @@ object BaseParam {
     const val SHEDULE_START_TIME = "SHEDULE_START_TIME"
     const val ACTUAL_START = "ACTUAL_START"
     const val ACTUAL_START_TIME = "ACTUAL_START_TIME"
+    const val LABORCODE = "LABORCODE"
+    const val CRAFT = "CRAFT"
 
     const val PRIORITY = "PRIORITY"
 
@@ -214,6 +220,12 @@ object BaseParam {
     const val REQUEST_CODE_MATERIAL_PLAN = 1169
     const val REQUEST_CODE_MATERIAL_ACTUAL = 1179
 
+    const val REQUEST_CODE_LABOR = 1189
+    const val REQUEST_CODE_TASK = 1199
+    const val REQUEST_CODE_CRAFT = 1200
+
+
+
 
     const val RFID_ASSETNUM = "assetnum"
     const val RFID_LOCATION = "location"
@@ -228,6 +240,11 @@ object BaseParam {
     const val SCAN_TYPE_RFID = "RFID"
     const val SCAN_TYPE_BARCODE = "BARCODE"
     const val IS_SCAN = "IS_SCAN"
+
+    const val LABORCODE_FORM = "LABORCODEP_FORM"
+    const val CRAFT_FORM = "CRAFT_FORM"
+    const val SKILL_FORM = "SKILL_FORM"
+    const val TASK_FORM = "TASK_FORM"
 
 
     /**

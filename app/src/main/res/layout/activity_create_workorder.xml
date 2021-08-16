@@ -546,6 +546,7 @@
                         android:id="@+id/include_laborplan"
                         layout="@layout/activity_create_wo_laborplan" />
 
+
                     <!--REPORT DATE-->
                     <LinearLayout
                         android:layout_width="match_parent"
