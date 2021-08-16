@@ -74,11 +74,13 @@ class ActivityFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             woActivityAdapter.loadStateFlow.collectLatest { loadStates ->
                 Timber.d("onCreateView loadstate :%s", loadStates)
+                val mediatorPrependLoadState: LoadState? = loadStates.source.prepend
+                Timber.d("onCreateView loa1dstate  mediator :%s", mediatorPrependLoadState!!.endOfPaginationReached)
                 binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
 //                binding.loadStateRetry.isVisible = loadStates.append is LoadState.Error
 //               binding.loadStateErrorMessage.isVisible = loadStates.append is LoadState.Error
 //                binding.loadStateErrorMessage.text = "Connection Lost, please try again
-                if (loadStates.append is LoadState.Error) {
+                if ( mediatorPrependLoadState!!.endOfPaginationReached && loadStates.append is LoadState.Error) {
                     val toast = Toast.makeText(
                         requireContext(),
                         "Server did not response, please try again",
@@ -156,13 +158,13 @@ class ActivityFragment : Fragment() {
                         else -> null
                     }
                     errorState?.let {
-                        val toast = Toast.makeText(
-                            requireContext(),
-                            "Please,check your connection",
-                            Toast.LENGTH_LONG
-                        )
-                        toast.setGravity(Gravity.CENTER, 0, 0)
-                        toast.show()
+//                        val toast = Toast.makeText(
+//                            requireContext(),
+//                            "Please,check your connection",
+//                            Toast.LENGTH_LONG
+//                        )
+//                        toast.setGravity(Gravity.CENTER, 0, 0)
+//                        toast.show()
                     }
                 }
             }

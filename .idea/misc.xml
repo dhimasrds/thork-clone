@@ -28,7 +28,7 @@
         <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
         <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.12" />
         <entry key="app/src/main/res/layout/fragment_activity.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.20877192982456141" />
+        <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.18" />
         <entry key="app/src/main/res/layout/load_state_view.xml" value="0.3006711409395973" />
       </map>
     </option>
