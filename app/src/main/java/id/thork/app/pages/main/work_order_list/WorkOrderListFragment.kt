@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -28,6 +29,7 @@ import id.thork.app.databinding.FragmentWorkOrderListBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -84,8 +86,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun setupView() {
         binding.recyclerView.apply {
             adapter = workOrderAdapter.withLoadStateFooter(
-                footer = WoLoadStateAdapter { workOrderAdapter.retry() }
-            )
+                footer = WoLoadStateAdapter { workOrderAdapter.retry() })
         }
     }
 
@@ -107,8 +108,26 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 Timber.d("onCreateView :%s", it)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            workOrderAdapter.loadStateFlow.collectLatest { loadStates ->
+                Timber.d("onCreateView loadstate :%s", loadStates)
+                binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
+//                binding.loadStateRetry.isVisible = loadStates.append is LoadState.Error
+//               binding.loadStateErrorMessage.isVisible = loadStates.append is LoadState.Error
+//                binding.loadStateErrorMessage.text = "Connection Lost, please try again
+                if (loadStates.append is LoadState.Error) {
+                    val toast = Toast.makeText(
+                        requireContext(),
+                        "Server did not response, please try again",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                }
+            }
 
-//        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+        }
     }
 
     private fun swipeRefresh() {
@@ -122,9 +141,14 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         pullRefreshLayout.setOnRefreshListener {
             workOrderAdapter.refresh()
             workOrderAdapter.addLoadStateListener { loadstate ->
-                Timber.d("loadresult wo :%s", loadstate.refresh)
-                if (loadstate.refresh !is LoadState.Loading) {
+
+                Timber.d("loadresult wo :%s", loadstate)
+                if (loadstate.append is LoadState.Loading) {
+                    binding.progressBar.visibility =View.VISIBLE
+                }else {
                     pullRefreshLayout.setRefreshing(false)
+                    binding.progressBar.visibility =View.GONE
+
                 }
             }
         }
@@ -162,6 +186,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
                         else -> null
                     }
+                    Timber.d("error state :%s", errorState)
                     errorState?.let {
                         val toast = Toast.makeText(
                             requireContext(),

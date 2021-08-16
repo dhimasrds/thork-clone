@@ -53,6 +53,7 @@ class WoPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
         Timber.d("position :%s", position)
+        Timber.d("error loadresult %s", error)
         return try {
             if (query == null) {
                 fetchWo(position)
@@ -106,7 +107,7 @@ class WoPagingSource @Inject constructor(
                     error = false
                 },
                 onError = {
-                    error = false
+                    error = true
                 },
                 onException = {
                     error = true

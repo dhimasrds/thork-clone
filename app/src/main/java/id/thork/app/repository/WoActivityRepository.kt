@@ -26,7 +26,7 @@ class WoActivityRepository constructor(
     private val workOrderClient: WorkOrderClient,
     private val woCacheDao: WoCacheDao,
 ) : BaseRepository() {
-    val TAG = WorkOrderRepository::class.java.name
+    val TAG = WoActivityRepository::class.java.name
 
     suspend fun getWorkOrderList(
         cookie: String,
