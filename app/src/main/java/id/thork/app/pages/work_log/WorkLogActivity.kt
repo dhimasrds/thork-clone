@@ -86,7 +86,6 @@ class WorkLogActivity : BaseActivity() {
             intent.putExtra(BaseParam.WORKORDERID, intentWoid)
             intent.putExtra(BaseParam.WONUM, intentWonum)
             startActivity(intent)
-            finish()
         }
     }
 }

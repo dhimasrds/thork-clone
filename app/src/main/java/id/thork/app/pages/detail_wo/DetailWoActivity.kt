@@ -5,6 +5,7 @@ import android.content.Intent
 import android.location.Location
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.RelativeLayout
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -100,8 +101,33 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 description.text = it.description
                 status.text = it.status
 
-                asset.text = StringUtils.truncate(it.assetnum, 20)
-                location.text = StringUtils.truncate(it.location, 20)
+
+                it.assetnum.whatIfNotNull(
+                    whatIf = { resultAsset ->
+                        asset.text = StringUtils.truncate(resultAsset, 20)
+                    },
+                    whatIfNot = {
+                        asset.text = getString(R.string.rfid_asset_empty)
+                        asset.setTextColor(ContextCompat.getColor(this@DetailWoActivity, R.color.colorRed))
+                        btnRfid.visibility = GONE
+                        btnQrcode.visibility = GONE
+                        btnQrcodeEmpty.visibility = VISIBLE
+                        btnRfidAssetEmpty.visibility = VISIBLE
+                    }
+                )
+                it.location.whatIfNotNull(
+                    whatIf = { resultLocation ->
+                        location.text = StringUtils.truncate(resultLocation, 20)
+                    },
+                    whatIfNot = {
+                        location.text = getString(R.string.rfid_location_empty)
+                        location.setTextColor(ContextCompat.getColor(this@DetailWoActivity, R.color.colorRed))
+                        btnRfidLocation.visibility = GONE
+                        btnQrcodeLocation.visibility = GONE
+                        btnQrcodeLocationEmpty.visibility = VISIBLE
+                        btnRfidLocationEmpty.visibility = VISIBLE
+                    }
+                )
                 it.woserviceaddress.whatIfNotNull { address ->
                     serviceaddress.text = address.get(0).formattedaddress
                 }
@@ -124,14 +150,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 workorderLongdesc = it.descriptionLongdescription
                 it.status?.let { status -> setButtonStatus(status) }
             }
-            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress!![0].longitudex != null) {
+            if (it.woserviceaddress?.get(0)?.latitudey != null && it.woserviceaddress[0].longitudex != null) {
                 isRoute = BaseParam.APP_TRUE
                 destinationLatLng = LatLng(
-                    it.woserviceaddress!![0].latitudey!!,
-                    it.woserviceaddress!![0].longitudex!!
+                    it.woserviceaddress[0].latitudey!!,
+                    it.woserviceaddress[0].longitudex!!
                 )
                 destinationString =
-                    "${it.woserviceaddress!![0].latitudey!!},${it.woserviceaddress!![0].longitudex!!}"
+                    "${it.woserviceaddress[0].latitudey!!},${it.woserviceaddress[0].longitudex!!}"
             }
         })
 
@@ -635,7 +661,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     private fun startQRScanner(requestCode: Int) {
         IntentIntegrator(this@DetailWoActivity).apply {
-            setCaptureActivity(ScannerActivity::class.java)
+            captureActivity = ScannerActivity::class.java
             setRequestCode(requestCode)
             initiateScan()
         }

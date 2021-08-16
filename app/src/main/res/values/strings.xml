@@ -472,9 +472,12 @@
 
     <!-- Rfid Asset -->
     <string name="scan_asset">Scanning Asset</string>
+    <string name="rfid_asset_empty">Not Asset Found</string>
+
 
     <!-- Rfid Location -->
     <string name="scan_location">Scanning Location</string>
+    <string name="rfid_location_empty">Not Location Found</string>
 
     <!-- Asset-->
     <string name="asset_rfid_is_match_begin">This Asset Item is</string>
