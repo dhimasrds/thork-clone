@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -204,14 +205,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         //TODO Result Query Asset for Rfid
         detailWoViewModel.AssetRfid.observe(this, {
             if (it ==  BaseParam.APP_DASH){
-                binding.icCheckAsset.visibility = GONE
-                binding.icCrossAsset.visibility = VISIBLE
-                binding.tvScanResultAsset.text = (getString(R.string.asset_rfid_is_not_registered))
-                binding.tvScanResultAsset.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.colorRed
-                    )
-                )
+                Toast.makeText(
+                    this,
+                    R.string.asset_rfid_is_not_registered,
+                    Toast.LENGTH_LONG
+                ).show()
             } else {
                 gotoRfidAsset(it)
             }
@@ -247,14 +245,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         detailWoViewModel.LocationRfid.observe(this, {
             Timber.d("Observer Location Rfid() %s", it)
             if (it ==  BaseParam.APP_DASH){
-                binding.icCheckLocation.visibility = GONE
-                binding.icCrossLocation.visibility = VISIBLE
-                binding.tvScanResultLocation.text = (getString(R.string.location_rfid_is_not_registered))
-                binding.tvScanResultLocation.setBackgroundColor(
-                    ContextCompat.getColor(
-                        applicationContext, R.color.colorRed
-                    )
-                )
+                Toast.makeText(
+                    this,
+                    R.string.location_rfid_is_not_registered,
+                    Toast.LENGTH_LONG
+                ).show()
             } else {
                 gotoRfidLocation(it)
             }
