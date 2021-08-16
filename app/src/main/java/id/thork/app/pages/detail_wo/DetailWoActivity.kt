@@ -209,7 +209,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         detailWoViewModel.ResultLocation.observe(this, {
             if (it.equals(BaseParam.APP_TRUE)) {
 //            locationIsMatch = result
-                binding.icCheckLocation.visibility = View.VISIBLE
+                binding.icCheckLocation.visibility = VISIBLE
                 binding.icCrossLocation.visibility = GONE
                 binding.tvScanResultLocation.text =
                     getString(R.string.asset_scan_result) + ": " +
@@ -221,7 +221,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 )
             } else {
                 binding.icCheckLocation.visibility = GONE
-                binding.icCrossLocation.visibility = View.VISIBLE
+                binding.icCrossLocation.visibility = VISIBLE
                 binding.tvScanResultLocation.text = (getString(R.string.asset_scan_result) + ": " +
                         getString(R.string.location_rfid_is_not_match))
                 binding.tvScanResultLocation.setBackgroundColor(

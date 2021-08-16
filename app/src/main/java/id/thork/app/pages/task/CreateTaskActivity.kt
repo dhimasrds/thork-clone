@@ -250,6 +250,14 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 tvEstDur.error = getString(R.string.task_estdur_required)
                 return false
             }
+            if (tvActualStart.text.toString().isBlank()){
+                tvActualStart.error = getString(R.string.task_estdur_required)
+                return false
+            }
+            if (tvTimeActualStart.text.toString().isBlank()){
+                tvTimeActualStart.error = getString(R.string.task_estdur_required)
+                return false
+            }
         }
         return true
     }

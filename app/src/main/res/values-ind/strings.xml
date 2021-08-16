@@ -550,6 +550,7 @@
     <string name="task_toolbar">Task</string>
     <string name="task_desc_required">Description tidaka boleh kosong</string>
     <string name="task_estdur_required">Estimate Duration tidak boleh kosong</string>
+    <string name="task_actual_required">Actual Start tidak boleh kosong</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>
