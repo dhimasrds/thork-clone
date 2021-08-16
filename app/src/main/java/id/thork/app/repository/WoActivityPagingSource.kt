@@ -113,7 +113,7 @@ class WoActivityPagingSource @Inject constructor(
                     error = false
                 },
                 onException = {
-                    error = false
+                    error = true
                 })
         }
         return error

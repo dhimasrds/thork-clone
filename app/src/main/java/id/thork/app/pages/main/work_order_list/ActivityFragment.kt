@@ -44,6 +44,7 @@ class ActivityFragment : Fragment() {
         pullRefreshLayout = binding.swipeRefreshLayout
         woActivityAdapter = WorkOrderAdapter()
         viewModel.pruneWork()
+
         return binding.root
     }
 
@@ -84,7 +85,7 @@ class ActivityFragment : Fragment() {
         )
 
         pullRefreshLayout.setOnRefreshListener {
-            woActivityAdapter.refresh()
+            woActivityAdapter.retry()
             woActivityAdapter.addLoadStateListener { loadstate ->
                 Timber.d("loadresult wo :%s", loadstate.refresh)
                 if (loadstate.refresh !is LoadState.Loading) {
