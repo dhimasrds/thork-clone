@@ -126,15 +126,17 @@ class LoginViewModel @ViewModelInject constructor(
 
     private fun loginCookie(userHash: String, username: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _progressVisible.postValue(true)
             loginRepository.loginCookie(userHash,
                 onSuccess = {
                     fetchUserData(userHash, username)
+                    _progressVisible.postValue(false)
                     Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
+                    _progressVisible.postValue(false)
                     _error.postValue(it)
                 })
-            _progressVisible.postValue(true)
         }
     }
 

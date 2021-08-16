@@ -134,16 +134,19 @@ class LoginRepository constructor(
                 val cookielist: List<String> = headers.values("Set-Cookie")
                 onSuccess(response)
                 Timber.tag(TAG).i("loginCookie() cookielist: %s",cookielist)
-                val jsessionid = cookielist[0].split(";").toTypedArray()[0]
-                preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
-                preferenceManager.putInt(
-                    BaseParam.APP_MX_COOKIE_TIMEOUT,
-                    response.sessiontimeout
-                )
-                preferenceManager.putLong(
-                    BaseParam.APP_MX_COOKIE_LAST_UPDATE,
-                    Date().time
-                )
+                if (!cookielist.isEmpty()) {
+                    val jsessionid = cookielist[0].split(";").toTypedArray()[0]
+                    preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)
+                    preferenceManager.putInt(
+                        BaseParam.APP_MX_COOKIE_TIMEOUT,
+                        response.sessiontimeout
+                    )
+                    preferenceManager.putLong(
+                        BaseParam.APP_MX_COOKIE_LAST_UPDATE,
+                        Date().time
+                    )
+                }
+
             }
         }.onError {
             Timber.tag(TAG).i("loginCookie() code: %s error: %s", statusCode.code, message())
