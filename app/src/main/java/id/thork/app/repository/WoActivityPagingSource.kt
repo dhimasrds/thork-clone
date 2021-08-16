@@ -49,7 +49,7 @@ class WoActivityPagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
-        Timber.d("position :%s query: %s", position, query)
+        Timber.d("position :%s query: %s , offset :%s", position, query,offset)
         Timber.d("error loadresult %s", error)
         return try {
             if (query == null) {
@@ -100,7 +100,7 @@ class WoActivityPagingSource @Inject constructor(
         Timber.tag(TAG).d("fetchWo() saved Query: %s", savedQuery)
         savedQuery?.let {
             repository.getWorkOrderList(
-                cookie, it, select, pageno = position, pagesize = 10,
+                cookie, it, select, pageno = position, pagesize = 5,
                 onSuccess = {
                     response = it
                     response.member?.let { it1 -> checkingWoInObjectBox(it1) }
