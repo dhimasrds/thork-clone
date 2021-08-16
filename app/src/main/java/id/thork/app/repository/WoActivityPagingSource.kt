@@ -50,6 +50,7 @@ class WoActivityPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         val position = params.key ?: 1
         Timber.d("position :%s query: %s", position, query)
+        Timber.d("error loadresult %s", error)
         return try {
             if (query == null) {
                 fetchWo(position)

@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../layout/custom_preview.xml" value="0.11927083333333334" />
         <entry key="app/src/main/res/drawable/add_load.xml" value="0.11008771929824561" />
+        <entry key="app/src/main/res/drawable/bg_dropdown.xml" value="0.11798245614035088" />
         <entry key="app/src/main/res/drawable/ic_material_actual.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.12" />
@@ -25,7 +27,8 @@
         <entry key="app/src/main/res/layout/activity_select_labor.xml" value="0.10733695652173914" />
         <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
         <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.12" />
-        <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/fragment_activity.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.20877192982456141" />
         <entry key="app/src/main/res/layout/load_state_view.xml" value="0.3006711409395973" />
       </map>
     </option>

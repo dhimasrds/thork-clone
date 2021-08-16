@@ -124,10 +124,9 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     toast.setGravity(Gravity.CENTER, 0, 0)
                     toast.show()
                 }
-                binding.loadStateRetry.setOnClickListener { workOrderAdapter.retry() }
             }
 
-//        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
         }
     }
 
@@ -144,7 +143,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             workOrderAdapter.addLoadStateListener { loadstate ->
 
                 Timber.d("loadresult wo :%s", loadstate)
-                if (loadstate.refresh is LoadState.Loading) {
+                if (loadstate.append is LoadState.Loading) {
                     binding.progressBar.visibility =View.VISIBLE
                 }else {
                     pullRefreshLayout.setRefreshing(false)

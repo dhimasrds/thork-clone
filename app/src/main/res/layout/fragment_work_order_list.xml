@@ -42,8 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_dropdown"
+            android:layout_marginTop="@dimen/general_margin_4dp"
+            android:layout_marginBottom="@dimen/general_margin_4dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="@dimen/general_margin_8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -61,69 +62,16 @@
                 />
         </FrameLayout>
 
-        <RelativeLayout
-            android:id="@+id/retry_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/general_margin_10dp"
-            app:layout_constraintTop_toBottomOf="@+id/framelayout"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/load_state_errorMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:maxEms="15"
-                android:maxLines="2"
-                android:text="Error message"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/design_default_color_error"
-                android:textSize="@dimen/base_text_size_16" />
-
-            <!--        <ProgressBar-->
-            <!--            android:id="@+id/load_state_progress"-->
-            <!--            android:layout_width="60dp"-->
-            <!--            android:layout_height="60dp"-->
-            <!--            android:layout_centerHorizontal="true"-->
-            <!--            android:layout_centerVertical="true" />-->
-
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/load_state_progress"
-                android:visibility="gone"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/infinity_bar"
-                android:elevation="10dp"
-                />
-
-            <Button
-                android:visibility="gone"
-                android:id="@+id/load_state_retry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="Retry" />
-
-        </RelativeLayout>
 
 
         <com.baoyz.widget.PullRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/retry_layout"
+            app:layout_constraintTop_toBottomOf="@+id/framelayout"
             app:layout_constraintVertical_bias="0.0">
 
 
@@ -131,7 +79,6 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
                 android:clipToPadding="false"
                 android:paddingLeft="@dimen/general_padding_16dp"
                 android:paddingRight="@dimen/general_padding_16dp"
