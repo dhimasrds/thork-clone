@@ -8,7 +8,8 @@ import javax.inject.Inject
  * Jakarta, Indonesia.
  */
 class WorkOrderClient @Inject constructor(
-    private val workOrderApi: WorkOrderApi) {
+    private val workOrderApi: WorkOrderApi
+) {
 
     suspend fun getWorkOrderList(
         cookie: String,
@@ -54,6 +55,42 @@ class WorkOrderClient @Inject constructor(
 
     suspend fun getWorklogType(headerParam: String, select: String, where: String) =
         workOrderApi.getWorklogType(headerParam, LEAN, select, where)
+
+    suspend fun addLaborPlan(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        workOrderId: Int,
+        body: Member,
+    ) =
+        workOrderApi.addLaborPlan(
+            cookie,
+            xMethodeOverride,
+            contentType,
+            patchType,
+            workOrderId,
+            LEAN,
+            body
+        )
+
+    suspend fun updateLaborPlan(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        workOrderId: Int,
+        body: Member,
+    ) =
+        workOrderApi.addLaborPlan(
+            cookie,
+            xMethodeOverride,
+            contentType,
+            patchType,
+            workOrderId,
+            LEAN,
+            body
+        )
 
     companion object {
         private const val LEAN = 1

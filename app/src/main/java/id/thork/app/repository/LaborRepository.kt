@@ -7,6 +7,7 @@ import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.labor_response.Laborcraftrate
 import id.thork.app.network.response.work_order.Member
+import id.thork.app.network.response.work_order.Woactivity
 import id.thork.app.network.response.work_order.Wplabor
 import id.thork.app.persistence.dao.CraftMasterDao
 import id.thork.app.persistence.dao.LaborActualDao
@@ -71,8 +72,13 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findListLaborPlanlbyTaskid(workroderid, taskid)
     }
 
+    fun findLaborPlanByWplaborid(wplaborid: String) : LaborPlanEntity?{
+        return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
+    }
+
 
     fun addLaborPlanToObjectBox(member: Member) {
+        //Labor Plan with Task
         val woact = member.woactivity
         woact.whatIfNotNullOrEmpty {
             it.forEach { task ->
@@ -98,13 +104,40 @@ class LaborRepository @Inject constructor(
                         laborCache.workorderid = member.workorderid.toString()
                         laborCache.wonumTask = task.wonum
                         laborCache.syncUpdate = BaseParam.APP_TRUE
+                        laborCache.isTask = BaseParam.APP_TRUE
                         saveLaborPlanCache(laborCache)
                     }
                 }
             }
         }
+
+        //Labor plan without task
+        val wplabor = member.wplabor
+        wplabor.whatIfNotNullOrEmpty {
+            it.forEach { wplabor ->
+                val laborCache = LaborPlanEntity()
+                wplabor.laborcode.whatIfNotNull { laborcode ->
+                    laborCache.laborcode = laborcode
+                }
+
+                wplabor.craft.whatIfNotNull { craft ->
+                    laborCache.craft = craft
+                }
+
+                wplabor.vendor.whatIfNotNull { vendor ->
+                    laborCache.vendor = vendor
+                }
+                laborCache.wplaborid = wplabor.wplaborid.toString()
+                laborCache.wonumHeader = member.wonum
+                laborCache.workorderid = member.workorderid.toString()
+                laborCache.syncUpdate = BaseParam.APP_TRUE
+                laborCache.isTask = BaseParam.APP_FALSE
+                saveLaborPlanCache(laborCache)
+            }
+        }
     }
 
+    //create labor plan without task
     fun prepareBodyLaborPlan(workroderid: String): List<Wplabor> {
         val listLaborPlan = laborPlanDao.findListLaborPlan(workroderid)
         val wpLaborList = mutableListOf<Wplabor>()
@@ -112,7 +145,7 @@ class LaborRepository @Inject constructor(
         listLaborPlan.whatIfNotNull { listCache ->
             Timber.tag(TAG).d("prepareBodyLaborPlan() listCache size %s", listCache.size)
             listCache.forEach { laborplan ->
-                if(laborplan.taskid.equals(BaseParam.APP_NULL)) {
+                if(laborplan.isTask == BaseParam.APP_FALSE) {
                     val wplabor = Wplabor()
                     wplabor.wplaborid = 0
                     laborplan.laborcode.whatIfNotNull(
@@ -128,6 +161,54 @@ class LaborRepository @Inject constructor(
             }
         }
         return wpLaborList
+    }
+
+    //Update labor plan without task
+    fun preapreBodyLaborPlanNontask(wplaborid: String, laborcode: String, craft: String) : List<Wplabor> {
+        val laborplanEntity = laborPlanDao.findlaborPlanByWplaborid(wplaborid)
+        val wpLaborList = mutableListOf<Wplabor>()
+        laborplanEntity.whatIfNotNull { cache ->
+            val wplabor = Wplabor()
+            wplabor.wplaborid = cache.wplaborid?.toInt()
+
+            if(laborcode != BaseParam.APP_DASH) {
+                wplabor.laborcode = laborcode
+            } else {
+                wplabor.craft = craft
+            }
+
+            wpLaborList.add(wplabor)
+        }
+        return wpLaborList
+    }
+
+
+    //Update labor plan with task
+    fun preapreBodyLaborPlanTask(wplaborid: String, taskid: String, wonumtask: String) : List<Woactivity> {
+        val woactivityList =mutableListOf<Woactivity>()
+        val listWplabor = mutableListOf<Wplabor>()
+        val laborplanEntity = laborPlanDao.findlaborPlanByWplaborid(wplaborid)
+
+        laborplanEntity.whatIfNotNull {
+            val wplabor = Wplabor()
+            wplabor.wplaborid = it.wplaborid?.toInt()
+            if(it.laborcode != BaseParam.APP_DASH) {
+                wplabor.laborcode = it.laborcode
+            } else {
+                wplabor.craft = it.craft
+            }
+            listWplabor.add(wplabor)
+        }
+
+        listWplabor.whatIfNotNullOrEmpty {
+            val woactivity = Woactivity()
+            woactivity.taskid =  taskid.toInt()
+            woactivity.wonum = wonumtask
+            woactivity.wplabor = it
+            woactivityList.add(woactivity)
+        }
+
+        return woactivityList
     }
 
 
@@ -165,10 +246,10 @@ class LaborRepository @Inject constructor(
                             wpLabor.craft.toString(),
                             tempwoid
                         )
-                        Timber.d("handlingLaborPlan() laborcode not avail %s", laborCache)
+                        Timber.tag(TAG).d("handlingLaborPlan() laborcode not avail %s", laborCache)
                         laborCache.whatIfNotNull { cache ->
                             val wplaborid = wpLabor.wplaborid.toString()
-                            Timber.d("handlingLaborPlan() save to local")
+                            Timber.tag(TAG).d("handlingLaborPlan() save to local")
                             updateLaborPlanCache(
                                 cache,
                                 wplaborid,
@@ -280,8 +361,8 @@ class LaborRepository @Inject constructor(
             laborMaster.status = it.status
             saveLaborMasterCache(laborMaster)
             //save craft
-            it.laborcraftrate.whatIfNotNullOrEmpty {
-                addCraftCache(it, laborcode)
+            it.laborcraftrate.whatIfNotNullOrEmpty { laborCraftRate ->
+                addCraftCache(laborCraftRate, laborcode)
             }
         }
     }
@@ -305,6 +386,7 @@ class LaborRepository @Inject constructor(
     fun addCraftCache(listcraft: List<Laborcraftrate>, laborcode: String) {
         listcraft.forEach {
             val craftMasterEntity = CraftMasterEntity()
+            Timber.tag(TAG).d("fetchMasterDataLabor() addCraftCache laborcode %s, craft %s", laborcode, it.craft )
             craftMasterEntity.craft = it.craft
             craftMasterEntity.skillLevel = it.skilllevel
             craftMasterEntity.laborcode = laborcode
@@ -329,7 +411,9 @@ class LaborRepository @Inject constructor(
         listMember: List<id.thork.app.network.response.labor_response.Member>,
         username: String
     ) {
+        removeCacheLabor()
         usernameGlobal = username
+        Timber.tag(TAG).d("fetchMasterDataLabor() size %s", listMember.size)
         listMember.forEach { member ->
             //save labor to local cache
             addLaborMasterCache(member)

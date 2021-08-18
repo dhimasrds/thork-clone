@@ -50,9 +50,8 @@ class LaborPlanAdapter constructor(
                     tvLabor.text = laborPlanEntity.craft
                 }
 
-                if (taskid != BaseParam.APP_NULL) {
+                if (laborPlanEntity.isTask != BaseParam.APP_FALSE) {
                     tvType.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
-
                 }
 
                 tvStatus.text = vendor

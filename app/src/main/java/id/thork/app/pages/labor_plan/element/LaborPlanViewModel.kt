@@ -3,14 +3,19 @@ package id.thork.app.pages.labor_plan.element
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.response.work_order.Member
 import id.thork.app.persistence.entity.*
 import id.thork.app.repository.LaborRepository
 import id.thork.app.repository.TaskRepository
 import id.thork.app.repository.WorkOrderRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
@@ -20,9 +25,10 @@ import timber.log.Timber
 class LaborPlanViewModel @ViewModelInject constructor(
     private val laborRepository: LaborRepository,
     private val workOrderRepository: WorkOrderRepository,
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val preferenceManager: PreferenceManager,
 
-) : LiveCoroutinesViewModel() {
+    ) : LiveCoroutinesViewModel() {
     val TAG = LaborPlanViewModel::class.java.name
 
     private val _getLaborPlanList = MutableLiveData<List<LaborPlanEntity>>()
@@ -135,7 +141,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
         taskid: String,
         taskdesc: String,
         craft: String,
-        skillLevel: String,
         wonum: String,
         workroderid: String
     ) {
@@ -147,8 +152,15 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanCache.laborcode = BaseParam.APP_DASH
             laborPlanCache.craft = craft
         }
-        laborPlanCache.taskid = taskid
-        laborPlanCache.taskDescription = taskdesc
+
+        if (taskid != BaseParam.APP_NULL) {
+            laborPlanCache.taskid = taskid
+            laborPlanCache.taskDescription = taskdesc
+            laborPlanCache.isTask = BaseParam.APP_TRUE
+        } else {
+            laborPlanCache.isTask = BaseParam.APP_FALSE
+        }
+
         laborPlanCache.wonumHeader = wonum
         laborPlanCache.workorderid = workroderid
         laborPlanCache.syncUpdate = BaseParam.APP_FALSE
@@ -160,15 +172,17 @@ class LaborPlanViewModel @ViewModelInject constructor(
         laborCode: String,
         taskid: String,
         taskdesc: String,
+        taskrefwonum : String,
         craft: String,
     ) {
-        if (laborPlanEntity.syncUpdate == BaseParam.APP_TRUE) {
-            //TODO udpate to Maximo
-        }
 
-        if (!taskid.equals(BaseParam.APP_DASH)) {
+        if (taskid != BaseParam.APP_NULL) {
             laborPlanEntity.taskid = taskid
             laborPlanEntity.taskDescription = taskdesc
+            laborPlanEntity.wonumTask = taskrefwonum
+            laborPlanEntity.isTask = BaseParam.APP_TRUE
+        } else {
+            laborPlanEntity.isTask = BaseParam.APP_FALSE
         }
 
         if (laborCode != BaseParam.APP_DASH) {
@@ -179,13 +193,64 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanEntity.craft = craft
         }
 
-        Timber.tag(TAG).i("update local cache")
-        laborRepository.saveLaborPlanCache(laborPlanEntity)
+        if (laborPlanEntity.syncUpdate == BaseParam.APP_TRUE) {
+            prepareBodyUpdateTomaximo(laborPlanEntity)
+        }
     }
 
-    fun updateToMaximo() {
-        //TODO update to maximo
+    fun prepareBodyUpdateTomaximo(laborPlanEntity: LaborPlanEntity) {
+        //need prepare body, and validation with task or without task
+        val workorderid = laborPlanEntity.workorderid.toString()
+        val wplaborid = laborPlanEntity.wplaborid.toString()
+        val taskid = laborPlanEntity.taskid.toString()
+        val wonumTask = laborPlanEntity.wonumTask.toString()
+        val laborCode = laborPlanEntity.laborcode.toString()
+        val craft = laborPlanEntity.craft.toString()
+        val prepareBody = Member()
+
+        if (laborPlanEntity.isTask == BaseParam.APP_TRUE) {
+            //TODO Prepare body with task
+            val bodyLaborplanWithTask =
+                laborRepository.preapreBodyLaborPlanTask(wplaborid, taskid, wonumTask)
+            bodyLaborplanWithTask.whatIfNotNullOrEmpty {
+                prepareBody.woactivity = it
+            }
+        } else {
+            //TODO Prepare body without task
+            val bodyLaborplanWithoutTask =
+                laborRepository.preapreBodyLaborPlanNontask(wplaborid, laborCode, craft)
+            bodyLaborplanWithoutTask.whatIfNotNullOrEmpty {
+                prepareBody.wplabor = it
+            }
+        }
+
+        prepareBody.whatIfNotNull {
+            updateToMaximo(it, workorderid, laborPlanEntity)
+        }
     }
 
+    fun updateToMaximo(member: Member, workroderid: String, laborPlanEntity: LaborPlanEntity) {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val xMethodeOverride: String = BaseParam.APP_PATCH
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
 
+        viewModelScope.launch(Dispatchers.IO) {
+            workOrderRepository.udpateLaborPlan(cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                workroderid.toInt(),
+                member,
+                onSuccess = {
+                    Timber.tag(TAG).i("update local cache after update")
+                    laborRepository.saveLaborPlanCache(laborPlanEntity)
+                    Timber.tag(TAG).i("updateToMaximo() onSuccess()")
+                },
+                onError = {
+                    Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
+                }
+            )
+        }
+    }
 }

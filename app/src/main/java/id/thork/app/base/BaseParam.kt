@@ -182,6 +182,7 @@ object BaseParam {
     const val WORKLOGTYPE = "WORKLOGTYPE"
     const val ATTENDANCEID = "ATTENDANCEID"
     const val TASKID = "TASKID"
+    const val REFWONUM = "REFWONUM"
     const val DETAIL_TASK = "DETAIL_TASK"
     const val SHEDULE_START = "SHEDULE_START"
     const val SHEDULE_START_TIME = "SHEDULE_START_TIME"

@@ -30,6 +30,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
     private var laborPlanEntity: LaborPlanEntity? = null
     var taskid: String? = null
     var taskdesc: String? = null
+    var taskrefwonum: String? = null
 
 
     override fun setupView() {
@@ -58,11 +59,12 @@ class LaborPlanDetailsActivity : BaseActivity() {
             laborPlanEntity = it
             taskid = it.taskid
             taskdesc = it.taskDescription
-            val skill = StringUtils.NVL(it.skillLevel, BaseParam.APP_DASH)
+            taskrefwonum = it.wonumTask
+            val isTask : Int? = it.isTask
             val vendor = StringUtils.NVL(it.vendor, BaseParam.APP_DASH)
             binding.apply {
                 tvLabor.text = it.laborcode
-                if (!taskid.equals(BaseParam.APP_NULL)) {
+                if (isTask != BaseParam.APP_FALSE) {
                     tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
                 }
                 tvCraft.text = it.craft
@@ -107,7 +109,6 @@ class LaborPlanDetailsActivity : BaseActivity() {
 
     private fun goToSelectLabor() {
         val intent = Intent(this, SelectLaborActivity::class.java)
-//        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
         intent.putExtra(BaseParam.LABORCODE_FORM, BaseParam.APP_DETAIL)
         startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
     }
@@ -135,6 +136,11 @@ class LaborPlanDetailsActivity : BaseActivity() {
                             taskDescriptionResult.whatIfNotNull {
                                 taskdesc = it
                             }
+
+                            val taskRefwonum = it.getStringExtra(BaseParam.REFWONUM)
+                            taskRefwonum.whatIfNotNull {
+                                taskrefwonum = it
+                            }
                             binding.tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
                         }
                     }
@@ -143,10 +149,8 @@ class LaborPlanDetailsActivity : BaseActivity() {
                         // Handling when choose Labor dan fill craft
                         data.whatIfNotNull {
                             val laborcode = it.getStringExtra(BaseParam.LABORCODE_FORM)
-//                            viewModels.fetchLaborAndCraft(laborcode.toString())
                             binding.tvLabor.text = laborcode
                             binding.tvCraft.text = BaseParam.APP_DASH
-
                         }
                     }
 
@@ -164,7 +168,6 @@ class LaborPlanDetailsActivity : BaseActivity() {
             }
         }
     }
-
 
     private fun retriveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
@@ -187,9 +190,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
                 )
             }
         )
-
         viewModels.fetchWoCache(intentWonum.toString())
-
     }
 
     override fun setupListener() {
@@ -199,23 +200,20 @@ class LaborPlanDetailsActivity : BaseActivity() {
         binding.btnSaveLaborPlan.setOnClickListener {
             val laborcode = binding.tvLabor.text
             val craft = binding.tvCraft.text
-            val skillLevel = binding.tvSkillLevel.text
-            Timber.d("setupListener() Create labor plan: %s %s %s", laborcode, craft, skillLevel)
+            Timber.d("setupListener() save labor plan : %s %s %s", laborcode, craft, taskid.toString())
             laborPlanEntity.whatIfNotNull {
                 viewModels.updateToLocalCache(
                     it,
                     laborcode.toString(),
                     taskid.toString(),
                     taskdesc.toString(),
+                    taskrefwonum.toString(),
                     craft.toString(),
                 )
             }
             navigateToLaborPlan()
-
         }
-
     }
-
 
     override fun goToPreviousActivity() {
         super.goToPreviousActivity()
@@ -234,6 +232,4 @@ class LaborPlanDetailsActivity : BaseActivity() {
         startActivity(intent)
         finish()
     }
-
-
 }

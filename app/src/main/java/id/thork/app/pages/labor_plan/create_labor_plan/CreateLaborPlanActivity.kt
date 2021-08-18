@@ -128,7 +128,6 @@ class CreateLaborPlanActivity : BaseActivity() {
                             val craft = it.getStringExtra(BaseParam.CRAFT_FORM)
                             val skill = it.getStringExtra(BaseParam.SKILL_FORM)
                             binding.tvCraft.text = craft
-//                            binding.tvSkillLevel.text = skill
                             binding.tvLabor.text = BaseParam.APP_DASH
                         }
                     }
@@ -149,7 +148,6 @@ class CreateLaborPlanActivity : BaseActivity() {
                 taskid.toString(),
                 taskdesc.toString(),
                 craft.toString(),
-                skillLevel.toString(),
                 intentWonum.toString(),
                 intentWorkorderid.toString()
             )

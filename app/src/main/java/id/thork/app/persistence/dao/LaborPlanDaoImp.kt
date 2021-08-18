@@ -140,7 +140,18 @@ class LaborPlanDaoImp : LaborPlanDao {
         return null
     }
 
-
+    override fun findlaborPlanByWplaborid(
+        wplaborid: String
+    ): LaborPlanEntity? {
+        val laborPlanEntity =
+            laborPlanEntityBox.query().equal(LaborPlanEntity_.wplaborid, wplaborid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
 
 
 

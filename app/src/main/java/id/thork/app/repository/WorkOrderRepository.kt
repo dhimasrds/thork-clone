@@ -925,4 +925,59 @@ class WorkOrderRepository @Inject constructor(
     }
 
 
+    //Submodule Labor
+    suspend fun addLaborPlan(cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
+                             workOrderId: Int, body: Member,
+                             onSuccess: () -> Unit, onError: (String) -> Unit,
+    ) {
+        val response =
+            workOrderClient.updateStatus(
+                cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                workOrderId,
+                body
+            )
+        response.suspendOnSuccess {
+            onSuccess()
+            Timber.tag(TAG).i("addLaborPlan() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG).i("addLaborPlan() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("addLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
+
+    suspend fun udpateLaborPlan(cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
+                                workOrderId: Int, body: Member,
+                                onSuccess: () -> Unit, onError: (String) -> Unit,
+    ) {
+        val response =
+            workOrderClient.updateStatus(
+                cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                workOrderId,
+                body
+            )
+        response.suspendOnSuccess {
+            onSuccess()
+            Timber.tag(TAG).i("udpateLaborPlan() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG).i("udpateLaborPlan() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("udpateLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
+
 }

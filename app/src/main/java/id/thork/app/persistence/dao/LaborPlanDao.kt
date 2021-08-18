@@ -26,4 +26,6 @@ interface LaborPlanDao {
         wonum: String,
         taskid: String
     ): LaborPlanEntity?
+
+    fun findlaborPlanByWplaborid(wplaborid: String): LaborPlanEntity?
 }
