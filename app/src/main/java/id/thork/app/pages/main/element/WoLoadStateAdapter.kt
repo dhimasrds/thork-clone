@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
+import id.thork.app.R
 import id.thork.app.databinding.LoadStateViewBinding
 import timber.log.Timber
 
@@ -17,32 +18,35 @@ class WoLoadStateAdapter(
     private val retry: () -> Unit
 ) : LoadStateAdapter<WoLoadStateAdapter.LoadStateViewHolder>() {
 
-    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
 
-        val progress = holder.loadStateViewBinding.loadStateProgress
-        val btnRetry = holder.loadStateViewBinding.loadStateRetry
-        val txtErrorMessage = holder.loadStateViewBinding.loadStateErrorMessage
+    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState) =
+        LoadStateViewHolder(
+            LoadStateViewBinding.bind(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.load_state_view, parent, false)
+            )
+        ) { retry.invoke() }
 
-        Timber.d("ProgressBar :%s", loadState.toString())
+    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) =
+        holder.bind(loadState)
 
-        btnRetry.isVisible = loadState !is LoadState.Loading
-        txtErrorMessage.isVisible = loadState !is LoadState.Loading
-        progress.isVisible = loadState is LoadState.Loading
+    class LoadStateViewHolder(
+        private val binding: LoadStateViewBinding,
+        private val retryCallback: () -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        if (loadState is LoadState.Error) {
-            txtErrorMessage.text = "Lost connection or check your connection"
+        init {
+            binding.loadStateRetry.setOnClickListener { retryCallback() }
         }
-        btnRetry.setOnClickListener {
-            retry.invoke()
+
+        fun bind(loadState: LoadState) {
+            Timber.d("loadstate error :%s", loadState)
+            with(binding) {
+                loadStateProgress.isVisible = loadState is LoadState.Loading
+                loadStateRetry.isVisible = loadState is LoadState.Error
+//                loadStateErrorMessage.isVisible = loadState is LoadState.Error
+//                loadStateErrorMessage.text = "Connection Lost, please try again "
+            }
         }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
-        return LoadStateViewHolder(
-            LoadStateViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
-    }
-
-    class LoadStateViewHolder(val loadStateViewBinding: LoadStateViewBinding) :
-        RecyclerView.ViewHolder(loadStateViewBinding.root)
 }

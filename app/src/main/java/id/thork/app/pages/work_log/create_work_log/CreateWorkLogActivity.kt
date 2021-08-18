@@ -80,8 +80,8 @@ class CreateWorkLogActivity : BaseActivity(), CustomDialogUtils.DialogActionList
         val intent = Intent(this, WorkLogActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, intentWoid)
         intent.putExtra(BaseParam.WONUM, intentWonum)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
-        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -98,7 +98,7 @@ class CreateWorkLogActivity : BaseActivity(), CustomDialogUtils.DialogActionList
 
     private fun setDialogSave() {
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
-            .setMiddleButtonText(R.string.places_try_again)
+            .setRightButtonText(R.string.dialog_yes)
             .setTittle(R.string.task_title)
             .setDescription(R.string.task_qustion)
             .setListener(this)

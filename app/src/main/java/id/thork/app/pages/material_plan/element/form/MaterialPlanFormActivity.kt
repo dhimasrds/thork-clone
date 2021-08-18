@@ -328,8 +328,8 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 materialLovBox.value = data.value
                 description.setText(data.name)
 
-//                storeroomLovBox.value = ""
-//                storeroomLovBox.setText("")
+                storeroomLovBox.value = ""
+                storeroomLovBox.setText("")
                 materialLov.destroy()
             }
             "storeroom" -> {

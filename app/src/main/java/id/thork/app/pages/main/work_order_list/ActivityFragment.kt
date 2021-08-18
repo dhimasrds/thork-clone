@@ -3,12 +3,10 @@ package id.thork.app.pages.main.work_order_list
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -22,6 +20,7 @@ import id.thork.app.databinding.FragmentActivityBinding
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderActvityViewModel
 import id.thork.app.pages.main.element.WorkOrderAdapter
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -44,6 +43,7 @@ class ActivityFragment : Fragment() {
         pullRefreshLayout = binding.swipeRefreshLayout
         woActivityAdapter = WorkOrderAdapter()
         viewModel.pruneWork()
+
         return binding.root
     }
 
@@ -71,6 +71,26 @@ class ActivityFragment : Fragment() {
                 Timber.d("onCreateView :%s", it)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            woActivityAdapter.loadStateFlow.collectLatest { loadStates ->
+                Timber.d("onCreateView loadstate :%s", loadStates)
+                val mediatorPrependLoadState: LoadState? = loadStates.source.prepend
+                Timber.d("onCreateView loa1dstate  mediator :%s", mediatorPrependLoadState!!.endOfPaginationReached)
+                binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
+//                binding.loadStateRetry.isVisible = loadStates.append is LoadState.Error
+//               binding.loadStateErrorMessage.isVisible = loadStates.append is LoadState.Error
+//                binding.loadStateErrorMessage.text = "Connection Lost, please try again
+                if ( mediatorPrependLoadState!!.endOfPaginationReached && loadStates.append is LoadState.Error) {
+                    val toast = Toast.makeText(
+                        requireContext(),
+                        "Server did not response, please try again",
+                        Toast.LENGTH_SHORT
+                    )
+                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.show()
+                }
+            }
+        }
 
         viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
     }
@@ -86,9 +106,18 @@ class ActivityFragment : Fragment() {
         pullRefreshLayout.setOnRefreshListener {
             woActivityAdapter.refresh()
             woActivityAdapter.addLoadStateListener { loadstate ->
-                Timber.d("loadresult wo :%s", loadstate.refresh)
-                if (loadstate.refresh !is LoadState.Loading) {
+
+                Timber.d("loadresult wo :%s", loadstate)
+                if (loadstate.refresh is LoadState.Loading) {
+                    binding.progressBar.visibility =View.VISIBLE
+                    requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }else {
                     pullRefreshLayout.setRefreshing(false)
+                    binding.progressBar.visibility =View.GONE
+                    requireActivity().window .clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+
                 }
             }
         }
@@ -108,7 +137,9 @@ class ActivityFragment : Fragment() {
 
                     // Show ProgressBar
                     progressBar.visibility = View.VISIBLE
-                } else {
+
+                }
+                else {
                     // Hide ProgressBar
                     progressBar.visibility = View.GONE
                     Timber.d("progressBarOnFirstLoad :%s", loadState.append)
@@ -127,13 +158,13 @@ class ActivityFragment : Fragment() {
                         else -> null
                     }
                     errorState?.let {
-                        val toast = Toast.makeText(
-                            requireContext(),
-                            "Please,check your connection",
-                            Toast.LENGTH_LONG
-                        )
-                        toast.setGravity(Gravity.CENTER, 0, 0)
-                        toast.show()
+//                        val toast = Toast.makeText(
+//                            requireContext(),
+//                            "Please,check your connection",
+//                            Toast.LENGTH_LONG
+//                        )
+//                        toast.setGravity(Gravity.CENTER, 0, 0)
+//                        toast.show()
                     }
                 }
             }
