@@ -112,18 +112,16 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             workOrderAdapter.loadStateFlow.collectLatest { loadStates ->
                 Timber.d("onCreateView loadstate :%s", loadStates)
                 val mediatorPrependLoadState: LoadState = loadStates.source.prepend
-                Timber.d("onCreateView loa1dstate  mediator :%s", mediatorPrependLoadState!!.endOfPaginationReached)
+                Timber.d("onCreateView loa1dstate  mediator :%s", mediatorPrependLoadState.endOfPaginationReached)
                 binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
-//                binding.loadStateRetry.isVisible = loadStates.append is LoadState.Error
-//               binding.loadStateErrorMessage.isVisible = loadStates.append is LoadState.Error
-//                binding.loadStateErrorMessage.text = "Connection Lost, please try again
+
                 if ( mediatorPrependLoadState.endOfPaginationReached && loadStates.append is LoadState.Error) {
                     val toast = Toast.makeText(
                         requireContext(),
                         "Server did not response, please try again",
                         Toast.LENGTH_SHORT
                     )
-                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.setGravity(Gravity.CENTER, 0, 50)
                     toast.show()
                 }
             }
@@ -145,7 +143,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             workOrderAdapter.addLoadStateListener { loadstate ->
 
                 Timber.d("loadresult wo :%s", loadstate)
-                if (loadstate.append is LoadState.Loading) {
+                if (loadstate.refresh is LoadState.Loading) {
                     binding.progressBar.visibility =View.VISIBLE
                 }else {
                     pullRefreshLayout.setRefreshing(false)
@@ -190,13 +188,13 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                     Timber.d("error state :%s", errorState)
                     errorState?.let {
-                        val toast = Toast.makeText(
-                            requireContext(),
-                            "Please, check your connection",
-                            Toast.LENGTH_SHORT
-                        )
-                        toast.setGravity(Gravity.CENTER, 0, 0)
-                        toast.show()
+//                        val toast = Toast.makeText(
+//                            requireContext(),
+//                            "Please, check your connection",
+//                            Toast.LENGTH_SHORT
+//                        )
+//                        toast.setGravity(Gravity.CENTER, 0, 0)
+//                        toast.show()
                     }
                 }
             }
