@@ -433,7 +433,11 @@ class TaskRepository @Inject constructor(
                 wplabor.wplaborid = 0
                 laborplan.laborcode.whatIfNotNull(
                     whatIf = {
-                        wplabor.laborcode = it
+                        if(it != BaseParam.APP_DASH) {
+                            wplabor.laborcode = it
+                        } else {
+                            wplabor.craft = laborplan.craft
+                        }
                     },
                     whatIfNot = {
                         wplabor.craft = laborplan.craft

@@ -146,16 +146,22 @@ class LaborRepository @Inject constructor(
             Timber.tag(TAG).d("prepareBodyLaborPlan() listCache size %s", listCache.size)
             listCache.forEach { laborplan ->
                 if(laborplan.isTask == BaseParam.APP_FALSE) {
+
                     val wplabor = Wplabor()
                     wplabor.wplaborid = 0
                     laborplan.laborcode.whatIfNotNull(
                         whatIf = {
-                            wplabor.laborcode = it
+                            if(it != BaseParam.APP_DASH) {
+                                wplabor.laborcode = it
+                            } else {
+                                wplabor.craft = laborplan.craft
+                            }
                         },
                         whatIfNot = {
                             wplabor.craft = laborplan.craft
                         }
                     )
+
                     wpLaborList.add(wplabor)
                 }
             }

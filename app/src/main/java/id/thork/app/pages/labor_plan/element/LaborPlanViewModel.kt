@@ -193,6 +193,8 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanEntity.craft = craft
         }
 
+        laborRepository.saveLaborPlanCache(laborPlanEntity)
+
         if (laborPlanEntity.syncUpdate == BaseParam.APP_TRUE) {
             prepareBodyUpdateTomaximo(laborPlanEntity)
         }
@@ -244,7 +246,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
                 member,
                 onSuccess = {
                     Timber.tag(TAG).i("update local cache after update")
-                    laborRepository.saveLaborPlanCache(laborPlanEntity)
                     Timber.tag(TAG).i("updateToMaximo() onSuccess()")
                 },
                 onError = {
