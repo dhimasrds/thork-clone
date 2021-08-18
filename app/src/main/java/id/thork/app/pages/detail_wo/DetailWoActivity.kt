@@ -204,13 +204,24 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
         //TODO Result Query Asset for Rfid
         detailWoViewModel.AssetRfid.observe(this, {
-            gotoRfidAsset(it)
+            if (it ==  BaseParam.APP_DASH){
+                binding.icCheckAsset.visibility = GONE
+                binding.icCrossAsset.visibility = VISIBLE
+                binding.tvScanResultAsset.text = (getString(R.string.asset_rfid_is_not_registered))
+                binding.tvScanResultAsset.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorRed
+                    )
+                )
+            } else {
+                gotoRfidAsset(it)
+            }
         })
 
         detailWoViewModel.ResultLocation.observe(this, {
             if (it.equals(BaseParam.APP_TRUE)) {
 //            locationIsMatch = result
-                binding.icCheckLocation.visibility = View.VISIBLE
+                binding.icCheckLocation.visibility = VISIBLE
                 binding.icCrossLocation.visibility = GONE
                 binding.tvScanResultLocation.text =
                     getString(R.string.asset_scan_result) + ": " +
@@ -222,7 +233,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 )
             } else {
                 binding.icCheckLocation.visibility = GONE
-                binding.icCrossLocation.visibility = View.VISIBLE
+                binding.icCrossLocation.visibility = VISIBLE
                 binding.tvScanResultLocation.text = (getString(R.string.asset_scan_result) + ": " +
                         getString(R.string.location_rfid_is_not_match))
                 binding.tvScanResultLocation.setBackgroundColor(
@@ -236,7 +247,18 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         //TODO Result Query Location for Rfid
         detailWoViewModel.LocationRfid.observe(this, {
             Timber.d("Observer Location Rfid() %s", it)
-            gotoRfidLocation(it)
+            if (it ==  BaseParam.APP_DASH){
+                binding.icCheckLocation.visibility = GONE
+                binding.icCrossLocation.visibility = VISIBLE
+                binding.tvScanResultLocation.text = (getString(R.string.location_rfid_is_not_registered))
+                binding.tvScanResultLocation.setBackgroundColor(
+                    ContextCompat.getColor(
+                        applicationContext, R.color.colorRed
+                    )
+                )
+            } else {
+                gotoRfidLocation(it)
+            }
         })
     }
 

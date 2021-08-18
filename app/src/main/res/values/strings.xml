@@ -512,6 +512,8 @@
     <!--  Location -->
     <string name="location_rfid_is_match_begin">This Location is</string>
     <string name="location_rfid_is_not_match">This Location is not match</string>
+    <string name="location_rfid_is_not_registered">Location RFID not Registered</string>
+    <string name="asset_rfid_is_not_registered">Asset RFID not Registered</string>
     <string name="location_rfid_is_match_end">Continue with this location?</string>
     <string name="find_asset">Find Asset</string>
     <string name="find_location">Find Location</string>
@@ -574,6 +576,7 @@
     <string name="create_labor_actual">Create Labor Actual</string>
     <string name="task_desc_required">Description can\'t empty</string>
     <string name="task_estdur_required">Estimate Duration can\'t empty</string>
+    <string name="task_actual_required">Actual Start can\'t empty</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>

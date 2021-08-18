@@ -185,7 +185,7 @@ class DetailWoViewModel @ViewModelInject constructor(
                     _AssetRfid.value = it.assetnum
                 },
                 whatIfNot = {
-                    _Result.value = BaseParam.APP_FALSE
+                    _AssetRfid.value = BaseParam.APP_DASH
                 }
             )
         }
@@ -208,7 +208,7 @@ class DetailWoViewModel @ViewModelInject constructor(
                     _LocationRfid.value = it.location
                 },
                 whatIfNot = {
-                    _ResultLocation.value = BaseParam.APP_FALSE
+                    _LocationRfid.value = BaseParam.APP_DASH
                 }
             )
         }
