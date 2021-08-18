@@ -52,9 +52,12 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var intentActual: String? = null
     private var intentActualTime: String? = null
     private var intentEstDur: Double? = null
-
-    private var scheduleStartObjectBox: String? = null
-    private var actualStartObjectBox: String? = null
+    private var dateSchedule: String? = null
+    private var dateActual: String? = null
+    private var timeSchedule: String? = null
+    private var timeActual: String? = null
+    private var scheduleDateFormatObjectBox: String? = null
+    private var actualDateFormatObjectBox: String? = null
     private var cancelTaskValidation: Boolean = false
 
     override fun setupView() {
@@ -125,13 +128,11 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                         intentEstDur.whatIfNotNull { estimateDuration ->
                             val isCreateWo: Boolean = intenttag != null
                             setupDateInView(isCreateWo, schedule, actual)
-                            scheduleStartObjectBox = schedule
-                            actualStartObjectBox = actual
+                            dateSchedule = schedule
+                            dateActual = actual
                             estDur = estimateDuration
                             tvDesc.setText(description)
                             tvEstDur.text = estimateDuration.toString()
-                            tvTimeScheduleStart.setText(DateUtils.getAppTimeFormat(cal.time))
-                            tvTimeActualStart.setText(DateUtils.getAppTimeFormat(cal.time))
                         }
                     }
                 }
@@ -141,25 +142,25 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
 
     private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String){
         if (isCreateWO) {
-            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-            val formatterOut = SimpleDateFormat("MM/dd/yyyy")
-            val convertedSchedule = formatter.parse(schedule)
-            val convertedActual = formatter.parse(actual)
-            val dateSchedule = formatterOut.format(convertedSchedule)
-            val dateActual = formatterOut.format(convertedActual)
-
-            binding.tvScheduleStart.setText(dateSchedule)
-            binding.tvActualStart.setText(dateActual)
+            val dt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+            val dateSchedule = dt.parse(schedule)
+            val dateActual = dt.parse(actual)
+            val formatDate = SimpleDateFormat("MM/dd/yyyy")
+            val formatTime = SimpleDateFormat("HH:mm")
+            binding.tvScheduleStart.setText(formatDate.format(dateSchedule))
+            binding.tvActualStart.setText(formatDate.format(dateActual))
+            binding.tvTimeScheduleStart.setText(formatTime.format(dateSchedule))
+            binding.tvTimeActualStart.setText(formatTime.format(dateActual))
         } else {
-            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-            val formatterOut = SimpleDateFormat("MM/dd/yyyy")
-            val convertedSchedule = formatter.parse(schedule)
-            val convertedActual = formatter.parse(actual)
-            val dateSchedule = formatterOut.format(convertedSchedule)
-            val dateActual = formatterOut.format(convertedActual)
-
-            binding.tvScheduleStart.setText(dateSchedule)
-            binding.tvActualStart.setText(dateActual)
+            val dt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            val dateSchedule = dt.parse(schedule)
+            val dateActual = dt.parse(actual)
+            val formatDate = SimpleDateFormat("MM/dd/yyyy")
+            val formateTime = SimpleDateFormat("HH:mm")
+            binding.tvScheduleStart.setText(formatDate.format(dateSchedule))
+            binding.tvActualStart.setText(formatDate.format(dateActual))
+            binding.tvTimeScheduleStart.setText(formateTime.format(dateSchedule))
+            binding.tvTimeActualStart.setText(formateTime.format(dateActual))
         }
     }
 
@@ -217,25 +218,45 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         binding.tvEstDur.setOnClickListener(setEstimdur)
 
         binding.btnSaveTask.setOnClickListener {
-            when {
-                intentTag != null && intentDetailTag != null && formValidation() && dateValidation() -> {
-                    setDialogUpdateFromCreateWO()
-                }
-                intentDetailTag != null && formValidation() && dateValidation() -> {
-                    setDialogUpdateFromCreateWO()
-                }
-                formValidation() && dateValidation() -> {
-                    setDialogSaveTask()
-                }
-                else -> {
-                    Toast.makeText(
-                        this,
-                        R.string.general_required_fields,
-                        Toast.LENGTH_LONG
-                    ).show()
+            if (formValidation()) {
+                convertDateFormat()
+                Timber.d("raka %s ", intentTag)
+                Timber.d("raka %s ", intentDetailTag)
+                when {
+                    intentTag != null && intentDetailTag != null && formValidation() && dateValidation() -> {
+                        setDialogUpdateFromCreateWO()
+                    }
+                    intentDetailTag != null && formValidation() && dateValidation() -> {
+                        setDialogUpdateFromCreateWO()
+                    }
+                    formValidation() && dateValidation() -> {
+                        setDialogSaveTask()
+                    }
+                    else -> {
+                        Toast.makeText(
+                            this,
+                            R.string.general_required_fields,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
+    }
+
+    private fun convertDateFormat() {
+        val dt3 = SimpleDateFormat("MM/dd/yyyy")
+        val dt4 = SimpleDateFormat("HH:mm")
+        val schedule = dt3.parse(binding.tvScheduleStart.text.toString())
+        val scheduleTime = dt4.parse(binding.tvTimeScheduleStart.text.toString())
+        val actual = dt3.parse(binding.tvActualStart.text.toString())
+        val actualTime = dt4.parse(binding.tvTimeActualStart.text.toString())
+        val formatDate = SimpleDateFormat("yyyy-MM-dd")
+        val formatTime = SimpleDateFormat("HH:mm:ss")
+        scheduleDateFormatObjectBox = formatDate.format(schedule)+"T"+formatTime.format(scheduleTime)
+        actualDateFormatObjectBox = formatDate.format(actual)+"T"+formatTime.format(actualTime)
+        Timber.d("convertDateFormat schedule %s ", scheduleDateFormatObjectBox)
+        Timber.d("convertDateFormat actual %s ", actualDateFormatObjectBox)
     }
 
     private fun formValidation(): Boolean {
@@ -263,14 +284,15 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     private fun dateValidation(): Boolean {
-        val longStartDate = cal.timeInMillis
-        val longEndDate = cal2.timeInMillis
+        val actualDate = DateUtils.convertMaximoDateToMillisec(actualDateFormatObjectBox)
+        val a = DateUtils.getDateTimeMaximo()
+        val todayDate = DateUtils.convertMaximoDateToMillisec(a)
 
         binding.apply {
             val etScheduleStart = tvScheduleStart.text.toString().trim()
             val etActualStart = tvActualStart.text.toString().trim()
             if (etScheduleStart.isNotBlank() || etActualStart.isNotBlank()) {
-                return longEndDate >= longStartDate
+                return todayDate >= actualDate
             } else {
                 return false
             }
@@ -346,17 +368,15 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     private fun updateDateInView(isSchedule: Boolean) {
-        val dateFormatObjectBox = "yyyy-MM-dd'T'HH:mm:ss" // mention the format you need
         val dateFormat = "MM/dd/yyyy" // mention the format you need
-        val sdfObjectBox = SimpleDateFormat(dateFormatObjectBox)
         val sdf = SimpleDateFormat(dateFormat)
         when (isSchedule) {
             true -> {
-                scheduleStartObjectBox = sdfObjectBox.format(cal.time)
+                dateSchedule = sdf.format(cal.time)
                 binding.tvScheduleStart.setText(sdf.format(cal.time))
             }
             false -> {
-                actualStartObjectBox = sdfObjectBox.format(cal2.time)
+                dateActual = sdf.format(cal2.time)
                 binding.tvActualStart.setText(sdf.format(cal2.time))
             }
         }
@@ -365,12 +385,14 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     fun updateTimeInView(isSchedule: Boolean) {
         when (isSchedule) {
             true -> {
-                scheduleStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal.time)
                 binding.tvTimeScheduleStart.setText(DateUtils.getAppTimeFormat(cal.time))
+                timeSchedule = binding.tvTimeScheduleStart.text?.toString()
+                Timber.d("raka %s ", timeSchedule)
             }
             false -> {
-                actualStartObjectBox = DateUtils.getAppDateTimeOBFormat(cal2.time)
                 binding.tvTimeActualStart.setText(DateUtils.getAppTimeFormat(cal2.time))
+                timeActual = binding.tvTimeActualStart.text?.toString()
+                Timber.d("raka %s ", timeActual)
             }
         }
     }
@@ -498,9 +520,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 intentTaskId,
                 intentWonum,
                 desc,
-                scheduleStartObjectBox,
+                scheduleDateFormatObjectBox,
                 estDur,
-                actualStartObjectBox
+                actualDateFormatObjectBox
             )
         } else {
             viewModels.editTaskOnlineFromWoDetail(
@@ -508,9 +530,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 intentTaskId,
                 intentWonum,
                 desc,
-                scheduleStartObjectBox,
+                scheduleDateFormatObjectBox,
                 estDur,
-                actualStartObjectBox
+                actualDateFormatObjectBox
             )
         }
         Toast.makeText(
@@ -526,9 +548,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             intentWonum,
             intentTaskId,
             desc,
-            scheduleStartObjectBox,
+            scheduleDateFormatObjectBox,
             estDur,
-            actualStartObjectBox,
+            actualDateFormatObjectBox,
             intentStatus,
             BaseParam.APP_FALSE,
             BaseParam.APP_TRUE,
@@ -542,9 +564,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             intentWonum,
             intentTaskId,
             desc,
-            scheduleStartObjectBox,
+            scheduleDateFormatObjectBox,
             estDur,
-            actualStartObjectBox,
+            actualDateFormatObjectBox,
             intentStatus,
             BaseParam.APP_TRUE,
             BaseParam.APP_FALSE,
@@ -558,9 +580,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             intentWonum,
             intentTaskId,
             desc,
-            scheduleStartObjectBox,
+            scheduleDateFormatObjectBox,
             estDur,
-            actualStartObjectBox,
+            actualDateFormatObjectBox,
             intentStatus,
             BaseParam.APP_FALSE,
             BaseParam.APP_FALSE,
