@@ -140,7 +140,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         }
     }
 
-    private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String){
+    private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String) {
         if (isCreateWO) {
             val dt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             val dateSchedule = dt.parse(schedule)
@@ -220,8 +220,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         binding.btnSaveTask.setOnClickListener {
             if (formValidation()) {
                 convertDateFormat()
-                Timber.d("raka %s ", intentTag)
-                Timber.d("raka %s ", intentDetailTag)
                 when {
                     intentTag != null && intentDetailTag != null && formValidation() && dateValidation() -> {
                         setDialogUpdateFromCreateWO()
@@ -253,8 +251,9 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         val actualTime = dt4.parse(binding.tvTimeActualStart.text.toString())
         val formatDate = SimpleDateFormat("yyyy-MM-dd")
         val formatTime = SimpleDateFormat("HH:mm:ss")
-        scheduleDateFormatObjectBox = formatDate.format(schedule)+"T"+formatTime.format(scheduleTime)
-        actualDateFormatObjectBox = formatDate.format(actual)+"T"+formatTime.format(actualTime)
+        scheduleDateFormatObjectBox =
+            formatDate.format(schedule) + "T" + formatTime.format(scheduleTime)
+        actualDateFormatObjectBox = formatDate.format(actual) + "T" + formatTime.format(actualTime)
         Timber.d("convertDateFormat schedule %s ", scheduleDateFormatObjectBox)
         Timber.d("convertDateFormat actual %s ", actualDateFormatObjectBox)
     }
@@ -271,12 +270,12 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 tvEstDur.error = getString(R.string.task_estdur_required)
                 return false
             }
-            if (tvActualStart.text.toString().isBlank()){
-                tvActualStart.error = getString(R.string.task_estdur_required)
+            if (tvActualStart.text.toString().isBlank()) {
+                tvActualStart.error = getString(R.string.task_actual_required)
                 return false
             }
-            if (tvTimeActualStart.text.toString().isBlank()){
-                tvTimeActualStart.error = getString(R.string.task_estdur_required)
+            if (tvTimeActualStart.text.toString().isBlank()) {
+                tvTimeActualStart.error = getString(R.string.task_actual_required)
                 return false
             }
         }
@@ -387,12 +386,10 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             true -> {
                 binding.tvTimeScheduleStart.setText(DateUtils.getAppTimeFormat(cal.time))
                 timeSchedule = binding.tvTimeScheduleStart.text?.toString()
-                Timber.d("raka %s ", timeSchedule)
             }
             false -> {
                 binding.tvTimeActualStart.setText(DateUtils.getAppTimeFormat(cal2.time))
                 timeActual = binding.tvTimeActualStart.text?.toString()
-                Timber.d("raka %s ", timeActual)
             }
         }
     }
