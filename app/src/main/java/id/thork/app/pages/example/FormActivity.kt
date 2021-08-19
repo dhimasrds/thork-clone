@@ -26,8 +26,8 @@ import id.thork.app.helper.builder.*
 import id.thork.app.helper.builder.adapter.LocomotifAdapter
 import id.thork.app.helper.builder.model.LocomotifAttribute
 import id.thork.app.helper.builder.widget.*
-import id.thork.app.helper.builder.widget.view.LocomotifLov
-import id.thork.app.helper.builder.widget.view.LocomotifLovBox
+import id.thork.app.helper.builder.widget.core.LocomotifLov
+import id.thork.app.helper.builder.widget.core.LocomotifLovBox
 import timber.log.Timber
 import java.util.*
 
@@ -155,7 +155,7 @@ OnValueChangeListener {
             locomotifAttributes.add(locomotifAttribute3)
 
             val locomotifAdapter = LocomotifAdapter("country",locomotifAttributes, this)
-            locomotifLov = LocomotifLov(this,                locomotifAdapter)
+            locomotifLov = LocomotifLov(this,                locomotifAdapter, "Country")
             locomotifLov.show()
         }
 

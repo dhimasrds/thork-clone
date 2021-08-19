@@ -11,7 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.helper.builder.LocomotifHelper
-import id.thork.app.helper.builder.widget.view.LocomotifLovBox
+import id.thork.app.helper.builder.widget.core.LocomotifLovBox
 import timber.log.Timber
 
 class LovWidget<T> (entity: T, context: Context) : AbstractWidget<T> (entity, context) {

@@ -18,8 +18,8 @@ import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.helper.builder.LocomotifHelper
 import id.thork.app.helper.builder.model.LocomotifAttribute
-import id.thork.app.helper.builder.widget.view.LocomotifLovBox
-import id.thork.app.helper.builder.widget.view.LocomotifRadio
+import id.thork.app.helper.builder.widget.core.LocomotifLovBox
+import id.thork.app.helper.builder.widget.core.LocomotifRadio
 import timber.log.Timber
 
 class LocomotifWidget constructor(val context: Context) {

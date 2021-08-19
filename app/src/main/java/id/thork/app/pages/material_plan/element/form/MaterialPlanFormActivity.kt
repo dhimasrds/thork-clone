@@ -12,6 +12,7 @@
 
 package id.thork.app.pages.material_plan.element.form
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
 import android.widget.*
@@ -31,9 +32,9 @@ import id.thork.app.helper.builder.*
 import id.thork.app.helper.builder.adapter.LocomotifAdapter
 import id.thork.app.helper.builder.model.LocomotifAttribute
 import id.thork.app.helper.builder.widget.OnValueChangeListener
-import id.thork.app.helper.builder.widget.view.LocomotifLov
-import id.thork.app.helper.builder.widget.view.LocomotifLovBox
-import id.thork.app.helper.builder.widget.view.LocomotifRadio
+import id.thork.app.helper.builder.widget.core.LocomotifLov
+import id.thork.app.helper.builder.widget.core.LocomotifLovBox
+import id.thork.app.helper.builder.widget.core.LocomotifRadio
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.material_plan.MaterialPlanActivity
@@ -272,18 +273,19 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
         finish()
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun widgetListener() {
         storeroomLovBox = locomotifBuilder?.getWidgetByTag("storeroom") as LocomotifLovBox
         storeroomLovBox.setOnClickListener {
             val storeroomAdapter = LocomotifAdapter("storeroom", storeroomItems, this)
-            storeroomLov = LocomotifLov(this, storeroomAdapter)
+            storeroomLov = LocomotifLov(this, storeroomAdapter, "Storeroom")
             storeroomLov.show()
         }
 
         materialLovBox = locomotifBuilder?.getWidgetByTag("itemNum") as LocomotifLovBox
         materialLovBox.setOnClickListener {
             val materialAdapter = LocomotifAdapter("itemNum", materialItems, this)
-            materialLov = LocomotifLov(this, materialAdapter)
+            materialLov = LocomotifLov(this, materialAdapter, "Material")
             materialLov.show()
         }
 

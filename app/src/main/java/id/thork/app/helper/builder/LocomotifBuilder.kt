@@ -44,8 +44,8 @@ import android.widget.RadioButton
 import androidx.core.view.children
 import id.thork.app.base.BaseParam
 import id.thork.app.helper.builder.widget.*
-import id.thork.app.helper.builder.widget.view.LocomotifLovBox
-import id.thork.app.helper.builder.widget.view.LocomotifRadio
+import id.thork.app.helper.builder.widget.core.LocomotifLovBox
+import id.thork.app.helper.builder.widget.core.LocomotifRadio
 
 
 class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
