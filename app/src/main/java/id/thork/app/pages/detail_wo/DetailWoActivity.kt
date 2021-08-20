@@ -17,10 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityDetailWoBinding
+import id.thork.app.di.module.AppSession
+import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.attachment.AttachmentActivity
@@ -40,6 +43,7 @@ import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
+import javax.inject.Inject
 
 class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     CustomDialogUtils.DialogActionListener {
@@ -62,6 +66,11 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private var workorderNumber: String? = null
     private var workorderLongdesc: String? = null
     private var valueLongDesc: String? = null
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+
 
     override fun setupView() {
         super.setupView()
@@ -96,6 +105,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun setupObserver() {
+        detailWoViewModel.connectionState()
+
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
             binding.apply {
