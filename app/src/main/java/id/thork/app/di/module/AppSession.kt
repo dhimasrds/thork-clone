@@ -22,9 +22,9 @@ import id.thork.app.persistence.dao.UserDaoImp
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Singleton
 class AppSession @Inject constructor(context: Context) {
     val TAG = AppSession::class.java.name
 
