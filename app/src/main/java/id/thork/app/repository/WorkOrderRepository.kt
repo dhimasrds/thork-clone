@@ -926,39 +926,50 @@ class WorkOrderRepository @Inject constructor(
 
 
     //Submodule Labor
-    suspend fun addLaborPlan(cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
-                             workOrderId: Int, body: Member,
-                             onSuccess: () -> Unit, onError: (String) -> Unit,
+    suspend fun createLaborPlan(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        properties: String,
+        workOrderId: Int,
+        body: Member,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit,
     ) {
         val response =
-            workOrderClient.updateStatus(
+            workOrderClient.createLaborPlan(
                 cookie,
                 xMethodeOverride,
                 contentType,
                 patchType,
+                properties,
                 workOrderId,
                 body
             )
         response.suspendOnSuccess {
-            onSuccess()
-            Timber.tag(TAG).i("addLaborPlan() code: %s ", statusCode.code)
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createLaborPlan() code: %s ", statusCode.code)
         }
             .onError {
-                Timber.tag(TAG).i("addLaborPlan() code: %s error: %s", statusCode.code, message())
+                Timber.tag(TAG).i("createLaborPlan() code: %s error: %s", statusCode.code, message())
                 onError(message())
             }
             .onException {
-                Timber.tag(TAG).i("addLaborPlan() exception: %s", message())
+                Timber.tag(TAG).i("createLaborPlan() exception: %s", message())
                 onError(message())
             }
     }
 
-    suspend fun udpateLaborPlan(cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
-                                workOrderId: Int, body: Member,
-                                onSuccess: () -> Unit, onError: (String) -> Unit,
+    suspend fun updateLaborPlan(
+        cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
+        workOrderId: Int, body: Member,
+        onSuccess: () -> Unit, onError: (String) -> Unit,
     ) {
         val response =
-            workOrderClient.updateStatus(
+            workOrderClient.updateLaborPlan(
                 cookie,
                 xMethodeOverride,
                 contentType,
@@ -971,7 +982,8 @@ class WorkOrderRepository @Inject constructor(
             Timber.tag(TAG).i("udpateLaborPlan() code: %s ", statusCode.code)
         }
             .onError {
-                Timber.tag(TAG).i("udpateLaborPlan() code: %s error: %s", statusCode.code, message())
+                Timber.tag(TAG)
+                    .i("udpateLaborPlan() code: %s error: %s", statusCode.code, message())
                 onError(message())
             }
             .onException {

@@ -23,6 +23,7 @@ class CreateLaborPlanActivity : BaseActivity() {
     var intentWorkorderid: String? = null
     var taskid: String? = null
     var taskdesc: String? = null
+    var isParentexisting : Boolean? = false
 
     override fun setupView() {
         super.setupView()
@@ -79,7 +80,6 @@ class CreateLaborPlanActivity : BaseActivity() {
 
     private fun goToSelectLabor() {
         val intent = Intent(this, SelectLaborActivity::class.java)
-//        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
         intent.putExtra(BaseParam.LABORCODE_FORM, BaseParam.APP_CREATE)
         startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
     }

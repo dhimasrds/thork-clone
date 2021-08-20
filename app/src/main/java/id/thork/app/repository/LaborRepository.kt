@@ -41,7 +41,6 @@ class LaborRepository @Inject constructor(
 
     fun saveLaborPlanCache(laborPlanEntity: LaborPlanEntity) {
         return laborPlanDao.createLaborPlanCache(laborPlanEntity, usernameGlobal)
-
     }
 
     fun removeLaborPlan() {
@@ -145,8 +144,7 @@ class LaborRepository @Inject constructor(
         listLaborPlan.whatIfNotNull { listCache ->
             Timber.tag(TAG).d("prepareBodyLaborPlan() listCache size %s", listCache.size)
             listCache.forEach { laborplan ->
-                if(laborplan.isTask == BaseParam.APP_FALSE) {
-
+                if(laborplan.isTask == BaseParam.APP_FALSE && laborplan.syncUpdate == BaseParam.APP_FALSE) {
                     val wplabor = Wplabor()
                     wplabor.wplaborid = 0
                     laborplan.laborcode.whatIfNotNull(

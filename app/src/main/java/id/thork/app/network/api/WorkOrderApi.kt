@@ -86,15 +86,16 @@ interface WorkOrderApi {
 
     //POST LABOR PLAN
     @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
-    suspend fun addLaborPlan(
+    suspend fun createLaborPlan(
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
         @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
         @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
+        @Header(BaseParam.APP_PROPERTIES) properties: String?,
         @Path("workorderid") workorderid: Int,
         @Query(value = "lean") lean: Int,
         @Body body: Member?,
-    ): ApiResponse<WorkOrderResponse>
+    ): ApiResponse<Member>
 
 
     // UPDATE LABOR PLAN

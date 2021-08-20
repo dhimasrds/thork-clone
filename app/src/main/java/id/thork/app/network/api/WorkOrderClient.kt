@@ -56,19 +56,21 @@ class WorkOrderClient @Inject constructor(
     suspend fun getWorklogType(headerParam: String, select: String, where: String) =
         workOrderApi.getWorklogType(headerParam, LEAN, select, where)
 
-    suspend fun addLaborPlan(
+    suspend fun createLaborPlan(
         cookie: String,
         xMethodeOverride: String,
         contentType: String,
         patchType: String,
+        properties: String,
         workOrderId: Int,
         body: Member,
     ) =
-        workOrderApi.addLaborPlan(
+        workOrderApi.createLaborPlan(
             cookie,
             xMethodeOverride,
             contentType,
             patchType,
+            properties,
             workOrderId,
             LEAN,
             body
@@ -82,7 +84,7 @@ class WorkOrderClient @Inject constructor(
         workOrderId: Int,
         body: Member,
     ) =
-        workOrderApi.addLaborPlan(
+        workOrderApi.updateLaborPlan(
             cookie,
             xMethodeOverride,
             contentType,

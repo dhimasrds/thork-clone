@@ -145,6 +145,7 @@ class LaborPlanViewModel @ViewModelInject constructor(
         workroderid: String
     ) {
         val laborPlanCache = LaborPlanEntity()
+
         if (laborCode != BaseParam.APP_DASH) {
             laborPlanCache.laborcode = laborCode
             laborPlanCache.craft = BaseParam.APP_DASH
@@ -165,6 +166,9 @@ class LaborPlanViewModel @ViewModelInject constructor(
         laborPlanCache.workorderid = workroderid
         laborPlanCache.syncUpdate = BaseParam.APP_FALSE
         laborRepository.saveLaborPlanCache(laborPlanCache)
+
+        //if this wo already upload to mx, this labor plan can automatic upload to mx
+        createLaborPlantoMaximo(laborPlanCache)
     }
 
     fun updateToLocalCache(
@@ -172,9 +176,10 @@ class LaborPlanViewModel @ViewModelInject constructor(
         laborCode: String,
         taskid: String,
         taskdesc: String,
-        taskrefwonum : String,
+        taskrefwonum: String,
         craft: String,
     ) {
+        val workorderid = laborPlanEntity.workorderid.toString()
 
         if (taskid != BaseParam.APP_NULL) {
             laborPlanEntity.taskid = taskid
@@ -192,17 +197,18 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanEntity.laborcode = BaseParam.APP_DASH
             laborPlanEntity.craft = craft
         }
-
         laborRepository.saveLaborPlanCache(laborPlanEntity)
 
         if (laborPlanEntity.syncUpdate == BaseParam.APP_TRUE) {
-            prepareBodyUpdateTomaximo(laborPlanEntity)
+            val prepareBody = prepareBodyUpdateTomaximo(laborPlanEntity)
+            prepareBody.whatIfNotNull {
+                updateLaborPlanToMaximo(it, workorderid, laborPlanEntity)
+            }
         }
     }
 
-    fun prepareBodyUpdateTomaximo(laborPlanEntity: LaborPlanEntity) {
+    fun prepareBodyUpdateTomaximo(laborPlanEntity: LaborPlanEntity): Member {
         //need prepare body, and validation with task or without task
-        val workorderid = laborPlanEntity.workorderid.toString()
         val wplaborid = laborPlanEntity.wplaborid.toString()
         val taskid = laborPlanEntity.taskid.toString()
         val wonumTask = laborPlanEntity.wonumTask.toString()
@@ -211,34 +217,36 @@ class LaborPlanViewModel @ViewModelInject constructor(
         val prepareBody = Member()
 
         if (laborPlanEntity.isTask == BaseParam.APP_TRUE) {
-            //TODO Prepare body with task
+            //Prepare body with task
             val bodyLaborplanWithTask =
                 laborRepository.preapreBodyLaborPlanTask(wplaborid, taskid, wonumTask)
             bodyLaborplanWithTask.whatIfNotNullOrEmpty {
                 prepareBody.woactivity = it
             }
         } else {
-            //TODO Prepare body without task
+            //Prepare body without task
             val bodyLaborplanWithoutTask =
                 laborRepository.preapreBodyLaborPlanNontask(wplaborid, laborCode, craft)
             bodyLaborplanWithoutTask.whatIfNotNullOrEmpty {
                 prepareBody.wplabor = it
             }
         }
-
-        prepareBody.whatIfNotNull {
-            updateToMaximo(it, workorderid, laborPlanEntity)
-        }
+        return prepareBody
     }
 
-    fun updateToMaximo(member: Member, workroderid: String, laborPlanEntity: LaborPlanEntity) {
+    //This method for update labor plan existing to maximo
+    fun updateLaborPlanToMaximo(
+        member: Member,
+        workroderid: String,
+        laborPlanEntity: LaborPlanEntity
+    ) {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val xMethodeOverride: String = BaseParam.APP_PATCH
         val contentType: String = ("application/json")
         val patchType: String = BaseParam.APP_MERGE
 
         viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository.udpateLaborPlan(cookie,
+            workOrderRepository.updateLaborPlan(cookie,
                 xMethodeOverride,
                 contentType,
                 patchType,
@@ -246,12 +254,123 @@ class LaborPlanViewModel @ViewModelInject constructor(
                 member,
                 onSuccess = {
                     Timber.tag(TAG).i("update local cache after update")
+                    laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
+                    laborRepository.saveLaborPlanCache(laborPlanEntity)
                     Timber.tag(TAG).i("updateToMaximo() onSuccess()")
                 },
                 onError = {
                     Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
                 }
             )
+        }
+    }
+
+    fun createLaborPlantoMaximo(laborPlanEntity: LaborPlanEntity) {
+        val wonum = laborPlanEntity.wonumHeader
+        //checking wo cache avaiable
+        val woCacheExisting = workOrderRepository.findWobyWonum(wonum.toString())
+        woCacheExisting.whatIfNotNull {
+            if (it.syncStatus == BaseParam.APP_TRUE) {
+                //Prepare Body Update to Maximo
+                prepareBodyAddLaborPlan(laborPlanEntity)
+            }
+        }
+    }
+
+    fun prepareBodyAddLaborPlan(laborPlanEntity: LaborPlanEntity) {
+        val workroderid = laborPlanEntity.workorderid
+        val member = Member()
+        workroderid.whatIfNotNull {
+            val taskList = taskRepository.prepareBodyForCreateLaborPlanWithTask(it.toInt())
+            val laborplanList = laborRepository.prepareBodyLaborPlan(it)
+
+            taskList.whatIfNotNullOrEmpty { tasks ->
+                member.woactivity = tasks
+            }
+
+            laborplanList.whatIfNotNullOrEmpty { wplabors ->
+                member.wplabor = wplabors
+            }
+
+            member.whatIfNotNull { prepareBody ->
+                //TODO Update to mx
+                createLaborPlanToMaximo(prepareBody, it, laborPlanEntity)
+            }
+        }
+    }
+
+    //This method for create labor plan to maximo
+    fun createLaborPlanToMaximo(
+        member: Member,
+        workroderid: String,
+        laborPlanEntity: LaborPlanEntity
+    ) {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val xMethodeOverride: String = BaseParam.APP_PATCH
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
+        val properties: String = BaseParam.APP_ALL_PROPERTIES
+
+        viewModelScope.launch(Dispatchers.IO) {
+            workOrderRepository.createLaborPlan(cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                properties,
+                workroderid.toInt(),
+                member,
+                onSuccess = { response ->
+                    Timber.tag(TAG).i("createLaborPlanToMaximo() onSuccess() %s",
+                        response
+                    )
+                    response.whatIfNotNull {
+                        handlingCreateLaborPlan(it, laborPlanEntity)
+                    }
+                },
+                onError = {
+                    Timber.tag(TAG).i("createLaborPlanToMaximo() onError() onError: %s", it)
+                }
+            )
+        }
+    }
+
+    fun handlingCreateLaborPlan(member: Member, laborPlanEntity: LaborPlanEntity) {
+        val isTask = laborPlanEntity.isTask
+        val listLpTask = member.woactivity
+        val listLpNonTask = member.wplabor
+
+        if(isTask == BaseParam.APP_TRUE) {
+            //TODO checking dengan listLpTask
+            listLpTask.whatIfNotNullOrEmpty { list ->
+                list.forEach {
+                    it.wplabor.whatIfNotNullOrEmpty { wplabors ->
+                        wplabors.forEach {  labor ->
+                            val wplaborid = labor.wplaborid
+                            laborPlanEntity.wonumTask = it.wonum
+                            checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
+                        }
+                    }
+                }
+            }
+
+        } else {
+            //TODO checking dengan ListLpWithoutTask
+            listLpNonTask.whatIfNotNullOrEmpty {
+                it.forEach { wplabor ->
+                    val wplaborid = wplabor.wplaborid
+                    checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
+                }
+            }
+        }
+    }
+
+    fun checkingLaborPlanExisting(wplaborid : String, laborPlanEntity: LaborPlanEntity) {
+        val cacheLaborPlan = laborRepository.findLaborPlanByWplaborid(wplaborid)
+        if (cacheLaborPlan == null) {
+            Timber.tag(TAG).i("handlingCreateLaborPlan() update local cache after update")
+            laborPlanEntity.wplaborid = wplaborid
+            laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
+            laborRepository.saveLaborPlanCache(laborPlanEntity)
         }
     }
 }

@@ -260,6 +260,22 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
+    fun prepareBodyForCreateLaborPlanWithTask(woid: Int) : List<id.thork.app.network.response.work_order.Woactivity> {
+        val taskEntity = findTaskByWoIdAndSyncStatus(woid, BaseParam.APP_TRUE)
+        val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
+        taskEntity.forEach {
+            val member = id.thork.app.network.response.work_order.Woactivity()
+            val listLaborPlan = prepareBodyLaborPlan(woid.toString(), it.taskId.toString())
+            member.taskid = it.taskId
+            member.wonum = it.refWonum
+            listLaborPlan.whatIfNotNullOrEmpty {
+                member.wplabor = it
+            }
+            memberTask.add(member)
+        }
+        return memberTask
+    }
+
     fun handlingTaskFailedFromCreateWo(woid: Int) {
         val taskEntity = findListTaskByWoid(woid)
         taskEntity.forEach {
@@ -429,21 +445,23 @@ class TaskRepository @Inject constructor(
         val wpLaborList = mutableListOf<Wplabor>()
         listLaborPlan.whatIfNotNull { listCache ->
             listCache.forEach { laborplan ->
-                val wplabor = Wplabor()
-                wplabor.wplaborid = 0
-                laborplan.laborcode.whatIfNotNull(
-                    whatIf = {
-                        if(it != BaseParam.APP_DASH) {
-                            wplabor.laborcode = it
-                        } else {
+                if(laborplan.syncUpdate == BaseParam.APP_FALSE) {
+                    val wplabor = Wplabor()
+                    wplabor.wplaborid = 0
+                    laborplan.laborcode.whatIfNotNull(
+                        whatIf = {
+                            if(it != BaseParam.APP_DASH) {
+                                wplabor.laborcode = it
+                            } else {
+                                wplabor.craft = laborplan.craft
+                            }
+                        },
+                        whatIfNot = {
                             wplabor.craft = laborplan.craft
                         }
-                    },
-                    whatIfNot = {
-                        wplabor.craft = laborplan.craft
-                    }
-                )
-                wpLaborList.add(wplabor)
+                    )
+                    wpLaborList.add(wplabor)
+                }
             }
         }
         return wpLaborList
