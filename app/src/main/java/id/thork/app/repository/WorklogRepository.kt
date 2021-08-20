@@ -7,6 +7,7 @@ import id.thork.app.network.response.work_order.Worklog
 import id.thork.app.network.response.worklogtype_response.Member
 import id.thork.app.persistence.dao.WorklogDao
 import id.thork.app.persistence.dao.WorklogTypeDao
+import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogTypeEntity
 import id.thork.app.utils.DateUtils
@@ -153,5 +154,25 @@ class WorklogRepository @Inject constructor(
         }
         return listWorklogBody
 
+    }
+
+    fun saveWorklogToObjectBox(
+        list: List<Worklog>,
+        woid: Int,
+        wonum: String
+    ) {
+        val listWorklogTypecache = mutableListOf<WorklogEntity>()
+        for (worklog in list) {
+            val cache = WorklogEntity()
+            cache.summary = worklog.description
+            cache.description = worklog.descriptionLongdescription
+            cache.date = worklog.createdate
+            cache.type = worklog.logtype
+            cache.wonum = wonum
+            cache.workorderid = woid.toString()
+            cache.syncStatus = BaseParam.APP_FALSE
+            listWorklogTypecache.add(cache)
+        }
+        saveListWorkLog(listWorklogTypecache)
     }
 }

@@ -371,6 +371,14 @@ class WorkOrderRepository @Inject constructor(
                 }
             }
 
+            wo.worklog.whatIfNotNullOrEmpty {
+                wo.wonum.whatIfNotNull { wonum ->
+                    wo.workorderid.whatIfNotNull { woid ->
+                        worklogRepository.saveWorklogToObjectBox(it, woid, wonum)
+                    }
+                }
+            }
+
             wo.woactivity.whatIfNotNullOrEmpty {
                 wo.workorderid.whatIfNotNull { woid ->
                     wo.wonum.whatIfNotNull { wonum ->
