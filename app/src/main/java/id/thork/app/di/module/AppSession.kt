@@ -35,7 +35,7 @@ class AppSession @Inject constructor(context: Context) {
     var orgId: String? = null
     var serverAddress: String? = null
     var isConnected: Boolean = true
-    
+
     var userDao: UserDao = UserDaoImp()
 
     init {
