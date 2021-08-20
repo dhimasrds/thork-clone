@@ -320,7 +320,8 @@ class LaborPlanViewModel @ViewModelInject constructor(
                 workroderid.toInt(),
                 member,
                 onSuccess = { response ->
-                    Timber.tag(TAG).i("createLaborPlanToMaximo() onSuccess() %s",
+                    Timber.tag(TAG).i(
+                        "createLaborPlanToMaximo() onSuccess() %s",
                         response
                     )
                     response.whatIfNotNull {
@@ -339,12 +340,12 @@ class LaborPlanViewModel @ViewModelInject constructor(
         val listLpTask = member.woactivity
         val listLpNonTask = member.wplabor
 
-        if(isTask == BaseParam.APP_TRUE) {
+        if (isTask == BaseParam.APP_TRUE) {
             //TODO checking dengan listLpTask
             listLpTask.whatIfNotNullOrEmpty { list ->
                 list.forEach {
                     it.wplabor.whatIfNotNullOrEmpty { wplabors ->
-                        wplabors.forEach {  labor ->
+                        wplabors.forEach { labor ->
                             val wplaborid = labor.wplaborid
                             laborPlanEntity.wonumTask = it.wonum
                             checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
@@ -352,7 +353,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
                     }
                 }
             }
-
         } else {
             //TODO checking dengan ListLpWithoutTask
             listLpNonTask.whatIfNotNullOrEmpty {
@@ -364,7 +364,7 @@ class LaborPlanViewModel @ViewModelInject constructor(
         }
     }
 
-    fun checkingLaborPlanExisting(wplaborid : String, laborPlanEntity: LaborPlanEntity) {
+    fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
         val cacheLaborPlan = laborRepository.findLaborPlanByWplaborid(wplaborid)
         if (cacheLaborPlan == null) {
             Timber.tag(TAG).i("handlingCreateLaborPlan() update local cache after update")

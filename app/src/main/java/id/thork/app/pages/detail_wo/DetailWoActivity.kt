@@ -109,7 +109,12 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                     },
                     whatIfNot = {
                         asset.text = getString(R.string.rfid_asset_empty)
-                        asset.setTextColor(ContextCompat.getColor(this@DetailWoActivity, R.color.colorRed))
+                        asset.setTextColor(
+                            ContextCompat.getColor(
+                                this@DetailWoActivity,
+                                R.color.colorRed
+                            )
+                        )
                         btnRfid.visibility = GONE
                         btnQrcode.visibility = GONE
                         btnQrcodeEmpty.visibility = VISIBLE
@@ -122,7 +127,12 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                     },
                     whatIfNot = {
                         location.text = getString(R.string.rfid_location_empty)
-                        location.setTextColor(ContextCompat.getColor(this@DetailWoActivity, R.color.colorRed))
+                        location.setTextColor(
+                            ContextCompat.getColor(
+                                this@DetailWoActivity,
+                                R.color.colorRed
+                            )
+                        )
                         btnRfidLocation.visibility = GONE
                         btnQrcodeLocation.visibility = GONE
                         btnQrcodeLocationEmpty.visibility = VISIBLE

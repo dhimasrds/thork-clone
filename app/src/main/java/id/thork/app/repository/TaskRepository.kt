@@ -260,7 +260,7 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
-    fun prepareBodyForCreateLaborPlanWithTask(woid: Int) : List<id.thork.app.network.response.work_order.Woactivity> {
+    fun prepareBodyForCreateLaborPlanWithTask(woid: Int): List<id.thork.app.network.response.work_order.Woactivity> {
         val taskEntity = findTaskByWoIdAndSyncStatus(woid, BaseParam.APP_TRUE)
         val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
         taskEntity.forEach {
@@ -445,12 +445,12 @@ class TaskRepository @Inject constructor(
         val wpLaborList = mutableListOf<Wplabor>()
         listLaborPlan.whatIfNotNull { listCache ->
             listCache.forEach { laborplan ->
-                if(laborplan.syncUpdate == BaseParam.APP_FALSE) {
+                if (laborplan.syncUpdate == BaseParam.APP_FALSE) {
                     val wplabor = Wplabor()
                     wplabor.wplaborid = 0
                     laborplan.laborcode.whatIfNotNull(
                         whatIf = {
-                            if(it != BaseParam.APP_DASH) {
+                            if (it != BaseParam.APP_DASH) {
                                 wplabor.laborcode = it
                             } else {
                                 wplabor.craft = laborplan.craft

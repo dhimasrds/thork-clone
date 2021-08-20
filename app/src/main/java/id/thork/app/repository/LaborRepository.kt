@@ -71,7 +71,7 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findListLaborPlanlbyTaskid(workroderid, taskid)
     }
 
-    fun findLaborPlanByWplaborid(wplaborid: String) : LaborPlanEntity?{
+    fun findLaborPlanByWplaborid(wplaborid: String): LaborPlanEntity? {
         return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
     }
 
@@ -144,12 +144,12 @@ class LaborRepository @Inject constructor(
         listLaborPlan.whatIfNotNull { listCache ->
             Timber.tag(TAG).d("prepareBodyLaborPlan() listCache size %s", listCache.size)
             listCache.forEach { laborplan ->
-                if(laborplan.isTask == BaseParam.APP_FALSE && laborplan.syncUpdate == BaseParam.APP_FALSE) {
+                if (laborplan.isTask == BaseParam.APP_FALSE && laborplan.syncUpdate == BaseParam.APP_FALSE) {
                     val wplabor = Wplabor()
                     wplabor.wplaborid = 0
                     laborplan.laborcode.whatIfNotNull(
                         whatIf = {
-                            if(it != BaseParam.APP_DASH) {
+                            if (it != BaseParam.APP_DASH) {
                                 wplabor.laborcode = it
                             } else {
                                 wplabor.craft = laborplan.craft
@@ -168,14 +168,18 @@ class LaborRepository @Inject constructor(
     }
 
     //Update labor plan without task
-    fun preapreBodyLaborPlanNontask(wplaborid: String, laborcode: String, craft: String) : List<Wplabor> {
+    fun preapreBodyLaborPlanNontask(
+        wplaborid: String,
+        laborcode: String,
+        craft: String
+    ): List<Wplabor> {
         val laborplanEntity = laborPlanDao.findlaborPlanByWplaborid(wplaborid)
         val wpLaborList = mutableListOf<Wplabor>()
         laborplanEntity.whatIfNotNull { cache ->
             val wplabor = Wplabor()
             wplabor.wplaborid = cache.wplaborid?.toInt()
 
-            if(laborcode != BaseParam.APP_DASH) {
+            if (laborcode != BaseParam.APP_DASH) {
                 wplabor.laborcode = laborcode
             } else {
                 wplabor.craft = craft
@@ -188,15 +192,19 @@ class LaborRepository @Inject constructor(
 
 
     //Update labor plan with task
-    fun preapreBodyLaborPlanTask(wplaborid: String, taskid: String, wonumtask: String) : List<Woactivity> {
-        val woactivityList =mutableListOf<Woactivity>()
+    fun preapreBodyLaborPlanTask(
+        wplaborid: String,
+        taskid: String,
+        wonumtask: String
+    ): List<Woactivity> {
+        val woactivityList = mutableListOf<Woactivity>()
         val listWplabor = mutableListOf<Wplabor>()
         val laborplanEntity = laborPlanDao.findlaborPlanByWplaborid(wplaborid)
 
         laborplanEntity.whatIfNotNull {
             val wplabor = Wplabor()
             wplabor.wplaborid = it.wplaborid?.toInt()
-            if(it.laborcode != BaseParam.APP_DASH) {
+            if (it.laborcode != BaseParam.APP_DASH) {
                 wplabor.laborcode = it.laborcode
             } else {
                 wplabor.craft = it.craft
@@ -206,7 +214,7 @@ class LaborRepository @Inject constructor(
 
         listWplabor.whatIfNotNullOrEmpty {
             val woactivity = Woactivity()
-            woactivity.taskid =  taskid.toInt()
+            woactivity.taskid = taskid.toInt()
             woactivity.wonum = wonumtask
             woactivity.wplabor = it
             woactivityList.add(woactivity)
@@ -390,7 +398,11 @@ class LaborRepository @Inject constructor(
     fun addCraftCache(listcraft: List<Laborcraftrate>, laborcode: String) {
         listcraft.forEach {
             val craftMasterEntity = CraftMasterEntity()
-            Timber.tag(TAG).d("fetchMasterDataLabor() addCraftCache laborcode %s, craft %s", laborcode, it.craft )
+            Timber.tag(TAG).d(
+                "fetchMasterDataLabor() addCraftCache laborcode %s, craft %s",
+                laborcode,
+                it.craft
+            )
             craftMasterEntity.craft = it.craft
             craftMasterEntity.skillLevel = it.skilllevel
             craftMasterEntity.laborcode = laborcode

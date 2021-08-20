@@ -954,7 +954,8 @@ class WorkOrderRepository @Inject constructor(
             Timber.tag(TAG).i("createLaborPlan() code: %s ", statusCode.code)
         }
             .onError {
-                Timber.tag(TAG).i("createLaborPlan() code: %s error: %s", statusCode.code, message())
+                Timber.tag(TAG)
+                    .i("createLaborPlan() code: %s error: %s", statusCode.code, message())
                 onError(message())
             }
             .onException {
