@@ -86,7 +86,7 @@ class ActivityFragment : Fragment() {
                         "Server did not response, please try again",
                         Toast.LENGTH_SHORT
                     )
-                    toast.setGravity(Gravity.CENTER, 0, 0)
+                    toast.setGravity(Gravity.CENTER, 0, 50)
                     toast.show()
                 }
             }

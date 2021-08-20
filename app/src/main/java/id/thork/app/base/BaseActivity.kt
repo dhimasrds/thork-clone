@@ -102,6 +102,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var historyAttendanceIcon: Boolean = false
     private var originWo: String? = null
     private var cookie: String? = null
+    private var connStat: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +119,8 @@ abstract class BaseActivity : AppCompatActivity() {
         runBlocking {
             appSession.userEntity.whatIfNotNull { userEntity ->
                 userEntity.userHash.whatIfNotNull { userHash ->
-                    cookie =  CookieHelper(BaseApplication.context, userHash).generateCookieIfExpired()
+                    cookie =
+                        CookieHelper(BaseApplication.context, userHash).generateCookieIfExpired()
                     appSession.cookie = cookie
                 }
             }
@@ -232,6 +234,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Timber.tag(BaseApplication.TAG).i("onLostConnection() connected menu")
         optionMenu = menu
         menuInflater.inflate(R.menu.actionbar_menu, optionMenu)
         optionMenu?.findItem(R.id.action_filter)?.isVisible = filterIcon
@@ -245,6 +248,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
         optionMenu?.findItem(R.id.action_create_followup)?.isVisible = followUpWoIcon
         optionMenu?.findItem(R.id.history_attendance)?.isVisible = historyAttendanceIcon
+        defineIconConnectionState()
         return true
     }
 
@@ -373,7 +377,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun onGoodConnection() {
 //        Timber.tag(BaseApplication.TAG).i("onGoodConnection() connected")
-        optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
+        connStat = BaseParam.GOOD_CONNECTION
         //TODO sync update status Workorder when online
         val woCacheList =
             woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
@@ -388,15 +392,19 @@ abstract class BaseActivity : AppCompatActivity() {
             workerCoordinator.addSyncAttendance()
         }
 
-        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(
+            BaseParam.APP_TRUE,
+            BaseParam.APP_TRUE
+        )
         task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
+        defineIconConnectionState()
     }
 
     open fun onSlowConnection() {
+        connStat = BaseParam.SLOW_CONNECTION
         CommonUtils.warningToast(resourceProvider.getString(R.string.connection_slow))
-        optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
         //TODO sync update status Workorder when online
         val woCacheList =
             woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
@@ -411,22 +419,47 @@ abstract class BaseActivity : AppCompatActivity() {
             workerCoordinator.addSyncAttendance()
         }
 
-        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+        val task = taskDao.findTaskListByOfflineModeAndIsFromWoDetail(
+            BaseParam.APP_TRUE,
+            BaseParam.APP_TRUE
+        )
         task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
+        defineIconConnectionState()
     }
 
     open fun onLostConnection() {
+        connStat = BaseParam.LOST_CONNECTION
+        Timber.tag(BaseApplication.TAG).i("onLostConnection() connected")
         CommonUtils.errorToast(resourceProvider.getString(R.string.connection_not_available))
-        optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_off)
+        Timber.tag(BaseApplication.TAG).i("onLostConnection() option menu :%s", optionMenu)
+        defineIconConnectionState()
     }
 
     open fun onNotificationReceived(message: String) {
         Timber.tag(BaseApplication.TAG).i("onNotificationReceived")
     }
 
+    private fun defineIconConnectionState() {
+        optionMenu.whatIfNotNull {
+            when (connStat) {
+                BaseParam.GOOD_CONNECTION -> {
+                    optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_on)
+
+                }
+                BaseParam.SLOW_CONNECTION -> {
+                    optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_slow)
+                }
+                BaseParam.LOST_CONNECTION -> {
+                    optionMenu?.findItem(R.id.action_conn)?.setIcon(R.drawable.ic_conn_off)
+                }
+            }
+        }
+    }
+
     private fun defineConnectionState(connectionState: Int) {
+        Timber.tag(BaseApplication.TAG).i("defineConnectionState :%s", connectionState)
         if (connectionState >= ConnectionState.SLOW.state) {
             onConnection(true)
             if (connectionState.equals(ConnectionState.SLOW.state)) {
