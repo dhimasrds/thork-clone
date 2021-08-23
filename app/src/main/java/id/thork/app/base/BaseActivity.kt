@@ -406,8 +406,6 @@ abstract class BaseActivity : AppCompatActivity() {
         //TODO sync update status Workorder when online
         val woCacheList =
             woCacheDao.findWoListBySyncStatusAndisChange(BaseParam.APP_FALSE, BaseParam.APP_TRUE)
-        Timber.tag(BaseApplication.TAG)
-            .i("onSlowConnection() size local cache %s", woCacheList.size)
         woCacheList.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncWoQueue()
         }
