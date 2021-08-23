@@ -150,20 +150,10 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         schedule: String,
         actual: String
     ) {
-        val dt = if (isCreateWO) {
-            SimpleDateFormat(DATE_FORMAT_MX)
-        } else {
-            SimpleDateFormat(DATE_FORMAT_OBJECTBOX)
-        }
-
-        val dateSchedule = dt.parse(schedule)
-        val dateActual = dt.parse(actual)
-        val formatDate = SimpleDateFormat(DATE_FORMAT_VIEW)
-        val formatTime = SimpleDateFormat(TIME_FORMAT_VIEW)
-        binding.tvScheduleStart.setText(formatDate.format(dateSchedule))
-        binding.tvActualStart.setText(formatDate.format(dateActual))
-        binding.tvTimeScheduleStart.setText(formatTime.format(dateSchedule))
-        binding.tvTimeActualStart.setText(formatTime.format(dateActual))
+        binding.tvScheduleStart.setText(DateUtils.convertDateTaskFormat(isCreateWO, schedule))
+        binding.tvActualStart.setText(DateUtils.convertDateTaskFormat(isCreateWO, actual))
+        binding.tvTimeScheduleStart.setText(DateUtils.convertTimeTaskFormat(isCreateWO, schedule))
+        binding.tvTimeActualStart.setText(DateUtils.convertTimeTaskFormat(isCreateWO, actual))
     }
 
     private fun setupStatus(status: String?) {

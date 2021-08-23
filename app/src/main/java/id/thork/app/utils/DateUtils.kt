@@ -29,6 +29,9 @@ object DateUtils {
     private val DATE_CARD_ATTENDANCE = "dd/MMM/yyyy"
     private val DATE_FORMAT_BODYMX = "yyyy-MM-dd"
     private val DATE_TIME_FORMAT_BODYMX = "HH:mm:ss"
+    private val DATE_TASK_FORMAT_MX = "yyyy-MM-dd'T'HH:mm:ssZ"
+    private val DATE_TASK_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ss"
+
 
     /**
      * Get Time Interval from start date and end date
@@ -219,6 +222,38 @@ object DateUtils {
 //            dateFormated = dateFormated.substring(0, dateFormated.length-2)
 //                .plus(":").plus(dateFormated.substring(dateFormated.length-2))
 //            return dateFormated
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun convertDateTaskFormat(isCreateWO: Boolean, dateString: String?): String? {
+        try {
+            val dt = if (isCreateWO) {
+                SimpleDateFormat(DATE_TASK_FORMAT_MX)
+            } else {
+                SimpleDateFormat(DATE_TASK_FORMAT_OBJECTBOX)
+            }
+            val date = dt.parse(dateString)
+            val dateFormater: DateFormat = SimpleDateFormat(APP_DATE_FORMAT)
+            return dateFormater.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun convertTimeTaskFormat(isCreateWO: Boolean, dateTime: String?): String? {
+        try {
+            val dt = if (isCreateWO) {
+                SimpleDateFormat(DATE_TASK_FORMAT_MX)
+            } else {
+                SimpleDateFormat(DATE_TASK_FORMAT_OBJECTBOX)
+            }
+            val date = dt.parse(dateTime)
+            val dateFormater: DateFormat = SimpleDateFormat(APP_TIME_FORMAT)
+            return dateFormater.format(date)
         } catch (e: Exception) {
             e.printStackTrace()
         }
