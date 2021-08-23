@@ -35,10 +35,12 @@ class AppSession @Inject constructor(context: Context) {
     var orgId: String? = null
     var serverAddress: String? = null
     var isConnected: Boolean = true
+    var connectionState: String? = null
 
     var userDao: UserDao = UserDaoImp()
 
     init {
+        Timber.tag(TAG).i("initUser() connection: %s namestate :%s", this, connectionState)
         userEntity = UserEntity()
         reinitUser()
     }

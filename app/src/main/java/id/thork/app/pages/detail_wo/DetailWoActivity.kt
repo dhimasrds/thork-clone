@@ -64,6 +64,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private var workorderLongdesc: String? = null
     private var valueLongDesc: String? = null
 
+
     override fun setupView() {
         super.setupView()
         binding.apply {
@@ -97,6 +98,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun setupObserver() {
+
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
             binding.apply {
