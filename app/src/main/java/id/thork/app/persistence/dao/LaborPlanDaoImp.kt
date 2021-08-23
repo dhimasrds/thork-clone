@@ -39,6 +39,10 @@ class LaborPlanDaoImp : LaborPlanDao {
         laborPlanEntityBox.removeAll()
     }
 
+    override fun removeByEntity(laborPlanEntity: LaborPlanEntity) {
+        laborPlanEntityBox.remove(laborPlanEntity)
+    }
+
     override fun createLaborPlanCache(laborPlanEntity: LaborPlanEntity, username: String?) {
         addUpdateInfo(laborPlanEntity, username)
         laborPlanEntityBox.put(laborPlanEntity)

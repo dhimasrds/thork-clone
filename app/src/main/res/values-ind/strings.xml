@@ -564,4 +564,7 @@
         <item>Local Work Order</item>
     </string-array>
 
+    <!--  Labor Plan -->
+    <string name="labor_plan_delete">Apakah anda akan menghapus record labor plan??</string>
+
 </resources>

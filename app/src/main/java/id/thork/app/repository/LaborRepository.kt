@@ -47,6 +47,10 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.remove()
     }
 
+    fun removeLaborPlanByEntity(laborPlanEntity: LaborPlanEntity) {
+        return laborPlanDao.removeByEntity(laborPlanEntity)
+    }
+
     fun findListLaborplanWorkorderid(workroderid: String): List<LaborPlanEntity> {
         return laborPlanDao.findListLaborPlan(workroderid)
     }
@@ -74,7 +78,6 @@ class LaborRepository @Inject constructor(
     fun findLaborPlanByWplaborid(wplaborid: String): LaborPlanEntity? {
         return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
     }
-
 
     fun addLaborPlanToObjectBox(member: Member) {
         //Labor Plan with Task

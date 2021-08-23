@@ -9,6 +9,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityLaborPlanDetailsBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
@@ -19,7 +20,7 @@ import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
-class LaborPlanDetailsActivity : BaseActivity() {
+class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = CreateLaborPlanActivity::class.java.name
     private val viewModels: LaborPlanViewModel by viewModels()
     private val binding: ActivityLaborPlanDetailsBinding by binding(R.layout.activity_labor_plan_details)
@@ -28,9 +29,11 @@ class LaborPlanDetailsActivity : BaseActivity() {
     private var intentWorkorderid: String? = null
     private var intentCraft: String? = null
     private var laborPlanEntity: LaborPlanEntity? = null
+    private var woCache: Boolean = false
     var taskid: String? = null
     var taskdesc: String? = null
     var taskrefwonum: String? = null
+    private lateinit var customDialogUtils: CustomDialogUtils
 
 
     override fun setupView() {
@@ -51,6 +54,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
         )
 
         retriveFromIntent()
+        customDialogUtils = CustomDialogUtils(this)
     }
 
     override fun setupObserver() {
@@ -60,7 +64,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
             taskid = it.taskid
             taskdesc = it.taskDescription
             taskrefwonum = it.wonumTask
-            val isTask : Int? = it.isTask
+            val isTask: Int? = it.isTask
             val vendor = StringUtils.NVL(it.vendor, BaseParam.APP_DASH)
             binding.apply {
                 tvLabor.text = it.laborcode
@@ -74,7 +78,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
 
         viewModels.woCache.observe(this, Observer {
             val status = it.status
-
+            woCache = true
             if (status != BaseParam.WAPPR) {
                 binding.apply {
                     selectCraft.visibility = View.INVISIBLE
@@ -196,11 +200,15 @@ class LaborPlanDetailsActivity : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
         goToAnotherAct()
-
         binding.btnSaveLaborPlan.setOnClickListener {
             val laborcode = binding.tvLabor.text
             val craft = binding.tvCraft.text
-            Timber.d("setupListener() save labor plan : %s %s %s", laborcode, craft, taskid.toString())
+            Timber.d(
+                "setupListener() save labor plan : %s %s %s",
+                laborcode,
+                craft,
+                taskid.toString()
+            )
             laborPlanEntity.whatIfNotNull {
                 viewModels.updateToLocalCache(
                     it,
@@ -213,6 +221,19 @@ class LaborPlanDetailsActivity : BaseActivity() {
             }
             navigateToLaborPlan()
         }
+
+        binding.btnDelete.setOnClickListener {
+            dialogDeleteLaborPlan()
+        }
+    }
+
+    private fun dialogDeleteLaborPlan() {
+        customDialogUtils.setTitle(R.string.information)
+        customDialogUtils.setDescription(R.string.labor_plan_delete)
+        customDialogUtils.setRightButtonText(R.string.dialog_yes)
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+        customDialogUtils.setListener(this)
+        customDialogUtils.show()
     }
 
     override fun goToPreviousActivity() {
@@ -232,4 +253,32 @@ class LaborPlanDetailsActivity : BaseActivity() {
         startActivity(intent)
         finish()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        customDialogUtils.dismiss()
+    }
+
+
+    override fun onRightButton() {
+        laborPlanEntity.whatIfNotNull {
+            viewModels.removeLaborPlanEntity(it, woCache)
+            navigateToLaborPlan()
+        }
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
+
+
 }

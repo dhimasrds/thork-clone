@@ -28,4 +28,5 @@ interface LaborPlanDao {
     ): LaborPlanEntity?
 
     fun findlaborPlanByWplaborid(wplaborid: String): LaborPlanEntity?
+    fun removeByEntity(laborPlanEntity: LaborPlanEntity)
 }

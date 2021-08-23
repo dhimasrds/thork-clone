@@ -579,4 +579,8 @@
         <item>Assigned Work Order</item>
         <item>Local Work Order</item>
     </string-array>
+
+    <!--  Labor Plan -->
+    <string name="labor_plan_delete">Do you want to delete labor plan record?</string>
+
 </resources>

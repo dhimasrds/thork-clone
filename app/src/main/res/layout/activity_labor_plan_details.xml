@@ -60,6 +60,24 @@
                     android:background="@color/transparant"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/general_margin_8dp"
+                        android:paddingEnd="@dimen/general_padding_10dp"
+                        android:background="@color/form_base_color"
+                        android:gravity="end">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/transparant"
+                            android:drawableLeft="@drawable/ic_delete"
+                            android:drawablePadding="@dimen/general_padding_5dp"
+                            android:text="@string/delete"
+                            android:textColor="@color/colorRed" />
+                    </LinearLayout>
+
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">

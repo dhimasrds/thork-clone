@@ -55,7 +55,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
     private val _listCraft = MutableLiveData<List<String>>()
     val listCraft: LiveData<List<String>> get() = _listCraft
 
-
     fun fetchListLaborPlan(workroderid: String) {
         val listLabor = laborRepository.findListLaborplanWorkorderid(workroderid)
         listLabor.whatIfNotNullOrEmpty {
@@ -96,13 +95,11 @@ class LaborPlanViewModel @ViewModelInject constructor(
         masterCraft.whatIfNotNullOrEmpty(
             whatIf = {
                 _getCraftMaster.value = it
-
             },
             whatIfNot = {
                 fetchMasterCraft()
             }
         )
-
     }
 
     fun fetchTask(wonum: String) {
@@ -293,7 +290,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
             }
 
             member.whatIfNotNull { prepareBody ->
-                //TODO Update to mx
                 createLaborPlanToMaximo(prepareBody, it, laborPlanEntity)
             }
         }
@@ -341,7 +337,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
         val listLpNonTask = member.wplabor
 
         if (isTask == BaseParam.APP_TRUE) {
-            //TODO checking dengan listLpTask
             listLpTask.whatIfNotNullOrEmpty { list ->
                 list.forEach {
                     it.wplabor.whatIfNotNullOrEmpty { wplabors ->
@@ -354,7 +349,6 @@ class LaborPlanViewModel @ViewModelInject constructor(
                 }
             }
         } else {
-            //TODO checking dengan ListLpWithoutTask
             listLpNonTask.whatIfNotNullOrEmpty {
                 it.forEach { wplabor ->
                     val wplaborid = wplabor.wplaborid
@@ -372,5 +366,14 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
             laborRepository.saveLaborPlanCache(laborPlanEntity)
         }
+    }
+
+    fun removeLaborPlanEntity(laborPlanEntity: LaborPlanEntity, woCache: Boolean) {
+        laborRepository.removeLaborPlanByEntity(laborPlanEntity)
+        //TODO need api delete labor plan from maximo
+//        if(woCache) {
+//            //TODO Remove labor plan with api delete
+//
+//        }
     }
 }
