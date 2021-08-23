@@ -38,11 +38,6 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var cal: Calendar = Calendar.getInstance()
     private var cal2: Calendar = Calendar.getInstance()
 
-    private val DATE_FORMAT_MX = "yyyy-MM-dd'T'HH:mm:ssZ"
-    private val DATE_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ss"
-    private val DATE_FORMAT_VIEW = "MM/dd/yyyy"
-    private val TIME_FORMAT_VIEW = "HH:mm"
-
     private var estDur: Double? = null
     private var intentWoid: Int? = null
     private var intentTaskId: Int? = null
