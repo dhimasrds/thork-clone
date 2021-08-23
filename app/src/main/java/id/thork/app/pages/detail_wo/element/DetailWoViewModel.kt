@@ -70,12 +70,6 @@ class DetailWoViewModel @ViewModelInject constructor(
         }
     }
 
-    fun connectionState(){
-       Timber.d("1connectionState labor :%s", appSession.laborCode)
-       Timber.d("1connectionState  state:%s", appSession.connectionState)
-       Timber.d("1connectionState cookie :%s", appSession.cookie)
-       Timber.d("1connectionState appsession :%s", appSession)
-    }
     fun fetchWobyWonum(wonum: String) {
         val woCacheEntity: WoCacheEntity? = workOrderRepository.findWobyWonum(wonum)
         Timber.tag(TAG).d("viewmodel fetchWobyWonum() $woCacheEntity")
