@@ -7,7 +7,6 @@ import id.thork.app.network.response.work_order.Worklog
 import id.thork.app.network.response.worklogtype_response.Member
 import id.thork.app.persistence.dao.WorklogDao
 import id.thork.app.persistence.dao.WorklogTypeDao
-import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogTypeEntity
 import id.thork.app.utils.DateUtils
@@ -78,7 +77,7 @@ class WorklogRepository @Inject constructor(
         return worklogDao.findListWorklogByWoid(workorderid)
     }
 
-    fun findWorklog(wonum: String, summary: String) : WorklogEntity? {
+    fun findWorklog(wonum: String, summary: String): WorklogEntity? {
         return worklogDao.findWorklog(wonum, summary)
     }
 
@@ -138,7 +137,7 @@ class WorklogRepository @Inject constructor(
     fun prepareBodyListWorklog(
         workorderid: String,
         syncStatus: Int
-    ) : List<Worklog>{
+    ): List<Worklog> {
         val listWorklogBody = mutableListOf<Worklog>()
         val listWorklogCache = getListWorklogByWoidAndSnycStatus(workorderid, syncStatus)
         listWorklogCache.whatIfNotNullOrEmpty {

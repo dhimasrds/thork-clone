@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
@@ -140,7 +139,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         }
     }
 
-    private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String){
+    private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String) {
         if (isCreateWO) {
             val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             val formatterOut = SimpleDateFormat("MM/dd/yyyy")
@@ -251,11 +250,11 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 tvEstDur.error = getString(R.string.task_estdur_required)
                 return false
             }
-            if (tvActualStart.text.toString().isBlank()){
+            if (tvActualStart.text.toString().isBlank()) {
                 tvActualStart.error = getString(R.string.task_estdur_required)
                 return false
             }
-            if (tvTimeActualStart.text.toString().isBlank()){
+            if (tvTimeActualStart.text.toString().isBlank()) {
                 tvTimeActualStart.error = getString(R.string.task_estdur_required)
                 return false
             }
