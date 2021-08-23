@@ -77,7 +77,7 @@ class WorklogRepository @Inject constructor(
         return worklogDao.findListWorklogByWoid(workorderid)
     }
 
-    fun findWorklog(wonum: String, summary: String) : WorklogEntity? {
+    fun findWorklog(wonum: String, summary: String): WorklogEntity? {
         return worklogDao.findWorklog(wonum, summary)
     }
 
@@ -137,7 +137,7 @@ class WorklogRepository @Inject constructor(
     fun prepareBodyListWorklog(
         workorderid: String,
         syncStatus: Int
-    ) : List<Worklog>{
+    ): List<Worklog> {
         val listWorklogBody = mutableListOf<Worklog>()
         val listWorklogCache = getListWorklogByWoidAndSnycStatus(workorderid, syncStatus)
         listWorklogCache.whatIfNotNullOrEmpty {

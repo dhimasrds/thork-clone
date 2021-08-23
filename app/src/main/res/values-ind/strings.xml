@@ -561,6 +561,8 @@
     <string name="task_desc_required">Description tidaka boleh kosong</string>
     <string name="task_estdur_required">Estimate Duration tidak boleh kosong</string>
     <string name="task_actual_required">Actual Start tidak boleh kosong</string>
+    <string name="task_summary_required">Summary tidak boleh kosong</string>
+    <string name="task_type_required">Type tidak boleh kosong</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>

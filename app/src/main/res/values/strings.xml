@@ -577,6 +577,8 @@
     <string name="task_desc_required">Description can\'t empty</string>
     <string name="task_estdur_required">Estimate Duration can\'t empty</string>
     <string name="task_actual_required">Actual Start can\'t empty</string>
+    <string name="task_summary_required">Summary can\'t empty</string>
+    <string name="task_type_required">Type can\'t empty</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>
