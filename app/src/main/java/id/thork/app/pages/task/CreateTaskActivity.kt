@@ -38,6 +38,11 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     private var cal: Calendar = Calendar.getInstance()
     private var cal2: Calendar = Calendar.getInstance()
 
+    private val DATE_FORMAT_MX = "yyyy-MM-dd'T'HH:mm:ssZ"
+    private val DATE_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ss"
+    private val DATE_FORMAT_VIEW = "MM/dd/yyyy"
+    private val TIME_FORMAT_VIEW = "HH:mm"
+
     private var estDur: Double? = null
     private var intentWoid: Int? = null
     private var intentTaskId: Int? = null
@@ -140,28 +145,25 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         }
     }
 
-    private fun setupDateInView(isCreateWO: Boolean, schedule: String, actual: String) {
-        if (isCreateWO) {
-            val dt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-            val dateSchedule = dt.parse(schedule)
-            val dateActual = dt.parse(actual)
-            val formatDate = SimpleDateFormat("MM/dd/yyyy")
-            val formatTime = SimpleDateFormat("HH:mm")
-            binding.tvScheduleStart.setText(formatDate.format(dateSchedule))
-            binding.tvActualStart.setText(formatDate.format(dateActual))
-            binding.tvTimeScheduleStart.setText(formatTime.format(dateSchedule))
-            binding.tvTimeActualStart.setText(formatTime.format(dateActual))
+    private fun setupDateInView(
+        isCreateWO: Boolean,
+        schedule: String,
+        actual: String
+    ) {
+        val dt = if (isCreateWO) {
+            SimpleDateFormat(DATE_FORMAT_MX)
         } else {
-            val dt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-            val dateSchedule = dt.parse(schedule)
-            val dateActual = dt.parse(actual)
-            val formatDate = SimpleDateFormat("MM/dd/yyyy")
-            val formateTime = SimpleDateFormat("HH:mm")
-            binding.tvScheduleStart.setText(formatDate.format(dateSchedule))
-            binding.tvActualStart.setText(formatDate.format(dateActual))
-            binding.tvTimeScheduleStart.setText(formateTime.format(dateSchedule))
-            binding.tvTimeActualStart.setText(formateTime.format(dateActual))
+            SimpleDateFormat(DATE_FORMAT_OBJECTBOX)
         }
+
+        val dateSchedule = dt.parse(schedule)
+        val dateActual = dt.parse(actual)
+        val formatDate = SimpleDateFormat(DATE_FORMAT_VIEW)
+        val formatTime = SimpleDateFormat(TIME_FORMAT_VIEW)
+        binding.tvScheduleStart.setText(formatDate.format(dateSchedule))
+        binding.tvActualStart.setText(formatDate.format(dateActual))
+        binding.tvTimeScheduleStart.setText(formatTime.format(dateSchedule))
+        binding.tvTimeActualStart.setText(formatTime.format(dateActual))
     }
 
     private fun setupStatus(status: String?) {

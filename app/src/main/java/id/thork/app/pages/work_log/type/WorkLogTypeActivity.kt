@@ -18,12 +18,11 @@ class WorkLogTypeActivity : BaseActivity() {
     private lateinit var worklogTypeEntity: MutableList<WorklogTypeEntity>
 
 
-
     override fun setupView() {
         super.setupView()
         binding.apply {
             lifecycleOwner = this@WorkLogTypeActivity
-            vm =viewModels
+            vm = viewModels
         }
         worklogTypeEntity = mutableListOf()
         worklogTypeAdapter = WorklogTypeAdapter(worklogTypeEntity, this)
