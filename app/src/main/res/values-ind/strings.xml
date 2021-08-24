@@ -571,5 +571,7 @@
 
     <!--  Labor Plan -->
     <string name="labor_plan_delete">Apakah anda akan menghapus record labor plan??</string>
+    <string name="labor_laborcode_required">Labor tidak boleh kosong</string>
+    <string name="labor_craft_required">Craft tidak boleh kosong</string>
 
 </resources>

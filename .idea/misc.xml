@@ -7,8 +7,9 @@
         <entry key="app/src/main/res/drawable/add_load.xml" value="0.11008771929824561" />
         <entry key="app/src/main/res/drawable/bg_dropdown.xml" value="0.11798245614035088" />
         <entry key="app/src/main/res/drawable/ic_material_actual.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_create_task.xml" value="0.23715277777777777" />
         <entry key="app/src/main/res/layout/activity_create_wo_assets.xml" value="0.10326086956521739" />
         <entry key="app/src/main/res/layout/activity_create_wo_attachments.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_create_wo_laborplan.xml" value="0.1068840579710145" />
@@ -32,8 +33,6 @@
         <entry key="app/src/main/res/layout/fragment_activity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.18" />
         <entry key="app/src/main/res/layout/load_state_view.xml" value="0.3006711409395973" />
-        <entry key="app/src/main/res/layout/locomotif_dialog.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/toolbar.xml" value="0.25" />
       </map>
     </option>
   </component>

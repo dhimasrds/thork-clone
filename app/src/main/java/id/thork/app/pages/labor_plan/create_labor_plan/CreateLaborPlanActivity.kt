@@ -13,7 +13,6 @@ import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
 import id.thork.app.pages.labor_plan.SelectTaskActivity
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
-import timber.log.Timber
 
 class CreateLaborPlanActivity : BaseActivity() {
     val TAG = CreateLaborPlanActivity::class.java.name
@@ -23,7 +22,6 @@ class CreateLaborPlanActivity : BaseActivity() {
     var intentWorkorderid: String? = null
     var taskid: String? = null
     var taskdesc: String? = null
-    var isParentexisting : Boolean? = false
 
     override fun setupView() {
         super.setupView()
@@ -115,10 +113,11 @@ class CreateLaborPlanActivity : BaseActivity() {
                         // Handling when choose Labor dan fill craft
                         data.whatIfNotNull {
                             val laborcode = it.getStringExtra(BaseParam.LABORCODE_FORM)
-                            binding.tvLabor.text = laborcode
-                            binding.tvCraft.text = BaseParam.APP_DASH
-
-
+                            binding.apply {
+                                tvLabor.text = laborcode
+                                tvCraft.text = BaseParam.APP_DASH
+                                removeValidation()
+                            }
                         }
                     }
 
@@ -126,9 +125,11 @@ class CreateLaborPlanActivity : BaseActivity() {
                         // Handling when choose craft
                         data.whatIfNotNull {
                             val craft = it.getStringExtra(BaseParam.CRAFT_FORM)
-                            val skill = it.getStringExtra(BaseParam.SKILL_FORM)
-                            binding.tvCraft.text = craft
-                            binding.tvLabor.text = BaseParam.APP_DASH
+                            binding.apply {
+                                tvCraft.text = craft
+                                tvLabor.text = BaseParam.APP_DASH
+                                removeValidation()
+                            }
                         }
                     }
                 }
@@ -139,20 +140,19 @@ class CreateLaborPlanActivity : BaseActivity() {
     override fun setupListener() {
         super.setupListener()
         binding.btnSaveLaborActual.setOnClickListener {
-            val laborcode = binding.tvLabor.text
-            val craft = binding.tvCraft.text
-            val skillLevel = binding.tvSkillLevel.text
-            Timber.d("setupListener() Create labor plan: %s %s %s", laborcode, craft, skillLevel)
-            viewModels.saveToLocalCache(
-                laborcode.toString(),
-                taskid.toString(),
-                taskdesc.toString(),
-                craft.toString(),
-                intentWonum.toString(),
-                intentWorkorderid.toString()
-            )
-            navigateToLaborPlan()
-
+            val laborcode = binding.tvLabor.text.toString()
+            val craft = binding.tvCraft.text.toString()
+            if (validation(laborcode, craft)) {
+                viewModels.saveToLocalCache(
+                    laborcode,
+                    taskid.toString(),
+                    taskdesc.toString(),
+                    craft,
+                    intentWonum.toString(),
+                    intentWorkorderid.toString()
+                )
+                navigateToLaborPlan()
+            }
         }
     }
 
@@ -179,5 +179,21 @@ class CreateLaborPlanActivity : BaseActivity() {
         intentWorkorderid = intent.getStringExtra(BaseParam.WORKORDERID)
     }
 
+    private fun validation(laborcode: String, craft: String): Boolean {
+        if (laborcode == BaseParam.APP_DASH && craft == BaseParam.APP_DASH) {
+            binding.apply {
+                tvLabor.error = getString(R.string.labor_laborcode_required)
+                tvCraft.error = getString(R.string.labor_craft_required)
+            }
+            return false
+        }
+        return true
+    }
 
+    private fun removeValidation() {
+        binding.apply {
+            tvLabor.error = null
+            tvCraft.error = null
+        }
+    }
 }

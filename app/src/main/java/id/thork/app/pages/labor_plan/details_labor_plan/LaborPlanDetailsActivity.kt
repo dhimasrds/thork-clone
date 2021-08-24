@@ -220,6 +220,7 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
                 )
             }
             navigateToLaborPlan()
+
         }
 
         binding.btnDelete.setOnClickListener {
@@ -279,6 +280,5 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
     }
-
 
 }
