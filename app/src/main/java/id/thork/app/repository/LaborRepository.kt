@@ -238,7 +238,7 @@ class LaborRepository @Inject constructor(
         wpLaborList.whatIfNotNullOrEmpty { wplaborlist ->
             wplaborlist.forEach { wpLabor ->
                 val laborcode = wpLabor.laborcode
-                Timber.tag(TAG).d("handlingLaborPlan() Laborcode %s", wpLabor.laborcode)
+                Timber.tag(TAG).d("handlingLaborPlan() Laborcode %s woid %s", wpLabor.laborcode, tempwoid)
                 laborcode.whatIfNotNull(
                     whatIf = {
                         val laborCache = laborPlanDao.findlaborPlanByworkorderid(

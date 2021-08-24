@@ -746,13 +746,13 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun updateCreateWoCacheOfflineMode(
-        woId: Int?,
-        wonum: String?,
         longdesc: String?,
-        currentWo: WoCacheEntity
+        currentWo: WoCacheEntity,
+        member: Member
     ) {
         Timber.d("updateCreateWoCacheOfflineMode() syncBody %s ", currentWo.syncBody)
-
+        val woId = member.workorderid
+        val wonum = member.wonum
         val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
@@ -767,7 +767,7 @@ class WorkOrderRepository @Inject constructor(
         currentWo.woId = woId
         currentWo.wonum = wonum
         currentWo.laborCode = appSession.laborCode
-        currentWo.syncBody = memberJsonAdapter.toJson(currentMember)
+        currentWo.syncBody = memberJsonAdapter.toJson(member)
         currentWo.syncStatus = BaseParam.APP_TRUE
         currentWo.isChanged = BaseParam.APP_FALSE
         currentWo.isLatest = BaseParam.APP_TRUE

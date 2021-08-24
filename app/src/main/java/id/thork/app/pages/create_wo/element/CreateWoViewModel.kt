@@ -200,12 +200,6 @@ class CreateWoViewModel @ViewModelInject constructor(
         location: String,
     ) {
 
-//        val wsa = Woserviceaddres()
-//        wsa.longitudex = longitudex
-//        wsa.latitudey = latitudey
-//        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
-//        woserviceaddress.add(wsa)
-
         tempWoId.whatIfNotNull { tempwoid ->
             val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
             val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
@@ -222,7 +216,6 @@ class CreateWoViewModel @ViewModelInject constructor(
             member.description = deskWo
             member.status = BaseParam.WAPPR
             member.reportdate = DateUtils.getDateTimeMaximo()
-//        member.woserviceaddress = woserviceaddress
             member.estdur = estDur
             member.wopriority = workPriority
             member.descriptionLongdescription = longdesc
@@ -246,10 +239,10 @@ class CreateWoViewModel @ViewModelInject constructor(
             tWoCacheEntity.createdDate = Date()
             tWoCacheEntity.updatedDate = Date()
             tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.woId = tempWoId
             tWoCacheEntity.status = BaseParam.WAPPR
             tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
             workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
-            Timber.d("createwointeractor: %s", longdesc)
         }
     }
 

@@ -82,16 +82,18 @@ class WorkOrderWorker @WorkerInject constructor(
     var taskRepository: TaskRepository
     var laborRepository: LaborRepository
 
-    lateinit  var retrofit: Retrofit
+    lateinit var retrofit: Retrofit
+
     //val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
 
     private fun provideStoreroomClient(): StoreroomClient {
-        val  retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
         val storeroomApi = retrofit.create(StoreroomApi::class.java)
         val storeroomClient = StoreroomClient(storeroomApi)
         return storeroomClient
     }
+
     init {
         val storeroomClient = provideStoreroomClient()
         val workerRepository =
@@ -105,7 +107,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 attachmentDao,
                 doclinksClient,
                 materialBackupDao, matusetransDao,
-                wpmaterialDao, materialDao,worklogDao,
+                wpmaterialDao, materialDao, worklogDao,
                 worklogTypeDao,
                 taskDao, laborPlanDao, laborActualDao, laborMasterDao, craftMasterDao
             )
@@ -267,7 +269,7 @@ class WorkOrderWorker @WorkerInject constructor(
         listWo: List<WoCacheEntity>,
         currentIndex: Int,
     ) {
-        val currentWo = listWo.get(currentIndex)
+        val currentWo = listWo[currentIndex]
 
         currentWo.whatIfNotNull { currentWo ->
             val prepareBody = WoUtils.convertBodyToMember(currentWo.syncBody.toString())
@@ -276,6 +278,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
                 val tempWonum = currentWo.wonum
+                val tempWoId : Int? = currentWo.woId
 
                 val member = Member()
                 member.siteid = appSession.siteId
@@ -298,36 +301,42 @@ class WorkOrderWorker @WorkerInject constructor(
                 prepareBody.woactivity.whatIfNotNullOrEmpty {
                     member.woactivity = it
                 }
+                prepareBody.wplabor.whatIfNotNullOrEmpty {
+                    member.wplabor = it
+                }
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val properties = BaseParam.APP_ALL_PROPERTIES
                 GlobalScope.launch(Dispatchers.IO) {
                     workOrderRepository.createWo(
                         cookie, properties, member,
-                        onSuccess = {
+                        onSuccess = { member ->
                             //TODO handle create wo cache after update
                             workOrderRepository.updateCreateWoCacheOfflineMode(
-                                it.workorderid,
-                                it.wonum,
                                 longdesc,
-                                currentWo
+                                currentWo,
+                                member
                             )
 
-                            it.woactivity.whatIfNotNullOrEmpty { woActivity ->
+                            member.woactivity.whatIfNotNullOrEmpty { woActivity ->
                                 if (tempWonum != null) {
                                     taskRepository.handlingTaskSuccessFromCreateWo(
-                                        it,
+                                        member,
                                         woActivity,
                                         tempWonum
                                     )
                                 }
+                            }
+
+                            member.wplabor.whatIfNotNullOrEmpty {  wpLabors ->
+                                laborRepository.handlingLaborPlan(wpLabors, member, tempWoId.toString())
                             }
                             val nextIndex = currentIndex + 1
                             if (nextIndex <= listWo.size - 1) {
                                 updateCreateWo(listWo, nextIndex)
                             }
                         }, onError = {
-                            Timber.tag(TAG).i("createWo() error: %s", it)
+                            Timber.tag(TAG).i("updateCreateWo() error: %s", it)
                         }
                     )
                 }
