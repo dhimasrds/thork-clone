@@ -497,6 +497,8 @@
     <!--  Location -->
     <string name="location_rfid_is_match_begin">Lokasi ini</string>
     <string name="location_rfid_is_not_match">Lokasi tidak sesuai</string>
+    <string name="location_rfid_is_not_registered">Lokasi RFID Tidak Terdaftar</string>
+    <string name="asset_rfid_is_not_registered">Asset RFID Tidak Terdaftar</string>
     <string name="location_rfid_is_match_end">lanjutkan dengan lokasi ini?</string>
     <string name="find_asset">Find Asset</string>
     <string name="find_location">Find Location</string>
@@ -558,6 +560,9 @@
 
     <string name="task_desc_required">Description tidaka boleh kosong</string>
     <string name="task_estdur_required">Estimate Duration tidak boleh kosong</string>
+    <string name="task_actual_required">Actual Start tidak boleh kosong</string>
+    <string name="task_summary_required">Summary tidak boleh kosong</string>
+    <string name="task_type_required">Type tidak boleh kosong</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>

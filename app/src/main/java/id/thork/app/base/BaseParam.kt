@@ -274,4 +274,12 @@ object BaseParam {
     val FORM_STATE_WO_READ_ONLY: Array<String> = arrayOf("CLOSE")
     val FORM_STATE_WO_EDIT: Array<String> = arrayOf("WAPPR","APPR","INPRG", "COMP")
 
+    /**
+     * CONNECTION SIGNAL
+     */
+    const val GOOD_CONNECTION= "GOOD_CONNECTION"
+    const val SLOW_CONNECTION= "SLOW_CONNECTION"
+    const val LOST_CONNECTION= "LOST_CONNECTION"
+
+
 }

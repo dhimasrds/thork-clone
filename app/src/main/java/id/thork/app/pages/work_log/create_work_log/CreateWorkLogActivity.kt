@@ -70,11 +70,30 @@ class CreateWorkLogActivity : BaseActivity(), CustomDialogUtils.DialogActionList
         }
 
         binding.btnCreate.setOnClickListener {
-            setDialogSave()
+            if (formValidation()) {
+                setDialogSave()
+            }
         }
 
     }
 
+    private fun formValidation(): Boolean {
+        binding.apply {
+            if (tvSummary.text.toString().isBlank()) {
+                tvSummary.error = getString(R.string.task_summary_required)
+                return false
+            }
+            if (tvDesc.text.toString().isBlank()) {
+                tvDesc.error = getString(R.string.task_desc_required)
+                return false
+            }
+            if (tvType.text.toString().isBlank()) {
+                tvType.error = getString(R.string.task_type_required)
+                return false
+            }
+        }
+        return true
+    }
 
     private fun navigateToWorklog() {
         val intent = Intent(this, WorkLogActivity::class.java)

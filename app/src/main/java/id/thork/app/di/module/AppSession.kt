@@ -14,17 +14,14 @@ package id.thork.app.di.module
 
 import android.content.Context
 import com.skydoves.whatif.whatIfNotNull
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.dao.UserDaoImp
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Singleton
 class AppSession @Inject constructor(context: Context) {
     val TAG = AppSession::class.java.name
 
@@ -38,10 +35,12 @@ class AppSession @Inject constructor(context: Context) {
     var orgId: String? = null
     var serverAddress: String? = null
     var isConnected: Boolean = true
+    var connectionState: String? = null
 
     var userDao: UserDao = UserDaoImp()
 
     init {
+        Timber.tag(TAG).i("initUser() connection: %s namestate :%s", this, connectionState)
         userEntity = UserEntity()
         reinitUser()
     }

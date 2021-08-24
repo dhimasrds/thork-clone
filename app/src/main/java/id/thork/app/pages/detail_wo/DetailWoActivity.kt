@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -53,7 +54,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private lateinit var map: GoogleMap
     private var lastKnownLocation: Location? = null
     private var intentWonum: String? = null
-    private var status: String? = null
+    private var statuswo: String? = null
     private var destinationString: String? = null
     private var destinationLatLng: LatLng? = null
     private var isRoute: Int = BaseParam.APP_FALSE
@@ -62,6 +63,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private var workorderNumber: String? = null
     private var workorderLongdesc: String? = null
     private var valueLongDesc: String? = null
+
 
     override fun setupView() {
         super.setupView()
@@ -89,12 +91,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
             historyAttendanceIcon = false
         )
         retrieveFromIntent()
+        setupViewCloseStatus()
 
-        Timber.d("status detail :%s", status)
+        Timber.d("status detail :%s", statuswo)
     }
 
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun setupObserver() {
+
         super.setupObserver()
         detailWoViewModel.CurrentMember.observe(this, {
             binding.apply {
@@ -214,13 +218,21 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
         //TODO Result Query Asset for Rfid
         detailWoViewModel.AssetRfid.observe(this, {
-            gotoRfidAsset(it)
+            if (it ==  BaseParam.APP_DASH){
+                Toast.makeText(
+                    this,
+                    R.string.asset_rfid_is_not_registered,
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                gotoRfidAsset(it)
+            }
         })
 
         detailWoViewModel.ResultLocation.observe(this, {
             if (it.equals(BaseParam.APP_TRUE)) {
 //            locationIsMatch = result
-                binding.icCheckLocation.visibility = View.VISIBLE
+                binding.icCheckLocation.visibility = VISIBLE
                 binding.icCrossLocation.visibility = GONE
                 binding.tvScanResultLocation.text =
                     getString(R.string.asset_scan_result) + ": " +
@@ -232,7 +244,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
                 )
             } else {
                 binding.icCheckLocation.visibility = GONE
-                binding.icCrossLocation.visibility = View.VISIBLE
+                binding.icCrossLocation.visibility = VISIBLE
                 binding.tvScanResultLocation.text = (getString(R.string.asset_scan_result) + ": " +
                         getString(R.string.location_rfid_is_not_match))
                 binding.tvScanResultLocation.setBackgroundColor(
@@ -246,19 +258,39 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         //TODO Result Query Location for Rfid
         detailWoViewModel.LocationRfid.observe(this, {
             Timber.d("Observer Location Rfid() %s", it)
-            gotoRfidLocation(it)
+            if (it ==  BaseParam.APP_DASH){
+                Toast.makeText(
+                    this,
+                    R.string.location_rfid_is_not_registered,
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                gotoRfidLocation(it)
+            }
         })
     }
 
     private fun retrieveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.APP_WONUM)
-        status = intent.getStringExtra(BaseParam.STATUS)
+        statuswo = intent.getStringExtra(BaseParam.STATUS)
         intentWonum.whatIfNotNull {
             detailWoViewModel.fetchWobyWonum(it)
             enableFollowUpWo(true, it)
         }
         val intentPriority = intent.getIntExtra(BaseParam.PRIORITY, 0)
         detailWoViewModel.setPriority(intentPriority)
+    }
+
+    private fun setupViewCloseStatus() {
+        binding.apply {
+            if (statuswo.equals(BaseParam.CLOSED)) {
+                Timber.d("setupViewCloseStatus status detail :%s", statuswo)
+                btnRfid.isEnabled = false
+                btnQrcode.isEnabled = false
+                btnRfidLocation.isEnabled = false
+                btnQrcodeLocation.isEnabled = false
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -345,6 +377,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         startActivity(intent)
     }
 
+
     private fun gotoLongDescription() {
         val intent = Intent(this, LongDescActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
@@ -363,7 +396,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private fun goToAttachments() {
         val intent = Intent(this, AttachmentActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
-        intent.putExtra(BaseParam.STATUS, status)
+        intent.putExtra(BaseParam.STATUS, statuswo)
         startActivity(intent)
     }
 
@@ -378,7 +411,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         val intent = Intent(this, WorkLogActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId.toString())
         intent.putExtra(BaseParam.WONUM, workorderNumber.toString())
-        intent.putExtra(BaseParam.STATUS, status)
+        intent.putExtra(BaseParam.STATUS, statuswo)
         startActivity(intent)
     }
 
@@ -393,7 +426,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
     private fun goToMaterialActual() {
         val intent = Intent(this, MaterialActualActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
-        intent.putExtra(BaseParam.STATUS, status)
+        intent.putExtra(BaseParam.STATUS, statuswo)
         startActivity(intent)
     }
 

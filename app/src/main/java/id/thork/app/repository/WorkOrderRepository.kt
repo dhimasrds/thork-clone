@@ -221,7 +221,7 @@ class WorkOrderRepository @Inject constructor(
     ) =
         Pager(
             config = PagingConfig(
-                pageSize = 5,
+                pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -246,7 +246,7 @@ class WorkOrderRepository @Inject constructor(
     ) =
         Pager(
             config = PagingConfig(
-                pageSize = 5,
+                pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -271,7 +271,7 @@ class WorkOrderRepository @Inject constructor(
     ) =
         Pager(
             config = PagingConfig(
-                pageSize = 5,
+                pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -368,6 +368,14 @@ class WorkOrderRepository @Inject constructor(
                         wo.wonum.toString(),
                         woId
                     )
+                }
+            }
+
+            wo.worklog.whatIfNotNullOrEmpty {
+                wo.wonum.whatIfNotNull { wonum ->
+                    wo.workorderid.whatIfNotNull { woid ->
+                        worklogRepository.saveWorklogToObjectBox(it, woid, wonum)
+                    }
                 }
             }
 
