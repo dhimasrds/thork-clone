@@ -74,7 +74,8 @@ class ProfileViewModel @ViewModelInject constructor(
 
     fun fetchAttendance() {
         //TODO appSession.cookie still null
-//        val cookie = appSession.cookie
+        val cookie1 = appSession.cookie
+        Timber.tag(TAG).i("fetchAttendance() cookie: %s", cookie1)
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val savedQuery = appResourceMx.fsmResAttendace
         val select = ApiParam.API_SELECT_ALL

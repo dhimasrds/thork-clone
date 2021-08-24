@@ -15,15 +15,21 @@ package id.thork.app.pages.main.element
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import id.thork.app.base.LiveCoroutinesViewModel
+import id.thork.app.di.module.AppSession
 import id.thork.app.workmanager.WorkerCoordinator
 
 class MainViewModel @ViewModelInject constructor(
     private val context: Context,
-    private val workerCoordinator: WorkerCoordinator
+    private val workerCoordinator: WorkerCoordinator,
+    private val appSession: AppSession
     ) : LiveCoroutinesViewModel() {
     val TAG = MainViewModel::class.java.name
 
     fun checkWorkManager() {
         workerCoordinator.addSyncWoQueue()
+    }
+
+    fun reInitAppSession(){
+        appSession.reinitUser()
     }
 }
