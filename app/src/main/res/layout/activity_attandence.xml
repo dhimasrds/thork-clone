@@ -93,7 +93,7 @@
                     android:layout_marginRight="@dimen/general_margin_5dp"
                     android:background="@color/transparant"
                     android:fontFamily="@font/roboto_regular"
-                    android:inputType="textMultiLine|textVisiblePassword"
+                    android:inputType="textMultiLine"
                     android:padding="@dimen/general_padding_5dp"
                     android:text="Loading..."
                     android:textAllCaps="false"
