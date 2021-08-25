@@ -119,6 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@id/progress_login"
                     android:layout_centerInParent="true"
+                    android:text="Fetch System Properties"
                     android:textColor="@color/black"
                     android:visibility="invisible"
                     app:visible="@{vm.fetchProgressVisible}" />

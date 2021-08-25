@@ -130,11 +130,12 @@ class LoginViewModel @ViewModelInject constructor(
                 onSuccess = {
                     fetchUserData(userHash, username)
                     Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
+                    Timber.d("raka %s ", "cookie: sukses")
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
+                    Timber.d("raka %s ", "cookie: error")
                     _error.postValue(it)
                 })
-            _progressVisible.postValue(false)
         }
     }
 
@@ -143,48 +144,54 @@ class LoginViewModel @ViewModelInject constructor(
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.API_SELECT_ALL
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
-        var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
             loginRepository.loginPerson(selectQuery, whereQuery,
                 onSuccess = {
-                    userResponse = it
-                    Timber.tag(TAG).d("fetchUserData() loginPerson: %s", userResponse.member)
+                    saveCacheLogin(it, userHash, username )
+                    Timber.d("raka %s ", "fetchData: sukses")
+                    Timber.tag(TAG).d("fetchUserData() loginPerson: %s", it.member)
                 },
                 onError = {
+                    Timber.d("raka %s ", "fetchData: error")
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     when (it) {
                         MxResponse.BMXAA0021E -> {
+                            Timber.d("raka %s ", "fetchData: error cookie")
                             loginCookie(userHash, username)
                         }
                         else -> {
+                            Timber.d("raka %s ", "fetchData: error yg lain")
                             _error.postValue(it)
                         }
                     }
                 },
                 onException = {
+                    Timber.d("raka %s ", "fetchData: noException")
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     _error.postValue(it)
                 })
-
-            //Save user into cache
-            var member: Member
-            userResponse.member.whatIfNotNullOrEmpty(
-                whatIf = {
-                    Timber.tag(TAG).d("fetchUserData() user response: %s", userResponse.member)
-                    member = userResponse.member[0]
-                    val isFirstLogin = userIsFirstLogin(member, username, userHash)
-                    _firstLogin.postValue(isFirstLogin)
-                    _loginState.postValue(BaseParam.APP_TRUE)
-                    appSession.reinitUser()
-                },
-                whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
-            )
-
-            fetchSystemProperties(userHash)
-            fetchMasterDataLabor(userHash, username)
-            // When user founded and stored into cache, then hide progressbarSet
+            _progressVisible.postValue(false)
         }
+    }
+
+    private fun saveCacheLogin(userResponse: UserResponse, userHash: String, username: String){
+        //Save user into cache
+        var member: Member
+        userResponse.member.whatIfNotNullOrEmpty(
+            whatIf = {
+                Timber.tag(TAG).d("fetchUserData() user response: %s", userResponse.member)
+                member = userResponse.member[0]
+                val isFirstLogin = userIsFirstLogin(member, username, userHash)
+                _firstLogin.postValue(isFirstLogin)
+                _loginState.postValue(BaseParam.APP_TRUE)
+                appSession.reinitUser()
+            },
+            whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
+        )
+
+        fetchSystemProperties(userHash, username)
+        // When user founded and stored into cache, then hide progressbarSet
     }
 
     private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
@@ -251,33 +258,40 @@ class LoginViewModel @ViewModelInject constructor(
         loginRepository.createUserSession(userEntity, username)
     }
 
-    private fun fetchSystemProperties(userHash: String) {
+    private fun fetchSystemProperties(userHash: String, username: String) {
         Timber.tag(TAG).i("fetchSystemProperties()")
+        _fetchProgressVisible.postValue(true)
         val selectQuery = ApiParam.API_SELECT_ALL
-        var systemProperties = id.thork.app.network.response.system_properties.SystemProperties()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch system properties
             loginRepository.fetchSystemproperties(userHash, selectQuery,
                 onSuccess = {
-                    systemProperties = it
+                    Timber.d("raka %s ", "sysProp: sukses")
+                    saveSysProp(it)
+                    fetchMasterDataLabor(userHash, username)
                 },
                 onError = {
+                    Timber.d("raka %s ", "sysProp: error")
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
                     _error.postValue(it)
                 },
                 onException = {
+                    Timber.d("raka %s ", "sysProp: noException")
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
                     _error.postValue(it)
                 })
-
-            var member: id.thork.app.network.response.system_properties.Member
-            systemProperties.member.whatIfNotNullOrEmpty(
-                whatIf = {
-                    member = systemProperties.member?.get(0)!!
-                    saveSystemResource(member)
-                    saveSystemProperties(member)
-                })
+            _fetchProgressVisible.postValue(false)
         }
+    }
+
+    private fun saveSysProp(systemProperties: id.thork.app.network.response.system_properties.SystemProperties){
+        var member: id.thork.app.network.response.system_properties.Member
+        systemProperties.member.whatIfNotNullOrEmpty(
+            whatIf = {
+                member = systemProperties.member?.get(0)!!
+                saveSystemResource(member)
+                saveSystemProperties(member)
+            })
     }
 
     private fun fetchMasterDataLabor(userHash: String, username: String) {
@@ -286,15 +300,18 @@ class LoginViewModel @ViewModelInject constructor(
             //fetch Master Data Labor
             loginRepository.fetchMasterDataLabor(userHash, selectQuery,
                 onSuccess = {
+                    Timber.d("raka %s ", " dataLabor: sukses")
                     it.member.whatIfNotNullOrEmpty {
                         laborRepository.addMasterDataLaborToObjectBox(it, username)
                     }
                 },
                 onError = {
+                    Timber.d("raka %s ", " dataLabor: error")
                     Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
                     _error.postValue(it)
                 },
                 onException = {
+                    Timber.d("raka %s ", " dataLabor: noException")
                     Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
                     _error.postValue(it)
                 })
