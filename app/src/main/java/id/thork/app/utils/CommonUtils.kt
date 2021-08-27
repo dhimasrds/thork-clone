@@ -22,6 +22,7 @@ import id.thork.app.base.BaseParam
 
 object CommonUtils {
     const val POSITION_CENTER = 1
+    private var toast : Toast? = null
 
     fun isTrue(input: Int): Boolean {
         if (input.equals(BaseParam.APP_TRUE)) {
@@ -59,5 +60,16 @@ object CommonUtils {
             BaseApplication.getAppContext(), message, Toast.LENGTH_LONG, true)
         toast.setGravity(Gravity.CENTER, 0, 0)
         toast.show()
+    }
+
+    fun standardToast (message: String){
+        toast = Toast.makeText(
+            BaseApplication.getAppContext(), message, Toast.LENGTH_SHORT)
+        toast?.setGravity(Gravity.CENTER, 0, 50)
+        toast?.show()
+    }
+
+    fun removeToast(){
+        toast?.cancel()
     }
 }

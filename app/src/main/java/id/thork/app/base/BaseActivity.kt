@@ -371,7 +371,13 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun onError() {
     }
 
-    open fun showToast() {
+    open fun showToast(message: String){
+        CommonUtils.standardToast(message)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        CommonUtils.removeToast()
     }
 
     open fun onGoodConnection() {
