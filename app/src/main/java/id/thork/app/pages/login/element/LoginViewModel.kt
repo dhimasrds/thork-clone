@@ -130,10 +130,8 @@ class LoginViewModel @ViewModelInject constructor(
                 onSuccess = {
                     fetchUserData(userHash, username)
                     Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
-                    Timber.d("raka %s ", "cookie: sukses")
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
-                    Timber.d("raka %s ", "cookie: error")
                     _error.postValue(it)
                 })
         }
@@ -148,26 +146,21 @@ class LoginViewModel @ViewModelInject constructor(
             //fetch user data via API
             loginRepository.loginPerson(selectQuery, whereQuery,
                 onSuccess = {
-                    saveCacheLogin(it, userHash, username )
-                    Timber.d("raka %s ", "fetchData: sukses")
+                    saveCacheLogin(it, userHash, username)
                     Timber.tag(TAG).d("fetchUserData() loginPerson: %s", it.member)
                 },
                 onError = {
-                    Timber.d("raka %s ", "fetchData: error")
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     when (it) {
                         MxResponse.BMXAA0021E -> {
-                            Timber.d("raka %s ", "fetchData: error cookie")
                             loginCookie(userHash, username)
                         }
                         else -> {
-                            Timber.d("raka %s ", "fetchData: error yg lain")
                             _error.postValue(it)
                         }
                     }
                 },
                 onException = {
-                    Timber.d("raka %s ", "fetchData: noException")
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     _error.postValue(it)
                 })
@@ -175,7 +168,7 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun saveCacheLogin(userResponse: UserResponse, userHash: String, username: String){
+    private fun saveCacheLogin(userResponse: UserResponse, userHash: String, username: String) {
         //Save user into cache
         var member: Member
         userResponse.member.whatIfNotNullOrEmpty(
@@ -186,12 +179,11 @@ class LoginViewModel @ViewModelInject constructor(
                 _firstLogin.postValue(isFirstLogin)
                 _loginState.postValue(BaseParam.APP_TRUE)
                 appSession.reinitUser()
+                // When user founded and stored into cache, then hide progressbarSet
+                fetchSystemProperties(userHash, username)
             },
             whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
         )
-
-        fetchSystemProperties(userHash, username)
-        // When user founded and stored into cache, then hide progressbarSet
     }
 
     private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
@@ -266,17 +258,14 @@ class LoginViewModel @ViewModelInject constructor(
             //fetch system properties
             loginRepository.fetchSystemproperties(userHash, selectQuery,
                 onSuccess = {
-                    Timber.d("raka %s ", "sysProp: sukses")
                     saveSysProp(it)
                     fetchMasterDataLabor(userHash, username)
                 },
                 onError = {
-                    Timber.d("raka %s ", "sysProp: error")
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
                     _error.postValue(it)
                 },
                 onException = {
-                    Timber.d("raka %s ", "sysProp: noException")
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
                     _error.postValue(it)
                 })
@@ -284,7 +273,7 @@ class LoginViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun saveSysProp(systemProperties: id.thork.app.network.response.system_properties.SystemProperties){
+    private fun saveSysProp(systemProperties: id.thork.app.network.response.system_properties.SystemProperties) {
         var member: id.thork.app.network.response.system_properties.Member
         systemProperties.member.whatIfNotNullOrEmpty(
             whatIf = {
@@ -300,18 +289,15 @@ class LoginViewModel @ViewModelInject constructor(
             //fetch Master Data Labor
             loginRepository.fetchMasterDataLabor(userHash, selectQuery,
                 onSuccess = {
-                    Timber.d("raka %s ", " dataLabor: sukses")
                     it.member.whatIfNotNullOrEmpty {
                         laborRepository.addMasterDataLaborToObjectBox(it, username)
                     }
                 },
                 onError = {
-                    Timber.d("raka %s ", " dataLabor: error")
                     Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
                     _error.postValue(it)
                 },
                 onException = {
-                    Timber.d("raka %s ", " dataLabor: noException")
                     Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
                     _error.postValue(it)
                 })
