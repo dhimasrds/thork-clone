@@ -180,6 +180,7 @@ class LoginViewModel @ViewModelInject constructor(
                 _loginState.postValue(BaseParam.APP_TRUE)
                 appSession.reinitUser()
                 // When user founded and stored into cache, then hide progressbarSet
+                _fetchProgressVisible.postValue(true)
                 fetchSystemProperties(userHash, username)
             },
             whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
@@ -252,7 +253,6 @@ class LoginViewModel @ViewModelInject constructor(
 
     private fun fetchSystemProperties(userHash: String, username: String) {
         Timber.tag(TAG).i("fetchSystemProperties()")
-        _fetchProgressVisible.postValue(true)
         val selectQuery = ApiParam.API_SELECT_ALL
         viewModelScope.launch(Dispatchers.IO) {
             //fetch system properties
@@ -269,7 +269,6 @@ class LoginViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
                     _error.postValue(it)
                 })
-            _fetchProgressVisible.postValue(false)
         }
     }
 
@@ -301,6 +300,7 @@ class LoginViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
                     _error.postValue(it)
                 })
+            _fetchProgressVisible.postValue(false)
         }
     }
 
