@@ -27,8 +27,7 @@ import kotlin.concurrent.timerTask
 object CommonUtils {
     const val POSITION_CENTER = 1
     private var toast: Toast? = null
-    private const val TOAST_TIMEOUT_MS: Long = 1000 // tweak this constant
-    private var toastShow = false
+    private const val TOAST_TIMEOUT_MS: Long = 1000
 
 
     private var lastToastTime: Long = 0
