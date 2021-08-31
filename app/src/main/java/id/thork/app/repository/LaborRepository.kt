@@ -79,7 +79,10 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
     }
 
-    fun findListLaborPlanBySyncUpdateAndLocally(syncupdate: Int, isLocally: Int) : List<LaborPlanEntity> {
+    fun findListLaborPlanBySyncUpdateAndLocally(
+        syncupdate: Int,
+        isLocally: Int
+    ): List<LaborPlanEntity> {
         return laborPlanDao.findListLaborPlanlbySyncUpdateAndisDetailWo(syncupdate, isLocally)
     }
 
@@ -176,7 +179,8 @@ class LaborRepository @Inject constructor(
         return wpLaborList
     }
 
-    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity) : List<Wplabor> {
+    //Prepare Body labor plan for offline mode
+    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity): List<Wplabor> {
         val wpLaborList = mutableListOf<Wplabor>()
         val wplabor = Wplabor()
         wplabor.wplaborid = 0
@@ -194,6 +198,34 @@ class LaborRepository @Inject constructor(
         )
         wpLaborList.add(wplabor)
         return wpLaborList
+    }
+
+    //Prepare Body update Labor plan to maximo
+    fun prepareBodyUpdateLaborPlanTomaximo(laborPlanEntity: LaborPlanEntity): Member {
+        //need prepare body, and validation with task or without task
+        val wplaborid = laborPlanEntity.wplaborid.toString()
+        val taskid = laborPlanEntity.taskid.toString()
+        val wonumTask = laborPlanEntity.wonumTask.toString()
+        val laborCode = laborPlanEntity.laborcode.toString()
+        val craft = laborPlanEntity.craft.toString()
+        val prepareBody = Member()
+
+        if (laborPlanEntity.isTask == BaseParam.APP_TRUE) {
+            //Prepare body with task
+            val bodyLaborplanWithTask =
+                preapreBodyLaborPlanTask(wplaborid, taskid, wonumTask)
+            bodyLaborplanWithTask.whatIfNotNullOrEmpty {
+                prepareBody.woactivity = it
+            }
+        } else {
+            //Prepare body without task
+            val bodyLaborplanWithoutTask =
+                preapreBodyLaborPlanNontask(wplaborid, laborCode, craft)
+            bodyLaborplanWithoutTask.whatIfNotNullOrEmpty {
+                prepareBody.wplabor = it
+            }
+        }
+        return prepareBody
     }
 
     //Update labor plan without task
@@ -252,7 +284,7 @@ class LaborRepository @Inject constructor(
         return woactivityList
     }
 
-
+    //Handling labor plan after update success
     fun handlingLaborPlan(
         wpLaborList: List<Wplabor>,
         member: Member,
@@ -264,7 +296,8 @@ class LaborRepository @Inject constructor(
         wpLaborList.whatIfNotNullOrEmpty { wplaborlist ->
             wplaborlist.forEach { wpLabor ->
                 val laborcode = wpLabor.laborcode
-                Timber.tag(TAG).d("handlingLaborPlan() Laborcode %s woid %s", wpLabor.laborcode, tempwoid)
+                Timber.tag(TAG)
+                    .d("handlingLaborPlan() Laborcode %s woid %s", wpLabor.laborcode, tempwoid)
                 laborcode.whatIfNotNull(
                     whatIf = {
                         val laborCache = laborPlanDao.findlaborPlanByworkorderid(
@@ -304,6 +337,7 @@ class LaborRepository @Inject constructor(
         }
     }
 
+    //Update labor plan when update success
     private fun updateLaborPlanCache(
         laborPlanEntity: LaborPlanEntity,
         wplaborid: String,
@@ -317,13 +351,46 @@ class LaborRepository @Inject constructor(
         laborPlanDao.createLaborPlanCache(laborPlanEntity, usernameGlobal)
     }
 
+    //Handling creaete labor plan cache when update success
+    fun handlingCreateLaborPlan(member: Member, laborPlanEntity: LaborPlanEntity) {
+        val isTask = laborPlanEntity.isTask
+        val listLpTask = member.woactivity
+        val listLpNonTask = member.wplabor
+
+        if (isTask == BaseParam.APP_TRUE) {
+            listLpTask.whatIfNotNullOrEmpty { list ->
+                list.forEach {
+                    it.wplabor.whatIfNotNullOrEmpty { wplabors ->
+                        wplabors.forEach { labor ->
+                            val wplaborid = labor.wplaborid
+                            laborPlanEntity.wonumTask = it.wonum
+                            checkingLaborPlanExisting(
+                                wplaborid.toString(),
+                                laborPlanEntity
+                            )
+                        }
+                    }
+                }
+            }
+        } else {
+            listLpNonTask.whatIfNotNullOrEmpty {
+                it.forEach { wplabor ->
+                    val wplaborid = wplabor.wplaborid
+                    checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
+                }
+            }
+        }
+    }
+
+    //handling labor plan cache when update labor plan to mx success
     fun handlingUpdateLaborPlan(laborPlanEntity: LaborPlanEntity, syncUpdate: Int, isLocally: Int) {
         laborPlanEntity.syncUpdate = syncUpdate
         laborPlanEntity.isLocally = isLocally
         saveLaborPlanCache(laborPlanEntity)
     }
 
-    fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
+    //Checking labor plan existing to replace wplaborid
+    private fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
         val cacheLaborPlan = findLaborPlanByWplaborid(wplaborid)
         if (cacheLaborPlan == null) {
             Timber.tag(TAG).i("checkingLaborPlanExisting() update local cache after update")

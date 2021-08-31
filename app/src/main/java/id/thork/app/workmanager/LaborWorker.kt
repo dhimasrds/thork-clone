@@ -23,7 +23,6 @@ import id.thork.app.repository.WorkerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.Dispatcher
 import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 
@@ -81,8 +80,6 @@ class LaborWorker @WorkerInject constructor(
         workOrderRepository = workerRepository.buildWorkorderRepository()
         laborRepository = workerRepository.buildLaborRepository()
         taskRepository = workerRepository.buildTaskRepository()
-
-        Timber.tag(TAG).i("LaborWorker() workOrderRepository: %s", workOrderRepository)
     }
 
     private val MAX_RUN_ATTEMPT = 6
@@ -101,7 +98,6 @@ class LaborWorker @WorkerInject constructor(
             Result.retry()
         }
     }
-
 
     fun syncUpdateLabor() {
         val tempCacheWithId = mutableListOf<LaborPlanEntity>()
@@ -133,13 +129,6 @@ class LaborWorker @WorkerInject constructor(
         tempCacheWithoutId.whatIfNotNullOrEmpty {
             updateCreateLaborPlan(it, index)
         }
-
-        Timber.tag(TAG)
-            .d("LaborWorker() syncUpdateLabor() tempCacheWithId size %s", tempCacheWithId.size)
-        Timber.tag(TAG).d(
-            "LaborWorker() syncUpdateLabor() tempCacheWithoutId size %s",
-            tempCacheWithoutId.size
-        )
     }
 
 
@@ -150,7 +139,7 @@ class LaborWorker @WorkerInject constructor(
         //TODO Http request to Update Labor plan
         val laborPlanEntity = listLaborPlan[currentIndex]
         laborPlanEntity.whatIfNotNull {
-            val member = prepareBodyUpdateTomaximoOfflineMode(it)
+            val member = laborRepository.prepareBodyUpdateLaborPlanTomaximo(it)
             val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
             val xMethodeOverride: String = BaseParam.APP_PATCH
             val contentType: String = ("application/json")
@@ -166,12 +155,20 @@ class LaborWorker @WorkerInject constructor(
                                 workorderid.toInt(),
                                 member,
                                 onSuccess = {
-                                    Timber.tag(TAG).i("updateLaborPlanToMaximo() update local cache after update")
-                                    handlingUpdateLaborPlan(laborPlanEntity, BaseParam.APP_TRUE, BaseParam.APP_TRUE)
+                                    laborRepository.handlingUpdateLaborPlan(
+                                        laborPlanEntity,
+                                        BaseParam.APP_TRUE,
+                                        BaseParam.APP_TRUE
+                                    )
                                 },
                                 onError = {
-                                    Timber.tag(TAG).i("updateLaborPlanToMaximo() onError() onError: %s", it)
-                                    handlingUpdateLaborPlan(laborPlanEntity, BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+                                    Timber.tag(TAG)
+                                        .i("updateLaborPlanToMaximo() onError() onError: %s", it)
+                                    laborRepository.handlingUpdateLaborPlan(
+                                        laborPlanEntity,
+                                        BaseParam.APP_FALSE,
+                                        BaseParam.APP_TRUE
+                                    )
 
                                 }
                             )
@@ -182,38 +179,6 @@ class LaborWorker @WorkerInject constructor(
         }
     }
 
-    fun prepareBodyUpdateTomaximoOfflineMode(laborPlanEntity: LaborPlanEntity): Member {
-        //need prepare body, and validation with task or without task
-        val wplaborid = laborPlanEntity.wplaborid.toString()
-        val taskid = laborPlanEntity.taskid.toString()
-        val wonumTask = laborPlanEntity.wonumTask.toString()
-        val laborCode = laborPlanEntity.laborcode.toString()
-        val craft = laborPlanEntity.craft.toString()
-        val prepareBody = Member()
-
-        if (laborPlanEntity.isTask == BaseParam.APP_TRUE) {
-            //Prepare body with task
-            val bodyLaborplanWithTask =
-                laborRepository.preapreBodyLaborPlanTask(wplaborid, taskid, wonumTask)
-            bodyLaborplanWithTask.whatIfNotNullOrEmpty {
-                prepareBody.woactivity = it
-            }
-        } else {
-            //Prepare body without task
-            val bodyLaborplanWithoutTask =
-                laborRepository.preapreBodyLaborPlanNontask(wplaborid, laborCode, craft)
-            bodyLaborplanWithoutTask.whatIfNotNullOrEmpty {
-                prepareBody.wplabor = it
-            }
-        }
-        return prepareBody
-    }
-
-    fun handlingUpdateLaborPlan(laborPlanEntity: LaborPlanEntity, syncUpdate: Int, isLocally: Int) {
-        laborPlanEntity.syncUpdate = syncUpdate
-        laborPlanEntity.isLocally = isLocally
-        laborRepository.saveLaborPlanCache(laborPlanEntity)
-    }
 
     /**
      * Update Create Labor plan
@@ -222,7 +187,6 @@ class LaborWorker @WorkerInject constructor(
         //TODO Http request to create labor plan
         val laborPlanEntity = listLaborPlan[currentIndex]
         laborPlanEntity.whatIfNotNull {
-            Timber.tag(TAG).d("LaborWorker() updateCreateLaborPlan() laborcode %s", it.laborcode)
             val member = prepareBodyCreateLaborPlanOfflinemode(it)
             val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
             val xMethodeOverride: String = BaseParam.APP_PATCH
@@ -242,12 +206,11 @@ class LaborWorker @WorkerInject constructor(
                                 workorderid.toInt(),
                                 member,
                                 onSuccess = { response ->
-                                    Timber.tag(TAG).i(
-                                        "LaborWorker() updateCreateLaborPlan() onSuccess() %s",
-                                        response
-                                    )
                                     response.whatIfNotNull { member ->
-                                        handlingCreateLaborPlan(member, laborPlanEntity)
+                                        laborRepository.handlingCreateLaborPlan(
+                                            member,
+                                            laborPlanEntity
+                                        )
                                         val nextIndex = currentIndex + 1
                                         if (nextIndex <= listLaborPlan.size - 1) {
                                             updateCreateLaborPlan(listLaborPlan, nextIndex)
@@ -256,7 +219,10 @@ class LaborWorker @WorkerInject constructor(
                                 },
                                 onError = {
                                     Timber.tag(TAG)
-                                        .i("LaborWorker() updateCreateLaborPlan() onError() onError: %s", it)
+                                        .i(
+                                            "LaborWorker() updateCreateLaborPlan() onError() onError: %s",
+                                            it
+                                        )
                                 }
                             )
                         }
@@ -268,7 +234,7 @@ class LaborWorker @WorkerInject constructor(
 
     private fun prepareBodyCreateLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity): Member {
         val member = Member()
-        if(laborPlanEntity.isTask == BaseParam.APP_TRUE) {
+        if (laborPlanEntity.isTask == BaseParam.APP_TRUE) {
             val taskList =
                 taskRepository.prepareBodyForCreateLaborPlanWithTaskOfflinemode(laborPlanEntity)
             taskList.whatIfNotNullOrEmpty { tasks ->
@@ -276,52 +242,10 @@ class LaborWorker @WorkerInject constructor(
             }
         } else {
             val laborplanList = laborRepository.prepareBodyLaborPlanOfflinemode(laborPlanEntity)
-
-
             laborplanList.whatIfNotNullOrEmpty { wplabors ->
                 member.wplabor = wplabors
             }
         }
         return member
     }
-
-    private fun handlingCreateLaborPlan(member: Member, laborPlanEntity: LaborPlanEntity) {
-        val isTask = laborPlanEntity.isTask
-        val listLpTask = member.woactivity
-        val listLpNonTask = member.wplabor
-
-        if (isTask == BaseParam.APP_TRUE) {
-            listLpTask.whatIfNotNullOrEmpty { list ->
-                list.forEach {
-                    it.wplabor.whatIfNotNullOrEmpty { wplabors ->
-                        wplabors.forEach { labor ->
-                            val wplaborid = labor.wplaborid
-                            laborPlanEntity.wonumTask = it.wonum
-                            checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
-                        }
-                    }
-                }
-            }
-        } else {
-            listLpNonTask.whatIfNotNullOrEmpty {
-                it.forEach { wplabor ->
-                    val wplaborid = wplabor.wplaborid
-                    checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
-                }
-            }
-        }
-    }
-
-    private fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
-        val cacheLaborPlan = laborRepository.findLaborPlanByWplaborid(wplaborid)
-        if (cacheLaborPlan == null) {
-            Timber.tag(TAG)
-                .i("LaborWorker() checkingLaborPlanExisting() update local cache after update")
-            laborPlanEntity.wplaborid = wplaborid
-            laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
-            laborPlanEntity.isLocally = BaseParam.APP_TRUE
-            laborRepository.saveLaborPlanCache(laborPlanEntity)
-        }
-    }
-
 }

@@ -276,9 +276,9 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
-    fun prepareBodyForCreateLaborPlanWithTaskOfflinemode(laborPlanEntity: LaborPlanEntity) :  List<id.thork.app.network.response.work_order.Woactivity> {
+    fun prepareBodyForCreateLaborPlanWithTaskOfflinemode(laborPlanEntity: LaborPlanEntity): List<id.thork.app.network.response.work_order.Woactivity> {
         val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
-        if(laborPlanEntity.isTask == BaseParam.APP_TRUE) {
+        if (laborPlanEntity.isTask == BaseParam.APP_TRUE) {
             laborPlanEntity.workorderid.whatIfNotNull {
                 val woid = it.toInt()
                 laborPlanEntity.taskid.whatIfNotNull { taskid ->
@@ -296,11 +296,10 @@ class TaskRepository @Inject constructor(
                 }
             }
         }
-
         return memberTask
     }
 
-    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity) : List<Wplabor> {
+    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity): List<Wplabor> {
         val wpLaborList = mutableListOf<Wplabor>()
         val wplabor = Wplabor()
         wplabor.wplaborid = 0
