@@ -64,6 +64,7 @@ class ProfileViewModel @ViewModelInject constructor(
                 loginRepository.logout(cookie, it,
                     onSuccess = {
                         deleteUserSession()
+                        appSession.clearSession()
                         Timber.tag(TAG).i("logoutCookie() sessionTime: %s", it)
                     }, onError = {
                         Timber.tag(TAG).i("logoutCookie() error: %s", it)
