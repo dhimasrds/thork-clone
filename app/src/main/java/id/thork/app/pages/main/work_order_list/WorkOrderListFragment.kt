@@ -25,6 +25,7 @@ import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
+import id.thork.app.utils.CommonUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -125,6 +126,9 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
+//    override fun onPause() {
+//        super.onPause()
+//        CommonUtils.removeToast()}
 
     private fun swipeRefresh() {
         pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
