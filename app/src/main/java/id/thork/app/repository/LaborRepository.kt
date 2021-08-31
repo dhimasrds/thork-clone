@@ -79,6 +79,10 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
     }
 
+    fun findListLaborPlanBySyncUpdateAndLocally(syncupdate: Int, isLocally: Int) : List<LaborPlanEntity> {
+        return laborPlanDao.findListLaborPlanlbySyncUpdateAndisDetailWo(syncupdate, isLocally)
+    }
+
     fun addLaborPlanToObjectBox(member: Member) {
         //Labor Plan with Task
         val woact = member.woactivity
@@ -107,6 +111,7 @@ class LaborRepository @Inject constructor(
                         laborCache.wonumTask = task.wonum
                         laborCache.syncUpdate = BaseParam.APP_TRUE
                         laborCache.isTask = BaseParam.APP_TRUE
+                        laborCache.isLocally = BaseParam.APP_TRUE
                         saveLaborPlanCache(laborCache)
                     }
                 }
@@ -134,6 +139,7 @@ class LaborRepository @Inject constructor(
                 laborCache.workorderid = member.workorderid.toString()
                 laborCache.syncUpdate = BaseParam.APP_TRUE
                 laborCache.isTask = BaseParam.APP_FALSE
+                laborCache.isLocally = BaseParam.APP_TRUE
                 saveLaborPlanCache(laborCache)
             }
         }
@@ -167,6 +173,26 @@ class LaborRepository @Inject constructor(
                 }
             }
         }
+        return wpLaborList
+    }
+
+    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity) : List<Wplabor> {
+        val wpLaborList = mutableListOf<Wplabor>()
+        val wplabor = Wplabor()
+        wplabor.wplaborid = 0
+        laborPlanEntity.laborcode.whatIfNotNull(
+            whatIf = {
+                if (it != BaseParam.APP_DASH) {
+                    wplabor.laborcode = it
+                } else {
+                    wplabor.craft = laborPlanEntity.craft
+                }
+            },
+            whatIfNot = {
+                wplabor.craft = laborPlanEntity.craft
+            }
+        )
+        wpLaborList.add(wplabor)
         return wpLaborList
     }
 
@@ -289,6 +315,23 @@ class LaborRepository @Inject constructor(
         laborPlanEntity.workorderid = woidHeader
         laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
         laborPlanDao.createLaborPlanCache(laborPlanEntity, usernameGlobal)
+    }
+
+    fun handlingUpdateLaborPlan(laborPlanEntity: LaborPlanEntity, syncUpdate: Int, isLocally: Int) {
+        laborPlanEntity.syncUpdate = syncUpdate
+        laborPlanEntity.isLocally = isLocally
+        saveLaborPlanCache(laborPlanEntity)
+    }
+
+    fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
+        val cacheLaborPlan = findLaborPlanByWplaborid(wplaborid)
+        if (cacheLaborPlan == null) {
+            Timber.tag(TAG).i("checkingLaborPlanExisting() update local cache after update")
+            laborPlanEntity.wplaborid = wplaborid
+            laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
+            laborPlanEntity.isLocally = BaseParam.APP_TRUE
+            saveLaborPlanCache(laborPlanEntity)
+        }
     }
 
 

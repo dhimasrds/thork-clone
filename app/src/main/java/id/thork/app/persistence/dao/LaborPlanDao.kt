@@ -29,4 +29,8 @@ interface LaborPlanDao {
 
     fun findlaborPlanByWplaborid(wplaborid: String): LaborPlanEntity?
     fun removeByEntity(laborPlanEntity: LaborPlanEntity)
+    fun findListLaborPlanlbySyncUpdateAndisDetailWo(
+        syncupdate: Int,
+        isLocally: Int
+    ): List<LaborPlanEntity>
 }

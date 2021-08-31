@@ -5,6 +5,7 @@ import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.persistence.entity.LaborPlanEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
@@ -157,7 +158,10 @@ class LaborPlanDaoImp : LaborPlanDao {
         return null
     }
 
-
+    override fun findListLaborPlanlbySyncUpdateAndisDetailWo(syncupdate: Int, isLocally: Int) : List<LaborPlanEntity> {
+        return laborPlanEntityBox.query().equal(LaborPlanEntity_.syncUpdate, syncupdate).equal(LaborPlanEntity_.isLocally, isLocally).
+        build().find()
+    }
 
 
 }

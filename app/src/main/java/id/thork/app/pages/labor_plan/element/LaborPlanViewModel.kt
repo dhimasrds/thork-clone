@@ -155,6 +155,12 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanCache.taskid = taskid
             laborPlanCache.taskDescription = taskdesc
             laborPlanCache.isTask = BaseParam.APP_TRUE
+            //To checking refwonum task in local
+            val taskEntity = taskRepository.findTaskByWoIdAndTaskId(workroderid.toInt(), taskid.toInt())
+            taskEntity.whatIfNotNull {
+                laborPlanCache.wonumTask = it.refWonum
+            }
+
         } else {
             laborPlanCache.isTask = BaseParam.APP_FALSE
         }
@@ -194,6 +200,7 @@ class LaborPlanViewModel @ViewModelInject constructor(
             laborPlanEntity.laborcode = BaseParam.APP_DASH
             laborPlanEntity.craft = craft
         }
+
         laborRepository.saveLaborPlanCache(laborPlanEntity)
 
         if (laborPlanEntity.syncUpdate == BaseParam.APP_TRUE) {
@@ -250,13 +257,13 @@ class LaborPlanViewModel @ViewModelInject constructor(
                 workroderid.toInt(),
                 member,
                 onSuccess = {
-                    Timber.tag(TAG).i("update local cache after update")
-                    laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
-                    laborRepository.saveLaborPlanCache(laborPlanEntity)
-                    Timber.tag(TAG).i("updateToMaximo() onSuccess()")
+                    Timber.tag(TAG).i("updateLaborPlanToMaximo() update local cache after update")
+                        laborRepository.handlingUpdateLaborPlan(laborPlanEntity, BaseParam.APP_TRUE, BaseParam.APP_TRUE)
                 },
                 onError = {
-                    Timber.tag(TAG).i("updateToMaximo() onError() onError: %s", it)
+                    Timber.tag(TAG).i("updateLaborPlanToMaximo() onError() onError: %s", it)
+                        laborRepository.handlingUpdateLaborPlan(laborPlanEntity, BaseParam.APP_FALSE, BaseParam.APP_TRUE)
+
                 }
             )
         }
@@ -271,6 +278,8 @@ class LaborPlanViewModel @ViewModelInject constructor(
                 //Prepare Body Update to Maximo
                 prepareBodyAddLaborPlan(laborPlanEntity)
             }
+            laborPlanEntity.isLocally = BaseParam.APP_TRUE
+            laborRepository.saveLaborPlanCache(laborPlanEntity)
         }
     }
 
@@ -358,12 +367,19 @@ class LaborPlanViewModel @ViewModelInject constructor(
         }
     }
 
+    fun handlingUpdateLaborPlan(laborPlanEntity: LaborPlanEntity, syncUpdate: Int, isLocally: Int) {
+        laborPlanEntity.syncUpdate = syncUpdate
+        laborPlanEntity.isLocally = isLocally
+        laborRepository.saveLaborPlanCache(laborPlanEntity)
+    }
+
     fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
         val cacheLaborPlan = laborRepository.findLaborPlanByWplaborid(wplaborid)
         if (cacheLaborPlan == null) {
-            Timber.tag(TAG).i("handlingCreateLaborPlan() update local cache after update")
+            Timber.tag(TAG).i("checkingLaborPlanExisting() update local cache after update")
             laborPlanEntity.wplaborid = wplaborid
             laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
+            laborPlanEntity.isLocally = BaseParam.APP_TRUE
             laborRepository.saveLaborPlanCache(laborPlanEntity)
         }
     }

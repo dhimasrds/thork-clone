@@ -20,4 +20,6 @@ class LaborPlanEntity : BaseEntity(){
     var wonumTask: String? = null
     var syncUpdate: Int? = null
     var isTask: Int? = null
+    var isLocally: Int? = null
+
 }

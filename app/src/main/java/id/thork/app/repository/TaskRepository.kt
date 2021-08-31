@@ -77,7 +77,7 @@ class TaskRepository @Inject constructor(
         return taskDao.findTaskByWoIdAndSyncStatus(woid, syncStatus)
     }
 
-    private fun findTaskByWoIdAndTaskId(woid: Int, taskId: Int): TaskEntity? {
+    fun findTaskByWoIdAndTaskId(woid: Int, taskId: Int): TaskEntity? {
         return taskDao.findTaskByWoidAndTaskId(woid, taskId)
     }
 
@@ -274,6 +274,50 @@ class TaskRepository @Inject constructor(
             memberTask.add(member)
         }
         return memberTask
+    }
+
+    fun prepareBodyForCreateLaborPlanWithTaskOfflinemode(laborPlanEntity: LaborPlanEntity) :  List<id.thork.app.network.response.work_order.Woactivity> {
+        val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
+        if(laborPlanEntity.isTask == BaseParam.APP_TRUE) {
+            laborPlanEntity.workorderid.whatIfNotNull {
+                val woid = it.toInt()
+                laborPlanEntity.taskid.whatIfNotNull { taskid ->
+                    val member = id.thork.app.network.response.work_order.Woactivity()
+                    val taskEntity = findTaskByWoIdAndTaskId(woid, taskid.toInt())
+                    val wplabor = prepareBodyLaborPlanOfflinemode(laborPlanEntity)
+                    taskEntity.whatIfNotNull { entity ->
+                        member.taskid = entity.taskId
+                        member.wonum = entity.refWonum
+                        wplabor.whatIfNotNullOrEmpty { wplabor ->
+                            member.wplabor = wplabor
+                        }
+                        memberTask.add(member)
+                    }
+                }
+            }
+        }
+
+        return memberTask
+    }
+
+    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity) : List<Wplabor> {
+        val wpLaborList = mutableListOf<Wplabor>()
+        val wplabor = Wplabor()
+        wplabor.wplaborid = 0
+        laborPlanEntity.laborcode.whatIfNotNull(
+            whatIf = {
+                if (it != BaseParam.APP_DASH) {
+                    wplabor.laborcode = it
+                } else {
+                    wplabor.craft = laborPlanEntity.craft
+                }
+            },
+            whatIfNot = {
+                wplabor.craft = laborPlanEntity.craft
+            }
+        )
+        wpLaborList.add(wplabor)
+        return wpLaborList
     }
 
     fun handlingTaskFailedFromCreateWo(woid: Int) {

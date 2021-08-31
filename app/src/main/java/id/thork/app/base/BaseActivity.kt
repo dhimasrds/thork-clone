@@ -49,6 +49,7 @@ import id.thork.app.network.GlideApp
 import id.thork.app.pages.attachment.element.signature.SignatureActivity
 import id.thork.app.pages.followup_wo.FollowUpWoActivity
 import id.thork.app.persistence.dao.AttendanceDao
+import id.thork.app.persistence.dao.LaborPlanDao
 import id.thork.app.persistence.dao.TaskDao
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.utils.CommonUtils
@@ -84,6 +85,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var laborPlanDao: LaborPlanDao
 
     @Inject
     lateinit var appSession: AppSession
@@ -397,6 +401,15 @@ abstract class BaseActivity : AppCompatActivity() {
         task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
+
+        val laborplan = laborPlanDao.findListLaborPlanlbySyncUpdateAndisDetailWo(
+            BaseParam.APP_FALSE,
+            BaseParam.APP_TRUE
+        )
+        laborplan.whatIfNotNullOrEmpty {
+            workerCoordinator.addSyncLabor()
+        }
+
         defineIconConnectionState()
     }
 
@@ -422,6 +435,8 @@ abstract class BaseActivity : AppCompatActivity() {
         task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
+        workerCoordinator.addSyncLabor()
+
         defineIconConnectionState()
     }
 
