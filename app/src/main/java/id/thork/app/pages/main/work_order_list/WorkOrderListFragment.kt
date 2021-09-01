@@ -3,16 +3,12 @@ package id.thork.app.pages.main.work_order_list
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,14 +17,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.work.WorkInfo
 import com.baoyz.widget.PullRefreshLayout
-import com.skydoves.whatif.whatIfNotNull
 import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentWorkOrderListBinding
+import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
+import id.thork.app.utils.CommonUtils
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -41,6 +38,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentWorkOrderListBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
     lateinit var workOrderAdapter: WorkOrderAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -112,21 +110,19 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             workOrderAdapter.loadStateFlow.collectLatest { loadStates ->
                 Timber.d("onCreateView loadstate :%s", loadStates)
                 val mediatorPrependLoadState: LoadState = loadStates.source.prepend
-                Timber.d("onCreateView loa1dstate  mediator :%s", mediatorPrependLoadState.endOfPaginationReached)
+                Timber.d(
+                    "onCreateView loa1dstate  mediator :%s",
+                    mediatorPrependLoadState.endOfPaginationReached
+                )
                 binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
 
-                if ( mediatorPrependLoadState.endOfPaginationReached && loadStates.append is LoadState.Error) {
-                    val toast = Toast.makeText(
-                        requireContext(),
-                        "Server did not response, please try again",
-                        Toast.LENGTH_SHORT
-                    )
-                    toast.setGravity(Gravity.CENTER, 0, 50)
-                    toast.show()
+                if (mediatorPrependLoadState.endOfPaginationReached && loadStates.append is LoadState.Error) {
+                    val mainActivity: MainActivity = activity as MainActivity
+                    mainActivity.showToast(getString(R.string.server_did_not_response))
                 }
             }
 
-        viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+            viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
         }
     }
 
@@ -144,15 +140,15 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
                 Timber.d("loadresult wo :%s", loadstate)
                 if (loadstate.refresh is LoadState.Loading) {
-                    binding.progressBar.visibility =View.VISIBLE
-                }else {
+                    binding.progressBar.visibility = View.VISIBLE
+                } else {
                     pullRefreshLayout.setRefreshing(false)
-                    binding.progressBar.visibility =View.GONE
-
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
     }
+
 
     private fun progressBarOnFirstLoad() {
         binding.apply {
@@ -188,13 +184,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                     Timber.d("error state :%s", errorState)
                     errorState?.let {
-//                        val toast = Toast.makeText(
-//                            requireContext(),
-//                            "Please, check your connection",
-//                            Toast.LENGTH_SHORT
-//                        )
-//                        toast.setGravity(Gravity.CENTER, 0, 0)
-//                        toast.show()
+
                     }
                 }
             }
@@ -254,6 +244,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 return@Observer
             }
 
+
             Timber.d("workInfosObserver() refresh adapter")
             workOrderAdapter.refresh()
             viewModel.pruneWork()
@@ -266,8 +257,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if (local == 1) {
             Timber.d("onItemSelected :%s", local)
             viewModel.getWoLocalAppr(BaseParam.WAPPR)
-        }
-        else{
+        } else {
             viewModel.getWoLocalAppr("")
         }
     }

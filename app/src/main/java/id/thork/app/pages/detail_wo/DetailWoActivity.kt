@@ -281,6 +281,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         detailWoViewModel.setPriority(intentPriority)
     }
 
+
     private fun setupViewCloseStatus() {
         binding.apply {
             if (statuswo.equals(BaseParam.CLOSED)) {
