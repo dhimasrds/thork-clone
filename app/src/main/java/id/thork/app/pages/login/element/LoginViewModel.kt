@@ -185,6 +185,7 @@ class LoginViewModel @ViewModelInject constructor(
             },
             whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
         )
+        _fetchProgressVisible.postValue(false)
     }
 
     private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
