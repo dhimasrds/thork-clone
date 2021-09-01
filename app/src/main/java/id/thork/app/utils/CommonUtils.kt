@@ -86,7 +86,7 @@ object CommonUtils {
         }
         Timer().schedule(timerTask {
             toast?.cancel()
-        }, 500)
+        }, 1500)
 
     }
 

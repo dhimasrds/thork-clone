@@ -126,10 +126,6 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-//    override fun onPause() {
-//        super.onPause()
-//        CommonUtils.removeToast()}
-
     private fun swipeRefresh() {
         pullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL)
         pullRefreshLayout.setColorSchemeColors(
