@@ -89,4 +89,18 @@ class AppSession @Inject constructor(context: Context) {
             }
         )
     }
+
+    fun clearSession() {
+        userEntity = UserEntity();
+        personUID = -1
+        firstLogin = 1
+        userHash = null
+        cookie = null
+        laborCode = null
+        siteId = null
+        orgId = null
+        serverAddress = null
+        isConnected = true
+        connectionState = null
+    }
 }

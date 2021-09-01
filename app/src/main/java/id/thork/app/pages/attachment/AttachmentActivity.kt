@@ -108,7 +108,10 @@ class AttachmentActivity : BaseActivity(), PickiTCallbacks {
         validationView()
 
         pickiT = PickiT(this, this, this)
-        requestPermission()
+
+        if (!status.equals(BaseParam.CLOSED)) {
+            requestPermission()
+        }
 
         setupDialog()
 

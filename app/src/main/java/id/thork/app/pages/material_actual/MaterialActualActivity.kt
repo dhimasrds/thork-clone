@@ -94,7 +94,7 @@ class MaterialActualActivity : BaseActivity() {
 
     fun validationView() {
         if (status.equals(BaseParam.CLOSED)) {
-            binding.btnLayout.visibility = View.GONE
+            binding.btnAdd.visibility = View.GONE
         }
     }
 
