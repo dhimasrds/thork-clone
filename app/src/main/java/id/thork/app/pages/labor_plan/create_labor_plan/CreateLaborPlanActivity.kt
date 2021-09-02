@@ -8,13 +8,14 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateLaborPlanBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
 import id.thork.app.pages.labor_plan.SelectTaskActivity
 import id.thork.app.pages.labor_plan.element.LaborPlanViewModel
 
-class CreateLaborPlanActivity : BaseActivity() {
+class CreateLaborPlanActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = CreateLaborPlanActivity::class.java.name
     private val viewModels: LaborPlanViewModel by viewModels()
     private val binding: ActivityCreateLaborPlanBinding by binding(R.layout.activity_create_labor_plan)
@@ -22,6 +23,7 @@ class CreateLaborPlanActivity : BaseActivity() {
     var intentWorkorderid: String? = null
     var taskid: String? = null
     var taskdesc: String? = null
+    private lateinit var customDialogUtils: CustomDialogUtils
 
     override fun setupView() {
         super.setupView()
@@ -41,6 +43,7 @@ class CreateLaborPlanActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
+        customDialogUtils = CustomDialogUtils(this)
         retriveFromIntent()
 
     }
@@ -143,15 +146,7 @@ class CreateLaborPlanActivity : BaseActivity() {
             val laborcode = binding.tvLabor.text.toString()
             val craft = binding.tvCraft.text.toString()
             if (validation(laborcode, craft)) {
-                viewModels.saveToLocalCache(
-                    laborcode,
-                    taskid.toString(),
-                    taskdesc.toString(),
-                    craft,
-                    intentWonum.toString(),
-                    intentWorkorderid.toString()
-                )
-                navigateToLaborPlan()
+                dialogSaveLaborplan()
             }
         }
     }
@@ -196,4 +191,47 @@ class CreateLaborPlanActivity : BaseActivity() {
             tvCraft.error = null
         }
     }
+
+    private fun dialogSaveLaborplan() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.labor_plan_title)
+            .setDescription(R.string.labor_plan_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
+    override fun onRightButton() {
+        val laborcode = binding.tvLabor.text.toString()
+        val craft = binding.tvCraft.text.toString()
+        viewModels.saveToLocalCache(
+            laborcode,
+            taskid.toString(),
+            taskdesc.toString(),
+            craft,
+            intentWonum.toString(),
+            intentWorkorderid.toString()
+        )
+        navigateToLaborPlan()
+
+    }
+
+    override fun onLeftButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
+    }
+
 }

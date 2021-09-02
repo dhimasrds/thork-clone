@@ -575,4 +575,8 @@
     <string name="labor_laborcode_required">Labor tidak boleh kosong</string>
     <string name="labor_craft_required">Craft tidak boleh kosong</string>
 
+    <!-- Save Labor Plan Dialog -->
+    <string name="labor_plan_title">Simpan</string>
+    <string name="labor_plan_question">Anda yakin ingin simpan labor plan ini?</string>
+
 </resources>

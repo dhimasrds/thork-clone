@@ -145,5 +145,15 @@ class CreateWorkLogActivity : BaseActivity(), CustomDialogUtils.DialogActionList
         customDialogUtils.dismiss()
     }
 
+    override fun onResume() {
+        super.onResume()
+        customDialogUtils.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customDialogUtils.dismiss()
+    }
+
 
 }

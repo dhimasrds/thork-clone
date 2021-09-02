@@ -592,4 +592,9 @@
     <string name="labor_laborcode_required">Labor can\'t empty</string>
     <string name="labor_craft_required">Craft can\'t empty</string>
 
+    <!-- Save Labor Plan Dialog -->
+    <string name="labor_plan_title">Save</string>
+    <string name="labor_plan_question">Are you sure you want to save labor plan?</string>
+
+
 </resources>

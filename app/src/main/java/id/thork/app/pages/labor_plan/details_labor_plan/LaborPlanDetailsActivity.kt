@@ -34,7 +34,7 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
     var taskdesc: String? = null
     var taskrefwonum: String? = null
     private lateinit var customDialogUtils: CustomDialogUtils
-
+    private var saveValidation: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -201,26 +201,8 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
         super.setupListener()
         goToAnotherAct()
         binding.btnSaveLaborPlan.setOnClickListener {
-            val laborcode = binding.tvLabor.text
-            val craft = binding.tvCraft.text
-            Timber.d(
-                "setupListener() save labor plan : %s %s %s",
-                laborcode,
-                craft,
-                taskid.toString()
-            )
-            laborPlanEntity.whatIfNotNull {
-                viewModels.updateToLocalCache(
-                    it,
-                    laborcode.toString(),
-                    taskid.toString(),
-                    taskdesc.toString(),
-                    taskrefwonum.toString(),
-                    craft.toString(),
-                )
-            }
-            navigateToLaborPlan()
-
+            saveValidation = true
+            dialogSaveLaborplan()
         }
 
         binding.btnDelete.setOnClickListener {
@@ -234,6 +216,15 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
         customDialogUtils.setRightButtonText(R.string.dialog_yes)
         customDialogUtils.setLeftButtonText(R.string.dialog_no)
         customDialogUtils.setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun dialogSaveLaborplan() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.labor_plan_title)
+            .setDescription(R.string.labor_plan_question)
+            .setListener(this)
         customDialogUtils.show()
     }
 
@@ -257,28 +248,57 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
 
     override fun onDestroy() {
         super.onDestroy()
+        saveValidation = false
         customDialogUtils.dismiss()
     }
 
     override fun onPause() {
         super.onPause()
+        saveValidation = false
         customDialogUtils.dismiss()
     }
 
-
     override fun onRightButton() {
-        laborPlanEntity.whatIfNotNull {
-            viewModels.removeLaborPlanEntity(it, woCache)
-            navigateToLaborPlan()
+        if(saveValidation) {
+            savelaborplan()
+        } else {
+            laborPlanEntity.whatIfNotNull {
+                viewModels.removeLaborPlanEntity(it, woCache)
+                navigateToLaborPlan()
+            }
         }
+
     }
 
     override fun onLeftButton() {
+        saveValidation = false
         customDialogUtils.dismiss()
     }
 
     override fun onMiddleButton() {
         customDialogUtils.dismiss()
+    }
+
+    private fun savelaborplan() {
+        val labor = binding.tvLabor.text
+        val craft = binding.tvCraft.text
+        Timber.d(
+            "savelaborplan() save labor plan : %s %s %s",
+            labor,
+            craft,
+            taskid.toString()
+        )
+        laborPlanEntity.whatIfNotNull {
+            viewModels.updateToLocalCache(
+                it,
+                labor.toString(),
+                taskid.toString(),
+                taskdesc.toString(),
+                taskrefwonum.toString(),
+                craft.toString(),
+            )
+        }
+        navigateToLaborPlan()
     }
 
 }
