@@ -154,7 +154,7 @@ class WoCacheDaoImp : WoCacheDao {
     override fun findListWoByStatusOffset(offset: Int, vararg status: String): List<WoCacheEntity> {
         return woCacheEntityBox.query()
             .`in`(WoCacheEntity_.status, status).build()
-            .find(offset.toLong(), 10)
+            .find(offset.toLong(), 20)
     }
 
     override fun findListWoByStatusOffsetAndRfid(
