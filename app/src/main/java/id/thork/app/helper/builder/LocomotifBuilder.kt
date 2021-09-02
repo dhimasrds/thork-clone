@@ -54,6 +54,7 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
     private val LOCOMOTIF = "LOCOMOTIF"
     private val LOCOMOTIF_DATEFORMAT = "dd/MM/yyyy"
     private val locomotifDateFormat = SimpleDateFormat(LOCOMOTIF_DATEFORMAT, Locale.UK)
+    private var toast : Toast? = null
 
     private val TITLE_SIZE = 18F
 
@@ -726,8 +727,9 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
                     fieldsEmptyValidator.size, fieldValidator
                 )
                 textWidget.setError("$fieldValidator can't empty")
-
                 Toast.makeText(context, R.string.general_required_fields, Toast.LENGTH_SHORT).show()
+//                toast =  Toast.makeText(context, R.string.general_required_fields, Toast.LENGTH_SHORT)
+//                toast?.show()
             }
             return false
         }

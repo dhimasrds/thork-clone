@@ -119,7 +119,7 @@ class WoActivityRepository constructor(
     ) =
         Pager(
             config = PagingConfig(
-                pageSize = 10,
+                pageSize = 20,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
@@ -145,7 +145,7 @@ class WoActivityRepository constructor(
     ) =
         Pager(
             config = PagingConfig(
-                pageSize = 10,
+                pageSize = 20,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {

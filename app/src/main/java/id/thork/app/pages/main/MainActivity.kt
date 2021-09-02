@@ -60,6 +60,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         super.setupView()
         setupMainView(binding.mainLayout)
 
+        viewModel.reInitAppSession()
         setupToolbarWithHomeNavigation(
             getString(R.string.this_fsm), navigation = true,
             filter = true, scannerIcon = false,

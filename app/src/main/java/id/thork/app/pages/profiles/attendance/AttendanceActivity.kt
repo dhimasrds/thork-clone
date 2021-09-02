@@ -21,12 +21,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.location.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skydoves.whatif.whatIf
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
+import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.databinding.ActivityAttandenceBinding
 import id.thork.app.network.GlideApp
@@ -37,6 +39,7 @@ import id.thork.app.pages.profiles.history_attendance.HistoryAttendanceActivity
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.FileUtils
 import id.thork.app.utils.IntentUtils
+import id.thork.app.utils.MapsUtils
 import timber.log.Timber
 import java.util.*
 
@@ -47,6 +50,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
     private lateinit var dialogUtils: DialogUtils
     private lateinit var locationManager: LocationManager
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var customDialogUtils: CustomDialogUtils
     private var latitudey: Double? = null
     private var longitudex: Double? = null
@@ -63,8 +67,12 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             vm = viewModels
         }
 
-        customDialogUtils = CustomDialogUtils(this)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        getDeviceLocation()
         locationManager = (getSystemService(LOCATION_SERVICE) as LocationManager)
+        pickLocation()
+        customDialogUtils = CustomDialogUtils(this)
+
 
         setupToolbarWithHomeNavigation(
             getString(R.string.attendance),
@@ -77,7 +85,6 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         )
 
         setupDialog()
-        pickLocation()
         displayCheckin()
     }
 
@@ -99,6 +106,25 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
         binding.deleteImage.setOnClickListener {
             setDialogDeleteImage()
+        }
+    }
+
+    private fun getDeviceLocation() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+                val locationResult = fusedLocationProviderClient.lastLocation
+                locationResult.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        longitudex = it.result?.longitude
+                        latitudey = it.result?.latitude
+                        binding.tvLocation.text = "$latitudey , $longitudex"
+                    }
+            }
+        } catch (e: SecurityException) {
+            Timber.d("getDeviceLocation(): %s", e.message)
         }
     }
 
@@ -243,10 +269,11 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             // Request location updates
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                0L,
+                5000,
                 0f,
                 locationListener
             )
+            Timber.tag(TAG).d("pickLocation()")
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
@@ -255,6 +282,7 @@ class AttendanceActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
     private val locationListener: LocationListener = object : LocationListener {
         @SuppressLint("SetTextI18n")
         override fun onLocationChanged(location: Location) {
+            Timber.tag(TAG).d("onLocationChanged() ")
             latitudey = location.latitude
             longitudex = location.longitude
             binding.tvLocation.text = "$latitudey , $longitudex"

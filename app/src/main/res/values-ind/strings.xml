@@ -563,6 +563,7 @@
     <string name="task_actual_required">Actual Start tidak boleh kosong</string>
     <string name="task_summary_required">Summary tidak boleh kosong</string>
     <string name="task_type_required">Type tidak boleh kosong</string>
+    <string name="server_did_not_response">Server did not response, please try again</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>
