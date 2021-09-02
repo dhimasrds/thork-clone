@@ -37,7 +37,7 @@
             android:focusable="false"
             android:fontFamily="@font/opensans_regular"
             android:hint="@string/search_here"
-            android:inputType="textVisiblePassword|textNoSuggestions"
+            android:inputType="textNoSuggestions"
             android:maxLines="1"
             android:padding="@dimen/general_padding_10dp"
             android:textColor="@color/white"
