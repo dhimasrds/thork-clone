@@ -173,6 +173,7 @@ class LoginViewModel @ViewModelInject constructor(
         var member: Member
         userResponse.member.whatIfNotNullOrEmpty(
             whatIf = {
+                _fetchProgressVisible.postValue(true)
                 Timber.tag(TAG).d("fetchUserData() user response: %s", userResponse.member)
                 member = userResponse.member[0]
                 val isFirstLogin = userIsFirstLogin(member, username, userHash)
@@ -180,7 +181,6 @@ class LoginViewModel @ViewModelInject constructor(
                 _loginState.postValue(BaseParam.APP_TRUE)
                 appSession.reinitUser()
                 // When user founded and stored into cache, then hide progressbarSet
-                _fetchProgressVisible.postValue(true)
                 fetchSystemProperties(userHash, username)
             },
             whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
