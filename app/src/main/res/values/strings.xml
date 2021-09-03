@@ -580,6 +580,7 @@
     <string name="task_summary_required">Summary can\'t empty</string>
     <string name="task_type_required">Type can\'t empty</string>
     <string name="server_did_not_response">Server did not response, please try again</string>
+    <string name="Do_you_want_to_switch_user">Do you want to switch user?</string>
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>
