@@ -38,7 +38,6 @@
             android:exported="true" />
         <activity android:name=".pages.labor_actual.create_labor_actual.CreateLaborActualActivity" />
         <activity android:name=".pages.labor_actual.LaborActualActivity" />
-        <activity android:name=".pages.attachment.element.signature.SignatureActivity" />
         <activity android:name=".pages.profiles.history_attendance.HistoryAttendanceDetailsActivity" />
         <activity android:name=".pages.labor_plan.SelectLaborActivity" />
         <activity android:name=".pages.labor_plan.SelectCraftActivity" />
@@ -54,11 +53,7 @@
         <activity android:name=".pages.work_log.WorkLogActivity" />
         <activity android:name=".pages.work_log.detail_work_log.DetailWorkLogActivity" />
         <activity android:name=".pages.rfid_create_wo_material.RfidMaterialctivity" />
-        <activity android:name=".pages.material_actual.element.detail_material_actual.MaterialActualDetail" />
-        <activity android:name=".pages.material_actual.element.material_actual_item_master.MaterialActualItem" />
         <activity android:name=".pages.material_plan.element.form.MaterialPlanFormActivity" />
-        <activity android:name=".pages.material_plan.element.material_plan_list_item_master.MaterialPlanItem" />
-        <activity android:name=".pages.material_plan.element.detail_material_plan.MaterialPlanDetail" />
         <activity android:name=".pages.material_actual.element.form.MaterialActualFormActivity" />
         <activity android:name=".pages.material_actual.MaterialActualActivity" />
         <activity android:name=".pages.followup_wo.FollowUpWoActivity" />

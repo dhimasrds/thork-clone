@@ -66,7 +66,10 @@
                             android:focusable="true"
                             android:clickable="true"
                             android:background="@drawable/ripple_effect"
-                            android:src="@drawable/ic_cross" />
+                            android:src="@drawable/ic_cross"
+                            />
+
+
                     </LinearLayout>
 
                 </LinearLayout>

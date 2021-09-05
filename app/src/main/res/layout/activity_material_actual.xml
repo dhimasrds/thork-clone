@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/general_margin_8dp"
         android:layout_marginRight="@dimen/general_margin_8dp"
-        tools:context=".pages.material_plan.MaterialPlanActivity">
+        tools:context=".pages.material_actual.MaterialActualActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -47,7 +47,6 @@
             android:id="@+id/layout_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4"
             android:layout_marginTop="@dimen/general_margin_10dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/app_bar"
@@ -55,26 +54,14 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/et_find_material"
-                android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_rounded_edit_text"
+                android:textCursorDrawable="@null"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@null"
-                app:queryHint="@string/search_material"
+                app:queryHint="@string/material_actual_search"
                 app:searchIcon="@drawable/ic_search" />
-
-
-
-                <Button
-                    android:id="@+id/btn_add"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:padding="10dp"
-                    android:text="Add"
-                    android:textAllCaps="false" />
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -93,5 +80,29 @@
             app:layout_constraintTop_toBottomOf="@+id/layout_search"
             app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/cardview_findmaterial" />
+
+        <LinearLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_margin_12dp"
+                android:layout_marginTop="@dimen/general_margin_12dp"
+                android:layout_marginEnd="@dimen/general_margin_12dp"
+                android:layout_marginBottom="@dimen/general_margin_12dp"
+                android:background="@drawable/ic_rectangle_528"
+                android:text="@string/material_actual_create"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

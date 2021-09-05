@@ -436,6 +436,10 @@
     <string name="material_plan_create">Create Material Plan</string>
     <string name="material_plan_delete">Do you want to delete material plan record?</string>
 
+    <!-- Material Actual -->
+    <string name="material_actual_search">Enter Material Code</string>
+    <string name="material_actual_create">Create Material Actual</string>
+    <string name="material_actual_delete">Do you want to delete material actual record?</string>
 
     <string name="note">Notes</string>
     <string name="list_material">List of Material</string>

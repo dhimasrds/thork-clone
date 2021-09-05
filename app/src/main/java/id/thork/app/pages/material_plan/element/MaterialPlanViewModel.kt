@@ -20,20 +20,20 @@ import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.MaterialRepository
+import id.thork.app.repository.WpMaterialRepository
 
 class MaterialPlanViewModel @ViewModelInject constructor(
     private val context: Context,
-    private val materialRepository: MaterialRepository
+    private val wpMaterialRepository: WpMaterialRepository,
 ) : LiveCoroutinesViewModel() {
     val TAG = MaterialPlanViewModel::class.java.name
 
     private val _listMaterial = MutableLiveData<List<WpmaterialEntity>>()
-
     val listMaterial: LiveData<List<WpmaterialEntity>> get() = _listMaterial
 
 
     fun initListMaterialPlan(workorderid: String) {
-        val materialPlan = materialRepository.getListMaterialPlanByWoid(workorderid.toInt())
+        val materialPlan = wpMaterialRepository.findListMaterialActualByWoid(workorderid.toInt())
         materialPlan.whatIfNotNull {
             _listMaterial.value = it
         }

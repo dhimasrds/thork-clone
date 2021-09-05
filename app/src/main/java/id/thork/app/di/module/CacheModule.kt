@@ -74,6 +74,12 @@ object CacheModule {
 
     @Singleton
     @Provides
+    fun provideMaterialActualDao(): MaterialActualDao {
+        return MaterialActualDaoImp()
+    }
+
+    @Singleton
+    @Provides
     fun provideMatusetransDao(): MatusetransDao {
         return MatusetransDaoImp()
     }

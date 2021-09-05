@@ -23,17 +23,27 @@
         <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_actual_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_material_actual.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_material_actual_detail.xml" value="0.10280797101449275" />
+        <entry key="app/src/main/res/layout/activity_material_actual_form.xml" value="0.1358695652173913" />
+        <entry key="app/src/main/res/layout/activity_material_actual_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_material_plan.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_material_plan_form.xml" value="0.1358695652173913" />
         <entry key="app/src/main/res/layout/activity_select_labor.xml" value="0.10733695652173914" />
         <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.22131147540983606" />
+        <entry key="app/src/main/res/layout/cardview_findmaterial.xml" value="0.11822916666666666" />
         <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.12" />
         <entry key="app/src/main/res/layout/fragment_activity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.18" />
         <entry key="app/src/main/res/layout/load_state_view.xml" value="0.3006711409395973" />
         <entry key="app/src/main/res/layout/locomotif_dialog.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/material_actual_item.xml" value="0.11822916666666666" />
+        <entry key="app/src/main/res/layout/material_actual_item_extension.xml" value="0.1358695652173913" />
+        <entry key="app/src/main/res/layout/material_plan_item.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/material_plan_item_extension.xml" value="0.1358695652173913" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.25" />
       </map>
     </option>

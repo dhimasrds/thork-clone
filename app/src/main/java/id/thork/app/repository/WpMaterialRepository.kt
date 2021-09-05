@@ -42,4 +42,8 @@ class WpMaterialRepository @Inject constructor(
     fun getMaterialPlanByIdAndWoId(id: Long, woId: Int): WpmaterialEntity? {
         return wpmaterialDao.findByIdAndWoId(id, woId)
     }
+
+    fun findListMaterialActualByWoid(woId: Int): List<WpmaterialEntity> {
+        return wpmaterialDao.findListMaterialActualByWoid(woId)
+    }
 }

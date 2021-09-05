@@ -352,9 +352,6 @@ class MaterialPlanFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDialo
                 if (intentState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
                     direqReq.isEnabled = false
                 }
-//                locomotifBuilder?.forField("itemNum")?.
-//                isRequired(true)?.
-//                setValue("")
             } else if (value.equals("MATERIAL")) {
                 itemNumGroup.visibility = View.GONE
                 direqReq.isChecked = true

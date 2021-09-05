@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 by This.ID, Indonesia . All Rights Reserved.
+  ~
+  ~ This software is the confidential and proprietary information of
+  ~ This.ID. ("Confidential Information").
+  ~
+  ~ Such Confidential Information shall not be disclosed and shall
+  ~ use it only	 in accordance with the terms of the license agreement
+  ~ entered into with This.ID; other than in accordance with the written
+  ~ permission of This.ID.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="2">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_rfid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/ic_rfid_detail_wo"
+        tools:ignore="NestedWeights" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_qrcode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/ic_qrcode_detail_wo" />
+
+</LinearLayout>

@@ -410,6 +410,11 @@
     <string name="material_plan_create">Tambah Material Plan</string>
     <string name="material_plan_delete">Apakah anda akan menghapus record material plan?</string>
 
+    <!-- Material Actual -->
+    <string name="material_actual_search">Masukkan Material Code</string>
+    <string name="material_actual_create">Tambah Material Actual</string>
+    <string name="material_actual_delete">Apakah anda akan menghapus record material actual?</string>
+
     <!-- Permission -->
     <string name="permission_location">We need your location permission to show Workorder on map</string>
 

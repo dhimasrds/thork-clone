@@ -68,6 +68,28 @@ object WorkOrderRepositoryModule {
 
     @Provides
     @ActivityRetainedScoped
+    fun provideWpMaterialRepository(
+        appSession: AppSession,
+    ): WpMaterialRepository {
+        return WpMaterialRepository(
+            WpmaterialDaoImp(),
+            appSession
+        )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideMaterialActualRepository(
+        appSession: AppSession,
+    ): MaterialActualRepository {
+        return MaterialActualRepository(
+            MaterialActualDaoImp(),
+            appSession
+        )
+    }
+
+    @Provides
+    @ActivityRetainedScoped
     fun provideAttachmentRepository(
         context: Context,
         preferenceManager: PreferenceManager,

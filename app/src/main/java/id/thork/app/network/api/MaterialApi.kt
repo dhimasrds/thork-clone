@@ -25,18 +25,18 @@ import retrofit2.http.Query
  * Jakarta, Indonesia.
  */
 interface MaterialApi {
-
-    @GET("maximo/oslc/os/THISFSMITEM")
-    suspend fun getMaterials(
-        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
-        @Query(value = "lean") lean: Int
-    ): ApiResponse<MaterialResponse>
-
-    @GET("maximo/oslc/os/THISFSMSTOREROOM?")
-    suspend fun getStoreroom(
-        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
-        @Query(value = "lean") lean: Int,
-        @Query(value = "oslc.select") select: String,
-        @Query(value = "oslc.where") where: String
-    ): ApiResponse<StoreroomResponse>
+//AKAN DIHAPUS
+//    @GET("maximo/oslc/os/THISFSMITEM")
+//    suspend fun getMaterials(
+//        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+//        @Query(value = "lean") lean: Int
+//    ): ApiResponse<MaterialResponse>
+//
+//    @GET("maximo/oslc/os/THISFSMSTOREROOM?")
+//    suspend fun getStoreroom(
+//        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+//        @Query(value = "lean") lean: Int,
+//        @Query(value = "oslc.select") select: String,
+//        @Query(value = "oslc.where") where: String
+//    ): ApiResponse<StoreroomResponse>
 }

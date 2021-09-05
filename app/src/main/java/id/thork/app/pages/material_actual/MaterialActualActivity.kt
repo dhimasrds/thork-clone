@@ -30,24 +30,26 @@ import id.thork.app.di.module.PreferenceManager
 import id.thork.app.pages.material_actual.element.MaterialActualAdapter
 import id.thork.app.pages.material_actual.element.MaterialActualViewModel
 import id.thork.app.pages.material_actual.element.form.MaterialActualFormActivity
-import id.thork.app.persistence.entity.MatusetransEntity
+import id.thork.app.pages.material_plan.element.form.MaterialPlanFormActivity
+import id.thork.app.persistence.entity.MaterialActualEntity
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
-class MaterialActualActivity : BaseActivity() {
+class MaterialActualActivity : BaseActivity(), MaterialActualAdapter.MaterialActualAdapterItemClickListener {
     val TAG = MaterialActualActivity::class.java.name
 
     val viewModel: MaterialActualViewModel by viewModels()
     private val binding: ActivityMaterialActualBinding by binding(R.layout.activity_material_actual)
 
     private lateinit var materialActualAdapter: MaterialActualAdapter
-    private lateinit var matusetranslist: MutableList<MatusetransEntity>
+    private lateinit var materialActualEntityList: MutableList<MaterialActualEntity>
 
     private var intentWoId = 0
     private var status: String? = null
+    private var intentState: String? = BaseParam.FORM_STATE_READ_ONLY
 
     @Inject
     @Named("svgRequestOption")
@@ -58,9 +60,9 @@ class MaterialActualActivity : BaseActivity() {
 
     override fun setupView() {
         super.setupView()
-        matusetranslist = mutableListOf()
+        materialActualEntityList = mutableListOf()
         materialActualAdapter =
-            MaterialActualAdapter(this, preferenceManager, svgRequestOptions, matusetranslist, this)
+            MaterialActualAdapter(this, preferenceManager, svgRequestOptions, materialActualEntityList, this)
 
         binding.apply {
             lifecycleOwner = this@MaterialActualActivity
@@ -75,6 +77,7 @@ class MaterialActualActivity : BaseActivity() {
                     )
                 )
                 adapter = materialActualAdapter
+                setUpFilterListener()
             }
         }
 
@@ -87,7 +90,6 @@ class MaterialActualActivity : BaseActivity() {
             option = false,
             historyAttendanceIcon = false
         )
-        setUpFilterListener()
         retrieveFromIntent()
         validationView()
     }
@@ -103,6 +105,7 @@ class MaterialActualActivity : BaseActivity() {
         binding.btnAdd.setOnClickListener {
             val intent = Intent(this, MaterialActualFormActivity::class.java)
             intent.putExtra(BaseParam.WORKORDERID, intentWoId)
+            intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_NEW)
             startActivity(intent)
             finish()
         }
@@ -110,28 +113,29 @@ class MaterialActualActivity : BaseActivity() {
 
     private fun retrieveFromIntent() {
         intentWoId = intent.getIntExtra(BaseParam.WORKORDERID, 0)
+        intentState = intent.getStringExtra(BaseParam.FORM_STATE)
         status = intent.getStringExtra(BaseParam.STATUS)
         Timber.d("retrieveFromIntent() intentWoId: %s", intentWoId)
+        viewModel.initListMaterialActual(intentWoId.toString())
+        intentState.whatIfNotNull {
+            if (it.equals(BaseParam.FORM_STATE_READ_ONLY)) {
+                binding.btnLayout.visibility = View.GONE
+            }
+        }
         viewModel.initListMaterialActual(intentWoId.toString())
     }
 
     override fun setupObserver() {
         super.setupObserver()
         viewModel.listMaterial.observe(this, Observer {
-            matusetranslist.clear()
-            matusetranslist.addAll(it)
+            materialActualEntityList.clear()
+            materialActualEntityList.addAll(it)
             materialActualAdapter.notifyDataSetChanged()
         })
 
         viewModel.result.observe(this, Observer {
             viewModel.initListMaterialActual(intentWoId.toString())
         })
-    }
-
-    fun deleteMaterial(itemnum: String?) {
-        itemnum.whatIfNotNull {
-            viewModel.deleteMaterial(itemnum.toString(), intentWoId.toString())
-        }
     }
 
     private fun setUpFilterListener() {
@@ -149,5 +153,19 @@ class MaterialActualActivity : BaseActivity() {
                 }
             })
         }
+    }
+
+    override fun onClickItem(materialActualEntity: MaterialActualEntity) {
+        Timber.tag(TAG).d("onClickItem() woId: %s id: %s", materialActualEntity.workorderId,
+            materialActualEntity.id)
+        val intent = Intent(this, MaterialActualFormActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, materialActualEntity.workorderId)
+        intent.putExtra(BaseParam.ID, materialActualEntity.id)
+        if (intentState.equals(BaseParam.FORM_STATE_NEW)) {
+            intentState = BaseParam.FORM_STATE_EDIT
+        }
+        intent.putExtra(BaseParam.FORM_STATE, intentState)
+        startActivity(intent)
+        finish()
     }
 }
