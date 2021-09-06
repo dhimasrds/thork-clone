@@ -79,6 +79,10 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
     }
 
+    fun findlaborPlanByObjectboxId(objectboxid: Long) : LaborPlanEntity? {
+        return laborPlanDao.findlaborPlanByObjectBoxid(objectboxid)
+    }
+
     fun findListLaborPlanBySyncUpdateAndLocally(
         syncupdate: Int,
         isLocally: Int

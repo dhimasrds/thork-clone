@@ -190,7 +190,7 @@ object BaseParam {
     const val ACTUAL_START_TIME = "ACTUAL_START_TIME"
     const val LABORCODE = "LABORCODE"
     const val CRAFT = "CRAFT"
-
+    const val OBJECTBOXID = "OBJECTBOXID"
     const val PRIORITY = "PRIORITY"
 
     /**

@@ -163,5 +163,18 @@ class LaborPlanDaoImp : LaborPlanDao {
         build().find()
     }
 
+    override fun findlaborPlanByObjectBoxid(
+        objectboxid: Long
+    ): LaborPlanEntity? {
+        val laborPlanEntity =
+            laborPlanEntityBox.query().equal(LaborPlanEntity_.id, objectboxid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
 
 }

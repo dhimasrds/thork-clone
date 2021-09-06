@@ -178,22 +178,10 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
         intentWorkorderid = intent.getStringExtra(BaseParam.WORKORDERID)
         intentLaborcode = intent.getStringExtra(BaseParam.LABORCODE)
         intentCraft = intent.getStringExtra(BaseParam.CRAFT)
-
+        val intentObjectboxid = intent.getLongExtra(BaseParam.OBJECTBOXID, 0)
         Timber.tag(TAG)
             .d("retriveFromIntent() laborcode: %s & craft: %s", intentLaborcode, intentCraft)
-
-        intentLaborcode.whatIfNotNull(
-            whatIf = {
-                viewModels.fetchLaborPlanByLaborCode(it, intentWorkorderid.toString())
-            },
-            whatIfNot = {
-                Timber.tag(TAG).d("retriveFromIntent() craft")
-                viewModels.fetchLaborPlanByCraft(
-                    intentCraft.toString(),
-                    intentWorkorderid.toString()
-                )
-            }
-        )
+        viewModels.fetchLaborPlanByObjectboxid(intentObjectboxid)
         viewModels.fetchWoCache(intentWonum.toString())
     }
 
@@ -259,7 +247,7 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
     }
 
     override fun onRightButton() {
-        if(saveValidation) {
+        if (saveValidation) {
             savelaborplan()
         } else {
             laborPlanEntity.whatIfNotNull {

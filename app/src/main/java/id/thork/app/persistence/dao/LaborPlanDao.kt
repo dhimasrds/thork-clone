@@ -33,4 +33,6 @@ interface LaborPlanDao {
         syncupdate: Int,
         isLocally: Int
     ): List<LaborPlanEntity>
+
+    fun findlaborPlanByObjectBoxid(objectboxid: Long): LaborPlanEntity?
 }

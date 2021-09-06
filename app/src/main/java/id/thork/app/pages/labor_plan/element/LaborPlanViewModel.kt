@@ -62,15 +62,8 @@ class LaborPlanViewModel @ViewModelInject constructor(
         }
     }
 
-    fun fetchLaborPlanByLaborCode(laborcode: String, workorderid: String) {
-        val laborCache = laborRepository.findLaborPlan(laborcode, workorderid)
-        laborCache.whatIfNotNull {
-            _laborPlanCache.value = it
-        }
-    }
-
-    fun fetchLaborPlanByCraft(craft: String, workroderid: String) {
-        val laborCache = laborRepository.findLaborPlanByCraft(craft, workroderid)
+    fun fetchLaborPlanByObjectboxid(objectboxid : Long) {
+        val laborCache = laborRepository.findlaborPlanByObjectboxId(objectboxid)
         laborCache.whatIfNotNull {
             _laborPlanCache.value = it
         }

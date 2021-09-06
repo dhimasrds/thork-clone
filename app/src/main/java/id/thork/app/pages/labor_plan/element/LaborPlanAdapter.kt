@@ -61,6 +61,7 @@ class LaborPlanAdapter constructor(
                     intent.putExtra(BaseParam.WORKORDERID, laborPlanEntity.workorderid)
                     intent.putExtra(BaseParam.LABORCODE, laborPlanEntity.laborcode)
                     intent.putExtra(BaseParam.CRAFT, laborPlanEntity.craft)
+                    intent.putExtra(BaseParam.OBJECTBOXID, laborPlanEntity.id)
                     activity.startActivity(intent)
                     activity.finish()
                 }
