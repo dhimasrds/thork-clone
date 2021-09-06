@@ -1,6 +1,5 @@
 package id.thork.app.repository
 
-import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.sandwich.message
@@ -9,7 +8,6 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
-import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.base.MxResponse
@@ -67,7 +65,7 @@ class LoginRepository constructor(
     }
 
     fun createSystemProperties(sysPropEntity: SysPropEntity, username: String) {
-        return sysPropDao.save(sysPropEntity, username);
+        return sysPropDao.save(sysPropEntity, username)
     }
 
     fun deleteSystemProperties() {
@@ -86,7 +84,7 @@ class LoginRepository constructor(
         return sysResDao.remove()
     }
 
-    fun createListSystemResource(sysResEntityList: List<SysResEntity>) : List<SysResEntity> {
+    fun createListSystemResource(sysResEntityList: List<SysResEntity>): List<SysResEntity> {
         return sysResDao.saveListSystemResource(sysResEntityList)
     }
 
@@ -133,7 +131,7 @@ class LoginRepository constructor(
                 //Save user session into local cache
                 val cookielist: List<String> = headers.values("Set-Cookie")
                 onSuccess(response)
-                Timber.tag(TAG).i("loginCookie() cookielist: %s",cookielist)
+                Timber.tag(TAG).i("loginCookie() cookielist: %s", cookielist)
                 if (!cookielist.isEmpty()) {
                     val jsessionid = cookielist[0].split(";").toTypedArray()[0]
                     preferenceManager.putString(BaseParam.APP_MX_COOKIE, jsessionid)

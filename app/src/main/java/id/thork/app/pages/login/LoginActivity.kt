@@ -13,6 +13,7 @@
 package id.thork.app.pages.login
 
 import android.content.Intent
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -34,9 +35,6 @@ class LoginActivity : BaseActivity(),
     val loginViewModel: LoginViewModel by viewModels()
     private val binding: ActivityLoginBinding by binding(R.layout.activity_login)
     private lateinit var customDialogUtils: CustomDialogUtils
-
-    companion object {
-    }
 
     override fun setupView() {
         super.setupView()
@@ -91,6 +89,40 @@ class LoginActivity : BaseActivity(),
                         R.color.colorBlack
                     )
                 )
+            }
+        })
+
+        loginViewModel.progressVisible.observe(this, Observer {
+            if (it) {
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                )
+                binding.includeLoginContent.password.isEnabled = false
+                binding.includeLoginContent.username.isEnabled = false
+            } else {
+                window.clearFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                )
+                binding.includeLoginContent.password.isEnabled = true
+                binding.includeLoginContent.username.isEnabled = true
+            }
+        })
+
+        loginViewModel.fetchProgressVisible.observe(this, Observer {
+            if (it) {
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                )
+                binding.includeLoginContent.password.isEnabled = false
+                binding.includeLoginContent.username.isEnabled = false
+            } else {
+                window.clearFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                )
+                binding.includeLoginContent.password.isEnabled = true
+                binding.includeLoginContent.username.isEnabled = true
             }
         })
 

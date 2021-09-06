@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:background="@color/transparant"
-                android:inputType="textMultiLine|textVisiblePassword"
+                android:inputType="textMultiLine"
                 android:drawableStart="@drawable/ic_date_black"
                 android:drawablePadding="@dimen/general_padding_5dp"
                 android:fontFamily="@font/roboto_regular"
@@ -84,7 +84,7 @@
                 android:fontFamily="@font/roboto_regular"
                 android:textColor="@color/colorBlack"
                 android:background="@color/transparant"
-                android:inputType="textMultiLine|textVisiblePassword"
+                android:inputType="textMultiLine"
                 android:hint="End date" />
 
             <LinearLayout
