@@ -35,9 +35,6 @@ class LoginActivity : BaseActivity(),
     private val binding: ActivityLoginBinding by binding(R.layout.activity_login)
     private lateinit var customDialogUtils: CustomDialogUtils
 
-    companion object {
-    }
-
     override fun setupView() {
         super.setupView()
         binding.apply {

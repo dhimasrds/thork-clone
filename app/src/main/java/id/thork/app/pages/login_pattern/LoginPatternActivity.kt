@@ -110,7 +110,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
 
         loginPatternViewModel.switchUser.observe(this, {
             if (it == BaseParam.APP_TRUE) {
-                navigateToServerAcitivity()
+                navigateToServerActivity()
             }
         })
     }
@@ -277,7 +277,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         }
     }
 
-    private fun navigateToServerAcitivity() {
+    private fun navigateToServerActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
