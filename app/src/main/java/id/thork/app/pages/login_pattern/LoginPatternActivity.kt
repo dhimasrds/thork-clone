@@ -25,10 +25,10 @@ import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityLoginPatternBinding
 import id.thork.app.pages.CustomDialogUtils
+import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
-import id.thork.app.pages.server.ServerActivity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import java.util.*
@@ -45,6 +45,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private var patternState = BaseParam.APP_FALSE
     private var tempPattern = BaseParam.APP_EMPTY_STRING
     private var changePatternSetting = BaseParam.APP_EMPTY_STRING
+    private var isSwitch = false
 
     @SuppressLint("NewApi")
     override fun setupView() {
@@ -68,7 +69,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         val pInfo = packageManager.getPackageInfo(packageName, 0)
         binding.tvVersion.text = BaseParam.APP_VERSION + pInfo.versionName
         binding.btnSwitchUser.setOnClickListener {
-            loginPatternViewModel.switchUser()
+            isSwitch = true
+            switchUserConfirmation()
         }
     }
 
@@ -108,7 +110,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
 
         loginPatternViewModel.switchUser.observe(this, {
             if (it == BaseParam.APP_TRUE) {
-                navigateToServerAcitivity()
+                navigateToServerActivity()
             }
         })
     }
@@ -209,6 +211,15 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         customDialogUtils.show()
     }
 
+    private fun switchUserConfirmation() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.pattern_title)
+            .setDescription(R.string.Do_you_want_to_switch_user)
+            .setListener(this)
+        customDialogUtils.show()
+    }
+
     private fun showFailedReinputDialog() {
         customDialogUtils.setLeftButtonText(R.string.dialog_reset)
             .setRightButtonText(R.string.dialog_repeat)
@@ -232,13 +243,18 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             binding.etProfileName.text =
                 StringUtils.getStringResources(this, R.string.confim_pattern)
         }
-        clearPattern()
+        if (isSwitch){
+        loginPatternViewModel.switchUser()}
         customDialogUtils.dismiss()
+        clearPattern()
     }
 
     override fun onLeftButton() {
+        if(isSwitch){
+            customDialogUtils.dismiss()
+        }else{
         customDialogUtils.dismiss()
-        resetPattern()
+        resetPattern()}
     }
 
     override fun onMiddleButton() {
@@ -261,8 +277,8 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
         }
     }
 
-    private fun navigateToServerAcitivity() {
-        val intent = Intent(this, ServerActivity::class.java)
+    private fun navigateToServerActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
