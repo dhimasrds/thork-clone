@@ -27,7 +27,6 @@ import id.thork.app.di.module.ResourceProvider
 import id.thork.app.network.ApiParam
 import id.thork.app.network.model.user.Member
 import id.thork.app.network.model.user.UserResponse
-import id.thork.app.network.response.labor_response.LaborResponse
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.UserEntity
@@ -130,11 +129,9 @@ class LoginViewModel @ViewModelInject constructor(
             loginRepository.loginCookie(userHash,
                 onSuccess = {
                     fetchUserData(userHash, username)
-                    _progressVisible.postValue(false)
                     Timber.tag(TAG).i("loginCookie() sessionTime: %s", it.sessiontimeout.toString())
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
-                    _progressVisible.postValue(false)
                     _error.postValue(it)
                 })
         }
@@ -145,13 +142,12 @@ class LoginViewModel @ViewModelInject constructor(
         Timber.tag(TAG).i("fetchUserData()")
         val selectQuery = ApiParam.API_SELECT_ALL
         val whereQuery = ApiParam.LOGIN_WHERE_ENDPOINT + "\"" + username + "\"}"
-        var userResponse = UserResponse()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch user data via API
             loginRepository.loginPerson(selectQuery, whereQuery,
                 onSuccess = {
-                    userResponse = it
-                    Timber.tag(TAG).d("fetchUserData() loginPerson: %s", userResponse.member)
+                    saveCacheLogin(it, userHash, username)
+                    Timber.tag(TAG).d("fetchUserData() loginPerson: %s", it.member)
                 },
                 onError = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
@@ -168,26 +164,28 @@ class LoginViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     _error.postValue(it)
                 })
-
-            //Save user into cache
-            var member: Member
-            userResponse.member.whatIfNotNullOrEmpty(
-                whatIf = {
-                    Timber.tag(TAG).d("fetchUserData() user response: %s", userResponse.member)
-                    member = userResponse.member[0]
-                    val isFirstLogin = userIsFirstLogin(member, username, userHash)
-                    _firstLogin.postValue(isFirstLogin)
-                    _loginState.postValue(BaseParam.APP_TRUE)
-                    appSession.reinitUser()
-                },
-                whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
-            )
-
-            fetchSystemProperties(userHash)
-            fetchMasterDataLabor(userHash, username)
-            // When user founded and stored into cache, then hide progressbarSet
             _progressVisible.postValue(false)
         }
+    }
+
+    private fun saveCacheLogin(userResponse: UserResponse, userHash: String, username: String) {
+        //Save user into cache
+        var member: Member
+        userResponse.member.whatIfNotNullOrEmpty(
+            whatIf = {
+                _fetchProgressVisible.postValue(true)
+                Timber.tag(TAG).d("fetchUserData() user response: %s", userResponse.member)
+                member = userResponse.member[0]
+                val isFirstLogin = userIsFirstLogin(member, username, userHash)
+                _firstLogin.postValue(isFirstLogin)
+                _loginState.postValue(BaseParam.APP_TRUE)
+                appSession.reinitUser()
+                // When user founded and stored into cache, then hide progressbarSet
+                fetchSystemProperties(userHash, username)
+            },
+            whatIfNot = { _loginState.postValue(BaseParam.APP_FALSE) }
+        )
+        _fetchProgressVisible.postValue(false)
     }
 
     private fun userIsFirstLogin(member: Member, username: String, userHash: String): Boolean {
@@ -254,17 +252,15 @@ class LoginViewModel @ViewModelInject constructor(
         loginRepository.createUserSession(userEntity, username)
     }
 
-    private fun fetchSystemProperties(userHash: String) {
+    private fun fetchSystemProperties(userHash: String, username: String) {
         Timber.tag(TAG).i("fetchSystemProperties()")
-        _fetchProgressVisible.postValue(true)
-        _progressVisible.postValue(true)
         val selectQuery = ApiParam.API_SELECT_ALL
-        var systemProperties = id.thork.app.network.response.system_properties.SystemProperties()
         viewModelScope.launch(Dispatchers.IO) {
             //fetch system properties
             loginRepository.fetchSystemproperties(userHash, selectQuery,
                 onSuccess = {
-                    systemProperties = it
+                    saveSysProp(it)
+                    fetchMasterDataLabor(userHash, username)
                 },
                 onError = {
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
@@ -274,15 +270,17 @@ class LoginViewModel @ViewModelInject constructor(
                     Timber.tag(TAG).i("fetchSystemProperties() error: %s", it)
                     _error.postValue(it)
                 })
-
-            var member: id.thork.app.network.response.system_properties.Member
-            systemProperties.member.whatIfNotNullOrEmpty(
-                whatIf = {
-                    member = systemProperties.member?.get(0)!!
-                    saveSystemResource(member)
-                    saveSystemProperties(member)
-                })
         }
+    }
+
+    private fun saveSysProp(systemProperties: id.thork.app.network.response.system_properties.SystemProperties) {
+        var member: id.thork.app.network.response.system_properties.Member
+        systemProperties.member.whatIfNotNullOrEmpty(
+            whatIf = {
+                member = systemProperties.member?.get(0)!!
+                saveSystemResource(member)
+                saveSystemProperties(member)
+            })
     }
 
     private fun fetchMasterDataLabor(userHash: String, username: String) {
@@ -290,19 +288,20 @@ class LoginViewModel @ViewModelInject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             //fetch Master Data Labor
             loginRepository.fetchMasterDataLabor(userHash, selectQuery,
-            onSuccess = {
-                        it.member.whatIfNotNullOrEmpty {
-                            laborRepository.addMasterDataLaborToObjectBox(it, username)
-                        }
-            },
-            onError = {
-                Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
-                _error.postValue(it)
-            },
-            onException = {
-                Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
-                _error.postValue(it)
-            })
+                onSuccess = {
+                    it.member.whatIfNotNullOrEmpty {
+                        laborRepository.addMasterDataLaborToObjectBox(it, username)
+                    }
+                },
+                onError = {
+                    Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
+                    _error.postValue(it)
+                },
+                onException = {
+                    Timber.tag(TAG).i("fetchMasterDataLabor() error: %s", it)
+                    _error.postValue(it)
+                })
+            _fetchProgressVisible.postValue(false)
         }
     }
 
@@ -334,9 +333,6 @@ class LoginViewModel @ViewModelInject constructor(
                 Timber.tag(TAG).i("saveSystemProperties() add to object box")
             }
             loginRepository.createListSystemProperties(sysPropEntitylist)
-            _fetchProgressVisible.postValue(false)
-            _progressVisible.postValue(false)
-
         }
     }
 
