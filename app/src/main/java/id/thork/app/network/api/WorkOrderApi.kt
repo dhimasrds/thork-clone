@@ -110,5 +110,12 @@ interface WorkOrderApi {
         @Body body: Member?,
     ): ApiResponse<WorkOrderResponse>
 
+    // Delete LABOR PLAN
+    @DELETE("/{localref}")
+    suspend fun deleteLaborPlan(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Path("localref", encoded = true) localref: String?,
+    ) : ApiResponse<Void>
+
 
 }

@@ -87,7 +87,7 @@ class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionL
                     btnSaveLaborPlan.visibility = View.INVISIBLE
                 }
             }
-        })
+        })  
     }
 
     private fun goToAnotherAct() {

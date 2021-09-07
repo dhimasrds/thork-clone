@@ -1,5 +1,6 @@
 package id.thork.app.pages.labor_plan.element
 
+import android.net.Uri
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -292,10 +293,30 @@ class LaborPlanViewModel @ViewModelInject constructor(
 
     fun removeLaborPlanEntity(laborPlanEntity: LaborPlanEntity, woCache: Boolean) {
         laborRepository.removeLaborPlanByEntity(laborPlanEntity)
-        //TODO need api delete labor plan from maximo
-//        if(woCache) {
-//            //TODO Remove labor plan with api delete
-//
-//        }
+        if(woCache) {
+            //TODO Remove labor plan with api delete
+            val localref = laborPlanEntity.localRef
+            localref.whatIfNotNull {
+                deleteLaborPlanFromMx(it, laborPlanEntity)
+            }
+
+        }
+    }
+
+    private fun deleteLaborPlanFromMx(locaref : String, laborPlanEntity: LaborPlanEntity) {
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        viewModelScope.launch(Dispatchers.IO) {
+            workOrderRepository.deleteLaborPlan(
+                cookie, locaref,
+                onSuccess = {
+                    Timber.tag(TAG).i("deleteLaborPlanFromMx() onSuccess()")
+
+                },
+                onError = {
+                    Timber.tag(TAG).i("deleteLaborPlanFromMx() onError() onError: %s", it)
+                }
+
+            )
+        }
     }
 }

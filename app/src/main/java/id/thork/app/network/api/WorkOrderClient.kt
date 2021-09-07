@@ -94,6 +94,11 @@ class WorkOrderClient @Inject constructor(
             body
         )
 
+    suspend fun deleteLaborPlan(
+        cookie: String,
+        url : String
+    ) = workOrderApi.deleteLaborPlan(cookie,url)
+
     companion object {
         private const val LEAN = 1
     }

@@ -1001,4 +1001,23 @@ class WorkOrderRepository @Inject constructor(
             }
     }
 
+    suspend fun deleteLaborPlan(cookie: String, url : String,onSuccess: () -> Unit, onError: (String) -> Unit,) {
+        val response = workOrderClient.deleteLaborPlan(cookie, url)
+
+        response.suspendOnSuccess {
+            onSuccess()
+            Timber.tag(TAG).i("deleteLaborPlan() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG)
+                    .i("deleteLaborPlan() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+
+            .onException {
+                Timber.tag(TAG).i("deleteLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
+
 }

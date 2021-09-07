@@ -17,6 +17,7 @@ import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborMasterEntity
 import id.thork.app.persistence.entity.LaborPlanEntity
+import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -96,29 +97,32 @@ class LaborRepository @Inject constructor(
         woact.whatIfNotNullOrEmpty {
             it.forEach { task ->
                 task.wplabor.whatIfNotNullOrEmpty { listLabor ->
-                    listLabor.forEach {
+                    listLabor.forEach { wplabor ->
                         val laborCache = LaborPlanEntity()
-                        it.laborcode.whatIfNotNull { laborcode ->
+                        wplabor.laborcode.whatIfNotNull { laborcode ->
                             laborCache.laborcode = laborcode
                             laborCache.taskid = task.taskid.toString()
                             laborCache.taskDescription = task.description
                         }
 
-                        it.craft.whatIfNotNull { craft ->
+                        wplabor.craft.whatIfNotNull { craft ->
                             laborCache.craft = craft
-                            laborCache.skillLevel = it.skilllevel
+                            laborCache.skillLevel = wplabor.skilllevel
                         }
 
-                        it.vendor.whatIfNotNull { vendor ->
+                        wplabor.vendor.whatIfNotNull { vendor ->
                             laborCache.vendor = vendor
                         }
-                        laborCache.wplaborid = it.wplaborid.toString()
+                        laborCache.wplaborid = wplabor.wplaborid.toString()
                         laborCache.wonumHeader = member.wonum
                         laborCache.workorderid = member.workorderid.toString()
                         laborCache.wonumTask = task.wonum
                         laborCache.syncUpdate = BaseParam.APP_TRUE
                         laborCache.isTask = BaseParam.APP_TRUE
                         laborCache.isLocally = BaseParam.APP_TRUE
+                        wplabor.localref.whatIfNotNull { localref ->
+                            laborCache.localRef = StringUtils.subStringLocalref(localref)
+                        }
                         saveLaborPlanCache(laborCache)
                     }
                 }
@@ -147,6 +151,9 @@ class LaborRepository @Inject constructor(
                 laborCache.syncUpdate = BaseParam.APP_TRUE
                 laborCache.isTask = BaseParam.APP_FALSE
                 laborCache.isLocally = BaseParam.APP_TRUE
+                wplabor.localref.whatIfNotNull { localref ->
+                    laborCache.localRef = StringUtils.subStringLocalref(localref)
+                }
                 saveLaborPlanCache(laborCache)
             }
         }
@@ -300,6 +307,7 @@ class LaborRepository @Inject constructor(
         wpLaborList.whatIfNotNullOrEmpty { wplaborlist ->
             wplaborlist.forEach { wpLabor ->
                 val laborcode = wpLabor.laborcode
+                val localref = wpLabor.localref
                 Timber.tag(TAG)
                     .d("handlingLaborPlan() Laborcode %s woid %s", wpLabor.laborcode, tempwoid)
                 laborcode.whatIfNotNull(
@@ -316,6 +324,7 @@ class LaborRepository @Inject constructor(
                                 wplaborid,
                                 wonumheader.toString(),
                                 woidHeader.toString(),
+                                localref.toString()
                             )
                         }
                     },
@@ -333,6 +342,7 @@ class LaborRepository @Inject constructor(
                                 wplaborid,
                                 wonumheader.toString(),
                                 woidHeader.toString(),
+                                localref.toString()
                             )
                         }
                     }
@@ -346,12 +356,14 @@ class LaborRepository @Inject constructor(
         laborPlanEntity: LaborPlanEntity,
         wplaborid: String,
         wonumheader: String,
-        woidHeader: String
+        woidHeader: String,
+        localref : String
     ) {
         laborPlanEntity.wplaborid = wplaborid
         laborPlanEntity.wonumHeader = wonumheader
         laborPlanEntity.workorderid = woidHeader
         laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
+        laborPlanEntity.localRef = StringUtils.subStringLocalref(localref)
         laborPlanDao.createLaborPlanCache(laborPlanEntity, usernameGlobal)
     }
 
@@ -366,10 +378,9 @@ class LaborRepository @Inject constructor(
                 list.forEach {
                     it.wplabor.whatIfNotNullOrEmpty { wplabors ->
                         wplabors.forEach { labor ->
-                            val wplaborid = labor.wplaborid
                             laborPlanEntity.wonumTask = it.wonum
                             checkingLaborPlanExisting(
-                                wplaborid.toString(),
+                                labor,
                                 laborPlanEntity
                             )
                         }
@@ -379,8 +390,7 @@ class LaborRepository @Inject constructor(
         } else {
             listLpNonTask.whatIfNotNullOrEmpty {
                 it.forEach { wplabor ->
-                    val wplaborid = wplabor.wplaborid
-                    checkingLaborPlanExisting(wplaborid.toString(), laborPlanEntity)
+                    checkingLaborPlanExisting(wplabor, laborPlanEntity)
                 }
             }
         }
@@ -394,13 +404,16 @@ class LaborRepository @Inject constructor(
     }
 
     //Checking labor plan existing to replace wplaborid
-    private fun checkingLaborPlanExisting(wplaborid: String, laborPlanEntity: LaborPlanEntity) {
+    private fun checkingLaborPlanExisting(wplabor: Wplabor, laborPlanEntity: LaborPlanEntity) {
+        val wplaborid = wplabor.wplaborid.toString()
+        val localref = wplabor.localref.toString()
         val cacheLaborPlan = findLaborPlanByWplaborid(wplaborid)
         if (cacheLaborPlan == null) {
             Timber.tag(TAG).i("checkingLaborPlanExisting() update local cache after update")
             laborPlanEntity.wplaborid = wplaborid
             laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
             laborPlanEntity.isLocally = BaseParam.APP_TRUE
+            laborPlanEntity.localRef = StringUtils.subStringLocalref(localref)
             saveLaborPlanCache(laborPlanEntity)
         }
     }

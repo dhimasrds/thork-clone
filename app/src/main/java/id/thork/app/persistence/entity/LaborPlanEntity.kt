@@ -21,5 +21,6 @@ class LaborPlanEntity : BaseEntity(){
     var syncUpdate: Int? = null
     var isTask: Int? = null
     var isLocally: Int? = null
+    var localRef: String? = null
 
 }
