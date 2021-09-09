@@ -48,9 +48,11 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
+    private val _updateSucces = MutableLiveData<Int>()
 
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
+    val updateSucces: LiveData<Int> get() = _updateSucces
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
     private var username: String? = null
@@ -172,6 +174,7 @@ class CreateWoViewModel @ViewModelInject constructor(
                         Timber.tag(TAG).i("createWorkOrderOnline() list wp labor %s", it.size)
                         laborRepository.handlingLaborPlan(it, woMember, tempWoId.toString())
                     }
+                    _updateSucces.postValue(BaseParam.APP_TRUE)
 
 //                    workorderid.whatIfNotNull {
 //                        uploadAttachments(it)
