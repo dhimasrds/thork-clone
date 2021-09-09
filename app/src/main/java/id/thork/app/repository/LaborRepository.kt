@@ -465,6 +465,7 @@ class LaborRepository @Inject constructor(
                         laborActual.workorderid = member.workorderid.toString()
                         laborActual.wonumTask = task.wonum
                         laborActual.syncUpdate = BaseParam.APP_TRUE
+                        saveLaborActualCache(laborActual)
 
                         //TODO Adjustment time
 //                        val finishdatetime = DateUtils.convertMaximoDateToMillisec(member.date)
@@ -472,6 +473,31 @@ class LaborRepository @Inject constructor(
                     }
                 }
             }
+        }
+
+        val wolabtran = member.labtrans
+        wolabtran.whatIfNotNullOrEmpty { labtrans ->
+            labtrans.forEach { labact ->
+                val laborActual = LaborActualEntity()
+                laborActual.laborcode = labact.laborcode
+                laborActual.labtransid = labact.labtransid.toString()
+                laborActual.craft = labact.craft
+
+                labact.skilllevel.whatIfNotNull {
+                    laborActual.skillLevel = it
+                }
+
+                labact.vendor.whatIfNotNull {
+                    laborActual.vendor = it
+                }
+
+                laborActual.wonumHeader = member.wonum
+                laborActual.workorderid = member.workorderid.toString()
+                laborActual.syncUpdate = BaseParam.APP_TRUE
+                saveLaborActualCache(laborActual)
+
+            }
+
         }
     }
 

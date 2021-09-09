@@ -11,4 +11,5 @@ class CraftMasterEntity :  BaseEntity() {
     var craft: String? = null
     var skillLevel: String? = null
     var laborcode: String? = null
+    var name: String? = null
 }
