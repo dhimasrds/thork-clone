@@ -386,6 +386,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         if (validateDialogExit) {
             viewModel.removeScanner(tempWonum)
             viewModel.removeTask(tempWonum)
+            customDialogUtils.dismiss()
+            finish()
         } else {
             if (isConnected) {
                 updateWoOnline()
