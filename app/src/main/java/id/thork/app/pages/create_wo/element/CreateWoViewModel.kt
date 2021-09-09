@@ -216,6 +216,8 @@ class CreateWoViewModel @ViewModelInject constructor(
             if (!assetnum.equals(BaseParam.APP_DASH)) {
                 member.assetnum = assetnum
             }
+            member.wonum = tempWonum
+            member.workorderid = tempwoid
             member.description = deskWo
             member.status = BaseParam.WAPPR
             member.reportdate = DateUtils.getDateTimeMaximo()
@@ -244,6 +246,7 @@ class CreateWoViewModel @ViewModelInject constructor(
             tWoCacheEntity.wonum = tempWonum
             tWoCacheEntity.woId = tempWoId
             tWoCacheEntity.status = BaseParam.WAPPR
+            tWoCacheEntity.isLatest = BaseParam.APP_TRUE
             tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
             workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
         }

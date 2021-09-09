@@ -72,6 +72,7 @@ class DetailWoViewModel @ViewModelInject constructor(
 
     fun fetchWobyWonum(wonum: String) {
         val woCacheEntity: WoCacheEntity? = workOrderRepository.findWobyWonum(wonum)
+        Timber.tag(TAG).d("viewmodel fetchWobyWonum() $wonum")
         Timber.tag(TAG).d("viewmodel fetchWobyWonum() $woCacheEntity")
         woCacheEntity.whatIfNotNull {
             val member = WoUtils.convertBodyToMember(woCacheEntity!!.syncBody.toString())

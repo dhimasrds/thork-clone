@@ -928,6 +928,7 @@ class WorkOrderRepository @Inject constructor(
         tWoCacheEntity.updatedDate = Date()
         tWoCacheEntity.wonum = tempWonum
         tWoCacheEntity.status = BaseParam.WAPPR
+        tWoCacheEntity.isLatest = BaseParam.APP_TRUE
         tWoCacheEntity.externalREFID = externalrefid
         saveWoList(tWoCacheEntity, appSession.userEntity.username)
     }

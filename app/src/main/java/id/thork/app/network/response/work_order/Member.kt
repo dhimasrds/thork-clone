@@ -221,13 +221,13 @@ data class Member(
     @Json(name = "woisswap")
     val woisswap: Boolean? = null,
     @Json(name = "wonum")
-    val wonum: String? = null,
+    var wonum: String? = null,
     @Json(name = "wopriority")
     var wopriority: Int? = null,
     @Json(name = "worklog_collectionref")
     val worklogCollectionref: String? = null,
     @Json(name = "workorderid")
-    val workorderid: Int? = null,
+    var workorderid: Int? = null,
     @Json(name = "workorderspec_collectionref")
     val workorderspecCollectionref: String? = null,
     @Json(name = "workpackmtlstatus")
