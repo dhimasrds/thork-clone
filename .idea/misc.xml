@@ -9,10 +9,11 @@
         <entry key="app/src/main/res/drawable/ic_material_actual.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_refresh_wolist.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_attandence.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_create_labor_actual.xml" value="0.2346456692913386" />
         <entry key="app/src/main/res/layout/activity_create_labor_plan.xml" value="0.12" />
         <entry key="app/src/main/res/layout/activity_create_wo_assets.xml" value="0.10326086956521739" />
         <entry key="app/src/main/res/layout/activity_create_wo_attachments.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_create_wo_laboractual.xml" value="0.10280797101449275" />
         <entry key="app/src/main/res/layout/activity_create_wo_laborplan.xml" value="0.1068840579710145" />
         <entry key="app/src/main/res/layout/activity_create_wo_material_plan.xml" value="0.10326086956521739" />
         <entry key="app/src/main/res/layout/activity_create_wo_task.xml" value="0.1" />
@@ -20,18 +21,19 @@
         <entry key="app/src/main/res/layout/activity_detail_wo.xml" value="0.10510510510510511" />
         <entry key="app/src/main/res/layout/activity_detail_wo_material_actual.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_detail_wo_worklog.xml" value="0.21" />
-        <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_labor_actual_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_labor_plan_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_material_actual.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_material_actual_detail.xml" value="0.10280797101449275" />
         <entry key="app/src/main/res/layout/activity_select_labor.xml" value="0.10733695652173914" />
         <entry key="app/src/main/res/layout/activity_select_task.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_server_content.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.22131147540983606" />
-        <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/cardview_labor_and_craft.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/cardview_labor_craft.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/cardview_labor_plan.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_activity.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_work_order_list.xml" value="0.18" />
         <entry key="app/src/main/res/layout/load_state_view.xml" value="0.3006711409395973" />

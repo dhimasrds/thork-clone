@@ -31,6 +31,7 @@ object DateUtils {
     private val DATE_TIME_FORMAT_BODYMX = "HH:mm:ss"
     private val DATE_TASK_FORMAT_MX = "yyyy-MM-dd'T'HH:mm:ssZ"
     private val DATE_TASK_FORMAT_OBJECTBOX = "yyyy-MM-dd'T'HH:mm:ss"
+    private val DATE_ONLY_FORMAT_MAXIMO = "yyyy-MM-dd"
 
 
     /**
@@ -214,6 +215,27 @@ object DateUtils {
         }
         return BaseParam.APP_EMPTY_STRING
     }
+
+    fun getAppDateFormatMaximo(date: Date): String {
+        try {
+            val format = SimpleDateFormat(DATE_ONLY_FORMAT_MAXIMO)
+            return format.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
+    fun getAppTimeFormatMaximo(date: Date): String {
+        try {
+            val format = SimpleDateFormat(DATE_TIME_FORMAT_BODYMX)
+            return format.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return BaseParam.APP_EMPTY_STRING
+    }
+
 
     fun getAppDateTimeOBFormat(date: Date): String {
         try {

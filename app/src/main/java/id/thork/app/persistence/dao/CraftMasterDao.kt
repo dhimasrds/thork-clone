@@ -13,4 +13,5 @@ interface CraftMasterDao {
     fun getListCraftByLaborcode(laborcode: String): List<CraftMasterEntity>
     fun getCraftByLaborcode(laborcode: String): CraftMasterEntity?
     fun getCraft(): Array<out String>?
+    fun getListCraft(): List<CraftMasterEntity>
 }

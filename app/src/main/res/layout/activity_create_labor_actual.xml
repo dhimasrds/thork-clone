@@ -61,8 +61,7 @@
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -88,6 +87,22 @@
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
 
+                                <TextView
+                                    android:id="@+id/select_labor"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_10dp"
+                                    android:text="@string/select_labor"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/blue_nav"
+                                    android:drawablePadding="@dimen/general_padding_10dp"
+                                    android:drawableEnd="@drawable/ic_search_blue"
+                                    android:textFontWeight="500"
+                                    android:textSize="15sp" />
+
                             </LinearLayout>
 
                             <View
@@ -103,12 +118,12 @@
                                 android:layout_marginRight="@dimen/general_margin_5dp"
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
-                                android:text="-"
                                 android:textAllCaps="false"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/base_text_size_16" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
+
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -136,6 +151,23 @@
                                     android:textColor="@color/colorBlack"
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
+
+                                <TextView
+                                    android:id="@+id/select_task"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:padding="@dimen/general_padding_10dp"
+                                    android:text="@string/select_task"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/blue_nav"
+                                    android:drawablePadding="@dimen/general_padding_10dp"
+                                    android:drawableEnd="@drawable/ic_search_blue"
+                                    android:textFontWeight="500"
+                                    android:textSize="15sp" />
+
 
                             </LinearLayout>
 
@@ -340,6 +372,8 @@
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
 
+
+
                             </LinearLayout>
 
                             <View
@@ -390,6 +424,23 @@
                                     android:textFontWeight="700"
                                     android:textSize="21sp" />
 
+                                <TextView
+                                    android:id="@+id/select_craft"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawableEnd="@drawable/ic_search_blue"
+                                    android:drawablePadding="@dimen/general_padding_10dp"
+                                    android:fontFamily="@font/roboto_regular"
+                                    android:gravity="right"
+                                    android:padding="@dimen/general_padding_10dp"
+                                    android:text="@string/select_craft"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/blue_nav"
+                                    android:textFontWeight="500"
+                                    android:textSize="15sp" />
+
+
                             </LinearLayout>
 
                             <View
@@ -405,7 +456,6 @@
                                 android:layout_marginRight="@dimen/general_margin_5dp"
                                 android:fontFamily="@font/roboto_regular"
                                 android:padding="@dimen/general_padding_5dp"
-                                android:text=" - "
                                 android:textAllCaps="false"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/base_text_size_16" />

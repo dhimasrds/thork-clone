@@ -1,4 +1,4 @@
-package id.thork.app.pages.labor_plan.element
+package id.thork.app.pages.labor_actual.element
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,28 +10,33 @@ import androidx.recyclerview.widget.RecyclerView
 import id.thork.app.base.BaseApplication
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.CardviewLaborAndCraftBinding
+import id.thork.app.databinding.CardviewLaborCraftBinding
 import id.thork.app.pages.labor_actual.create_labor_actual.CreateLaborActualActivity
 import id.thork.app.pages.labor_plan.create_labor_plan.CreateLaborPlanActivity
 import id.thork.app.pages.labor_plan.details_labor_plan.LaborPlanDetailsActivity
+import id.thork.app.pages.labor_plan.element.LaborAdapter
+import id.thork.app.pages.labor_plan.element.LaborPlanAdapter
+import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.LaborMasterEntity
+import id.thork.app.utils.StringUtils
 
 /**
- * Created by Dhimas Saputra on 23/06/21
+ * Created by Dhimas Saputra on 08/09/21
  * Jakarta, Indonesia.
  */
-class LaborAdapter constructor(
+class SelectLaborAndCraftAdapter constructor(
     private val activity: Activity,
-    private val laborMasterEntity: List<LaborMasterEntity>,
+    private val craftMasterEntity: List<CraftMasterEntity>,
     private val intentTag: String
 
 ) :
-    RecyclerView.Adapter<LaborAdapter.ViewHolder>() {
+    RecyclerView.Adapter<SelectLaborAndCraftAdapter.ViewHolder>() {
     val TAG = LaborPlanAdapter::class.java.name
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            CardviewLaborAndCraftBinding.inflate(
+            CardviewLaborCraftBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -39,18 +44,20 @@ class LaborAdapter constructor(
         )
     }
 
-    inner class ViewHolder(val binding: CardviewLaborAndCraftBinding) :
+    inner class ViewHolder(val binding: CardviewLaborCraftBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("NewApi")
-        fun bind(laborMasterEntity: LaborMasterEntity) {
+        fun bind(craftMasterEntity: CraftMasterEntity) {
             binding.apply {
-                tvLaborOrCraft.text = laborMasterEntity.laborcode
+                tvLabor.text = craftMasterEntity.laborcode
+                tvCraft.text = craftMasterEntity.craft
+                tvSkillLevel.text = StringUtils.NVL(craftMasterEntity.skillLevel,BaseParam.APP_DASH)
                 when (intentTag) {
                     BaseParam.APP_CREATE -> {
                         cardLaborPlan.setOnClickListener {
                             val intent =
                                 Intent(BaseApplication.context, CreateLaborPlanActivity::class.java)
-                            intent.putExtra(BaseParam.LABORCODE_FORM, laborMasterEntity.laborcode)
+                            intent.putExtra(BaseParam.LABORCODE_FORM, craftMasterEntity.laborcode)
                             activity.setResult(AppCompatActivity.RESULT_OK, intent)
                             activity.finish()
                         }
@@ -60,7 +67,9 @@ class LaborAdapter constructor(
                         cardLaborPlan.setOnClickListener {
                             val intent =
                                 Intent(BaseApplication.context, CreateLaborActualActivity::class.java)
-                            intent.putExtra(BaseParam.LABORCODE_FORM, laborMasterEntity.laborcode)
+                            intent.putExtra(BaseParam.LABORCODE_FORM, craftMasterEntity.laborcode)
+                            intent.putExtra(BaseParam.CRAFT_FORM, craftMasterEntity.craft)
+                            intent.putExtra(BaseParam.SKILL_FORM, craftMasterEntity.skillLevel)
                             activity.setResult(AppCompatActivity.RESULT_OK, intent)
                             activity.finish()
                         }
@@ -72,7 +81,7 @@ class LaborAdapter constructor(
                                 BaseApplication.context,
                                 LaborPlanDetailsActivity::class.java
                             )
-                            intent.putExtra(BaseParam.LABORCODE_FORM, laborMasterEntity.laborcode)
+                            intent.putExtra(BaseParam.LABORCODE_FORM, craftMasterEntity.laborcode)
                             activity.setResult(AppCompatActivity.RESULT_OK, intent)
                             activity.finish()
                         }
@@ -83,12 +92,12 @@ class LaborAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val laborMasterEntity: LaborMasterEntity = laborMasterEntity[position]
-        holder.bind(laborMasterEntity)
+        val craftMasterEntity: CraftMasterEntity = craftMasterEntity[position]
+        holder.bind(craftMasterEntity)
     }
 
     override fun getItemCount(): Int {
-        return laborMasterEntity.size
+        return craftMasterEntity.size
     }
 }
 

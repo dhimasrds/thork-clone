@@ -66,4 +66,18 @@ class LaborActualDaoImp : LaborActualDao {
             .equal(LaborActualEntity_.workorderid, workorderid)
             .build().find()
     }
+
+    override fun findlaborActualByObjectBoxid(
+        objectboxid: Long
+    ): LaborActualEntity? {
+        val laborPlanEntity =
+            laborActualEntityBox.query().equal(LaborActualEntity_.id, objectboxid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
 }

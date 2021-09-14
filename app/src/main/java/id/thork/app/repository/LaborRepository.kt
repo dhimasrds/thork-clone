@@ -84,6 +84,10 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findlaborPlanByObjectBoxid(objectboxid)
     }
 
+    fun findlaborActualByObjectboxId(objectboxid: Long) : LaborActualEntity? {
+        return laborActualDao.findlaborActualByObjectBoxid(objectboxid)
+    }
+
     fun findListLaborPlanBySyncUpdateAndLocally(
         syncupdate: Int,
         isLocally: Int
@@ -489,6 +493,10 @@ class LaborRepository @Inject constructor(
 
     fun fetchListLabor(): List<LaborMasterEntity> {
         return laborMasterDao.getListLaborMaster()
+    }
+
+    fun fetchListCraftMaster(): List<CraftMasterEntity> {
+        return craftMasterDao.getListCraft()
     }
 
     fun addLaborMasterCache(member: id.thork.app.network.response.labor_response.Member) {

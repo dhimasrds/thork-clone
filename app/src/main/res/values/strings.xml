@@ -596,6 +596,7 @@
     <!-- Save Labor Plan Dialog -->
     <string name="labor_plan_title">Save</string>
     <string name="labor_plan_question">Are you sure you want to save labor plan?</string>
+    <string name="labor_actual_question">Are you sure you want to save labor actual?</string>
 
 
 </resources>
