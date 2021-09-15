@@ -47,6 +47,7 @@ class LaborActualDaoImp : LaborActualDao {
 
     }
 
+
     override fun findlaborActualByworkorderid(
         laborcode: String,
         workorderid: String

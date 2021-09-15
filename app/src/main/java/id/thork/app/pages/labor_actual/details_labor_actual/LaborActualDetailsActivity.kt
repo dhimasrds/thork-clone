@@ -19,9 +19,11 @@ import id.thork.app.databinding.ActivityCreateLaborActualBinding
 import id.thork.app.databinding.ActivityLaborActualDetailsBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
+import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_actual.create_labor_actual.CreateLaborActualActivity
 import id.thork.app.pages.labor_actual.element.LaborActualViewModel
 import id.thork.app.pages.labor_actual.element.TimePickerHelper
+import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
 import id.thork.app.pages.labor_plan.SelectTaskActivity
@@ -54,6 +56,10 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
     private var calForEndTime : String? = null
     private var startDateObjectBoxFormat : String? = null
     private var endDateObjectBoxFormat : String? = null
+    private var startDate : String? = null
+    private var startTime : String? = null
+    private var endDate : String? = null
+    private var endTime : String? = null
 
 
     lateinit var timePicker: TimePickerHelper
@@ -105,12 +111,20 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
             craft = StringUtils.NVL(it.craft, BaseParam.APP_DASH)
             skillLevel = StringUtils.NVL(it.skillLevel, BaseParam.APP_DASH)
             vendor =StringUtils.NVL(it.vendor, BaseParam.APP_DASH)
+            startDate =StringUtils.NVL(it.startDate, BaseParam.APP_DASH)
+            startTime =StringUtils.NVL(it.statTime, BaseParam.APP_DASH)
+            endDate =StringUtils.NVL(it.endDate, BaseParam.APP_DASH)
+            endTime =StringUtils.NVL(it.endTime, BaseParam.APP_DASH)
 
             binding.apply {
                 tvLabor.text = laborcode
                 tvCraft.text = craft
                 tvSkillLevel.text = skillLevel
                 tvVendor.text = vendor
+                tvStartDate.text = startDate
+                tvStartTime.text = startTime
+                tvEndDate.text = endDate
+                tvEndTime.text = endTime
 
             }
 
@@ -373,19 +387,35 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         customDialogUtils.show()
     }
 
+    private fun navigateToLaborActual() {
+        val intent = Intent(this, LaborActualActivity::class.java)
+        intent.putExtra(BaseParam.WONUM, intentWonum)
+        intent.putExtra(BaseParam.WORKORDERID, intentWorkorderid?.toInt())
+        startActivity(intent)
+        finish()
+    }
+
 
     override fun onRightButton() {
         binding.apply {
-            viewModels.saveLaborActual(
+            laborActualActivity.whatIfNotNull {
+            viewModels.updateLaborActualLocal(
+                it,
                 intentWonum.toString(),
                 intentWorkorderid.toString(),
                 tvLabor.text.toString(),
                 tvCraft.text.toString(),
                 startDateObjectBoxFormat.toString(),
                 endDateObjectBoxFormat.toString(),
-                tvSkillLevel.text.toString())
+                tvSkillLevel.text.toString(),
+                tvStartDate.text.toString(),
+                tvStartTime.text.toString(),
+                tvEndDate.text.toString(),
+                tvEndTime.text.toString())
+            }
         }
         customDialogUtils.dismiss()
+        navigateToLaborActual()
     }
 
     override fun onLeftButton() {

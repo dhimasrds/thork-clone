@@ -13,8 +13,10 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateLaborActualBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
+import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_actual.element.LaborActualViewModel
 import id.thork.app.pages.labor_actual.element.TimePickerHelper
+import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
 import id.thork.app.pages.labor_plan.SelectTaskActivity
@@ -331,19 +333,32 @@ class CreateLaborActualActivity: BaseActivity(), CustomDialogUtils.DialogActionL
         customDialogUtils.show()
     }
 
+    private fun navigateToLaborActual() {
+        val intent = Intent(this, LaborActualActivity::class.java)
+        intent.putExtra(BaseParam.WONUM, intentWonum)
+        intent.putExtra(BaseParam.WORKORDERID, intentWorkorderid?.toInt())
+        startActivity(intent)
+        finish()
+    }
+
 
     override fun onRightButton() {
         binding.apply {
-            viewModels.saveLaborActual(
+            viewModels.saveLaborActualLocal(
                 intentWonum.toString(),
                 intentWorkorderid.toString(),
                 tvLabor.text.toString(),
                 tvCraft.text.toString(),
                 startDateObjectBoxFormat.toString(),
                 endDateObjectBoxFormat.toString(),
-                tvSkillLevel.text.toString())
+                tvSkillLevel.text.toString(),
+                tvStartDate.text.toString(),
+                tvStartTime.text.toString(),
+                tvEndDate.text.toString(),
+                tvEndTime.text.toString())
         }
         customDialogUtils.dismiss()
+        navigateToLaborActual()
     }
 
     override fun onLeftButton() {

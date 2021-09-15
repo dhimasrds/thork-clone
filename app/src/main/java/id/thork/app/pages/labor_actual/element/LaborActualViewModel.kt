@@ -7,7 +7,6 @@ import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.PreferenceManager
 import id.thork.app.persistence.entity.LaborActualEntity
-import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.repository.LaborRepository
 import id.thork.app.repository.TaskRepository
 import id.thork.app.repository.WorkOrderRepository
@@ -34,14 +33,18 @@ class LaborActualViewModel @ViewModelInject constructor(
     val getLaborActual: LiveData<LaborActualEntity> get() = _getLaborActual
 
 
-    fun saveLaborActual(
+    fun saveLaborActualLocal(
         wonum : String,
         woId  : String,
         labor :String,
         craft : String,
+        startDateForMaximo : String,
+        endDateForMaximo : String,
+        skillLevel : String,
         startDate : String,
+        startTime : String,
         endDate : String,
-        skillLevel : String){
+        endTime : String,){
 
         val laborActual = LaborActualEntity()
         laborActual.wonumHeader = wonum
@@ -50,9 +53,43 @@ class LaborActualViewModel @ViewModelInject constructor(
         laborActual.craft = craft
         laborActual.startDate = startDate
         laborActual.endDate = endDate
+        laborActual.statTime = startTime
+        laborActual.endTime = endTime
+        laborActual.startDateForMaximo = startDateForMaximo
+        laborActual.endDateForMaximo = endDateForMaximo
         laborActual.skillLevel = skillLevel
 
         laborRepository.saveLaborActualCache(laborActual)
+
+    }
+
+    fun updateLaborActualLocal(
+        laborActualEntity: LaborActualEntity,
+        wonum : String,
+        woId  : String,
+        labor :String,
+        craft : String,
+        startDateForMaximo : String,
+        endDateForMaximo : String,
+        skillLevel : String,
+        startDate : String,
+        startTime : String,
+        endDate : String,
+        endTime : String,){
+
+        laborActualEntity.wonumHeader = wonum
+        laborActualEntity.workorderid = woId
+        laborActualEntity.laborcode = labor
+        laborActualEntity.craft = craft
+        laborActualEntity.startDate = startDate
+        laborActualEntity.endDate = endDate
+        laborActualEntity.statTime = startTime
+        laborActualEntity.endTime = endTime
+        laborActualEntity.startDateForMaximo = startDateForMaximo
+        laborActualEntity.endDateForMaximo = endDateForMaximo
+        laborActualEntity.skillLevel = skillLevel
+
+        laborRepository.saveLaborActualCache(laborActualEntity)
 
     }
 
