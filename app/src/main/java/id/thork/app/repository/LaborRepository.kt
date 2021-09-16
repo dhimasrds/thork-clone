@@ -52,6 +52,11 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.removeByEntity(laborPlanEntity)
     }
 
+    fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity) {
+        return laborActualDao.removeLaborActualByEntity(laborActualEntity)
+    }
+
+
     fun findListLaborplanWorkorderid(workroderid: String): List<LaborPlanEntity> {
         return laborPlanDao.findListLaborPlan(workroderid)
     }
@@ -82,6 +87,10 @@ class LaborRepository @Inject constructor(
 
     fun findlaborPlanByObjectboxId(objectboxid: Long) : LaborPlanEntity? {
         return laborPlanDao.findlaborPlanByObjectBoxid(objectboxid)
+    }
+
+    fun findlaborActualByObjectboxId(objectboxid: Long) : LaborActualEntity? {
+        return laborActualDao.findlaborActualByObjectBoxid(objectboxid)
     }
 
     fun findListLaborPlanBySyncUpdateAndLocally(
@@ -515,6 +524,10 @@ class LaborRepository @Inject constructor(
 
     fun fetchListLabor(): List<LaborMasterEntity> {
         return laborMasterDao.getListLaborMaster()
+    }
+
+    fun fetchListCraftMaster(): List<CraftMasterEntity> {
+        return craftMasterDao.getListCraft()
     }
 
     fun addLaborMasterCache(member: id.thork.app.network.response.labor_response.Member) {

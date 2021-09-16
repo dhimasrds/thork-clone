@@ -66,7 +66,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.dropdownMenu.adapter = adapter
         }
 
-
+        workOrderAdapter.refresh()
         return binding.root
     }
 
@@ -106,7 +106,8 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.woListwappr.observe(viewLifecycleOwner) {
                 workOrderAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-                Timber.d("onCreateView :%s", it)
+
+                Timber.d("onCreateView size:%s", it)
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {

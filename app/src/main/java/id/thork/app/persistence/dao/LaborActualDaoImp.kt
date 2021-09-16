@@ -47,6 +47,7 @@ class LaborActualDaoImp : LaborActualDao {
 
     }
 
+
     override fun findlaborActualByworkorderid(
         laborcode: String,
         workorderid: String
@@ -66,4 +67,23 @@ class LaborActualDaoImp : LaborActualDao {
             .equal(LaborActualEntity_.workorderid, workorderid)
             .build().find()
     }
+
+    override fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity) {
+        laborActualEntityBox.remove(laborActualEntity)
+    }
+
+
+    override fun findlaborActualByObjectBoxid(
+        objectboxid: Long
+    ): LaborActualEntity? {
+        val laborPlanEntity =
+            laborActualEntityBox.query().equal(LaborActualEntity_.id, objectboxid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
 }

@@ -162,6 +162,10 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             gotoTaskActivity()
         }
 
+        binding.includeLaborplan.laborPlan.setOnClickListener {
+            goToLaborPlan()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -344,6 +348,11 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         intent.putExtra(BaseParam.WONUM, tempWonum)
         intent.putExtra(BaseParam.STATUS, BaseParam.WAPPR)
         intent.putExtra(BaseParam.TAG_TASK, "TAG_TASK")
+        startActivity(intent)
+    }
+
+    private fun goToLaborPlan() {
+        val intent = Intent(this, LaborPlanActivity::class.java)
         startActivity(intent)
     }
 
