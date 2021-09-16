@@ -248,6 +248,7 @@ object BaseParam {
     const val CRAFT_FORM = "CRAFT_FORM"
     const val SKILL_FORM = "SKILL_FORM"
     const val TASK_FORM = "TASK_FORM"
+    const val VENDOR = "VENDOR"
 
 
     /**

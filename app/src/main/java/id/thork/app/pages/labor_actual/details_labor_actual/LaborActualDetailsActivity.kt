@@ -3,33 +3,24 @@ package id.thork.app.pages.labor_actual.details_labor_actual
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.text.InputFilter
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateLaborActualBinding
-import id.thork.app.databinding.ActivityLaborActualDetailsBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_actual.create_labor_actual.CreateLaborActualActivity
 import id.thork.app.pages.labor_actual.element.LaborActualViewModel
 import id.thork.app.pages.labor_actual.element.TimePickerHelper
-import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
 import id.thork.app.pages.labor_plan.SelectTaskActivity
 import id.thork.app.persistence.entity.LaborActualEntity
+import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.DateUtils
-import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -44,22 +35,25 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
     private var intentWorkorderid: String? = null
     private var intentLaborcode: String? = null
     private var intentCraft: String? = null
-    private var msStartDate : Long? = null
-    private var msEndDate : Long? = null
-    private var msStartTime : Long? = null
-    private var msEndTime : Long? = null
+    private var msStartDate: Long? = null
+    private var msEndDate: Long? = null
+    private var msStartTime: Long? = null
+    private var msEndTime: Long? = null
     private var cal: Calendar = Calendar.getInstance()
-    private var cal2 : Calendar = Calendar.getInstance()
+    private var cal2: Calendar = Calendar.getInstance()
     private var calForStartDate: String? = null
-    private var calForEndDate : String? = null
+    private var calForEndDate: String? = null
     private var calForStarTime: String? = null
-    private var calForEndTime : String? = null
-    private var startDateObjectBoxFormat : String? = null
-    private var endDateObjectBoxFormat : String? = null
-    private var startDate : String? = null
-    private var startTime : String? = null
-    private var endDate : String? = null
-    private var endTime : String? = null
+    private var calForEndTime: String? = null
+    private var startDateObjectBoxFormat: String? = null
+    private var endDateObjectBoxFormat: String? = null
+    private var startDate: String? = null
+    private var startTime: String? = null
+    private var endDate: String? = null
+    private var endTime: String? = null
+    private var saveValidation: Boolean = false
+    private var taskid: String? = null
+    private var taskdesc: String? = null
 
 
     lateinit var timePicker: TimePickerHelper
@@ -67,12 +61,12 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
     private lateinit var dialogUtils: DialogUtils
     private lateinit var customDialogUtils: CustomDialogUtils
 
-    private var laborcode : String? = null
-    private var craft : String? = null
-    private var skillLevel : String? = null
-    private var vendor : String? = null
+    private var laborcode: String? = null
+    private var craft: String? = null
+    private var skillLevel: String? = null
+    private var vendor: String? = null
 
-    private var laborActualActivity : LaborActualEntity? = null
+    private var laborActualActivity: LaborActualEntity? = null
 
 
     override fun setupView() {
@@ -110,11 +104,17 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
             laborcode = StringUtils.NVL(it.laborcode, BaseParam.APP_DASH)
             craft = StringUtils.NVL(it.craft, BaseParam.APP_DASH)
             skillLevel = StringUtils.NVL(it.skillLevel, BaseParam.APP_DASH)
-            vendor =StringUtils.NVL(it.vendor, BaseParam.APP_DASH)
-            startDate =StringUtils.NVL(it.startDate, BaseParam.APP_DASH)
-            startTime =StringUtils.NVL(it.statTime, BaseParam.APP_DASH)
-            endDate =StringUtils.NVL(it.endDate, BaseParam.APP_DASH)
-            endTime =StringUtils.NVL(it.endTime, BaseParam.APP_DASH)
+            vendor = StringUtils.NVL(it.vendor, BaseParam.APP_DASH)
+            startDate = StringUtils.NVL(it.startDate, BaseParam.APP_DASH)
+            startTime = StringUtils.NVL(it.statTime, BaseParam.APP_DASH)
+            endDate = StringUtils.NVL(it.endDate, BaseParam.APP_DASH)
+            endTime = StringUtils.NVL(it.endTime, BaseParam.APP_DASH)
+            msStartDate = it.longStartDate
+            msStartTime = it.longStartTime
+            msEndDate = it.longEndDate
+            msEndTime = it.longEndTime
+            taskid = it.taskid
+            taskdesc = it.taskDescription
 
             binding.apply {
                 tvLabor.text = laborcode
@@ -125,10 +125,25 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                 tvStartTime.text = startTime
                 tvEndDate.text = endDate
                 tvEndTime.text = endTime
+                tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
 
             }
 
         })
+    }
+
+    override fun setupListener() {
+        super.setupListener()
+        binding.tvStartTime.setOnClickListener { showTimePickerDialog(true) }
+        binding.tvEndTime.setOnClickListener { showTimePickerDialog(false) }
+        binding.btnSaveLaborActual.setOnClickListener {
+            validationEmpty()
+            validationDateAndTime()
+            saveValidation = true
+        }
+        binding.btnDelete.setOnClickListener {
+            dialogDeleteLaborActual()
+        }
     }
 
     private fun retriveFromIntent() {
@@ -191,29 +206,24 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         Timber.d("updateDateInView() cal2:%s", cal2.time.time)
         when (date) {
             true -> {
-                binding.tvStartDate.text =DateUtils.getAppDateFormat(cal.time)
+                binding.tvStartDate.text = DateUtils.getAppDateFormat(cal.time)
                 msStartDate = cal.timeInMillis
                 calForStartDate = DateUtils.getAppDateFormatMaximo(cal.time)
+                binding.tvStartDate.error = null
+
             }
             false -> {
-                binding.tvEndDate.text =DateUtils.getAppDateFormat(cal2.time)
+                binding.tvEndDate.text = DateUtils.getAppDateFormat(cal2.time)
                 msEndDate = cal2.timeInMillis
                 calForEndDate = DateUtils.getAppDateFormatMaximo(cal2.time)
+                binding.tvEndDate.error = null
+
             }
         }
     }
 
-    override fun setupListener() {
-        super.setupListener()
-        binding.tvStartTime.setOnClickListener {showTimePickerDialog(true) }
-        binding.tvEndTime.setOnClickListener {showTimePickerDialog(false) }
-        binding.btnSaveLaborActual.setOnClickListener {
-            validationEmpty()
-            validationDateAndTime()
-        }
-    }
 
-    private fun showTimePickerDialog(isStartDate : Boolean) {
+    private fun showTimePickerDialog(isStartDate: Boolean) {
         val cal = Calendar.getInstance()
         val h = cal.get(Calendar.HOUR_OF_DAY)
         val m = cal.get(Calendar.MINUTE)
@@ -221,19 +231,22 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         timePicker.showDialog(h, m, object : TimePickerHelper.Callback {
             @SuppressLint("SetTextI18n")
             override fun onTimeSelected(hourOfDay: Int, minute: Int) {
-                cal.set(Calendar.HOUR_OF_DAY,hourOfDay)
-                cal.set(Calendar.MINUTE,minute)
-                when (isStartDate){
-                    true  ->{
+                cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                cal.set(Calendar.MINUTE, minute)
+                when (isStartDate) {
+                    true -> {
                         binding.tvStartTime.text = DateUtils.getAppTimeFormat(cal.time)
                         msStartTime = cal.timeInMillis
                         calForStarTime = DateUtils.getAppTimeFormatMaximo(cal.time)
+                        binding.tvStartTime.error = null
                     }
 
                     false -> {
                         binding.tvEndTime.text = DateUtils.getAppTimeFormat(cal.time)
                         msEndTime = cal.timeInMillis
                         calForEndTime = DateUtils.getAppTimeFormatMaximo(cal.time)
+                        binding.tvEndTime.error = null
+
                     }
                 }
 
@@ -258,46 +271,81 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         }
     }
 
-    private fun validationDateAndTime(){
+    private fun validationDateAndTime() {
         if (validationEmpty()) {
-            if (msEndTime!! < msStartTime!!) {
-                Toast.makeText(this@LaborActualDetailsActivity, "Finish time has to be after Start time ", Toast.LENGTH_SHORT).show()
-            }
-            else if (msEndDate!! < msStartDate!!){
-                Toast.makeText(this@LaborActualDetailsActivity, "Finish time has to be after Start time ", Toast.LENGTH_SHORT).show()
-            }
-            else{
+            if (msEndDate!! == msStartDate!! && msEndTime!! < msStartTime!!) {
+                CommonUtils.standardToast("Finish time has to be after Start time")
+            } else if (msEndDate!! < msStartDate!!) {
+                CommonUtils.standardToast("Finish time has to be after Start time")
+            } else {
                 convertDateFormat()
                 dialogSaveLaborActual()
             }
 
         }
     }
-    private fun validationEmpty():Boolean{
-        binding.apply {
-            if (tvLabor.text.isNullOrBlank() ||
-                tvStartTime.text.isNullOrBlank() ||
-                tvEndTime.text.isNullOrBlank() ||
-                tvStartDate.text.isNullOrBlank() ||
-                tvEndDate.text.isNullOrBlank() ||
-                tvCraft.text.isNullOrBlank())
-            {
 
-                Toast.makeText(this@LaborActualDetailsActivity, "field cannot be empty", Toast.LENGTH_SHORT).show()
+    private fun validationEmpty(): Boolean {
+        binding.apply {
+            if (tvLabor.text.toString().isBlank()) {
+
+                tvLabor.error = "Cannot be empty"
+
+                CommonUtils.standardToast("field cannot be empty")
+                return false
+            } else if (tvStartDate.text.isNullOrBlank()) {
+
+                tvStartDate.error = "Cannot be empty"
+
+                CommonUtils.standardToast("field cannot be empty")
+                return false
+            } else if (tvStartTime.text.isNullOrBlank()) {
+
+                tvStartTime.error = "Cannot be empty"
+
+                CommonUtils.standardToast("field cannot be empty")
+                return false
+            } else if (tvEndDate.text.isNullOrBlank()) {
+
+                tvEndDate.error = "Cannot be empty"
+
+                CommonUtils.standardToast("field cannot be empty")
+                return false
+            } else if (tvEndTime.text.isNullOrBlank()) {
+
+                tvEndTime.error = "Cannot be empty"
+
+                CommonUtils.standardToast("field cannot be empty")
+                return false
+            } else if (tvCraft.text.isNullOrBlank()) {
+
+                tvCraft.error = "Cannot be empty"
+
+                CommonUtils.standardToast("field cannot be empty")
                 return false
             }
         }
-        return  true
+        return true
+    }
+
+    private fun removeValidation() {
+        binding.apply {
+            if (!tvLabor.text.isNullOrEmpty()) {
+                tvLabor.error = null
+            } else if (!tvCraft.text.isNullOrEmpty()) {
+                tvCraft.error = null
+            }
+        }
     }
 
     private fun goToSelectLabor() {
         Timber.d("goToSelectLabor :%s", isCraft)
-        if (isCraft){
+        if (isCraft) {
             val intent = Intent(this, SelectLaborActivity::class.java)
             intent.putExtra(BaseParam.LABORCODE_FORM, BaseParam.LABORCODE_FORM_ACTUAL)
             intent.putExtra(BaseParam.CRAFT_FORM_ACTUAL, BaseParam.CRAFT_FORM_ACTUAL)
             startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
-        }else {
+        } else {
             val intent = Intent(this, SelectLaborActivity::class.java)
             intent.putExtra(BaseParam.LABORCODE_FORM, BaseParam.LABORCODE_FORM_ACTUAL)
             startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
@@ -322,21 +370,21 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         when (resultCode) {
             RESULT_OK -> {
                 when (requestCode) {
-//                    BaseParam.REQUEST_CODE_TASK -> {
-//                        //Handling when choose task
-//                        data.whatIfNotNull {
-//                            val taskidResult = it.getIntExtra(BaseParam.TASKID, 0)
-//                            taskidResult.whatIfNotNull {
-//                                taskid = it.toString()
-//                            }
-//
-//                            val taskDescriptionResult = it.getStringExtra(BaseParam.DESCRIPTION)
-//                            taskDescriptionResult.whatIfNotNull {
-//                                taskdesc = it
-//                            }
-//                            binding.tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
-//                        }
-//                    }
+                    BaseParam.REQUEST_CODE_TASK -> {
+                        //Handling when choose task
+                        data.whatIfNotNull {
+                            val taskidResult = it.getIntExtra(BaseParam.TASKID, 0)
+                            taskidResult.whatIfNotNull {
+                                taskid = it.toString()
+                            }
+
+                            val taskDescriptionResult = it.getStringExtra(BaseParam.DESCRIPTION)
+                            taskDescriptionResult.whatIfNotNull {
+                                taskdesc = it
+                            }
+                            binding.tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
+                        }
+                    }
 
                     BaseParam.REQUEST_CODE_LABOR -> {
                         // Handling when choose Labor dan fill craft
@@ -348,7 +396,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                                 tvLabor.text = laborcode
                                 tvCraft.text = craft
                                 tvSkillLevel.text = skillLevel
-//                                removeValidation()
+                                removeValidation()
                             }
                         }
                     }
@@ -371,9 +419,17 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
     @SuppressLint("SimpleDateFormat")
     private fun convertDateFormat() {
+        val dt3 = SimpleDateFormat("dd/MM/yyyy")
+        val dt4 = SimpleDateFormat("HH:mm")
+        val startDate = dt3.parse(binding.tvStartDate.text.toString())
+        val startTime = dt4.parse(binding.tvStartTime.text.toString())
+        val endDate = dt3.parse(binding.tvEndDate.text.toString())
+        val endTime = dt4.parse(binding.tvEndTime.text.toString())
+        val formatDate = SimpleDateFormat("yyyy-MM-dd")
+        val formatTime = SimpleDateFormat("HH:mm:ss")
         startDateObjectBoxFormat =
-            calForStartDate + "T" + calForStarTime
-        endDateObjectBoxFormat = calForEndDate + "T" + calForEndTime
+            formatDate.format(startDate) + "T" + formatTime.format(startTime)
+        endDateObjectBoxFormat = formatDate.format(endDate) + "T" + formatTime.format(endTime)
         Timber.d("convertDateFormat Start %s ", startDateObjectBoxFormat)
         Timber.d("convertDateFormat End %s ", endDateObjectBoxFormat)
     }
@@ -387,6 +443,16 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         customDialogUtils.show()
     }
 
+    private fun dialogDeleteLaborActual() {
+        customDialogUtils.setTitle(R.string.information)
+        customDialogUtils.setDescription(R.string.labor_actual_delete)
+        customDialogUtils.setRightButtonText(R.string.dialog_yes)
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+        customDialogUtils.setListener(this)
+        customDialogUtils.show()
+    }
+
+
     private fun navigateToLaborActual() {
         val intent = Intent(this, LaborActualActivity::class.java)
         intent.putExtra(BaseParam.WONUM, intentWonum)
@@ -397,21 +463,30 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
 
     override fun onRightButton() {
-        binding.apply {
+        if (saveValidation) {
+            binding.apply {
+                laborActualActivity.whatIfNotNull {
+                    viewModels.updateLaborActualLocal(
+                        it,
+                        taskid.toString(),
+                        taskdesc.toString(),
+                        intentWonum.toString(),
+                        intentWorkorderid.toString(),
+                        tvLabor.text.toString(),
+                        tvCraft.text.toString(),
+                        startDateObjectBoxFormat.toString(),
+                        endDateObjectBoxFormat.toString(),
+                        tvSkillLevel.text.toString(),
+                        tvStartDate.text.toString(),
+                        tvStartTime.text.toString(),
+                        tvEndDate.text.toString(),
+                        tvEndTime.text.toString()
+                    )
+                }
+            }
+        } else {
             laborActualActivity.whatIfNotNull {
-            viewModels.updateLaborActualLocal(
-                it,
-                intentWonum.toString(),
-                intentWorkorderid.toString(),
-                tvLabor.text.toString(),
-                tvCraft.text.toString(),
-                startDateObjectBoxFormat.toString(),
-                endDateObjectBoxFormat.toString(),
-                tvSkillLevel.text.toString(),
-                tvStartDate.text.toString(),
-                tvStartTime.text.toString(),
-                tvEndDate.text.toString(),
-                tvEndTime.text.toString())
+                viewModels.removeLaborActual(it)
             }
         }
         customDialogUtils.dismiss()

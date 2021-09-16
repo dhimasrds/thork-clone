@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/layout/activity_detail_wo.xml" value="0.10510510510510511" />
         <entry key="app/src/main/res/layout/activity_detail_wo_material_actual.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_detail_wo_worklog.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/activity_follow_up_wo.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_labor_actual.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_labor_actual_details.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_labor_plan.xml" value="0.1" />

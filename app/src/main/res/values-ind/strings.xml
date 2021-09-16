@@ -579,6 +579,9 @@
     <!-- Save Labor Plan Dialog -->
     <string name="labor_plan_title">Simpan</string>
     <string name="labor_plan_question">Anda yakin ingin simpan labor plan ini?</string>
+
+    <!--  Labor Actual -->
     <string name="labor_actual_question">Anda yakin ingin simpan labor actual ini?</string>
+    <string name="labor_actual_delete">Apakah anda akan menghapus record labor actual?</string>
 
 </resources>

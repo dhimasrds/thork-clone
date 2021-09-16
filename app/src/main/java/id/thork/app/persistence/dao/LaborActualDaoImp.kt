@@ -68,6 +68,11 @@ class LaborActualDaoImp : LaborActualDao {
             .build().find()
     }
 
+    override fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity) {
+        laborActualEntityBox.remove(laborActualEntity)
+    }
+
+
     override fun findlaborActualByObjectBoxid(
         objectboxid: Long
     ): LaborActualEntity? {

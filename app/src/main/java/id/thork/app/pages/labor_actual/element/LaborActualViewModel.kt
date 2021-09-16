@@ -34,17 +34,24 @@ class LaborActualViewModel @ViewModelInject constructor(
 
 
     fun saveLaborActualLocal(
-        wonum : String,
-        woId  : String,
-        labor :String,
-        craft : String,
-        startDateForMaximo : String,
-        endDateForMaximo : String,
-        skillLevel : String,
-        startDate : String,
-        startTime : String,
-        endDate : String,
-        endTime : String,){
+        taskid: String,
+        taskdesc: String,
+        wonum: String,
+        woId: String,
+        labor: String,
+        craft: String,
+        startDateForMaximo: String,
+        endDateForMaximo: String,
+        skillLevel: String,
+        startDate: String,
+        startTime: String,
+        endDate: String,
+        endTime: String,
+        msStartDate: Long,
+        msStartTime: Long,
+        msEndDate: Long,
+        msEndTime: Long
+    ) {
 
         val laborActual = LaborActualEntity()
         laborActual.wonumHeader = wonum
@@ -58,24 +65,35 @@ class LaborActualViewModel @ViewModelInject constructor(
         laborActual.startDateForMaximo = startDateForMaximo
         laborActual.endDateForMaximo = endDateForMaximo
         laborActual.skillLevel = skillLevel
+        laborActual.longStartDate = msStartDate
+        laborActual.longStartTime = msStartTime
+        laborActual.longEndDate = msEndDate
+        laborActual.longEndTime = msEndTime
 
+        if (taskid.isNotEmpty()) {
+            laborActual.taskid = taskid
+            laborActual.taskDescription = taskdesc
+        }
         laborRepository.saveLaborActualCache(laborActual)
 
     }
 
     fun updateLaborActualLocal(
         laborActualEntity: LaborActualEntity,
-        wonum : String,
-        woId  : String,
-        labor :String,
-        craft : String,
-        startDateForMaximo : String,
-        endDateForMaximo : String,
-        skillLevel : String,
-        startDate : String,
-        startTime : String,
-        endDate : String,
-        endTime : String,){
+        taskid: String,
+        taskdesc: String,
+        wonum: String,
+        woId: String,
+        labor: String,
+        craft: String,
+        startDateForMaximo: String,
+        endDateForMaximo: String,
+        skillLevel: String,
+        startDate: String,
+        startTime: String,
+        endDate: String,
+        endTime: String,
+    ) {
 
         laborActualEntity.wonumHeader = wonum
         laborActualEntity.workorderid = woId
@@ -89,21 +107,30 @@ class LaborActualViewModel @ViewModelInject constructor(
         laborActualEntity.endDateForMaximo = endDateForMaximo
         laborActualEntity.skillLevel = skillLevel
 
+        if (taskid.isNotEmpty()) {
+            laborActualEntity.taskid = taskid
+            laborActualEntity.taskDescription = taskdesc
+        }
+
         laborRepository.saveLaborActualCache(laborActualEntity)
 
     }
 
-    fun fetchListLaborActual(woId: String){
+    fun fetchListLaborActual(woId: String) {
         val listLaborActual = laborRepository.findListLaborActualByWorkorderid(woId)
         Timber.d("fetchListLaborActual size :%s", listLaborActual.size)
         _getLaborActualList.value = listLaborActual
     }
 
-    fun fetchLaborActualByObjectboxid(objectboxid : Long) {
+    fun fetchLaborActualByObjectboxid(objectboxid: Long) {
         val laborCache = laborRepository.findlaborActualByObjectboxId(objectboxid)
         laborCache.whatIfNotNull {
             _getLaborActual.value = it
         }
+    }
+
+    fun removeLaborActual(laborActualEntity: LaborActualEntity){
+        laborRepository.removeLaborActualByEntity(laborActualEntity)
     }
 
 }

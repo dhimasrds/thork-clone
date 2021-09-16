@@ -59,6 +59,7 @@ class LaborActualAdapter constructor(
                     intent.putExtra(BaseParam.CRAFT, laborActualEntity.craft)
                     intent.putExtra(BaseParam.OBJECTBOXID, laborActualEntity.id)
                     activity.startActivity(intent)
+                    activity.finish()
                 }
             }
         }

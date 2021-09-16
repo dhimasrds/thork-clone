@@ -52,6 +52,11 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.removeByEntity(laborPlanEntity)
     }
 
+    fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity) {
+        return laborActualDao.removeLaborActualByEntity(laborActualEntity)
+    }
+
+
     fun findListLaborplanWorkorderid(workroderid: String): List<LaborPlanEntity> {
         return laborPlanDao.findListLaborPlan(workroderid)
     }
