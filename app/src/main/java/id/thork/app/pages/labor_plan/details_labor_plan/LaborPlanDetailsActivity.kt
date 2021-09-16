@@ -9,6 +9,7 @@ import id.thork.app.R
 import id.thork.app.base.BaseActivity
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityLaborPlanDetailsBinding
+import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
@@ -19,7 +20,7 @@ import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
-class LaborPlanDetailsActivity : BaseActivity() {
+class LaborPlanDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = CreateLaborPlanActivity::class.java.name
     private val viewModels: LaborPlanViewModel by viewModels()
     private val binding: ActivityLaborPlanDetailsBinding by binding(R.layout.activity_labor_plan_details)
@@ -28,9 +29,12 @@ class LaborPlanDetailsActivity : BaseActivity() {
     private var intentWorkorderid: String? = null
     private var intentCraft: String? = null
     private var laborPlanEntity: LaborPlanEntity? = null
+    private var woCache: Boolean = false
     var taskid: String? = null
     var taskdesc: String? = null
-
+    var taskrefwonum: String? = null
+    private lateinit var customDialogUtils: CustomDialogUtils
+    private var saveValidation: Boolean = false
 
     override fun setupView() {
         super.setupView()
@@ -50,6 +54,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
         )
 
         retriveFromIntent()
+        customDialogUtils = CustomDialogUtils(this)
     }
 
     override fun setupObserver() {
@@ -58,11 +63,12 @@ class LaborPlanDetailsActivity : BaseActivity() {
             laborPlanEntity = it
             taskid = it.taskid
             taskdesc = it.taskDescription
-            val skill = StringUtils.NVL(it.skillLevel, BaseParam.APP_DASH)
+            taskrefwonum = it.wonumTask
+            val isTask: Int? = it.isTask
             val vendor = StringUtils.NVL(it.vendor, BaseParam.APP_DASH)
             binding.apply {
                 tvLabor.text = it.laborcode
-                if (!taskid.equals(BaseParam.APP_NULL)) {
+                if (isTask != BaseParam.APP_FALSE) {
                     tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
                 }
                 tvCraft.text = it.craft
@@ -72,7 +78,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
 
         viewModels.woCache.observe(this, Observer {
             val status = it.status
-
+            woCache = true
             if (status != BaseParam.WAPPR) {
                 binding.apply {
                     selectCraft.visibility = View.INVISIBLE
@@ -81,7 +87,7 @@ class LaborPlanDetailsActivity : BaseActivity() {
                     btnSaveLaborPlan.visibility = View.INVISIBLE
                 }
             }
-        })
+        })  
     }
 
     private fun goToAnotherAct() {
@@ -107,7 +113,6 @@ class LaborPlanDetailsActivity : BaseActivity() {
 
     private fun goToSelectLabor() {
         val intent = Intent(this, SelectLaborActivity::class.java)
-//        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
         intent.putExtra(BaseParam.LABORCODE_FORM, BaseParam.APP_DETAIL)
         startActivityForResult(intent, BaseParam.REQUEST_CODE_LABOR)
     }
@@ -135,6 +140,11 @@ class LaborPlanDetailsActivity : BaseActivity() {
                             taskDescriptionResult.whatIfNotNull {
                                 taskdesc = it
                             }
+
+                            val taskRefwonum = it.getStringExtra(BaseParam.REFWONUM)
+                            taskRefwonum.whatIfNotNull {
+                                taskrefwonum = it
+                            }
                             binding.tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
                         }
                     }
@@ -143,10 +153,8 @@ class LaborPlanDetailsActivity : BaseActivity() {
                         // Handling when choose Labor dan fill craft
                         data.whatIfNotNull {
                             val laborcode = it.getStringExtra(BaseParam.LABORCODE_FORM)
-//                            viewModels.fetchLaborAndCraft(laborcode.toString())
                             binding.tvLabor.text = laborcode
                             binding.tvCraft.text = BaseParam.APP_DASH
-
                         }
                     }
 
@@ -165,57 +173,48 @@ class LaborPlanDetailsActivity : BaseActivity() {
         }
     }
 
-
     private fun retriveFromIntent() {
         intentWonum = intent.getStringExtra(BaseParam.WONUM)
         intentWorkorderid = intent.getStringExtra(BaseParam.WORKORDERID)
         intentLaborcode = intent.getStringExtra(BaseParam.LABORCODE)
         intentCraft = intent.getStringExtra(BaseParam.CRAFT)
-
+        val intentObjectboxid = intent.getLongExtra(BaseParam.OBJECTBOXID, 0)
         Timber.tag(TAG)
             .d("retriveFromIntent() laborcode: %s & craft: %s", intentLaborcode, intentCraft)
-
-        intentLaborcode.whatIfNotNull(
-            whatIf = {
-                viewModels.fetchLaborPlanByLaborCode(it, intentWorkorderid.toString())
-            },
-            whatIfNot = {
-                Timber.tag(TAG).d("retriveFromIntent() craft")
-                viewModels.fetchLaborPlanByCraft(
-                    intentCraft.toString(),
-                    intentWorkorderid.toString()
-                )
-            }
-        )
-
+        viewModels.fetchLaborPlanByObjectboxid(intentObjectboxid)
         viewModels.fetchWoCache(intentWonum.toString())
-
     }
 
     override fun setupListener() {
         super.setupListener()
         goToAnotherAct()
-
         binding.btnSaveLaborPlan.setOnClickListener {
-            val laborcode = binding.tvLabor.text
-            val craft = binding.tvCraft.text
-            val skillLevel = binding.tvSkillLevel.text
-            Timber.d("setupListener() Create labor plan: %s %s %s", laborcode, craft, skillLevel)
-            laborPlanEntity.whatIfNotNull {
-                viewModels.updateToLocalCache(
-                    it,
-                    laborcode.toString(),
-                    taskid.toString(),
-                    taskdesc.toString(),
-                    craft.toString(),
-                )
-            }
-            navigateToLaborPlan()
-
+            saveValidation = true
+            dialogSaveLaborplan()
         }
 
+        binding.btnDelete.setOnClickListener {
+            dialogDeleteLaborPlan()
+        }
     }
 
+    private fun dialogDeleteLaborPlan() {
+        customDialogUtils.setTitle(R.string.information)
+        customDialogUtils.setDescription(R.string.labor_plan_delete)
+        customDialogUtils.setRightButtonText(R.string.dialog_yes)
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+        customDialogUtils.setListener(this)
+        customDialogUtils.show()
+    }
+
+    private fun dialogSaveLaborplan() {
+        customDialogUtils.setLeftButtonText(R.string.dialog_no)
+            .setRightButtonText(R.string.dialog_yes)
+            .setTittle(R.string.labor_plan_title)
+            .setDescription(R.string.labor_plan_question)
+            .setListener(this)
+        customDialogUtils.show()
+    }
 
     override fun goToPreviousActivity() {
         super.goToPreviousActivity()
@@ -235,5 +234,59 @@ class LaborPlanDetailsActivity : BaseActivity() {
         finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        saveValidation = false
+        customDialogUtils.dismiss()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveValidation = false
+        customDialogUtils.dismiss()
+    }
+
+    override fun onRightButton() {
+        if (saveValidation) {
+            savelaborplan()
+        } else {
+            laborPlanEntity.whatIfNotNull {
+                viewModels.removeLaborPlanEntity(it, woCache)
+                navigateToLaborPlan()
+            }
+        }
+
+    }
+
+    override fun onLeftButton() {
+        saveValidation = false
+        customDialogUtils.dismiss()
+    }
+
+    override fun onMiddleButton() {
+        customDialogUtils.dismiss()
+    }
+
+    private fun savelaborplan() {
+        val labor = binding.tvLabor.text
+        val craft = binding.tvCraft.text
+        Timber.d(
+            "savelaborplan() save labor plan : %s %s %s",
+            labor,
+            craft,
+            taskid.toString()
+        )
+        laborPlanEntity.whatIfNotNull {
+            viewModels.updateToLocalCache(
+                it,
+                labor.toString(),
+                taskid.toString(),
+                taskdesc.toString(),
+                taskrefwonum.toString(),
+                craft.toString(),
+            )
+        }
+        navigateToLaborPlan()
+    }
 
 }

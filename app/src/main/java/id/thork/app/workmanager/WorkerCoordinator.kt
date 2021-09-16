@@ -117,7 +117,7 @@ class WorkerCoordinator @Inject constructor(
             .addTag(SYNC_WO)
 //            .setInputData(inputData)
             .setConstraints(constraints)
-            .setInitialDelay(15, TimeUnit.SECONDS)
+            .setInitialDelay(18, TimeUnit.SECONDS)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
                 OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
@@ -152,6 +152,23 @@ class WorkerCoordinator @Inject constructor(
 
         val workRequest: WorkRequest = OneTimeWorkRequestBuilder<AttendanceWorker>()
             .addTag(SYNC_ATTENDANCE)
+            .setConstraints(constraints)
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            ).build()
+
+        val workManager = WorkManager.getInstance(context)
+        workManager.enqueue(workRequest)
+    }
+
+    fun addSyncLabor() {
+        val SYNC_LABOR = "SYNC_LABOR"
+
+        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<LaborWorker>()
+            .addTag(SYNC_LABOR)
             .setConstraints(constraints)
             .setInitialDelay(10, TimeUnit.SECONDS)
             .setBackoffCriteria(

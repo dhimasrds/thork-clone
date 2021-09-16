@@ -46,6 +46,7 @@ class LaborTaskAdapter constructor(
                         Intent(BaseApplication.context, CreateLaborPlanActivity::class.java)
                     intent.putExtra(BaseParam.DESCRIPTION, taskEntity.desc)
                     intent.putExtra(BaseParam.TASKID, taskEntity.taskId)
+                    intent.putExtra(BaseParam.REFWONUM, taskEntity.refWonum)
                     activity.setResult(AppCompatActivity.RESULT_OK, intent)
                     activity.finish()
                 }

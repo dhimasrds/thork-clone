@@ -584,9 +584,22 @@
     <string name="task_summary_required">Summary can\'t empty</string>
     <string name="task_type_required">Type can\'t empty</string>
     <string name="server_did_not_response">Server did not response, please try again</string>
+    <string name="Do_you_want_to_switch_user">Do you want to switch user?</string>
+
 
     <string-array name="wo_type">
         <item>Assigned Work Order</item>
         <item>Local Work Order</item>
     </string-array>
+
+    <!--  Labor Plan -->
+    <string name="labor_plan_delete">Do you want to delete labor plan record?</string>
+    <string name="labor_laborcode_required">Labor can\'t empty</string>
+    <string name="labor_craft_required">Craft can\'t empty</string>
+
+    <!-- Save Labor Plan Dialog -->
+    <string name="labor_plan_title">Save</string>
+    <string name="labor_plan_question">Are you sure you want to save labor plan?</string>
+
+
 </resources>

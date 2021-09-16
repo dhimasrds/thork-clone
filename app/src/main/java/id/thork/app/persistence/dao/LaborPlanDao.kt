@@ -26,4 +26,13 @@ interface LaborPlanDao {
         wonum: String,
         taskid: String
     ): LaborPlanEntity?
+
+    fun findlaborPlanByWplaborid(wplaborid: String): LaborPlanEntity?
+    fun removeByEntity(laborPlanEntity: LaborPlanEntity)
+    fun findListLaborPlanlbySyncUpdateAndisDetailWo(
+        syncupdate: Int,
+        isLocally: Int
+    ): List<LaborPlanEntity>
+
+    fun findlaborPlanByObjectBoxid(objectboxid: Long): LaborPlanEntity?
 }

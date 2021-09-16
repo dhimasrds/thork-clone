@@ -746,13 +746,13 @@ class WorkOrderRepository @Inject constructor(
     }
 
     fun updateCreateWoCacheOfflineMode(
-        woId: Int?,
-        wonum: String?,
         longdesc: String?,
-        currentWo: WoCacheEntity
+        currentWo: WoCacheEntity,
+        member: Member
     ) {
         Timber.d("updateCreateWoCacheOfflineMode() syncBody %s ", currentWo.syncBody)
-
+        val woId = member.workorderid
+        val wonum = member.wonum
         val listMatAct = materialRepository.prepareMaterialActual(woId, wonum)
         val moshi = Moshi.Builder().build()
         val memberJsonAdapter = moshi.adapter(Member::class.java)
@@ -767,7 +767,7 @@ class WorkOrderRepository @Inject constructor(
         currentWo.woId = woId
         currentWo.wonum = wonum
         currentWo.laborCode = appSession.laborCode
-        currentWo.syncBody = memberJsonAdapter.toJson(currentMember)
+        currentWo.syncBody = memberJsonAdapter.toJson(member)
         currentWo.syncStatus = BaseParam.APP_TRUE
         currentWo.isChanged = BaseParam.APP_FALSE
         currentWo.isLatest = BaseParam.APP_TRUE
@@ -928,9 +928,97 @@ class WorkOrderRepository @Inject constructor(
         tWoCacheEntity.updatedDate = Date()
         tWoCacheEntity.wonum = tempWonum
         tWoCacheEntity.status = BaseParam.WAPPR
+        tWoCacheEntity.isLatest = BaseParam.APP_TRUE
         tWoCacheEntity.externalREFID = externalrefid
         saveWoList(tWoCacheEntity, appSession.userEntity.username)
     }
 
+
+    //Submodule Labor
+    suspend fun createLaborPlan(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        properties: String,
+        workOrderId: Int,
+        body: Member,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        val response =
+            workOrderClient.createLaborPlan(
+                cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                properties,
+                workOrderId,
+                body
+            )
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createLaborPlan() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG)
+                    .i("createLaborPlan() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("createLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
+
+    suspend fun updateLaborPlan(
+        cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
+        workOrderId: Int, body: Member,
+        onSuccess: () -> Unit, onError: (String) -> Unit,
+    ) {
+        val response =
+            workOrderClient.updateLaborPlan(
+                cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                workOrderId,
+                body
+            )
+        response.suspendOnSuccess {
+            onSuccess()
+            Timber.tag(TAG).i("udpateLaborPlan() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG)
+                    .i("udpateLaborPlan() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("udpateLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
+
+    suspend fun deleteLaborPlan(cookie: String, url : String,onSuccess: () -> Unit, onError: (String) -> Unit,) {
+        val response = workOrderClient.deleteLaborPlan(cookie, url)
+
+        response.suspendOnSuccess {
+            onSuccess()
+            Timber.tag(TAG).i("deleteLaborPlan() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG)
+                    .i("deleteLaborPlan() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+
+            .onException {
+                Timber.tag(TAG).i("deleteLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
 
 }

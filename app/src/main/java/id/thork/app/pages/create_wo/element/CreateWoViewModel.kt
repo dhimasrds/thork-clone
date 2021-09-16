@@ -48,9 +48,11 @@ class CreateWoViewModel @ViewModelInject constructor(
 
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
+    private val _updateSucces = MutableLiveData<Int>()
 
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
+    val updateSucces: LiveData<Int> get() = _updateSucces
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
     private var username: String? = null
@@ -172,6 +174,7 @@ class CreateWoViewModel @ViewModelInject constructor(
                         Timber.tag(TAG).i("createWorkOrderOnline() list wp labor %s", it.size)
                         laborRepository.handlingLaborPlan(it, woMember, tempWoId.toString())
                     }
+                    _updateSucces.postValue(BaseParam.APP_TRUE)
 
 //                    workorderid.whatIfNotNull {
 //                        uploadAttachments(it)
@@ -200,12 +203,6 @@ class CreateWoViewModel @ViewModelInject constructor(
         location: String,
     ) {
 
-//        val wsa = Woserviceaddres()
-//        wsa.longitudex = longitudex
-//        wsa.latitudey = latitudey
-//        val woserviceaddress: MutableList<Woserviceaddres> = java.util.ArrayList<Woserviceaddres>()
-//        woserviceaddress.add(wsa)
-
         tempWoId.whatIfNotNull { tempwoid ->
             val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
             val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
@@ -219,10 +216,11 @@ class CreateWoViewModel @ViewModelInject constructor(
             if (!assetnum.equals(BaseParam.APP_DASH)) {
                 member.assetnum = assetnum
             }
+            member.wonum = tempWonum
+            member.workorderid = tempwoid
             member.description = deskWo
             member.status = BaseParam.WAPPR
             member.reportdate = DateUtils.getDateTimeMaximo()
-//        member.woserviceaddress = woserviceaddress
             member.estdur = estDur
             member.wopriority = workPriority
             member.descriptionLongdescription = longdesc
@@ -246,10 +244,11 @@ class CreateWoViewModel @ViewModelInject constructor(
             tWoCacheEntity.createdDate = Date()
             tWoCacheEntity.updatedDate = Date()
             tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.woId = tempWoId
             tWoCacheEntity.status = BaseParam.WAPPR
+            tWoCacheEntity.isLatest = BaseParam.APP_TRUE
             tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
             workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
-            Timber.d("createwointeractor: %s", longdesc)
         }
     }
 

@@ -82,7 +82,6 @@ class LoginActivity : BaseActivity(),
             Timber.tag(TAG).i("username.observe() success: %s", it)
             if (it != null) {
                 binding.includeLoginContent.username.setText(it)
-                binding.includeLoginContent.username.isEnabled = false
                 binding.includeLoginContent.username.setTextColor(
                     ContextCompat.getColor(
                         this,

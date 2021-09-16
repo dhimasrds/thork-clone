@@ -8,6 +8,7 @@ import io.objectbox.annotation.Entity
  */
 @Entity
 class LaborMasterEntity : BaseEntity() {
+    var name : String? = null
     var laborid: String? = null
     var laborcode: String? = null
     var personid: String? = null

@@ -19,4 +19,8 @@ class LaborPlanEntity : BaseEntity(){
     var workorderid: String? = null
     var wonumTask: String? = null
     var syncUpdate: Int? = null
+    var isTask: Int? = null
+    var isLocally: Int? = null
+    var localRef: String? = null
+
 }

@@ -181,7 +181,7 @@ data class Woactivity(
     @Json(name = "woisswap")
     val woisswap: Boolean? = null,
     @Json(name = "wonum")
-    val wonum: String? = null,
+    var wonum: String? = null,
     @Json(name = "wopriority")
     val wopriority: Int? = null,
     @Json(name = "workorderid")

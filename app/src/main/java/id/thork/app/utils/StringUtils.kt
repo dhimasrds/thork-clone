@@ -191,9 +191,12 @@ object StringUtils {
     }
 
     fun checkingString(string: String): String {
-        val currentText = string
-        val convertText = currentText.replace("'", BaseParam.APP_EMPTY_STRING)
+        return string.replace("'", BaseParam.APP_EMPTY_STRING)
             .replace("\"", BaseParam.APP_EMPTY_STRING)
-        return convertText
     }
+
+    fun subStringLocalref(string: String): String {
+        return string.substring(20)
+    }
+
 }

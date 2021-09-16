@@ -83,4 +83,39 @@ interface WorkOrderApi {
         @Query(value = "oslc.select") select: String?,
         @Query(value = "oslc.where") where: String?
     ): ApiResponse<WorklogtypeResponse>
+
+    //POST LABOR PLAN
+    @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
+    suspend fun createLaborPlan(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
+        @Header(BaseParam.APP_PROPERTIES) properties: String?,
+        @Path("workorderid") workorderid: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: Member?,
+    ): ApiResponse<Member>
+
+
+    // UPDATE LABOR PLAN
+    @PUT("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
+    suspend fun updateLaborPlan(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
+        @Path("workorderid") workorderid: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: Member?,
+    ): ApiResponse<WorkOrderResponse>
+
+    // Delete LABOR PLAN
+    @DELETE("/{localref}")
+    suspend fun deleteLaborPlan(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Path("localref", encoded = true) localref: String?,
+    ) : ApiResponse<Void>
+
+
 }

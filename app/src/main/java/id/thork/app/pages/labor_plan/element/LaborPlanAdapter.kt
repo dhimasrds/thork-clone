@@ -50,9 +50,8 @@ class LaborPlanAdapter constructor(
                     tvLabor.text = laborPlanEntity.craft
                 }
 
-                if (taskid != BaseParam.APP_NULL) {
+                if (laborPlanEntity.isTask != BaseParam.APP_FALSE) {
                     tvType.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
-
                 }
 
                 tvStatus.text = vendor
@@ -62,6 +61,7 @@ class LaborPlanAdapter constructor(
                     intent.putExtra(BaseParam.WORKORDERID, laborPlanEntity.workorderid)
                     intent.putExtra(BaseParam.LABORCODE, laborPlanEntity.laborcode)
                     intent.putExtra(BaseParam.CRAFT, laborPlanEntity.craft)
+                    intent.putExtra(BaseParam.OBJECTBOXID, laborPlanEntity.id)
                     activity.startActivity(intent)
                     activity.finish()
                 }

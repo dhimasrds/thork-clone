@@ -5,6 +5,7 @@ import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.persistence.entity.LaborPlanEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
@@ -37,6 +38,10 @@ class LaborPlanDaoImp : LaborPlanDao {
 
     override fun remove() {
         laborPlanEntityBox.removeAll()
+    }
+
+    override fun removeByEntity(laborPlanEntity: LaborPlanEntity) {
+        laborPlanEntityBox.remove(laborPlanEntity)
     }
 
     override fun createLaborPlanCache(laborPlanEntity: LaborPlanEntity, username: String?) {
@@ -140,9 +145,36 @@ class LaborPlanDaoImp : LaborPlanDao {
         return null
     }
 
+    override fun findlaborPlanByWplaborid(
+        wplaborid: String
+    ): LaborPlanEntity? {
+        val laborPlanEntity =
+            laborPlanEntityBox.query().equal(LaborPlanEntity_.wplaborid, wplaborid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
 
+    override fun findListLaborPlanlbySyncUpdateAndisDetailWo(syncupdate: Int, isLocally: Int) : List<LaborPlanEntity> {
+        return laborPlanEntityBox.query().equal(LaborPlanEntity_.syncUpdate, syncupdate).equal(LaborPlanEntity_.isLocally, isLocally).
+        build().find()
+    }
 
-
+    override fun findlaborPlanByObjectBoxid(
+        objectboxid: Long
+    ): LaborPlanEntity? {
+        val laborPlanEntity =
+            laborPlanEntityBox.query().equal(LaborPlanEntity_.id, objectboxid)
+                .build()
+                .find()
+        laborPlanEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
 
 
 }

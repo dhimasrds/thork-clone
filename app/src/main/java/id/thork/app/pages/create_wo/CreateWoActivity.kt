@@ -386,6 +386,8 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         if (validateDialogExit) {
             viewModel.removeScanner(tempWonum)
             viewModel.removeTask(tempWonum)
+            customDialogUtils.dismiss()
+            finish()
         } else {
             if (isConnected) {
                 updateWoOnline()
@@ -402,7 +404,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
                 longDesc
             )
         }
-        gotoHome()
+
     }
 
     private fun updateWoOnline() {
@@ -416,11 +418,6 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             binding.asset.text.toString(),
             binding.tvLocation.text.toString()
         )
-        Toast.makeText(
-            this,
-            StringUtils.getStringResources(this, R.string.workorder_create_success),
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     private fun updateWoOffline() {
@@ -437,6 +434,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
             StringUtils.getStringResources(this, R.string.workorder_create_failed),
             Toast.LENGTH_LONG
         ).show()
+        gotoHome()
     }
 
     override fun onLeftButton() {
@@ -514,6 +512,17 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
         viewModel.locationCache.observe(this, Observer {
             binding.tvLocation.text = it.location
+        })
+
+        viewModel.updateSucces.observe(this, Observer {
+           if(it == BaseParam.APP_TRUE) {
+               Toast.makeText(
+                   this,
+                   StringUtils.getStringResources(this, R.string.workorder_create_success),
+                   Toast.LENGTH_LONG
+               ).show()
+               gotoHome()
+           }
         })
     }
 
