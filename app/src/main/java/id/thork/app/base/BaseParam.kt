@@ -61,6 +61,7 @@ object BaseParam {
     const val APP_X_DOCUMENT_DESCRIPTION = "x-document-description"
     const val APP_X_DOCUMENT_META = "x-document-meta"
     const val APP_CONTENT_TYPE = "Content-Type"
+    const val APP_CONTENT_TYPE_JSON = "application/json"
     const val APP_PATCHTYPE = "patchtype"
     const val APP_PROPERTIES = "properties"
     const val APP_ALL_PROPERTIES = "*"

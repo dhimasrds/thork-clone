@@ -8,6 +8,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import id.thork.app.di.module.AppSession
 import id.thork.app.di.module.PreferenceManager
+import id.thork.app.network.api.MaterialClient
 import id.thork.app.network.api.StoreroomClient
 import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.persistence.dao.*
@@ -80,10 +81,12 @@ object WorkOrderRepositoryModule {
     @Provides
     @ActivityRetainedScoped
     fun provideMaterialActualRepository(
+        materialClient: MaterialClient,
         appSession: AppSession,
     ): MaterialActualRepository {
         return MaterialActualRepository(
             MaterialActualDaoImp(),
+            materialClient,
             appSession
         )
     }

@@ -14,29 +14,24 @@ package id.thork.app.network.api
 
 import com.skydoves.sandwich.ApiResponse
 import id.thork.app.base.BaseParam
-import id.thork.app.network.response.material_response.MaterialResponse
-import id.thork.app.network.response.storeroom_response.StoreroomResponse
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import id.thork.app.network.model.material_actual.MatusetransBody
+import retrofit2.http.*
 
 /**
- * Created by Reja on 28/05/21
+ * Created by Reja on 17/09/2021
  * Jakarta, Indonesia.
  */
 interface MaterialApi {
-//AKAN DIHAPUS
-//    @GET("maximo/oslc/os/THISFSMITEM")
-//    suspend fun getMaterials(
-//        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
-//        @Query(value = "lean") lean: Int
-//    ): ApiResponse<MaterialResponse>
-//
-//    @GET("maximo/oslc/os/THISFSMSTOREROOM?")
-//    suspend fun getStoreroom(
-//        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
-//        @Query(value = "lean") lean: Int,
-//        @Query(value = "oslc.select") select: String,
-//        @Query(value = "oslc.where") where: String
-//    ): ApiResponse<StoreroomResponse>
+
+    @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
+    suspend fun addMaterialActual(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
+        @Path("workorderid") workorderid: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: MatusetransBody?,
+    ): ApiResponse<Void>
+
 }

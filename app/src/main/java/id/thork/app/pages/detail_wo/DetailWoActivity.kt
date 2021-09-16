@@ -428,6 +428,7 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         val intent = Intent(this, MaterialActualActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
         intent.putExtra(BaseParam.STATUS, statuswo)
+        intent.putExtra(BaseParam.FORM_STATE, BaseParam.FORM_STATE_EDIT)
         startActivity(intent)
     }
 

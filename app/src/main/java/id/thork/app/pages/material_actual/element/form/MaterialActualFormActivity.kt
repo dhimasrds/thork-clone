@@ -225,6 +225,11 @@ class MaterialActualFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDia
         viewModel.result.observe(this, Observer {
             if (it == BaseParam.APP_TRUE) {
                 gotoMaterialActual()
+                appSession.cookie.whatIfNotNull { cookie ->
+                    materialActualEntity.whatIfNotNull { entity ->
+                        viewModel.saveMaterialRemote(cookie,entity)
+                    }
+                }
             }
         })
     }

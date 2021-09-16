@@ -56,6 +56,14 @@ object WorkOrderModule {
 
     @Provides
     @ActivityRetainedScoped
+    fun provideMaterialApi(preferenceManager: PreferenceManager, httpLoggingInterceptor: HttpLoggingInterceptor): MaterialApi {
+        Timber.tag(TAG).i("provideMaterialApi() init")
+        val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
+        return retrofit.create(MaterialApi::class.java)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
     fun provideWorkOrderClient(workOrderApi: WorkOrderApi): WorkOrderClient {
         return WorkOrderClient(workOrderApi)
     }
@@ -64,5 +72,11 @@ object WorkOrderModule {
     @ActivityRetainedScoped
     fun provideStoreroomClient(storeroomApi: StoreroomApi): StoreroomClient {
         return StoreroomClient(storeroomApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideMaterialClient(materialApi: MaterialApi): MaterialClient {
+        return MaterialClient(materialApi)
     }
 }

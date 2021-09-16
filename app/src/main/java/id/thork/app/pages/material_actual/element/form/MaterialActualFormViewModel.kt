@@ -4,18 +4,23 @@ import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.base.BaseParam
 import id.thork.app.base.LiveCoroutinesViewModel
 import id.thork.app.di.module.AppSession
 import id.thork.app.helper.builder.model.LocomotifAttribute
+import id.thork.app.network.model.material_actual.Matusetran
+import id.thork.app.network.model.material_actual.MatusetransBody
 import id.thork.app.pages.material_plan.element.form.MaterialPlanFormViewModel
 import id.thork.app.persistence.entity.MaterialActualEntity
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.WpmaterialEntity
 import id.thork.app.repository.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.math.abs
 
 /**
  * Created by Reja on 05/09/21
@@ -130,4 +135,39 @@ class MaterialActualFormViewModel @ViewModelInject constructor(
         }
     }
 
+    private fun buildReqBody(materialActualEntity: MaterialActualEntity): MatusetransBody {
+        val matusetransBody = MatusetransBody()
+        val matusetranList: MutableList<Matusetran> = mutableListOf()
+        val matusetran: Matusetran = Matusetran()
+        matusetran.matusetransid = 0
+        matusetran.linetype = materialActualEntity.lineType
+        matusetran.issuetype = BaseParam.ISSUE
+        matusetran.itemnum = materialActualEntity.itemNum
+        matusetran.storeloc = materialActualEntity.storeroom
+        matusetran.unitcost = 0.0
+        materialActualEntity.itemQty.whatIfNotNull { quantity ->
+            matusetran.quantity = - abs(quantity)?.toDouble()
+        }
+        matusetranList.add(matusetran)
+        matusetransBody.matusetrans = matusetranList
+        return matusetransBody
+    }
+
+    fun saveMaterialRemote(cookie: String, materialActualEntity: MaterialActualEntity) {
+        materialActualEntity.whatIfNotNull { entity ->
+            val matusetransBody = buildReqBody(entity)
+            viewModelScope.launch {
+                materialActualEntity.workorderId?.let {
+                    materialActualRepository.addMaterialActual(cookie, it, matusetransBody,
+                        onSuccess = {
+                            Timber.tag(TAG).d("saveMaterialRemote() onSuccess")
+                            //update local cache
+                        },
+                        onError = {
+                            Timber.tag(TAG).d("saveMaterialRemote() onError")
+                        })
+                }
+            }
+        }
+    }
 }
