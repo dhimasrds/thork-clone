@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.work.WorkInfo
@@ -21,7 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentWorkOrderListBinding
+import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.main.element.MapViewModel
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
@@ -122,7 +125,15 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
 
-            viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+            viewLifecycleOwner.lifecycleScope.launch{
+                viewModel.outputWorkInfos.observe(viewLifecycleOwner, workInfosObserver())
+            }
+
+//            val sharedViewModel = ViewModelProvider(requireActivity()).get(CreateWoViewModel::class.java)
+//            sharedViewModel.refreshAdapter.observe(viewLifecycleOwner, Observer {
+//                Timber.d("onCreateView sharedViewModel refreshAdapter :%s", it)
+//                workOrderAdapter.refresh()
+//            })
         }
     }
 
@@ -238,6 +249,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             // Note that these next few lines grab a single WorkInfo if it exists
             // This code could be in a Transformation in the ViewModel; they are included here
             // so that the entire process of displaying a WorkInfo is in one location.
+            Timber.d("workInfosObserver() listOfWorkInfo : %s", listOfWorkInfo)
 
             // If there are no matching work info, do nothing
             if (listOfWorkInfo.isNullOrEmpty()) {
