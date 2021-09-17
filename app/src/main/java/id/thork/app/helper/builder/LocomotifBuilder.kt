@@ -129,6 +129,12 @@ class LocomotifBuilder<T> constructor(val item: T, val context: Context) {
         this.fieldsCaption = fieldsCaption
     }
 
+    fun setRequiredFields(fields: Array<String>) {
+        fields.forEach { field->
+            fieldRequired.put(field, true)
+        }
+    }
+
     fun setupExtensionView(extensionView: View) {
         this.extensionView = extensionView
     }

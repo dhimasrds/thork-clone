@@ -53,7 +53,7 @@ class MaterialActualFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDia
     private lateinit var materialLovBox: LocomotifLovBox
     private lateinit var materialLov: LocomotifLov
     private lateinit var lineType: RadioGroup
-    private lateinit var direqReq: CheckBox
+//    private lateinit var direqReq: CheckBox
     private lateinit var description: AppCompatEditText
     private lateinit var itemNumGroup: View
     private lateinit var itemNumExtension: View
@@ -113,14 +113,15 @@ class MaterialActualFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDia
                 locomotifBuilder?.listener = this
                 locomotifBuilder?.setupFields(
                     arrayOf(
-                        "lineType", "itemNum", "description", "itemQty", "storeroom", "direqReq"
+                        "lineType", "itemNum", "description", "itemQty", "storeroom"
                     )
                 )
                 locomotifBuilder?.setupFieldsCaption(
                     arrayOf(
-                        "Line Type", "Item", "Description", "Qty", "Storeroom", "Direct Issue"
+                        "Line Type", "Item", "Description", "Qty", "Storeroom"
                     )
                 )
+                locomotifBuilder?.setRequiredFields(arrayOf("itemNum", "description", "storeroom"))
                 itemNumExtension = View.inflate(this, R.layout.material_actual_item_extension, null)
                 locomotifBuilder?.setupExtensionView(itemNumExtension)
                 locomotifBuilder?.forFieldItems("lineType", lineTypeItems)
@@ -284,7 +285,7 @@ class MaterialActualFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDia
 
         itemNumGroup = locomotifBuilder?.getWidgetGroupByTag("itemNum") as View
         lineType = locomotifBuilder?.getWidgetByTag("lineType") as LocomotifRadio
-        direqReq = locomotifBuilder?.getWidgetByTag("direqReq") as CheckBox
+//        direqReq = locomotifBuilder?.getWidgetByTag("direqReq") as CheckBox
         description = locomotifBuilder?.getWidgetByTag("description") as AppCompatEditText
 
         val rfidButton: AppCompatButton = itemNumExtension.findViewById(R.id.btn_rfid)
@@ -340,15 +341,15 @@ class MaterialActualFormActivity : BaseActivity(), LocomotifAdapter.LocomotifDia
         if (fieldName.equals("lineType")) {
             if (value.equals("ITEM")) {
                 itemNumGroup.visibility = View.VISIBLE
-                direqReq.isEnabled = true
+                //direqReq.isEnabled = true
 
                 if (intentState.equals(BaseParam.FORM_STATE_READ_ONLY)) {
-                    direqReq.isEnabled = false
+                    //direqReq.isEnabled = false
                 }
             } else if (value.equals("MATERIAL")) {
                 itemNumGroup.visibility = View.GONE
-                direqReq.isChecked = true
-                direqReq.isEnabled = false
+//                direqReq.isChecked = true
+//                direqReq.isEnabled = false
 
                 locomotifBuilder?.forField("itemNum")?.
                 isRequired(false)?.
