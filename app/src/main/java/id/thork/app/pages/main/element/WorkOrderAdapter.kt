@@ -17,6 +17,7 @@ import id.thork.app.network.response.work_order.Member
 import id.thork.app.pages.detail_wo.DetailWoActivity
 import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
+import id.thork.app.utils.StringUtils
 import timber.log.Timber
 
 /**
@@ -60,7 +61,7 @@ class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(
             Timber.d("adapter assetnum   :%s", woEntity.assetnum)
             binding.wo = woEntity
             binding.tvWonum.text = woEntity.wonum
-            binding.desc.text = woEntity.description
+            binding.desc.text = StringUtils.truncate(woEntity.description,22)
             binding.tvWoAsset.text =
                 id.thork.app.utils.StringUtils.NVL(woEntity.assetnum, BaseParam.APP_DASH)
             binding.tvWoLocation.text = woEntity.location
