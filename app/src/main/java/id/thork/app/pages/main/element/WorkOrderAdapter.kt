@@ -1,5 +1,6 @@
 package id.thork.app.pages.main.element
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,13 +20,16 @@ import id.thork.app.persistence.dao.WoCacheDao
 import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by Dhimas Saputra on 08/01/21
  * Jakarta, Indonesia.
  */
 
-class WorkOrderAdapter : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(DiffCallback) {
+@Singleton
+class WorkOrderAdapter@Inject constructor(context: Context)  : PagingDataAdapter<Member, WorkOrderAdapter.ViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Member>() {
 

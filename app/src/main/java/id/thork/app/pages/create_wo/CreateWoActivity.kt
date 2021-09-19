@@ -13,14 +13,8 @@
 package id.thork.app.pages.create_wo
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.text.InputFilter
 import android.view.View
 import android.widget.Button
@@ -31,9 +25,9 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.zxing.integration.android.IntentIntegrator
 import com.skydoves.whatif.whatIfNotNull
+import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseActivity
-import id.thork.app.base.BaseApplication.Constants.context
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityCreateWorkorderBinding
 import id.thork.app.pages.CustomDialogUtils
@@ -47,6 +41,7 @@ import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
+import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
@@ -55,7 +50,9 @@ import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     DialogUtils.DialogUtilsListener {
     private val viewModel: CreateWoViewModel by viewModels()
@@ -80,6 +77,9 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     private var latitudey: Double? = null
     private var longitudex: Double? = null
     private var validateDialogExit: Boolean = false
+
+    @Inject
+    lateinit var workOrderAdapter: WorkOrderAdapter
 
     override fun setupView() {
         super.setupView()
@@ -493,6 +493,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
 
     private fun gotoHome() {
         finish()
+        workOrderAdapter.refresh()
     }
 
     private fun startQRScanner(requestCode: Int) {

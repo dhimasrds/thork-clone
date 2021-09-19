@@ -32,6 +32,7 @@ import id.thork.app.network.api.StoreroomApi
 import id.thork.app.network.api.StoreroomClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
+import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.persistence.dao.*
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.WoCacheEntity
@@ -50,6 +51,7 @@ import java.util.*
 class WorkOrderWorker @WorkerInject constructor(
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters,
+    val workOrderAdapter: WorkOrderAdapter,
     val appSession: AppSession,
     val preferenceManager: PreferenceManager,
     val mx: AppResourceMx,
@@ -81,6 +83,8 @@ class WorkOrderWorker @WorkerInject constructor(
     var worklogRepository: WorklogRepository
     var taskRepository: TaskRepository
     var laborRepository: LaborRepository
+
+
 
     lateinit var retrofit: Retrofit
 
@@ -242,6 +246,7 @@ class WorkOrderWorker @WorkerInject constructor(
                                     if (nextIndex <= listWo.size - 1) {
                                         updateStatusWoOffline(listWo, nextIndex)
                                     }
+                                    workOrderAdapter.refresh()
                                 },
                                 onError = {
                                     Timber.tag(TAG).i("onError() onError: %s", it)
@@ -335,6 +340,8 @@ class WorkOrderWorker @WorkerInject constructor(
                             if (nextIndex <= listWo.size - 1) {
                                 updateCreateWo(listWo, nextIndex)
                             }
+                            workOrderAdapter.refresh()
+                            workOrderAdapter.retry()
                         }, onError = {
                             Timber.tag(TAG).i("updateCreateWo() error: %s", it)
                         }
