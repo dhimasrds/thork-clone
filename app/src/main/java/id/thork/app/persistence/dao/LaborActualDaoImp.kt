@@ -86,4 +86,22 @@ class LaborActualDaoImp : LaborActualDao {
         return null
     }
 
+    override fun findListLaborActualbyTaskid(workorderid: String, taskid: String) : List<LaborActualEntity> {
+        return laborActualEntityBox.query().equal(LaborActualEntity_.workorderid, workorderid).equal(LaborActualEntity_.taskid, taskid).
+        build().find()
+    }
+
+    override fun findlaborPlanByLabtransid(
+        labtransid: String
+    ): LaborActualEntity? {
+        val laborActualEntity =
+            laborActualEntityBox.query().equal(LaborActualEntity_.labtransid, labtransid)
+                .build()
+                .find()
+        laborActualEntity.whatIfNotNullOrEmpty {
+            return it[0]
+        }
+        return null
+    }
+
 }

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
@@ -65,6 +64,8 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
         setupDatePicker()
         goToAnotherAct()
 
+        binding.cardEndDate.visibility = View.GONE
+        binding.cardEndTime.visibility = View.GONE
 
         dialogUtils = DialogUtils(this)
         customDialogUtils = CustomDialogUtils(this)
@@ -212,61 +213,42 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
 
     private fun validationDateAndTime() {
         if (validationEmpty()) {
-            if (msEndDate!! == msStartDate!! && msEndTime!! < msStartTime!!) {
-                CommonUtils.standardToast("Finish time has to be after Start time")
-            } else if (msEndDate!! < msStartDate!!) {
-                CommonUtils.standardToast("Finish time has to be after Start time")
-            } else {
-                convertDateFormat()
-                dialogSaveLaborActual()
-            }
-
+            convertDateFormat()
+            dialogSaveLaborActual()
         }
     }
 
     private fun validationEmpty(): Boolean {
         binding.apply {
-            if (tvLabor.text.toString().isBlank()) {
+            when {
+                tvLabor.text.toString().isBlank() -> {
 
-                tvLabor.error = "Cannot be empty"
+                    tvLabor.error = "Cannot be empty"
 
-              CommonUtils.standardToast("field cannot be empty")
-                return false
-            }
-            else if (tvStartDate.text.isNullOrBlank()) {
+                    CommonUtils.standardToast("field cannot be empty")
+                    return false
+                }
+                tvStartDate.text.isNullOrBlank() -> {
 
-                tvStartDate.error = "Cannot be empty"
+                    tvStartDate.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
-                return false
-            }
-            else if (tvStartTime.text.isNullOrBlank()) {
+                    CommonUtils.standardToast("field cannot be empty")
+                    return false
+                }
+                tvStartTime.text.isNullOrBlank() -> {
 
-                tvStartTime.error = "Cannot be empty"
+                    tvStartTime.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
-                return false
-            }
-            else if (tvEndDate.text.isNullOrBlank()) {
+                    CommonUtils.standardToast("field cannot be empty")
+                    return false
+                }
+                tvCraft.text.isNullOrBlank() -> {
 
-                tvEndDate.error = "Cannot be empty"
+                    tvCraft.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
-                return false
-            }
-            else if (tvEndTime.text.isNullOrBlank()) {
-
-                tvEndTime.error = "Cannot be empty"
-
-                CommonUtils.standardToast("field cannot be empty")
-                return false
-            }
-            else if (tvCraft.text.isNullOrBlank()) {
-
-                tvCraft.error = "Cannot be empty"
-
-                CommonUtils.standardToast("field cannot be empty")
-                return false
+                    CommonUtils.standardToast("field cannot be empty")
+                    return false
+                }
             }
         }
         return true
@@ -274,10 +256,9 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
 
     private fun removeValidation() {
         binding.apply {
-            if (!tvLabor.text.isNullOrEmpty()){
+            if (!tvLabor.text.isNullOrEmpty()) {
                 tvLabor.error = null
-            }
-            else if (!tvCraft.text.isNullOrEmpty()){
+            } else if (!tvCraft.text.isNullOrEmpty()) {
                 tvCraft.error = null
             }
         }
@@ -398,16 +379,11 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
                 tvLabor.text.toString(),
                 tvCraft.text.toString(),
                 startDateObjectBoxFormat.toString(),
-                endDateObjectBoxFormat.toString(),
                 tvSkillLevel.text.toString(),
                 tvStartDate.text.toString(),
                 tvStartTime.text.toString(),
-                tvEndDate.text.toString(),
-                tvEndTime.text.toString(),
                 msStartDate!!,
-                msStartTime!!,
-                msEndDate!!,
-                msEndTime!!
+                msStartTime!!
             )
         }
         customDialogUtils.dismiss()

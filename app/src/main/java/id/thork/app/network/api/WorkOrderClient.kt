@@ -1,5 +1,6 @@
 package id.thork.app.network.api
 
+import id.thork.app.network.response.work_order.Labtran
 import id.thork.app.network.response.work_order.Member
 import javax.inject.Inject
 
@@ -98,6 +99,46 @@ class WorkOrderClient @Inject constructor(
         cookie: String,
         url : String
     ) = workOrderApi.deleteLaborPlan(cookie,url)
+
+    suspend fun createLaborActual(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        properties: String,
+        workOrderId: Int,
+        body: Member,
+    ) =
+        workOrderApi.createLaborActual(
+            cookie,
+            xMethodeOverride,
+            contentType,
+            patchType,
+            properties,
+            workOrderId,
+            LEAN,
+            body
+        )
+
+    suspend fun updateLaborActual(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        labtrnasId: Int,
+        body: Labtran,
+    ) =
+        workOrderApi.updateLaborActual(
+            cookie,
+            xMethodeOverride,
+            contentType,
+            patchType,
+            labtrnasId,
+            LEAN,
+            body
+        )
+
+
 
     companion object {
         private const val LEAN = 1

@@ -5,6 +5,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.material_response.MaterialResponse
+import id.thork.app.network.response.work_order.Labtran
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.network.response.worklogtype_response.WorklogtypeResponse
@@ -26,7 +27,7 @@ interface WorkOrderApi {
         @Query(value = "oslc.pageSize") pagesize: Int?,
     ): ApiResponse<WorkOrderResponse>
 
-    @GET("maximo/oslc/os/oslcwo")
+    @GET("maximo/oslc/os/THISFSMWODETAIL")
     suspend fun searchWorkorder(
         @Header("MAXAUTH") userHash: String?,
         @Query(value = "lean") lean: Int,
@@ -116,6 +117,31 @@ interface WorkOrderApi {
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
         @Path("localref", encoded = true) localref: String?,
     ) : ApiResponse<Void>
+
+
+    //POST LABOR ACTUAL
+    @POST("/maximo/oslc/os/thisfsmwodetail/{workorderid}")
+    suspend fun createLaborActual(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
+        @Header(BaseParam.APP_PROPERTIES) properties: String?,
+        @Path("workorderid") workorderid: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: Member?,
+    ): ApiResponse<Member>
+
+    @PUT("/maximo/oslc/os/thisfsmlabtrans/{labtransid}")
+    suspend fun updateLaborActual(
+        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Header(BaseParam.APP_X_METHOD_OVERRIDE) xMethodeOverride: String?,
+        @Header(BaseParam.APP_CONTENT_TYPE) contentType: String?,
+        @Header(BaseParam.APP_PATCHTYPE) patchtype: String?,
+        @Path("labtransid") labtrnasId: Int,
+        @Query(value = "lean") lean: Int,
+        @Body body: Labtran,
+    ) : ApiResponse<Labtran>
 
 
 }

@@ -3,6 +3,7 @@ package id.thork.app.pages.labor_actual.details_labor_actual
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.view.View
 import androidx.activity.viewModels
 import com.skydoves.whatif.whatIfNotNull
 import id.thork.app.R
@@ -82,6 +83,10 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
         dialogUtils = DialogUtils(this)
         customDialogUtils = CustomDialogUtils(this)
+        binding.deleteLayout.visibility = View.GONE
+        binding.selectCraft.visibility = View.GONE
+        binding.selectLabor.visibility = View.GONE
+        binding.selectTask.visibility = View.GONE
 
         setupToolbarWithHomeNavigation(
             getString(R.string.labor_actual),
@@ -92,7 +97,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
             option = false,
             historyAttendanceIcon = false
         )
-
 
         retriveFromIntent()
     }
@@ -466,21 +470,18 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         if (saveValidation) {
             binding.apply {
                 laborActualActivity.whatIfNotNull {
-                    viewModels.updateLaborActualLocal(
+                    viewModels.updateLaborActual(
                         it,
-                        taskid.toString(),
-                        taskdesc.toString(),
-                        intentWonum.toString(),
-                        intentWorkorderid.toString(),
-                        tvLabor.text.toString(),
-                        tvCraft.text.toString(),
                         startDateObjectBoxFormat.toString(),
                         endDateObjectBoxFormat.toString(),
-                        tvSkillLevel.text.toString(),
                         tvStartDate.text.toString(),
                         tvStartTime.text.toString(),
                         tvEndDate.text.toString(),
-                        tvEndTime.text.toString()
+                        tvEndTime.text.toString(),
+                        msStartDate!!,
+                        msEndTime!!,
+                        msStartTime!!,
+                        msEndTime!!
                     )
                 }
             }

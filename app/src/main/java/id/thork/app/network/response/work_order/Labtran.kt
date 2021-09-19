@@ -23,9 +23,9 @@ data class  Labtran(
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "laborcode")
-    val laborcode: String? = null,
+    var laborcode: String? = null,
     @Json(name = "labtransid")
-    val labtransid: Int? = null,
+    var labtransid: Int? = null,
     @Json(name = "linecost")
     val linecost: Double? = null,
     @Json(name = "localref")
@@ -57,9 +57,9 @@ data class  Labtran(
     @Json(name = "skilllevel")
     val skilllevel: String? = null,
     @Json(name = "startdatetime")
-    val startdatetime: String? = null,
+    var startdatetime: String? = null,
     @Json(name = "finishdatetime")
-    val finishdatetime: String? = null,
+    var finishdatetime: String? = null,
     @Json(name = "vendor")
     var vendor: String? = null,
 )
