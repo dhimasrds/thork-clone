@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -37,6 +38,8 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val viewModel: WorkOrderListViewModel by viewModels()
     private lateinit var binding: FragmentWorkOrderListBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
+
+    @Inject
     lateinit var workOrderAdapter: WorkOrderAdapter
 
 
@@ -49,7 +52,6 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         pullRefreshLayout = binding.swipeRefreshLayout
-        workOrderAdapter = WorkOrderAdapter()
         viewModel.pruneWork()
 
         binding.dropdownMenu.onItemSelectedListener = this
@@ -104,6 +106,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             viewModel.woListwappr.observe(viewLifecycleOwner) {
                 workOrderAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 Timber.d("onCreateView :%s", it)
+                workOrderAdapter.snapshot()
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {

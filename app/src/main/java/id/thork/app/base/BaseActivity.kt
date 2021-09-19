@@ -358,6 +358,7 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun setupListener() {
     }
 
+
     open fun setupObserver() {
         Timber.tag(BaseApplication.TAG)
         connectionLiveData.observe(this, { connectionState ->

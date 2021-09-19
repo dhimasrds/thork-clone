@@ -24,10 +24,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ActivityFragment : Fragment() {
-    private lateinit var woActivityAdapter: WorkOrderAdapter
+    @Inject
+    lateinit var woActivityAdapter: WorkOrderAdapter
     private lateinit var binding: FragmentActivityBinding
     private lateinit var pullRefreshLayout: PullRefreshLayout
     private val viewModel: WorkOrderActvityViewModel by viewModels()
@@ -41,7 +43,6 @@ class ActivityFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         pullRefreshLayout = binding.swipeRefreshLayout
-        woActivityAdapter = WorkOrderAdapter()
         viewModel.pruneWork()
 
         return binding.root
