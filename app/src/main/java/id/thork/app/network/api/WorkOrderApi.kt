@@ -26,7 +26,7 @@ interface WorkOrderApi {
         @Query(value = "oslc.pageSize") pagesize: Int?,
     ): ApiResponse<WorkOrderResponse>
 
-    @GET("maximo/oslc/os/oslcwo")
+    @GET("maximo/oslc/os/THISFSMWODETAIL")
     suspend fun searchWorkorder(
         @Header("MAXAUTH") userHash: String?,
         @Query(value = "lean") lean: Int,

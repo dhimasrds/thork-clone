@@ -64,7 +64,6 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     init {
         woCacheDao = WoCacheDaoImp()
         outputWorkInfos = workManager.getWorkInfosByTagLiveData("SYNC_WO")
-
     }
 
     private val currentQuery = state.getLiveData(CURRENT_QUERY, EMPTY_QUERY)

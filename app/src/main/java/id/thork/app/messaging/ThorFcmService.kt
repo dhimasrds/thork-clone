@@ -78,8 +78,13 @@ class ThorFcmService : FirebaseMessagingService() {
         Timber.tag(TAG).i("processingRemoteMessage() topic: %s", remoteMessage.from)
         val crewId = remoteMessage.data.get("crewId")
         val isCrewExists = appSession.personUID.toString().equals(crewId)
+        val isNotifTopic = remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_NOTIFICATION_TOPIC
+        val isLocationTopic = remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_LOCATION_TOPIC
 
-        if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_NOTIFICATION_TOPIC) {
+        Timber.tag(TAG).i("processingRemoteMessage() isNotifTopic: %s", isNotifTopic)
+        Timber.tag(TAG).i("processingRemoteMessage() isLocationTopic: %s", isLocationTopic)
+
+        if (isNotifTopic) {
             if (!crewId.isNullOrEmpty()) {
                 Timber.tag(TAG).i(
                     "processingRemoteMessage() local crewId: %s server CrewId: %s Crew Exists: %s",
@@ -94,7 +99,7 @@ class ThorFcmService : FirebaseMessagingService() {
             //} else {
             //notification when application on foreground
             //}
-        } else if (remoteMessage.from == BaseParam.FIREBASE_TOPIC + BaseParam.FIREBASE_LOCATION_TOPIC) {
+        } else if (isLocationTopic) {
             Timber.tag(TAG).i("processingRemoteMessage location: %s", remoteMessage.toString())
 
             if (isBackgroundRunning(applicationContext)) {
