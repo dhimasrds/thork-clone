@@ -6,6 +6,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.base.BaseRepository
 import id.thork.app.di.module.AppSession
 import id.thork.app.network.response.labor_response.Laborcraftrate
+import id.thork.app.network.response.work_order.Labtran
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.Woactivity
 import id.thork.app.network.response.work_order.Wplabor
@@ -52,6 +53,11 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.removeByEntity(laborPlanEntity)
     }
 
+    fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity) {
+        return laborActualDao.removeLaborActualByEntity(laborActualEntity)
+    }
+
+
     fun findListLaborplanWorkorderid(workroderid: String): List<LaborPlanEntity> {
         return laborPlanDao.findListLaborPlan(workroderid)
     }
@@ -80,8 +86,12 @@ class LaborRepository @Inject constructor(
         return laborPlanDao.findlaborPlanByWplaborid(wplaborid)
     }
 
-    fun findlaborPlanByObjectboxId(objectboxid: Long) : LaborPlanEntity? {
+    fun findlaborPlanByObjectboxId(objectboxid: Long): LaborPlanEntity? {
         return laborPlanDao.findlaborPlanByObjectBoxid(objectboxid)
+    }
+
+    fun findlaborActualByObjectboxId(objectboxid: Long): LaborActualEntity? {
+        return laborActualDao.findlaborActualByObjectBoxid(objectboxid)
     }
 
     fun findListLaborPlanBySyncUpdateAndLocally(
@@ -357,7 +367,7 @@ class LaborRepository @Inject constructor(
         wplaborid: String,
         wonumheader: String,
         woidHeader: String,
-        localref : String
+        localref: String
     ) {
         laborPlanEntity.wplaborid = wplaborid
         laborPlanEntity.wonumHeader = wonumheader
@@ -436,6 +446,10 @@ class LaborRepository @Inject constructor(
 
     }
 
+    fun findLaborActualByLabtransid(labtransid: String): LaborActualEntity? {
+        return laborActualDao.findlaborPlanByLabtransid(labtransid)
+    }
+
     fun findLaborActual(laborcode: String, workorderid: String): LaborActualEntity? {
         return laborActualDao.findlaborActualByworkorderid(laborcode, workorderid)
     }
@@ -501,6 +515,102 @@ class LaborRepository @Inject constructor(
         }
     }
 
+    //Update labor actual with task
+    fun preapreBodyLaborActualTask(
+        wplaborid: String,
+        taskid: String,
+        wonumtask: String
+    ): List<Woactivity> {
+        val woactivityList = mutableListOf<Woactivity>()
+        val listWplabor = mutableListOf<Wplabor>()
+        val laborplanEntity = laborPlanDao.findlaborPlanByWplaborid(wplaborid)
+
+        laborplanEntity.whatIfNotNull {
+            val wplabor = Wplabor()
+            wplabor.wplaborid = it.wplaborid?.toInt()
+            if (it.laborcode != BaseParam.APP_DASH) {
+                wplabor.laborcode = it.laborcode
+            } else {
+                wplabor.craft = it.craft
+            }
+            listWplabor.add(wplabor)
+        }
+
+        listWplabor.whatIfNotNullOrEmpty {
+            val woactivity = Woactivity()
+            woactivity.taskid = taskid.toInt()
+            woactivity.wonum = wonumtask
+            woactivity.wplabor = it
+            woactivityList.add(woactivity)
+        }
+
+        return woactivityList
+    }
+
+    fun prepareBodyLaborActual(workroderid: String, taskid: String): List<Labtran> {
+        val listLaborActual = laborActualDao.findListLaborActualbyTaskid(workroderid, taskid)
+        val labtransList = mutableListOf<Labtran>()
+        listLaborActual.whatIfNotNull { listCache ->
+            listCache.forEach { laboractual ->
+                if (laboractual.syncUpdate == BaseParam.APP_FALSE) {
+                    val labtran = Labtran()
+                    laboractual.laborcode.whatIfNotNull(
+                        whatIf = {
+                            labtran.labtransid = 0
+                            labtran.laborcode = it
+                        }
+                    )
+                    labtransList.add(labtran)
+                }
+            }
+        }
+        return labtransList
+    }
+
+    fun prepareBodyUpdateLaborActual(laborActualEntity: LaborActualEntity) : Labtran {
+        val prepareBody = Labtran()
+        prepareBody.startdatetime = laborActualEntity.startDateForMaximo
+        prepareBody.finishdatetime = laborActualEntity.endDateForMaximo
+        return prepareBody
+    }
+
+    fun handlingCreateLaborActual(member: Member, laborActualEntity: LaborActualEntity) {
+        val woactivity = member.woactivity
+        woactivity.whatIfNotNullOrEmpty { listTask ->
+            listTask.forEach {
+                it.labtrans.whatIfNotNullOrEmpty { labtrans ->
+                    labtrans.forEach { labtran ->
+                        laborActualEntity.wonumTask = it.wonum
+                        checkingLaborActualExisting(labtran, laborActualEntity)
+                    }
+                }
+            }
+        }
+    }
+
+    //handling labor plan cache when update labor plan to mx success
+    fun handlingUpdateLaborActual(laborActualEntity: LaborActualEntity, syncUpdate: Int) {
+        laborActualEntity.syncUpdate = syncUpdate
+        saveLaborActualCache(laborActualEntity)
+    }
+
+
+    //Checking labor actual existing to replace labtransid
+    private fun checkingLaborActualExisting(
+        labtran: Labtran,
+        laborActualEntity: LaborActualEntity
+    ) {
+        val labtransid = labtran.labtransid.toString()
+        val cacheLaborPlan = findLaborActualByLabtransid(labtransid)
+        if (cacheLaborPlan == null) {
+            Timber.tag(TAG).i("checkingLaborActualExisting() update local cache after update")
+            laborActualEntity.labtransid = labtransid
+            laborActualEntity.syncUpdate = BaseParam.APP_TRUE
+            saveLaborActualCache(laborActualEntity)
+        }
+    }
+
+
     /**
      * Labor Master
      */
@@ -515,6 +625,10 @@ class LaborRepository @Inject constructor(
 
     fun fetchListLabor(): List<LaborMasterEntity> {
         return laborMasterDao.getListLaborMaster()
+    }
+
+    fun fetchListCraftMaster(): List<CraftMasterEntity> {
+        return craftMasterDao.getListCraft()
     }
 
     fun addLaborMasterCache(member: id.thork.app.network.response.labor_response.Member) {

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.whatif.whatIfNotNull
@@ -34,13 +35,14 @@ class WorkOrderAdapter@Inject constructor(context: Context)  : PagingDataAdapter
     companion object DiffCallback : DiffUtil.ItemCallback<Member>() {
 
         override fun areItemsTheSame(oldItem: Member, newItem: Member): Boolean {
-            return oldItem.wonum === newItem.wonum
+            return oldItem.description == newItem.description
         }
 
         override fun areContentsTheSame(oldItem: Member, newItem: Member): Boolean {
             return oldItem == newItem
         }
     }
+
 
 
     class ViewHolder(val binding: CardViewWorkOrderBinding) :

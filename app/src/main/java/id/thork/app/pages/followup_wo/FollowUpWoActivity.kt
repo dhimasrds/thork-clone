@@ -162,6 +162,10 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             gotoTaskActivity()
         }
 
+        binding.includeLaborplan.laborPlan.setOnClickListener {
+            goToLaborPlan()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -347,6 +351,13 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
         startActivity(intent)
     }
 
+    private fun goToLaborPlan() {
+        val intent = Intent(this, LaborPlanActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, tempWorkOrderId)
+        intent.putExtra(BaseParam.WONUM, tempWonum)
+        startActivity(intent)
+    }
+
     private fun pickLocation() {
         try {
             // Request location updates
@@ -393,11 +404,10 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
                 longDesc
             )
         }
-        gotoHome()
     }
 
     private fun updateWoOnline() {
-        viewModel.createWorkOrderOnline(
+        viewModel.createFollowUpWorkOrderOnline(
             binding.deskWo.text.toString(),
             estDur,
             getWorkPriority(),
@@ -408,11 +418,6 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             intentWonum.toString(),
             tempWorkOrderId.toString()
         )
-        Toast.makeText(
-            this,
-            StringUtils.getStringResources(this, R.string.workorder_followup_create_success),
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     private fun updateWoOffline() {
@@ -431,6 +436,8 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
             StringUtils.getStringResources(this, R.string.workorder_followup_create_failed),
             Toast.LENGTH_LONG
         ).show()
+        gotoHome()
+
     }
 
     override fun onLeftButton() {
@@ -525,6 +532,17 @@ class FollowUpWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListene
 
         viewModel.locationCache.observe(this, Observer {
             binding.tvLocation.text = it.location
+        })
+
+        viewModel.updateSucces.observe(this, Observer {
+            if(it == BaseParam.APP_TRUE) {
+                Toast.makeText(
+                    this,
+                    StringUtils.getStringResources(this, R.string.workorder_create_success),
+                    Toast.LENGTH_LONG
+                ).show()
+                gotoHome()
+            }
         })
     }
 

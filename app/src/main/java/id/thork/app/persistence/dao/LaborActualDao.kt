@@ -11,4 +11,8 @@ interface LaborActualDao {
     fun createLaborActualCache(laborActualEntity: LaborActualEntity, username: String?)
     fun findlaborActualByworkorderid(laborcode: String, workorderid: String): LaborActualEntity?
     fun findListLaborActual(workorderid: String): List<LaborActualEntity>
+    fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity)
+    fun findlaborActualByObjectBoxid(objectboxid: Long): LaborActualEntity?
+    fun findListLaborActualbyTaskid(workorderid: String, taskid: String): List<LaborActualEntity>
+    fun findlaborPlanByLabtransid(labtransid: String): LaborActualEntity?
 }

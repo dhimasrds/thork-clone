@@ -21,6 +21,7 @@ import id.thork.app.network.api.WorkOrderClient
 import id.thork.app.network.response.asset_response.AssetResponse
 import id.thork.app.network.response.fsm_location.FsmLocation
 import id.thork.app.network.response.material_response.MaterialResponse
+import id.thork.app.network.response.work_order.Labtran
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.network.response.worklogtype_response.WorklogtypeResponse
@@ -1017,6 +1018,74 @@ class WorkOrderRepository @Inject constructor(
 
             .onException {
                 Timber.tag(TAG).i("deleteLaborPlan() exception: %s", message())
+                onError(message())
+            }
+    }
+
+    suspend fun createLaborActual(
+        cookie: String,
+        xMethodeOverride: String,
+        contentType: String,
+        patchType: String,
+        properties: String,
+        workOrderId: Int,
+        body: Member,
+        onSuccess: (Member) -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        val response =
+            workOrderClient.createLaborActual(
+                cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                properties,
+                workOrderId,
+                body
+            )
+        response.suspendOnSuccess {
+            data.whatIfNotNull {
+                onSuccess(it)
+            }
+            Timber.tag(TAG).i("createLaborActual() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG)
+                    .i("createLaborActual() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("createLaborActual() exception: %s", message())
+                onError(message())
+            }
+    }
+
+
+    suspend fun updateLaborActual(
+        cookie: String, xMethodeOverride: String, contentType: String, patchType: String,
+        labtrnasId: Int, body: Labtran,
+        onSuccess: () -> Unit, onError: (String) -> Unit,
+    ) {
+        val response =
+            workOrderClient.updateLaborActual(
+                cookie,
+                xMethodeOverride,
+                contentType,
+                patchType,
+                labtrnasId,
+                body
+            )
+        response.suspendOnSuccess {
+            onSuccess()
+            Timber.tag(TAG).i("updateLaborActual() code: %s ", statusCode.code)
+        }
+            .onError {
+                Timber.tag(TAG)
+                    .i("updateLaborActual() code: %s error: %s", statusCode.code, message())
+                onError(message())
+            }
+            .onException {
+                Timber.tag(TAG).i("updateLaborActual() exception: %s", message())
                 onError(message())
             }
     }

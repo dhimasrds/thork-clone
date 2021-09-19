@@ -26,6 +26,7 @@ import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.attachment.AttachmentActivity
 import id.thork.app.pages.detail_wo.element.DetailWoViewModel
+import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_plan.LaborPlanActivity
 import id.thork.app.pages.list_material.ListMaterialActivity
 import id.thork.app.pages.long_description.LongDescActivity
@@ -369,6 +370,10 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         binding.includeLaborplan.laborPlan.setOnClickListener {
             goToLaborPlan()
         }
+
+        binding.includeLaboractual.laborActual.setOnClickListener {
+            goToLaborActual()
+        }
     }
 
     private fun gotoListMaterial() {
@@ -448,6 +453,14 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
     private fun goToLaborPlan() {
         val intent = Intent(this, LaborPlanActivity::class.java)
+        intent.putExtra(BaseParam.WORKORDERID, workorderId)
+        intent.putExtra(BaseParam.WONUM, workorderNumber)
+        intent.putExtra(BaseParam.STATUS, workorderStatus)
+        startActivity(intent)
+    }
+
+    private fun goToLaborActual() {
+        val intent = Intent(this, LaborActualActivity::class.java)
         intent.putExtra(BaseParam.WORKORDERID, workorderId)
         intent.putExtra(BaseParam.WONUM, workorderNumber)
         intent.putExtra(BaseParam.STATUS, workorderStatus)

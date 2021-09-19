@@ -52,6 +52,12 @@ class CraftMasterDaoImp : CraftMasterDao {
             .build().find()
     }
 
+    override fun getListCraft(): List<CraftMasterEntity> {
+        return craftMasterEntityBox.query()
+            .notNull(CraftMasterEntity_.laborcode)
+            .build().find()
+    }
+
     override fun getCraftByLaborcode(
         laborcode: String
     ): CraftMasterEntity? {

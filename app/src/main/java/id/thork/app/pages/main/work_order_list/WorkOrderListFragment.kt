@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.work.WorkInfo
@@ -21,7 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import id.thork.app.R
 import id.thork.app.base.BaseParam
 import id.thork.app.databinding.FragmentWorkOrderListBinding
+import id.thork.app.pages.create_wo.element.CreateWoViewModel
 import id.thork.app.pages.main.MainActivity
+import id.thork.app.pages.main.element.MapViewModel
 import id.thork.app.pages.main.element.WoLoadStateAdapter
 import id.thork.app.pages.main.element.WorkOrderAdapter
 import id.thork.app.pages.main.element.WorkOrderListViewModel
@@ -65,7 +68,7 @@ class WorkOrderListFragment : Fragment(), AdapterView.OnItemSelectedListener {
             binding.dropdownMenu.adapter = adapter
         }
 
-
+        workOrderAdapter.refresh()
         return binding.root
     }
 

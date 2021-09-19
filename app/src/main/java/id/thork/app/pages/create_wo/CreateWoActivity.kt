@@ -492,6 +492,7 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
     }
 
     private fun gotoHome() {
+//        viewModel.notifyAdapter()
         finish()
         workOrderAdapter.refresh()
     }

@@ -44,6 +44,9 @@ class LaborPlanViewModel @ViewModelInject constructor(
     private val _getLaborMaster = MutableLiveData<List<LaborMasterEntity>>()
     val getLaborMaster: LiveData<List<LaborMasterEntity>> get() = _getLaborMaster
 
+    private val _getCraftMasterEntity = MutableLiveData<List<CraftMasterEntity>>()
+    val getCraftMasterEntity: LiveData<List<CraftMasterEntity>> get() = _getCraftMasterEntity
+
     private val _getCraftMaster = MutableLiveData<List<CraftMasterEntity>>()
     val getCraftMaster: LiveData<List<CraftMasterEntity>> get() = _getCraftMaster
 
@@ -81,6 +84,13 @@ class LaborPlanViewModel @ViewModelInject constructor(
         val masterLabor = laborRepository.fetchListLabor()
         masterLabor.whatIfNotNullOrEmpty {
             _getLaborMaster.value = it
+        }
+    }
+
+    fun fetchListMasterCraft() {
+        val masterCraft = laborRepository.fetchListCraftMaster()
+        masterCraft.whatIfNotNullOrEmpty {
+            _getCraftMasterEntity.value = it
         }
     }
 

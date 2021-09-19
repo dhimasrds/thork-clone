@@ -14,6 +14,7 @@ import id.thork.app.network.api.TaskApi
 import id.thork.app.network.api.TaskClient
 import id.thork.app.network.response.task_response.TaskResponse
 import id.thork.app.network.response.task_response.Woactivity
+import id.thork.app.network.response.work_order.Labtran
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.Wplabor
 import id.thork.app.persistence.dao.LaborActualDao
@@ -299,7 +300,7 @@ class TaskRepository @Inject constructor(
         return memberTask
     }
 
-    fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity): List<Wplabor> {
+    private fun prepareBodyLaborPlanOfflinemode(laborPlanEntity: LaborPlanEntity): List<Wplabor> {
         val wpLaborList = mutableListOf<Wplabor>()
         val wplabor = Wplabor()
         wplabor.wplaborid = 0
@@ -582,6 +583,44 @@ class TaskRepository @Inject constructor(
         laborPlanEntity.wonumTask = taskwonum
         laborPlanEntity.syncUpdate = BaseParam.APP_TRUE
         laborPlanDao.createLaborPlanCache(laborPlanEntity, appSession.userEntity.username)
+    }
+
+
+    fun prepareBodyForCreateLaborActualWithTask(woid: Int): List<id.thork.app.network.response.work_order.Woactivity> {
+        val taskEntity = findTaskByWoIdAndSyncStatus(woid, BaseParam.APP_TRUE)
+        val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
+        taskEntity.forEach {
+            val member = id.thork.app.network.response.work_order.Woactivity()
+            val listLaborActual = prepareBodyLaborActual(woid.toString(), it.taskId.toString())
+            member.taskid = it.taskId
+            member.wonum = it.refWonum
+            listLaborActual.whatIfNotNullOrEmpty {
+                member.labtrans = it
+            }
+            memberTask.add(member)
+        }
+        return memberTask
+    }
+
+    private fun prepareBodyLaborActual(workroderid: String, taskid: String): List<Labtran> {
+        val listLaborActual = laborActualDao.findListLaborActualbyTaskid(workroderid, taskid)
+        val labtransList = mutableListOf<Labtran>()
+        listLaborActual.whatIfNotNull { listCache ->
+            listCache.forEach { laboractual ->
+                if (laboractual.syncUpdate == BaseParam.APP_FALSE) {
+                    val labtran = Labtran()
+                    laboractual.laborcode.whatIfNotNull(
+                        whatIf = {
+                            labtran.labtransid = 0
+                            labtran.laborcode = it
+                            labtran.startdatetime = laboractual.startDateForMaximo
+                        }
+                    )
+                    labtransList.add(labtran)
+                }
+            }
+        }
+        return labtransList
     }
 
 

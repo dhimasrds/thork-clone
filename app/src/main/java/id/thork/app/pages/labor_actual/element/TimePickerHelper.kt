@@ -20,7 +20,7 @@ class TimePickerHelper(
         callback?.onTimeSelected(hourOfDay, minute)
     }
     init {
-        val style = if (isSpinnerType) R.style.SpinnerTimePickerDialogSpinner else R.style.SpinnerTimePickerDialog
+        val style = if (isSpinnerType) R.style.ThorTimePickerDialog else R.style.SpinnerTimePickerDialog
         val cal = Calendar.getInstance()
         dialog = TimePickerDialog(context, style, listener,
             cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), is24HourView)

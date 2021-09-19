@@ -49,10 +49,12 @@ class CreateWoViewModel @ViewModelInject constructor(
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
     private val _updateSucces = MutableLiveData<Int>()
+    private val _refreshAdapter = MutableLiveData<Int>()
 
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
     val updateSucces: LiveData<Int> get() = _updateSucces
+    val refreshAdapter: LiveData<Int> get() = _refreshAdapter
 
     private lateinit var attachmentEntities: MutableList<AttachmentEntity>
     private var username: String? = null
@@ -88,6 +90,10 @@ class CreateWoViewModel @ViewModelInject constructor(
         hasil = hasilDetikDouble / 3600
         return hasil
     }
+
+//    fun notifyAdapter() {
+//        _refreshAdapter.postValue(BaseParam.APP_TRUE)
+//    }
 
     fun createWorkOrderOnline(
         deskWo: String,

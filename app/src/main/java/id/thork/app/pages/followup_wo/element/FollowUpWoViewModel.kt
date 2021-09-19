@@ -42,6 +42,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
     private val workOrderRepository: WorkOrderRepository,
     private val preferenceManager: PreferenceManager,
     private val taskRepository: TaskRepository,
+    private val laborRepository: LaborRepository
 ) : LiveCoroutinesViewModel() {
     private val TAG = CreateWoViewModel::class.java.name
 
@@ -50,9 +51,13 @@ class FollowUpWoViewModel @ViewModelInject constructor(
 
     private val _assetCache = MutableLiveData<AssetEntity>()
     private val _locationCache = MutableLiveData<LocationEntity>()
+    private val _updateSucces = MutableLiveData<Int>()
+
 
     val assetCache: LiveData<AssetEntity> get() = _assetCache
     val locationCache: LiveData<LocationEntity> get() = _locationCache
+    val updateSucces: LiveData<Int> get() = _updateSucces
+
 
     fun getTempWonum(): String? {
         if (tempWonum == null) {
@@ -78,7 +83,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         return hasil
     }
 
-    fun createWorkOrderOnline(
+    fun createFollowUpWorkOrderOnline(
         deskWo: String,
         estDur: Double?,
         workPriority: Int,
@@ -99,6 +104,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             val externalrefid = WoUtils.getExternalRefid()
             val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
             val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val laborplanList = laborRepository.prepareBodyLaborPlan(tempWoId.toString())
 
             val member = Member()
             member.siteid = appSession.siteId
@@ -132,6 +138,10 @@ class FollowUpWoViewModel @ViewModelInject constructor(
                 member.externalrefid = it
             }
 
+            laborplanList.whatIfNotNullOrEmpty {
+                member.wplabor = it
+            }
+
             //save create Wo to local
             workOrderRepository.saveCreatedWoLocally(
                 member,
@@ -142,7 +152,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             val moshi = Moshi.Builder().build()
             val memberJsonAdapter: JsonAdapter<Member> = moshi.adapter(Member::class.java)
             Timber.tag(TAG)
-                .d("createWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
+                .d("createFollowUpWorkOrderOnline() results: %s", memberJsonAdapter.toJson(member))
 
             val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
             val properties = BaseParam.APP_ALL_PROPERTIES
@@ -159,12 +169,19 @@ class FollowUpWoViewModel @ViewModelInject constructor(
                             woMember
                         )
                         woMember.woactivity.whatIfNotNullOrEmpty {
-                            Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
+                            Timber.tag(TAG).i("createFollowUpWorkOrderOnline() onSuccess() onSuccess: %s", it)
                             taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
                         }
+
+                        woMember.wplabor.whatIfNotNullOrEmpty {
+                            Timber.tag(TAG).i("createFollowUpWorkOrderOnline() list wp labor %s", it.size)
+                            laborRepository.handlingLaborPlan(it, woMember, tempWoId.toString())
+                        }
+                        _updateSucces.postValue(BaseParam.APP_TRUE)
+
                     }, onError = {
                         taskRepository.handlingTaskFailedFromCreateWo(tempwoid)
-                        Timber.tag(TAG).i("createWo() error: %s", it)
+                        Timber.tag(TAG).i("createFollowUpWorkOrderOnline() error: %s", it)
                     }
                 )
             }
@@ -199,6 +216,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
         tempWoId.whatIfNotNull { tempwoid ->
             val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
             val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempwoid)
+            val laborplanList = laborRepository.prepareBodyLaborPlan(tempwoid.toString())
             val member = Member()
             member.siteid = appSession.siteId
             if (!location.equals(BaseParam.APP_DASH)) {
@@ -208,6 +226,8 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             if (!assetnum.equals(BaseParam.APP_DASH)) {
                 member.assetnum = assetnum
             }
+            member.wonum = tempWonum
+            member.workorderid = tempwoid
             member.description = deskWo
             member.status = BaseParam.WAPPR
             member.reportdate = DateUtils.getDateTimeMaximo()
@@ -226,6 +246,11 @@ class FollowUpWoViewModel @ViewModelInject constructor(
                 member.woactivity = tasklist
             }
 
+            laborplanList.whatIfNotNullOrEmpty { wplabor ->
+                member.wplabor = wplabor
+
+            }
+
             val tWoCacheEntity = WoCacheEntity()
             tWoCacheEntity.syncBody = convertToJson(member)
             tWoCacheEntity.syncStatus = BaseParam.APP_FALSE
@@ -235,6 +260,7 @@ class FollowUpWoViewModel @ViewModelInject constructor(
             tWoCacheEntity.createdDate = Date()
             tWoCacheEntity.updatedDate = Date()
             tWoCacheEntity.wonum = tempWonum
+            tWoCacheEntity.woId = tempWoId
             tWoCacheEntity.status = BaseParam.WAPPR
             tWoCacheEntity.externalREFID = WoUtils.getExternalRefid()
             workOrderRepository.saveWoList(tWoCacheEntity, appSession.userEntity.username)
