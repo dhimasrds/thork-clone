@@ -85,7 +85,6 @@ class WorkOrderWorker @WorkerInject constructor(
     var laborRepository: LaborRepository
 
 
-
     lateinit var retrofit: Retrofit
 
     //val retrofit = RetrofitBuilder(preferenceManager, httpLoggingInterceptor).provideRetrofit()
@@ -169,6 +168,7 @@ class WorkOrderWorker @WorkerInject constructor(
         }
 
         listCreateWoOffline.whatIfNotNullOrEmpty {
+            Timber.d("syncUpdateWo() wo list offline size %s", it.size)
             updateCreateWo(it, index)
         }
 
@@ -207,9 +207,7 @@ class WorkOrderWorker @WorkerInject constructor(
                     longdesc,
                     status
                 )
-                woId.whatIfNotNull {
-                    checklistAttachment(it)
-                }
+
 
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val xMethodeOverride: String = BaseParam.APP_PATCH
@@ -258,8 +256,12 @@ class WorkOrderWorker @WorkerInject constructor(
         }
     }
 
-    fun checklistAttachment(woId: Int) {
-        attachmentEntities = attachmentRepository.getAttachmentByWoIdAndSyncStatus(woId, false)
+    fun checklistAttachment(tempWoId: Int, woid: Int) {
+        attachmentEntities = attachmentRepository.getAttachmentByWoIdAndSyncStatus(tempWoId, false)
+        attachmentEntities.forEach {
+            it.workOrderId = woid
+        }
+        Timber.tag(TAG).i("checklistAttachment() attachment: %s", attachmentEntities.size)
         attachmentEntities.whatIfNotNullOrEmpty {
             GlobalScope.launch(Dispatchers.IO) {
                 attachmentRepository.uploadAttachment(
@@ -283,7 +285,7 @@ class WorkOrderWorker @WorkerInject constructor(
                 val longdesc = prepareBody.longdescription?.get(0)?.ldtext
                 val status = prepareBody.status
                 val tempWonum = currentWo.wonum
-                val tempWoId : Int? = currentWo.woId
+                val tempWoId: Int? = currentWo.woId
 
                 val member = Member()
                 member.siteid = appSession.siteId
@@ -310,12 +312,16 @@ class WorkOrderWorker @WorkerInject constructor(
                     member.wplabor = it
                 }
 
+                Timber.tag(TAG).d("updateCreateWo() woId: %s", tempWoId)
+
+
                 val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
                 val properties = BaseParam.APP_ALL_PROPERTIES
                 GlobalScope.launch(Dispatchers.IO) {
                     workOrderRepository.createWo(
                         cookie, properties, member,
                         onSuccess = { member ->
+                            val woId = member.workorderid
                             //TODO handle create wo cache after update
                             workOrderRepository.updateCreateWoCacheOfflineMode(
                                 longdesc,
@@ -333,15 +339,21 @@ class WorkOrderWorker @WorkerInject constructor(
                                 }
                             }
 
-                            member.wplabor.whatIfNotNullOrEmpty {  wpLabors ->
-                                laborRepository.handlingLaborPlan(wpLabors, member, tempWoId.toString())
+                            member.wplabor.whatIfNotNullOrEmpty { wpLabors ->
+                                laborRepository.handlingLaborPlan(
+                                    wpLabors,
+                                    member,
+                                    tempWoId.toString()
+                                )
+                            }
+                            tempWoId.whatIfNotNull {
+                                checklistAttachment(it, woId!!)
                             }
                             val nextIndex = currentIndex + 1
                             if (nextIndex <= listWo.size - 1) {
                                 updateCreateWo(listWo, nextIndex)
                             }
                             workOrderAdapter.refresh()
-                            workOrderAdapter.retry()
                         }, onError = {
                             Timber.tag(TAG).i("updateCreateWo() error: %s", it)
                         }

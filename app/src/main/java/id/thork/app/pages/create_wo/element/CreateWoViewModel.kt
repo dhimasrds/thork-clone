@@ -165,6 +165,7 @@ class CreateWoViewModel @ViewModelInject constructor(
                         tempWonum,
                         woMember
                     )
+                    Timber.tag(TAG).i("createWorkOrderOnline() woid %s", workorderid)
                     woMember.woactivity.whatIfNotNullOrEmpty {
                         Timber.tag(TAG).i("updateToMaximo() onSuccess() onSuccess: %s", it)
                         taskRepository.handlingTaskSuccessFromCreateWo(woMember, it, tempWonum)
@@ -176,9 +177,9 @@ class CreateWoViewModel @ViewModelInject constructor(
                     }
                     _updateSucces.postValue(BaseParam.APP_TRUE)
 
-//                    workorderid.whatIfNotNull {
-//                        uploadAttachments(it)
-//                    }
+                    workorderid.whatIfNotNull {
+                        uploadAttachments(it,tempWoId)
+                    }
                 }, onError = {
                     taskRepository.handlingTaskFailedFromCreateWo(tempWoId)
                     Timber.tag(TAG).i("createWo() error: %s", it)
@@ -279,8 +280,13 @@ class CreateWoViewModel @ViewModelInject constructor(
         }
     }
 
-    fun uploadAttachments(woId: Int) {
-        attachmentEntities = attachmentRepository.getAttachmentByWoId(woId)
+    fun uploadAttachments(woId: Int, tempWoId: Int) {
+        attachmentEntities = attachmentRepository.getAttachmentByWoId(tempWoId)
+        attachmentEntities.forEach {
+            it.workOrderId = woId
+        }
+        attachmentRepository.saveList(attachmentEntities,username.toString())
+
         Timber.tag(TAG)
             .d("uploadAttachments() woId: %s attachmentEntities: %s", woId, attachmentEntities)
         viewModelScope.launch(Dispatchers.IO) {
