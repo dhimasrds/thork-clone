@@ -157,7 +157,7 @@ class WorklogRepository @Inject constructor(
 
     fun saveWorklogToObjectBox(
         list: List<Worklog>,
-        woid: Int,
+        woid: String,
         wonum: String
     ) {
         val listWorklogTypecache = mutableListOf<WorklogEntity>()
