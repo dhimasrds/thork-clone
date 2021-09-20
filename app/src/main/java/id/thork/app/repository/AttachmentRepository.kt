@@ -158,7 +158,11 @@ class AttachmentRepository constructor(
             attachment.syncStatus?.let { syncStatus ->
                 attachment.fileName?.let { fileName ->
                     Timber.tag(TAG)
-                        .d("uploadAttachment() uriString: %s sync status: %s", uriString, syncStatus)
+                        .d(
+                            "uploadAttachment() uriString: %s sync status: %s",
+                            uriString,
+                            syncStatus
+                        )
                     if (!uriString.startsWith("http") && !syncStatus) {
                         val requestBody = attachment.uriString?.let { urlString ->
                             attachment.mimeType?.let { mimeType ->
@@ -214,6 +218,10 @@ class AttachmentRepository constructor(
         attachmentDao.save(attachmentEntity, username)
     }
 
+    fun saveList(attachmentEntity: List<AttachmentEntity>, username: String) {
+        attachmentDao.save(attachmentEntity, username)
+    }
+
     private fun createRequestBody(
         cookie: String,
         filePath: String,
@@ -232,7 +240,10 @@ class AttachmentRepository constructor(
         attachmentDao.save(attachmentEntities, username)
     }
 
-    fun getAttachmentByWoIdAndSyncStatus(woId: Int, syncStatus: Boolean) : MutableList<AttachmentEntity> {
+    fun getAttachmentByWoIdAndSyncStatus(
+        woId: Int,
+        syncStatus: Boolean
+    ): MutableList<AttachmentEntity> {
         return attachmentDao.fetchAttachmentByWoIdAndSyncStatus(woId, syncStatus).toMutableList()
     }
 
