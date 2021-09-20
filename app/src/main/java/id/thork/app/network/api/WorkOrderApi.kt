@@ -73,9 +73,17 @@ interface WorkOrderApi {
     @GET("maximo/oslc/os/THISFSMITEM")
     suspend fun getItemMaster(
         @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+        @Query("savedQuery") savedQuery: String?,
         @Query(value = "lean") lean: Int,
         @Query(value = "oslc.select") select: String?,
     ): ApiResponse<MaterialResponse>
+
+//    @GET("maximo/oslc/os/THISFSMITEM")
+//    suspend fun getItemMaster(
+//        @Header(BaseParam.APP_MX_COOKIE) cookie: String?,
+//        @Query(value = "lean") lean: Int,
+//        @Query(value = "oslc.select") select: String?,
+//    ): ApiResponse<MaterialResponse>
 
     @GET("maximo/oslc/os/THISFSMSYNDOMAIN")
     suspend fun getWorklogType(

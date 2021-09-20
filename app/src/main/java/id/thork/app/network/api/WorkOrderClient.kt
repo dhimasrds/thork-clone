@@ -51,8 +51,8 @@ class WorkOrderClient @Inject constructor(
             body
         )
 
-    suspend fun getItemMaster(headerParam: String, select: String) =
-        workOrderApi.getItemMaster(headerParam, LEAN, select)
+    suspend fun getItemMaster(headerParam: String, savedQuery: String, select: String) =
+        workOrderApi.getItemMaster(headerParam, savedQuery, LEAN, select)
 
     suspend fun getWorklogType(headerParam: String, select: String, where: String) =
         workOrderApi.getWorklogType(headerParam, LEAN, select, where)

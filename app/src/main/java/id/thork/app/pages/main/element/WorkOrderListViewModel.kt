@@ -188,18 +188,21 @@ class WorkOrderListViewModel @ViewModelInject constructor(
     fun fetchItemMaster() {
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.API_SELECT_ALL
-        viewModelScope.launch(Dispatchers.IO) {
-            workOrderRepository.getItemMaster(cookie, select,
-                onSuccess = {
-                    it.member.whatIfNotNullOrEmpty { members ->
-                        Timber.d("WorkOrderListViewModel() fetchItemMaster() onSuccess :%s", it)
-                        materialRepository.addItemMasterToObjectBox(members)
+        val savedQuery = appResourceMx.fsmResItem
+        savedQuery.whatIfNotNullOrEmpty { query->
+            viewModelScope.launch(Dispatchers.IO) {
+                workOrderRepository.getItemMaster(cookie, query, select,
+                    onSuccess = {
+                        it.member.whatIfNotNullOrEmpty { members ->
+                            Timber.d("WorkOrderListViewModel() fetchItemMaster() onSuccess :%s", it)
+                            materialRepository.addItemMasterToObjectBox(members)
+                        }
+                    },
+                    onError = {
+                        Timber.d("WorkOrderListViewModel() fetchAsset() onError :%s", it)
                     }
-                },
-                onError = {
-                    Timber.d("WorkOrderListViewModel() fetchAsset() onError :%s", it)
-                }
-            )
+                )
+            }
         }
     }
 

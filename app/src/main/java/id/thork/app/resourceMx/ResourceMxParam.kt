@@ -5,6 +5,7 @@ package id.thork.app.resourceMx
  * Jakarta, Indonesia.
  */
 object ResourceMxParam {
+    const val FMS_RES_ITEM = "THISFSMRESitem"
     const val FMS_RES_ASSET = "THISFSMRESasset"
     const val FMS_RES_LOCATIONS = "THISFSMRESlocations"
     const val FMS_RES_WORKORDER = "THISFSMWorkOrder"

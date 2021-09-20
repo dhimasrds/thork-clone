@@ -513,11 +513,12 @@ class WorkOrderRepository @Inject constructor(
 
     suspend fun getItemMaster(
         cookie: String,
+        savedQuery: String,
         select: String,
         onSuccess: (MaterialResponse) -> Unit,
         onError: (String) -> Unit
     ) {
-        val response = workOrderClient.getItemMaster(cookie, select)
+        val response = workOrderClient.getItemMaster(cookie, savedQuery, select)
         response.suspendOnSuccess {
             data.whatIfNotNull {
                 onSuccess(it)
@@ -548,24 +549,24 @@ class WorkOrderRepository @Inject constructor(
         }
     }
 
-    suspend fun getStoreroom(
-        cookie: String,
-        select: String,
-        onSuccess: (MaterialResponse) -> Unit,
-        onError: (String) -> Unit
-    ) {
-        val response = workOrderClient.getItemMaster(cookie, select)
-        response.suspendOnSuccess {
-            data.whatIfNotNull {
-                onSuccess(it)
-                Timber.tag(TAG).i("repository getItemMaster() code:%s", it.member)
-                Timber.tag(TAG).i("repository getItemMaster() code:%s", statusCode.code)
-            }
-        }.onError {
-            Timber.tag(TAG).i("getItemMaster() code: %s error: %s", statusCode.code, message())
-            onError(message())
-        }
-    }
+//    suspend fun getStoreroom(
+//        cookie: String,
+//        select: String,
+//        onSuccess: (MaterialResponse) -> Unit,
+//        onError: (String) -> Unit
+//    ) {
+//        val response = workOrderClient.getItemMaster(cookie, select)
+//        response.suspendOnSuccess {
+//            data.whatIfNotNull {
+//                onSuccess(it)
+//                Timber.tag(TAG).i("repository getItemMaster() code:%s", it.member)
+//                Timber.tag(TAG).i("repository getItemMaster() code:%s", statusCode.code)
+//            }
+//        }.onError {
+//            Timber.tag(TAG).i("getItemMaster() code: %s error: %s", statusCode.code, message())
+//            onError(message())
+//        }
+//    }
 
     fun addLocationToObjectBox(member: List<id.thork.app.network.response.fsm_location.Member>) {
         deleteLocation()

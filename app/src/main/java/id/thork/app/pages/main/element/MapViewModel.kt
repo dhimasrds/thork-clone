@@ -88,11 +88,14 @@ class MapViewModel @ViewModelInject constructor(
     }
 
     suspend fun isConnected() {
-        if (appSession.isConnected) {
-            fectlistWoOnline()
-        } else {
-            fetchListWoOffline()
-        }
+        fetchListWoOffline()
+        fetchLocationMarker()
+        fetchAssetMarker()
+//        if (appSession.isConnected) {
+//            fetchlistWoOnline()
+//        } else {
+//            fetchListWoOffline()
+//        }
     }
 
     fun setDataWo(wonum: String, tag: String) {
@@ -120,7 +123,7 @@ class MapViewModel @ViewModelInject constructor(
         _resultTagMarker.value = tag
     }
 
-    fun fetchListWoOffline() {
+    private fun fetchListWoOffline() {
         Timber.d("MapViewModel() fetchListWo")
         val listWoLocal = workOrderRepository.fetchWoList()
         _listWo.value = listWoLocal
@@ -172,7 +175,7 @@ class MapViewModel @ViewModelInject constructor(
         }
     }
 
-    suspend fun fectlistWoOnline() {
+    private suspend fun fetchlistWoOnline() {
         Timber.d("MapViewModel() fetchListWo Online")
         val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
         val select: String = ApiParam.API_SELECT_ALL
@@ -249,10 +252,10 @@ class MapViewModel @ViewModelInject constructor(
         listLocationCache.whatIfNotNullOrEmpty {
             _listLocation.value = it
         }
-        fetchAsset()
+        fetchAssetMarker()
     }
 
-    fun fetchAsset() {
+    fun fetchAssetMarker() {
         val listAssetCache = workOrderRepository.fetchAssetList()
         listAssetCache.whatIfNotNullOrEmpty {
             _listAsset.value = it

@@ -81,10 +81,12 @@ class DetailWoViewModel @ViewModelInject constructor(
     }
 
     fun requestRoute(origin: String, destination: String) {
+        Timber.tag(TAG).i("requestRoute() origin: %s destination: %s", origin, destination)
         viewModelScope.launch(Dispatchers.IO) {
             //Request Routing Map Base on Api Google Map
             googleMapsRepository.requestRoute(origin, destination, BaseParam.APP_APIKEY,
                 onSuccess = {
+                    Timber.tag(TAG).i("requestRoute() response: %s", it)
                     _RequestRoute.postValue(it)
                     getLocationInfo(it)
                 },

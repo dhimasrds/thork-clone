@@ -124,7 +124,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     fun setupObserver() {
         mapViewModel.listWo.observe(viewLifecycleOwner, {
             it.forEach {
-                Timber.tag(TAG).d("setupObserver() ${it.wonum}")
+                Timber.tag(TAG).d("setupObserver() listWo wonum: %s lat: %s long: %s", it.wonum, it.latitude, it.longitude)
                 if (it.latitude != null && it.longitude != null) {
                     val woLatLng = LatLng(it.latitude!!.toDouble(), it.longitude!!.toDouble())
                     MapsUtils.renderWoMarker(map, woLatLng, it.wonum.toString())
@@ -133,6 +133,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         })
         mapViewModel.listMember.observe(viewLifecycleOwner, {
             it.forEach {
+                Timber.tag(TAG).d("setupObserver() listMember wonum: %s", it.wonum)
                 if (!it.woserviceaddress.isNullOrEmpty()) {
                     val latitudeWo = it.woserviceaddress?.get(0)?.latitudey
                     val longitudeWo = it.woserviceaddress?.get(0)?.longitudex
