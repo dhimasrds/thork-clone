@@ -105,7 +105,6 @@ class CreateWoViewModel @ViewModelInject constructor(
 //        val woserviceaddress: MutableList<Woserviceaddres> = ArrayList<Woserviceaddres>()
 //        woserviceaddress.add(wsa)
         val externalrefid = WoUtils.getExternalRefid()
-
         val materialPlanlist = prepareMaterialTrans(tempWoId.toString())
         val taskList = taskRepository.prepareTaskBodyFromCreateWo(tempWoId)
         val laborplanList = laborRepository.prepareBodyLaborPlan(tempWoId.toString())
