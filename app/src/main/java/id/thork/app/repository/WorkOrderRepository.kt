@@ -375,7 +375,6 @@ class WorkOrderRepository @Inject constructor(
             wo.worklog.whatIfNotNullOrEmpty {
                 wo.wonum.whatIfNotNull { wonum ->
                     wo.workorderid.whatIfNotNull { woid ->
-                        Timber.d("raka %s ", wonum)
                         worklogRepository.saveWorklogToObjectBox(it, woid.toString(), wonum)
                     }
                 }
@@ -449,7 +448,6 @@ class WorkOrderRepository @Inject constructor(
         member.worklog.whatIfNotNullOrEmpty {
             member.wonum.whatIfNotNull { wonum ->
                 member.workorderid.whatIfNotNull { woid ->
-                    Timber.d("raka %s ", wonum)
                     worklogRepository.saveWorklogToObjectBox(it, woid.toString(), wonum)
                 }
             }
