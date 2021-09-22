@@ -15,7 +15,6 @@ package id.thork.app.pages.login_pattern
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.andrognito.patternlockview.PatternLockView
 import com.andrognito.patternlockview.listener.PatternLockViewListener
@@ -29,6 +28,7 @@ import id.thork.app.pages.login.LoginActivity
 import id.thork.app.pages.login_pattern.element.LoginPatternViewModel
 import id.thork.app.pages.main.MainActivity
 import id.thork.app.pages.profiles.setting.settings.SettingsActivity
+import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import java.util.*
@@ -243,18 +243,20 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
             binding.etProfileName.text =
                 StringUtils.getStringResources(this, R.string.confim_pattern)
         }
-        if (isSwitch){
-        loginPatternViewModel.switchUser()}
+        if (isSwitch) {
+            loginPatternViewModel.switchUser()
+        }
         customDialogUtils.dismiss()
         clearPattern()
     }
 
     override fun onLeftButton() {
-        if(isSwitch){
+        if (isSwitch) {
             customDialogUtils.dismiss()
-        }else{
-        customDialogUtils.dismiss()
-        resetPattern()}
+        } else {
+            customDialogUtils.dismiss()
+            resetPattern()
+        }
     }
 
     override fun onMiddleButton() {
@@ -265,8 +267,7 @@ class LoginPatternActivity : BaseActivity(), CustomDialogUtils.DialogActionListe
     private fun navigateToMainActivity() {
         Timber.tag(TAG).d("navigateToMainActivity()")
         if (changePatternSetting == TAG_SETTING) {
-            Toast.makeText(this, R.string.settings_change_pattern_success, Toast.LENGTH_SHORT)
-                .show()
+            CommonUtils.standardToast(getString(R.string.settings_change_pattern_success))
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             finish()

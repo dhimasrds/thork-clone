@@ -8,10 +8,8 @@ import android.text.InputFilter
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.R
@@ -21,6 +19,7 @@ import id.thork.app.databinding.ActivityCreateTaskBinding
 import id.thork.app.pages.CustomDialogUtils
 import id.thork.app.pages.DialogUtils
 import id.thork.app.pages.task.element.TaskViewModel
+import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -219,11 +218,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                         setDialogSaveTask()
                     }
                     else -> {
-                        Toast.makeText(
-                            this,
-                            R.string.general_required_fields,
-                            Toast.LENGTH_LONG
-                        ).show()
+                        CommonUtils.standardToast(getString(R.string.general_required_fields))
                     }
                 }
             }
@@ -395,23 +390,11 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         saveEst.setOnClickListener {
             dialogUtils.setCancelable(false)
             if (esdurHours.text.toString().isEmpty() && esdurMinutes.text.toString().isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.estimatedhour_estimatedminute,
-                    Toast.LENGTH_LONG
-                ).show()
+                CommonUtils.standardToast(getString(R.string.estimatedhour_estimatedminute))
             } else if (esdurHours.text.toString().isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.estimatedhour,
-                    Toast.LENGTH_LONG
-                ).show()
+                CommonUtils.standardToast(getString(R.string.estimatedhour))
             } else if (esdurMinutes.text.toString().isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.estimatedminute,
-                    Toast.LENGTH_LONG
-                ).show()
+                CommonUtils.standardToast(getString(R.string.estimatedminute))
             } else {
                 val estH: Int = esdurHours.text.toString().toInt()
                 val estM: Int = esdurMinutes.text.toString().toInt()
@@ -521,11 +504,7 @@ class CreateTaskActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
                 actualDateFormatObjectBox
             )
         }
-        Toast.makeText(
-            this,
-            R.string.task_updated,
-            Toast.LENGTH_LONG
-        ).show()
+        CommonUtils.standardToast(getString(R.string.task_updated))
     }
 
     private fun updateTaskOfflineFromWoDetail() {

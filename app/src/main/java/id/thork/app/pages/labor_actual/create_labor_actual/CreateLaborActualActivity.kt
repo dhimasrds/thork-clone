@@ -225,28 +225,28 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
 
                     tvLabor.error = "Cannot be empty"
 
-                    CommonUtils.standardToast("field cannot be empty")
+                    CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                     return false
                 }
                 tvStartDate.text.isNullOrBlank() -> {
 
                     tvStartDate.error = "Cannot be empty"
 
-                    CommonUtils.standardToast("field cannot be empty")
+                    CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                     return false
                 }
                 tvStartTime.text.isNullOrBlank() -> {
 
                     tvStartTime.error = "Cannot be empty"
 
-                    CommonUtils.standardToast("field cannot be empty")
+                    CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                     return false
                 }
                 tvCraft.text.isNullOrBlank() -> {
 
                     tvCraft.error = "Cannot be empty"
 
-                    CommonUtils.standardToast("field cannot be empty")
+                    CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                     return false
                 }
             }

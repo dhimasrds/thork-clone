@@ -7,7 +7,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -38,6 +37,7 @@ import id.thork.app.pages.rfid_asset.RfidAssetAcitivty
 import id.thork.app.pages.rfid_location.RfidLocationActivity
 import id.thork.app.pages.task.TaskActivity
 import id.thork.app.pages.work_log.WorkLogActivity
+import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.MapsUtils
 import id.thork.app.utils.StringUtils
@@ -219,12 +219,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
 
         //TODO Result Query Asset for Rfid
         detailWoViewModel.AssetRfid.observe(this, {
-            if (it ==  BaseParam.APP_DASH){
-                Toast.makeText(
-                    this,
-                    R.string.asset_rfid_is_not_registered,
-                    Toast.LENGTH_LONG
-                ).show()
+            if (it == BaseParam.APP_DASH) {
+                CommonUtils.standardToast(getString(R.string.asset_rfid_is_not_registered))
             } else {
                 gotoRfidAsset(it)
             }
@@ -259,12 +255,8 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         //TODO Result Query Location for Rfid
         detailWoViewModel.LocationRfid.observe(this, {
             Timber.d("Observer Location Rfid() %s", it)
-            if (it ==  BaseParam.APP_DASH){
-                Toast.makeText(
-                    this,
-                    R.string.location_rfid_is_not_registered,
-                    Toast.LENGTH_LONG
-                ).show()
+            if (it == BaseParam.APP_DASH) {
+                CommonUtils.standardToast(getString(R.string.location_rfid_is_not_registered))
             } else {
                 gotoRfidLocation(it)
             }
@@ -722,11 +714,6 @@ class DetailWoActivity : BaseActivity(), OnMapReadyCallback,
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         finish()
-    }
-
-    override fun goToPreviousActivity() {
-        //finish()
-        super.goToPreviousActivity()
     }
 
     private fun startQRScanner(requestCode: Int) {

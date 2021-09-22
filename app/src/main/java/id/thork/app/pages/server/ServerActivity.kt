@@ -15,7 +15,6 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
@@ -69,9 +68,11 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
             if (binding.includeServerContent.serverUrl.text != null && binding.includeServerContent.serverUrl.text.toString()
                     .isNotEmpty()
             ) {
-                viewModel.validateUrl(binding.includeServerContent.switchHttps.isChecked,
-                    binding.includeServerContent.serverUrl.text.toString())
-            }  else {
+                viewModel.validateUrl(
+                    binding.includeServerContent.switchHttps.isChecked,
+                    binding.includeServerContent.serverUrl.text.toString()
+                )
+            } else {
                 setDialogEmpty()
             }
         }
@@ -92,7 +93,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         viewModel.outputWorkInfos.observe(this, workInfosObserver())
 
         viewModel.checkURL.observe(this, {
-            if (it == BaseParam.APP_FALSE){
+            if (it == BaseParam.APP_FALSE) {
                 setDialogWrongURL()
             } else {
                 checkURL = true
@@ -100,7 +101,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
         })
 
         viewModel.isReachable.observe(this, {
-            if (it == BaseParam.APP_FALSE){
+            if (it == BaseParam.APP_FALSE) {
                 setDialogReachServer()
             } else {
                 serverReachable = true
@@ -203,7 +204,7 @@ class ServerActivity : BaseActivity(), DialogUtils.DialogUtilsListener,
     }
 
     override fun onBackPressed() {
-        Toast.makeText(this, R.string.exit_application, Toast.LENGTH_SHORT).show()
+        CommonUtils.standardToast(getString(R.string.exit_application))
         Handler(Looper.getMainLooper()).postDelayed({
             exitApplication = false
         }, 2000)
