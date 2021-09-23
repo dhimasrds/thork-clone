@@ -129,8 +129,11 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                 tvStartTime.text = startTime
                 tvEndDate.text = endDate
                 tvEndTime.text = endTime
-                tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
-
+                if (taskid.isNullOrEmpty()) {
+                    tvTask.text = BaseParam.APP_DASH
+                } else {
+                    tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
+                }
             }
 
         })
@@ -179,9 +182,9 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                 cal2.set(Calendar.YEAR, year)
                 cal2.set(Calendar.MONTH, monthOfYear)
                 cal2.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                cal2.set(Calendar.HOUR, 23)
-                cal2.set(Calendar.MINUTE, 59)
-                cal2.set(Calendar.SECOND, 59)
+                cal2.set(Calendar.HOUR, 0)
+                cal2.set(Calendar.MINUTE, 0)
+                cal2.set(Calendar.SECOND, 0)
                 updateDateInView(false)
             }
         binding.tvStartDate.setOnClickListener {
@@ -276,11 +279,21 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
     }
 
     private fun validationDateAndTime() {
+        val cal = Calendar.getInstance()
+        val currentTime = cal.timeInMillis
         if (validationEmpty()) {
             if (msEndDate!! == msStartDate!! && msEndTime!! < msStartTime!!) {
                 CommonUtils.standardToast("Finish time has to be after Start time")
             } else if (msEndDate!! < msStartDate!!) {
                 CommonUtils.standardToast("Finish time has to be after Start time")
+            } else if (
+                msStartDate!! > currentTime ||
+                msStartTime!! > currentTime ||
+                msEndDate!! > currentTime ||
+                msEndTime!! > currentTime
+            ) {
+                CommonUtils.standardToast("Cannot input data with future dates and times")
+
             } else {
                 convertDateFormat()
                 dialogSaveLaborActual()
