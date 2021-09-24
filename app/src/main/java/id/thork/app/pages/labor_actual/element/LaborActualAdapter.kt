@@ -12,6 +12,7 @@ import id.thork.app.pages.labor_actual.details_labor_actual.LaborActualDetailsAc
 import id.thork.app.pages.labor_plan.create_labor_plan.CreateLaborPlanActivity
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.utils.StringUtils
+import timber.log.Timber
 
 /**
  * Created by Dhimas Saputra on 05/08/21
@@ -44,9 +45,14 @@ class LaborActualAdapter constructor(
             val laborcode = StringUtils.NVL(laborActualEntity.laborcode, BaseParam.APP_DASH)
             val craft = StringUtils.NVL(laborActualEntity.craft, BaseParam.APP_DASH)
             val skillLevel = StringUtils.NVL(laborActualEntity.skillLevel, BaseParam.APP_DASH)
+            Timber.d("tvType task:%s desc :%s",laborActualEntity.taskid, laborActualEntity.taskDescription )
             binding.apply {
-                tvType.text = laborActualEntity.taskid.plus(BaseParam.APP_DASH)
-                    .plus(laborActualEntity.taskDescription)
+                if (laborActualEntity.taskid.isNullOrEmpty()){
+                    tvType.text = BaseParam.APP_DASH
+                }else{
+                    tvType.text = StringUtils.NVL(laborActualEntity.taskid.plus(BaseParam.APP_DASH)
+                        .plus(laborActualEntity.taskDescription), BaseParam.APP_DASH)
+                }
                 tvStatus.text = vendor
                 tvLabor.text = laborcode
                 tvCraft.text = craft
