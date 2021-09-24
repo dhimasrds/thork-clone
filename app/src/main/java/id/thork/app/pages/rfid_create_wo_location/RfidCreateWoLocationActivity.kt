@@ -2,7 +2,6 @@ package id.thork.app.pages.rfid_create_wo_location
 
 import android.content.Intent
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNullOrEmpty
@@ -13,6 +12,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidCreateWoLocationBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_create_wo_location.element.RfidCreateWoLocationActivityViewModel
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
@@ -95,12 +95,12 @@ class RfidCreateWoLocationActivity : BaseActivity(), RFIDHandler.ResponseHandler
     }
 
     override fun onConnected(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        CommonUtils.standardToast(message.toString())
 
     }
 
     override fun onDisconnected() {
-        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show()
+        CommonUtils.standardToast("Disconnect")
     }
 
     override fun handleTagdata(tagData: Array<out TagData>?) {

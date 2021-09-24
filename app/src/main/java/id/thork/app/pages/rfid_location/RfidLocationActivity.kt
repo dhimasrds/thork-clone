@@ -3,7 +3,6 @@ package id.thork.app.pages.rfid_location
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.skydoves.whatif.whatIfNotNull
@@ -14,6 +13,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidLocationBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_location.element.RfidLocationActivityViewModel
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
@@ -80,10 +80,8 @@ class RfidLocationActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterfac
 
         rfidLocationViewModel.percentageResult.observe(this, Observer {
             val percentage = it + "% " + getString(R.string.asset_rfid_is_match)
-            binding.tvAssetResult.setText(
-                """${getString(R.string.asset_rfid_is_match_begin)} $percentage
-${getString(R.string.asset_rfid_is_match_end)}"""
-            )
+            binding.tvAssetResult.text = """${getString(R.string.asset_rfid_is_match_begin)} $percentage
+        ${getString(R.string.asset_rfid_is_match_end)}"""
         })
 
         rfidLocationViewModel.result.observe(this, Observer {
@@ -134,11 +132,11 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
 
 
     override fun onConnected(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        CommonUtils.standardToast(message.toString())
     }
 
     override fun onDisconnected() {
-        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show();
+        CommonUtils.standardToast("Disconnect")
     }
 
     override fun handleTagdata(tagData: Array<out TagData>?) {

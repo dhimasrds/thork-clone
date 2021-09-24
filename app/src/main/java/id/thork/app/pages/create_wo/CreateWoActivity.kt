@@ -46,6 +46,7 @@ import id.thork.app.pages.material_plan.MaterialPlanActivity
 import id.thork.app.pages.rfid_create_wo_asset.RfidCreateWoAssetActivity
 import id.thork.app.pages.rfid_create_wo_location.RfidCreateWoLocationActivity
 import id.thork.app.pages.task.TaskActivity
+import id.thork.app.utils.CommonUtils
 import id.thork.app.utils.DateUtils
 import id.thork.app.utils.InputFilterMinMaxUtils
 import id.thork.app.utils.StringUtils
@@ -261,23 +262,11 @@ class CreateWoActivity : BaseActivity(), CustomDialogUtils.DialogActionListener,
         val saveEst = dialogUtils.setViewId(R.id.save_est) as Button
         saveEst.setOnClickListener {
             if (esdurHours.text.toString().isEmpty() && esdurMinutes.text.toString().isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.estimatedhour_estimatedminute,
-                    Toast.LENGTH_LONG
-                ).show()
+                CommonUtils.standardToast(getString(R.string.estimatedhour_estimatedminute))
             } else if (esdurHours.text.toString().isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.estimatedhour,
-                    Toast.LENGTH_LONG
-                ).show()
+                CommonUtils.standardToast(getString(R.string.estimatedhour))
             } else if (esdurMinutes.text.toString().isEmpty()) {
-                Toast.makeText(
-                    this,
-                    R.string.estimatedminute,
-                    Toast.LENGTH_LONG
-                ).show()
+                CommonUtils.standardToast(getString( R.string.estimatedminute))
             } else {
                 val estH: Int = esdurHours.text.toString().toInt()
                 val estM: Int = esdurMinutes.text.toString().toInt()

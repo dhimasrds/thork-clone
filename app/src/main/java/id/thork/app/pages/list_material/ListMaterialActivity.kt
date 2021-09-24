@@ -1,7 +1,6 @@
 package id.thork.app.pages.list_material
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.zxing.integration.android.IntentIntegrator
@@ -12,6 +11,7 @@ import id.thork.app.databinding.ActivityListMaterialBinding
 import id.thork.app.pages.ScannerActivity
 import id.thork.app.pages.list_material.element.ListMaterialAdapter
 import id.thork.app.pages.list_material.element.ListMaterialViewModel
+import id.thork.app.utils.CommonUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,26 +55,26 @@ class ListMaterialActivity : BaseActivity() {
     }
 
     private fun initView() {
-        if (intentWonum!= null){
+        if (intentWonum != null) {
             checkingFileFromCreateWo()
         } else {
             checkingFileFromWoDetail()
         }
     }
 
-    private fun checkingFileFromCreateWo(){
+    private fun checkingFileFromCreateWo() {
         val listMaterial = viewModel.fetchMaterialListByWonum(intentWonum!!)
-        if (listMaterial != null && listMaterial.isNotEmpty()){
+        if (listMaterial != null && listMaterial.isNotEmpty()) {
             initAdapterByWonum()
         } else {
             startQRScanner()
         }
     }
 
-    private fun checkingFileFromWoDetail(){
+    private fun checkingFileFromWoDetail() {
         val listA = viewModel.fetchMaterialList(intentWoId!!)
         if (intentWoStatus != null && intentWoStatus.equals(BaseParam.COMPLETED) && listA?.isEmpty()!!) {
-            Toast.makeText(this, R.string.stat_complete, Toast.LENGTH_SHORT).show()
+            CommonUtils.standardToast(getString(R.string.stat_complete))
         } else if (intentWoStatus != null && intentWoStatus.equals(BaseParam.COMPLETED) && listA != null && listA.isNotEmpty()) {
             initAdapter()
         } else if (listA != null && listA.isNotEmpty()) {
@@ -83,15 +83,16 @@ class ListMaterialActivity : BaseActivity() {
     }
 
     private fun startQRScanner() {
-        IntentIntegrator(this@ListMaterialActivity).setCaptureActivity(ScannerActivity::class.java).initiateScan()
+        IntentIntegrator(this@ListMaterialActivity).setCaptureActivity(ScannerActivity::class.java)
+            .initiateScan()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode ,data)
+        val result = IntentIntegrator.parseActivityResult(requestCode, data)
         if (result != null) {
             if (result.contents != null && intentWonum != null) {
                 saveMaterialFromCreateWo(result.contents, intentWonum!!)
-            } else if (result.contents != null){
+            } else if (result.contents != null) {
                 saveMaterialFromWoDetail(result.contents, intentWoId!!)
             }
         } else {
@@ -143,8 +144,4 @@ class ListMaterialActivity : BaseActivity() {
         startQRScanner()
     }
 
-    override fun goToPreviousActivity() {
-        //finish()
-        super.goToPreviousActivity()
-    }
 }

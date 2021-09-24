@@ -278,9 +278,9 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
     private fun validationDateAndTime() {
         if (validationEmpty()) {
             if (msEndDate!! == msStartDate!! && msEndTime!! < msStartTime!!) {
-                CommonUtils.standardToast("Finish time has to be after Start time")
+                CommonUtils.standardToast(getString(R.string.finish_time))
             } else if (msEndDate!! < msStartDate!!) {
-                CommonUtils.standardToast("Finish time has to be after Start time")
+                CommonUtils.standardToast(getString(R.string.finish_time))
             } else {
                 convertDateFormat()
                 dialogSaveLaborActual()
@@ -295,37 +295,37 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
                 tvLabor.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
+                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvStartDate.text.isNullOrBlank()) {
 
                 tvStartDate.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
+                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvStartTime.text.isNullOrBlank()) {
 
                 tvStartTime.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
+                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvEndDate.text.isNullOrBlank()) {
 
                 tvEndDate.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
+                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvEndTime.text.isNullOrBlank()) {
 
                 tvEndTime.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
+                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvCraft.text.isNullOrBlank()) {
 
                 tvCraft.error = "Cannot be empty"
 
-                CommonUtils.standardToast("field cannot be empty")
+                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             }
         }

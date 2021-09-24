@@ -2,7 +2,6 @@ package id.thork.app.pages.profiles.history_attendance
 
 
 import android.app.DatePickerDialog
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +11,7 @@ import id.thork.app.databinding.ActivityHistoryAttendanceBinding
 import id.thork.app.pages.profiles.attendance.element.AttandanceViewModel
 import id.thork.app.pages.profiles.history_attendance.element.HistoryAttendanceAdapter
 import id.thork.app.persistence.entity.AttendanceEntity
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -90,22 +90,14 @@ class HistoryAttendanceActivity : BaseActivity() {
             val etEndDate = endDate.text.toString().trim()
             if (etStartDate.isNotBlank() || etEndDate.isNotBlank()) {
                 if (longEndDate < longStartDate) {
-                    Toast.makeText(
-                        this@HistoryAttendanceActivity,
-                        "Your End date cannot be past than start date",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    CommonUtils.standardToast(getString(R.string.end_date_history))
                 } else {
                     Timber.d("validationDate() filter :%s", startDate.text)
                     viewModels.filterByDate(cal.timeInMillis, cal2.timeInMillis)
                     setupViewFilter()
                 }
             } else {
-                Toast.makeText(
-                    this@HistoryAttendanceActivity,
-                    "Your Start date or End cannot be empty",
-                    Toast.LENGTH_SHORT
-                ).show()
+                CommonUtils.standardToast(getString(R.string.start_date_history))
             }
         }
     }

@@ -13,6 +13,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidMaterialctivityBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_create_wo_material.element.RfidMaterialActivityViewModel
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 class RfidMaterialctivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
@@ -95,11 +96,11 @@ class RfidMaterialctivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface
     }
 
     override fun onConnected(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        CommonUtils.standardToast(message.toString())
     }
 
     override fun onDisconnected() {
-        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show()
+        CommonUtils.standardToast("Disconnect")
     }
 
     override fun handleTagdata(tagData: Array<out TagData>?) {

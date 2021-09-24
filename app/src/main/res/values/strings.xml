@@ -605,6 +605,10 @@
     <!--  Labor Actual -->
     <string name="labor_actual_question">Are you sure you want to save labor actual?</string>
     <string name="labor_actual_delete">Do you want to delete labor actual record?</string>
+    <string name="end_date_history">Your End date cannot be past than start date</string>
+    <string name="start_date_history">Your Start date or End cannot be empty</string>
+    <string name="field_cannot_be_empty">field cannot be empty</string>
+    <string name="finish_time">Finish time has to be after Start time</string>
 
 
 </resources>

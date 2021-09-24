@@ -14,6 +14,7 @@ import id.thork.app.base.BaseParam
 import id.thork.app.databinding.ActivityRfidMultiAssetBinding
 import id.thork.app.helper.rfid.RFIDHandler
 import id.thork.app.pages.rfid_mutli_asset.element.RfidMultiAssetActivityViewModel
+import id.thork.app.utils.CommonUtils
 import timber.log.Timber
 
 class RfidMultiAssetActivity : BaseActivity(), RFIDHandler.ResponseHandlerInterface {
@@ -141,11 +142,11 @@ ${getString(R.string.asset_rfid_is_match_end)}"""
     }
 
     override fun onConnected(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        CommonUtils.standardToast(message.toString())
     }
 
     override fun onDisconnected() {
-        Toast.makeText(this, "disconnect", Toast.LENGTH_LONG).show();
+        CommonUtils.standardToast("Disconnect")
     }
 
     override fun handleTagdata(tagData: Array<out TagData>?) {
