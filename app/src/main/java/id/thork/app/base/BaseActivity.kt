@@ -147,7 +147,8 @@ abstract class BaseActivity : AppCompatActivity() {
         setSupportActionBar(toolBar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         toolBarTitle.text = title
-        toolBarTitle.visibility = View.GONE
+//        toolBarTitle.visibility = View.GONE
+        editTextToolbar.visibility = View.GONE
 
         if (navigation) {
             val profile: ImageView = findViewById(R.id.profile_image)

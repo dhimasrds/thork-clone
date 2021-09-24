@@ -123,6 +123,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
 
     fun setupObserver() {
         mapViewModel.listWo.observe(viewLifecycleOwner, {
+            Timber.tag(TAG).d("setupObserver() wo local size: %s", it.size)
             it.forEach {
                 Timber.tag(TAG).d("setupObserver() listWo wonum: %s lat: %s long: %s", it.wonum, it.latitude, it.longitude)
                 if (it.latitude != null && it.longitude != null) {
@@ -132,6 +133,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             }
         })
         mapViewModel.listMember.observe(viewLifecycleOwner, {
+            Timber.tag(TAG).d("setupObserver() wo online size: %s", it.size)
             it.forEach {
                 Timber.tag(TAG).d("setupObserver() listMember wonum: %s", it.wonum)
                 if (!it.woserviceaddress.isNullOrEmpty()) {
@@ -147,6 +149,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         })
 
         mapViewModel.listLocation.observe(viewLifecycleOwner, {
+            Timber.tag(TAG).d("setupObserver() location size: %s", it.size)
             it.forEach { locationCache ->
                 val latitudeLocation = locationCache.latitudey
                 val longitudeLocation = locationCache.longitudex
@@ -162,6 +165,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         })
 
         mapViewModel.listAsset.observe(viewLifecycleOwner, {
+            Timber.tag(TAG).d("setupObserver() asset size: %s", it.size)
             it.forEach { assetCache ->
                     val lattitudeAsset = assetCache.latitudey
                     val longitudeAsset = assetCache.longitudex
