@@ -292,7 +292,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                 msEndDate!! > currentTime ||
                 msEndTime!! > currentTime
             ) {
-                CommonUtils.standardToast("Cannot input data with future dates and times")
+                CommonUtils.standardToast("Cannot input labor with future dates and times")
 
                 CommonUtils.standardToast(getString(R.string.finish_time))
             } else {
