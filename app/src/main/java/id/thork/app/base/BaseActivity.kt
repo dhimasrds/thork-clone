@@ -112,8 +112,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private var originWo: String? = null
     private var cookie: String? = null
     private val scheduleTaskExecutor: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
-    private val threadPool: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
-    private lateinit var scheduledFuture: ScheduledFuture<*>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
