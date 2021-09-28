@@ -18,6 +18,7 @@ import id.thork.app.persistence.dao.UserDao
 import id.thork.app.persistence.dao.UserDaoImp
 import id.thork.app.persistence.entity.UserEntity
 import timber.log.Timber
+import java.util.concurrent.ScheduledThreadPoolExecutor
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +27,7 @@ class AppSession @Inject constructor(context: Context) {
     val TAG = AppSession::class.java.name
 
     var userEntity: UserEntity
+    lateinit var scheduleTaskExecutor: ScheduledThreadPoolExecutor
     var personUID: Int = -1
     var firstLogin: Int = 1
     var userHash: String? = null
@@ -36,6 +38,7 @@ class AppSession @Inject constructor(context: Context) {
     var serverAddress: String? = null
     var isConnected: Boolean = true
     var connectionState: String? = null
+    var scheduleTaskActive: Boolean = false
 
     var userDao: UserDao = UserDaoImp()
 
@@ -43,7 +46,9 @@ class AppSession @Inject constructor(context: Context) {
         Timber.tag(TAG).i("initUser() connection: %s namestate :%s", this, connectionState)
         userEntity = UserEntity()
         reinitUser()
+
     }
+
 
     fun reinitUser() {
         val existingUser: UserEntity? = userDao.findActiveSessionUser()
@@ -91,7 +96,7 @@ class AppSession @Inject constructor(context: Context) {
     }
 
     fun clearSession() {
-        userEntity = UserEntity();
+        userEntity = UserEntity()
         personUID = -1
         firstLogin = 1
         userHash = null
