@@ -84,6 +84,29 @@ object DateUtils {
         return date.time
     }
 
+    fun convertDateToMillisec(dateString: String?) : Long {
+        val date = SimpleDateFormat(APP_DATE_FORMAT).parse(dateString)
+        return date.time
+    }
+
+    fun convertTimeToMillisec(dateString: String?) : Long {
+        val date = SimpleDateFormat(APP_TIME_FORMAT).parse(dateString)
+        return date.time
+    }
+
+    fun convertMaximoDateToDate(dateString: String?) : String {
+        val date = SimpleDateFormat(DATE_FORMAT_MAXIMO).parse(dateString)
+        val sdf = SimpleDateFormat(APP_DATE_FORMAT)
+        return sdf.format(date.time)
+    }
+
+    fun convertMaximoDateToTime(dateString: String?) : String{
+        val date = SimpleDateFormat(DATE_FORMAT_MAXIMO).parse(dateString)
+        val sdf = SimpleDateFormat(APP_TIME_FORMAT)
+        return sdf.format(date.time)
+    }
+
+
     /**
      * HEADER ATTENDANCE
      * For Display Header Attendance

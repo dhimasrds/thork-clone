@@ -158,7 +158,7 @@ class LaborPlanDaoImp : LaborPlanDao {
         return null
     }
 
-    override fun findListLaborPlanlbySyncUpdateAndisDetailWo(syncupdate: Int, isLocally: Int) : List<LaborPlanEntity> {
+    override fun findListLaborPlanlbySyncUpdateAndisLocally(syncupdate: Int, isLocally: Int) : List<LaborPlanEntity> {
         return laborPlanEntityBox.query().equal(LaborPlanEntity_.syncUpdate, syncupdate).equal(LaborPlanEntity_.isLocally, isLocally).
         build().find()
     }

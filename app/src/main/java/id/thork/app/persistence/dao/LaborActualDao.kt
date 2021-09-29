@@ -14,5 +14,9 @@ interface LaborActualDao {
     fun removeLaborActualByEntity(laborActualEntity: LaborActualEntity)
     fun findlaborActualByObjectBoxid(objectboxid: Long): LaborActualEntity?
     fun findListLaborActualbyTaskid(workorderid: String, taskid: String): List<LaborActualEntity>
-    fun findlaborPlanByLabtransid(labtransid: String): LaborActualEntity?
+    fun findlaborActualByLabtransid(labtransid: String): LaborActualEntity?
+    fun findListLaborActualSyncUpdateAndLocally(
+        syncUpdate: Int,
+        isLocally: Int
+    ): List<LaborActualEntity>
 }

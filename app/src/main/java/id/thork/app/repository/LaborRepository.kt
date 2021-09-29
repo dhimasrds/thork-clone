@@ -18,6 +18,7 @@ import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborMasterEntity
 import id.thork.app.persistence.entity.LaborPlanEntity
+import id.thork.app.utils.DateUtils
 import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import javax.inject.Inject
@@ -98,7 +99,7 @@ class LaborRepository @Inject constructor(
         syncupdate: Int,
         isLocally: Int
     ): List<LaborPlanEntity> {
-        return laborPlanDao.findListLaborPlanlbySyncUpdateAndisDetailWo(syncupdate, isLocally)
+        return laborPlanDao.findListLaborPlanlbySyncUpdateAndisLocally(syncupdate, isLocally)
     }
 
     fun addLaborPlanToObjectBox(member: Member) {
@@ -447,11 +448,18 @@ class LaborRepository @Inject constructor(
     }
 
     fun findLaborActualByLabtransid(labtransid: String): LaborActualEntity? {
-        return laborActualDao.findlaborPlanByLabtransid(labtransid)
+        return laborActualDao.findlaborActualByLabtransid(labtransid)
     }
 
     fun findLaborActual(laborcode: String, workorderid: String): LaborActualEntity? {
         return laborActualDao.findlaborActualByworkorderid(laborcode, workorderid)
+    }
+
+    fun findListLaborActualBySyncUpdateAndLocally(
+        syncupdate: Int,
+        isLocally: Int
+    ): List<LaborActualEntity> {
+        return laborActualDao.findListLaborActualSyncUpdateAndLocally(syncupdate, isLocally)
     }
 
     fun addLaborActualToObjectBox(member: Member) {
@@ -479,11 +487,24 @@ class LaborRepository @Inject constructor(
                         laborActual.workorderid = member.workorderid.toString()
                         laborActual.wonumTask = task.wonum
                         laborActual.syncUpdate = BaseParam.APP_TRUE
+                        laborActual.isTask = BaseParam.APP_TRUE
+
+                        val startdatetimemx = labtran.startdatetime
+                        val finishdatetimemx = labtran.finishdatetime
+
+                        startdatetimemx.whatIfNotNull {
+                            laborActual.startDateForMaximo = it
+                            laborActual.startDate = DateUtils.convertMaximoDateToDate(it)
+                            laborActual.statTime = DateUtils.convertMaximoDateToTime(it)
+                        }
+
+                        finishdatetimemx.whatIfNotNull {
+                            laborActual.endDateForMaximo = it
+                            laborActual.endDate = DateUtils.convertMaximoDateToDate(it)
+                            laborActual.endTime = DateUtils.convertMaximoDateToTime(it)
+                        }
+
                         saveLaborActualCache(laborActual)
-
-                        //TODO Adjustment time
-//                        val finishdatetime = DateUtils.convertMaximoDateToMillisec(member.date)
-
                     }
                 }
             }
@@ -508,6 +529,7 @@ class LaborRepository @Inject constructor(
                 laborActual.wonumHeader = member.wonum
                 laborActual.workorderid = member.workorderid.toString()
                 laborActual.syncUpdate = BaseParam.APP_TRUE
+                laborActual.isTask = BaseParam.APP_FALSE
                 saveLaborActualCache(laborActual)
 
             }
@@ -547,10 +569,10 @@ class LaborRepository @Inject constructor(
         return woactivityList
     }
 
-    fun prepareBodyLaborActual(workroderid: String, taskid: String): List<Labtran> {
+    fun prepareBodyLaborActualwithTask(workroderid: String, taskid: String): List<Labtran> {
         val listLaborActual = laborActualDao.findListLaborActualbyTaskid(workroderid, taskid)
         val labtransList = mutableListOf<Labtran>()
-        listLaborActual.whatIfNotNull { listCache ->
+        listLaborActual.whatIfNotNullOrEmpty { listCache ->
             listCache.forEach { laboractual ->
                 if (laboractual.syncUpdate == BaseParam.APP_FALSE) {
                     val labtran = Labtran()
@@ -567,7 +589,40 @@ class LaborRepository @Inject constructor(
         return labtransList
     }
 
-    fun prepareBodyUpdateLaborActual(laborActualEntity: LaborActualEntity) : Labtran {
+    fun prepareBodyLaborActualNonTask(workroderid: String) : List<Labtran> {
+        val listLaborActual = laborActualDao.findListLaborActual(workroderid)
+        val labtransList = mutableListOf<Labtran>()
+
+        listLaborActual.whatIfNotNullOrEmpty { list ->
+            list.forEach { laboractual ->
+                if(laboractual.syncUpdate == BaseParam.APP_FALSE && laboractual.isTask == BaseParam.APP_FALSE) {
+                    val labtran = Labtran()
+                    laboractual.laborcode.whatIfNotNull {
+                        labtran.labtransid = 0
+                        labtran.laborcode = it
+                        labtran.startdatetime = laboractual.startDateForMaximo
+                        labtransList.add(labtran)
+                    }
+                }
+            }
+        }
+        return labtransList
+    }
+
+    fun prepareBodyLaborActualNonTaskOfflineMode(laborActualEntity: LaborActualEntity) : List<Labtran> {
+        val labtransList = mutableListOf<Labtran>()
+        val labtran = Labtran()
+        laborActualEntity.whatIfNotNull {
+            labtran.labtransid = 0
+            labtran.laborcode = it.laborcode
+            labtran.startdatetime = it.startDateForMaximo
+            labtransList.add(labtran)
+        }
+
+        return labtransList
+    }
+
+        fun prepareBodyUpdateLaborActual(laborActualEntity: LaborActualEntity) : Labtran {
         val prepareBody = Labtran()
         prepareBody.startdatetime = laborActualEntity.startDateForMaximo
         prepareBody.finishdatetime = laborActualEntity.endDateForMaximo
@@ -576,13 +631,23 @@ class LaborRepository @Inject constructor(
 
     fun handlingCreateLaborActual(member: Member, laborActualEntity: LaborActualEntity) {
         val woactivity = member.woactivity
-        woactivity.whatIfNotNullOrEmpty { listTask ->
-            listTask.forEach {
-                it.labtrans.whatIfNotNullOrEmpty { labtrans ->
-                    labtrans.forEach { labtran ->
-                        laborActualEntity.wonumTask = it.wonum
-                        checkingLaborActualExisting(labtran, laborActualEntity)
+        val labtrans = member.labtrans
+        val isTask = laborActualEntity.isTask
+        if(isTask == BaseParam.APP_TRUE) {
+            woactivity.whatIfNotNullOrEmpty { listTask ->
+                listTask.forEach {
+                    it.labtrans.whatIfNotNullOrEmpty { labtrans ->
+                        labtrans.forEach { labtran ->
+                            laborActualEntity.wonumTask = it.wonum
+                            checkingLaborActualExisting(labtran, laborActualEntity)
+                        }
                     }
+                }
+            }
+        } else {
+            labtrans.whatIfNotNullOrEmpty { labtran ->
+                labtran.forEach {
+                    checkingLaborActualExisting(it, laborActualEntity)
                 }
             }
         }
@@ -606,10 +671,10 @@ class LaborRepository @Inject constructor(
             Timber.tag(TAG).i("checkingLaborActualExisting() update local cache after update")
             laborActualEntity.labtransid = labtransid
             laborActualEntity.syncUpdate = BaseParam.APP_TRUE
+            laborActualEntity.isLocally = BaseParam.APP_FALSE
             saveLaborActualCache(laborActualEntity)
         }
     }
-
 
     /**
      * Labor Master
@@ -704,6 +769,15 @@ class LaborRepository @Inject constructor(
             //save labor to local cache
             addLaborMasterCache(member)
         }
+    }
+
+    /**
+     * Method for locking labor plan and labor actual
+     */
+
+    fun lockingLaborActual(laborActualEntity: LaborActualEntity, locking: Boolean) {
+        laborActualEntity.locking = locking
+        saveLaborActualCache(laborActualEntity)
     }
 
     fun removeCacheLabor() {

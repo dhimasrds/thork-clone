@@ -585,16 +585,15 @@ class TaskRepository @Inject constructor(
         laborPlanDao.createLaborPlanCache(laborPlanEntity, appSession.userEntity.username)
     }
 
-
     fun prepareBodyForCreateLaborActualWithTask(woid: Int): List<id.thork.app.network.response.work_order.Woactivity> {
         val taskEntity = findTaskByWoIdAndSyncStatus(woid, BaseParam.APP_TRUE)
         val memberTask = mutableListOf<id.thork.app.network.response.work_order.Woactivity>()
-        taskEntity.forEach {
+        taskEntity.forEach { task ->
             val member = id.thork.app.network.response.work_order.Woactivity()
-            val listLaborActual = prepareBodyLaborActual(woid.toString(), it.taskId.toString())
-            member.taskid = it.taskId
-            member.wonum = it.refWonum
+            val listLaborActual = prepareBodyLaborActual(woid.toString(), task.taskId.toString())
             listLaborActual.whatIfNotNullOrEmpty {
+                member.taskid = task.taskId
+                member.wonum = task.refWonum
                 member.labtrans = it
             }
             memberTask.add(member)
@@ -622,6 +621,7 @@ class TaskRepository @Inject constructor(
         }
         return labtransList
     }
+
 
 
 }

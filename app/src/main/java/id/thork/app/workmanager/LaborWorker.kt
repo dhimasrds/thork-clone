@@ -15,6 +15,7 @@ import id.thork.app.network.api.DoclinksClient
 import id.thork.app.network.response.work_order.Member
 import id.thork.app.network.response.work_order.WorkOrderResponse
 import id.thork.app.persistence.dao.*
+import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.repository.LaborRepository
 import id.thork.app.repository.TaskRepository
@@ -91,6 +92,7 @@ class LaborWorker @WorkerInject constructor(
             }
 
             syncUpdateLabor()
+            syncUpdateLaborActual()
             Result.success()
 
         } catch (e: Exception) {
@@ -130,7 +132,6 @@ class LaborWorker @WorkerInject constructor(
             updateCreateLaborPlan(it, index)
         }
     }
-
 
     /**
      * Update Labor Plan
@@ -247,5 +248,160 @@ class LaborWorker @WorkerInject constructor(
             }
         }
         return member
+    }
+
+    /**
+     * Labor Actual
+     */
+
+    fun syncUpdateLaborActual() {
+        val tempCacheWithId = mutableListOf<LaborActualEntity>()
+        val tempCacheWitoutId = mutableListOf<LaborActualEntity>()
+        val index = 0
+
+        val listLaborActualLocal = laborRepository.findListLaborActualBySyncUpdateAndLocally(
+            BaseParam.APP_FALSE,
+            BaseParam.APP_TRUE
+        )
+
+        listLaborActualLocal.whatIfNotNullOrEmpty { caches ->
+            caches.forEach { laboractual ->
+                laborRepository.lockingLaborActual(laboractual, true)
+                laboractual.labtransid.whatIfNotNull(
+                    whatIf = {
+                        tempCacheWithId.add(laboractual)
+                    },
+                    whatIfNot = {
+                        tempCacheWitoutId.add(laboractual)
+                    }
+                )
+            }
+
+            tempCacheWithId.whatIfNotNullOrEmpty {
+                updateLaborActual(it, index)
+            }
+
+            tempCacheWitoutId.whatIfNotNullOrEmpty {
+                createLaborActual(it, index)
+            }
+        }
+    }
+
+    /**
+     * Create Labor Actual
+     */
+
+    fun createLaborActual(listLaborActual: List<LaborActualEntity>, currentIndex: Int) {
+        val laboractualEntity = listLaborActual[currentIndex]
+        val workorderid = laboractualEntity.workorderid
+        laborRepository.lockingLaborActual(laboractualEntity, true)
+        val member = prepareBodyCreateLaborActualOfflinemode(laboractualEntity)
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val xMethodeOverride: String = BaseParam.APP_PATCH
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
+        val properties: String = BaseParam.APP_ALL_PROPERTIES
+
+        member.whatIfNotNull { body ->
+            runBlocking {
+                launch(Dispatchers.IO) {
+                    workorderid.whatIfNotNull { woid ->
+                        workOrderRepository.createLaborActual(
+                            cookie,
+                            xMethodeOverride,
+                            contentType,
+                            patchType,
+                            properties,
+                            woid.toInt(),
+                            body,
+                            onSuccess = { response ->
+                                response.whatIfNotNull {
+                                    laborRepository.handlingCreateLaborActual(it, laboractualEntity)
+                                    laborRepository.lockingLaborActual(laboractualEntity, false)
+
+                                    val nextIndex = currentIndex + 1
+                                    if (nextIndex <= listLaborActual.size - 1) {
+                                        createLaborActual(listLaborActual, nextIndex)
+                                    }
+                                }
+                            },
+                            onError = {
+                                laborRepository.lockingLaborActual(laboractualEntity, false)
+                                Timber.tag(TAG).i("createLaborActual() onError() onError: %s", it)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun prepareBodyCreateLaborActualOfflinemode(laborActualEntity: LaborActualEntity): Member {
+        val member = Member()
+        laborActualEntity.workorderid.whatIfNotNull {
+            if (laborActualEntity.isTask == BaseParam.APP_TRUE) {
+                val tasklist = taskRepository.prepareBodyForCreateLaborActualWithTask(it.toInt())
+                tasklist.whatIfNotNullOrEmpty { task ->
+                    member.woactivity = task
+                }
+            } else {
+                val laboractualList =
+                    laborRepository.prepareBodyLaborActualNonTaskOfflineMode(laborActualEntity)
+                laboractualList.whatIfNotNullOrEmpty { labtrans ->
+                    member.labtrans = labtrans
+                }
+            }
+        }
+        Timber.tag(TAG).d("laborworker prepareBodyCreateLaborActualOfflinemode() :%s", member)
+        return member
+    }
+
+    /**
+     * update labor actual
+     */
+
+    fun updateLaborActual(listLaborActual: List<LaborActualEntity>, currentIndex: Int) {
+        val laborActualEntity = listLaborActual[currentIndex]
+        val labtranid = laborActualEntity.labtransid
+        laborRepository.lockingLaborActual(laborActualEntity, true)
+        val labtran = laborRepository.prepareBodyUpdateLaborActual(laborActualEntity)
+        val cookie: String = preferenceManager.getString(BaseParam.APP_MX_COOKIE)
+        val xMethodeOverride: String = BaseParam.APP_PATCH
+        val contentType: String = ("application/json")
+        val patchType: String = BaseParam.APP_MERGE
+
+        labtran.whatIfNotNull { labtran ->
+            runBlocking {
+                launch(Dispatchers.IO) {
+                    labtranid.whatIfNotNull { labtranid ->
+                        workOrderRepository.updateLaborActual(
+                            cookie,
+                            xMethodeOverride,
+                            contentType,
+                            patchType,
+                            labtranid.toInt(),
+                            labtran,
+                            onSuccess = {
+                                Timber.tag(TAG)
+                                    .i("updateLaborActual() update local cache after update")
+                                laborRepository.handlingUpdateLaborActual(
+                                    laborActualEntity,
+                                    BaseParam.APP_TRUE
+                                )
+                                laborRepository.lockingLaborActual(laborActualEntity, false)
+
+                                val nextIndex = currentIndex + 1
+                                if (nextIndex <= listLaborActual.size - 1) {
+                                    updateLaborActual(listLaborActual, nextIndex)
+                                }
+                            },
+                            onError = {
+                                Timber.tag(TAG).i("updateLaborActual() onError() onError: %s", it)
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
 }

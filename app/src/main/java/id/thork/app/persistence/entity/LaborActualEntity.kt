@@ -25,9 +25,7 @@ class LaborActualEntity: BaseEntity(){
     var startDateForMaximo: String? = null
     var endDateForMaximo: String? = null
     var syncUpdate: Int? = null
-    var offlineMode: Int? = null
-    var longStartDate: Long? = null
-    var longEndDate: Long? = null
-    var longStartTime: Long? = null
-    var longEndTime: Long? = null
+    var isLocally: Int? = null
+    var isTask: Int? = null
+    var locking: Boolean? = false
 }

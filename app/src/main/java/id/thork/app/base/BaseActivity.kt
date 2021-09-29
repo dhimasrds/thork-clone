@@ -412,14 +412,7 @@ abstract class BaseActivity : AppCompatActivity() {
             workerCoordinator.addSyncTask()
         }
 
-        val laborplan = laborPlanDao.findListLaborPlanlbySyncUpdateAndisDetailWo(
-            BaseParam.APP_FALSE,
-            BaseParam.APP_TRUE
-        )
-        laborplan.whatIfNotNullOrEmpty {
-            workerCoordinator.addSyncLabor()
-        }
-
+        workerCoordinator.addSyncLabor()
         defineIconConnectionState()
     }
 
@@ -445,8 +438,8 @@ abstract class BaseActivity : AppCompatActivity() {
         task.whatIfNotNullOrEmpty {
             workerCoordinator.addSyncTask()
         }
-        workerCoordinator.addSyncLabor()
 
+        workerCoordinator.addSyncLabor()
         defineIconConnectionState()
     }
 

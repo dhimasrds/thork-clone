@@ -382,8 +382,6 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
                 tvSkillLevel.text.toString(),
                 tvStartDate.text.toString(),
                 tvStartTime.text.toString(),
-                msStartDate!!,
-                msStartTime!!
             )
         }
         customDialogUtils.dismiss()

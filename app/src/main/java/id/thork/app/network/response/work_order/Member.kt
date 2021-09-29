@@ -265,5 +265,5 @@ data class Member(
     @Json(name = "wplabor")
     var wplabor: List<Wplabor>? = null,
     @Json(name = "labtrans")
-    val labtrans: List<Labtran>? = null,
+    var labtrans: List<Labtran>? = null,
 )

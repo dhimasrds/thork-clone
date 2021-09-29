@@ -38,98 +38,6 @@ class LaborActualViewModel @ViewModelInject constructor(
     private val _getLaborActual = MutableLiveData<LaborActualEntity>()
     val getLaborActual: LiveData<LaborActualEntity> get() = _getLaborActual
 
-
-    fun saveLaborActualLocalBackUp(
-        taskid: String,
-        taskdesc: String,
-        wonum: String,
-        woId: String,
-        labor: String,
-        craft: String,
-        startDateForMaximo: String,
-        endDateForMaximo: String,
-        skillLevel: String,
-        startDate: String,
-        startTime: String,
-        endDate: String,
-        endTime: String,
-        msStartDate: Long,
-        msStartTime: Long,
-        msEndDate: Long,
-        msEndTime: Long
-    ) {
-
-        val laborActual = LaborActualEntity()
-        laborActual.wonumHeader = wonum
-        laborActual.workorderid = woId
-        laborActual.laborcode = labor
-        laborActual.craft = craft
-        laborActual.startDate = startDate
-        laborActual.endDate = endDate
-        laborActual.statTime = startTime
-        laborActual.endTime = endTime
-        laborActual.startDateForMaximo = startDateForMaximo
-        laborActual.endDateForMaximo = endDateForMaximo
-        laborActual.skillLevel = skillLevel
-        laborActual.longStartDate = msStartDate
-        laborActual.longStartTime = msStartTime
-        laborActual.longEndDate = msEndDate
-        laborActual.longEndTime = msEndTime
-        laborActual.syncUpdate = BaseParam.APP_FALSE
-
-        if (taskid.isNotEmpty()) {
-            laborActual.taskid = taskid
-            laborActual.taskDescription = taskdesc
-            val taskEntity =
-                taskRepository.findTaskByWoIdAndTaskId(woId.toInt(), taskid.toInt())
-            taskEntity.whatIfNotNull {
-                laborActual.wonumTask = it.refWonum
-            }
-        }
-        laborRepository.saveLaborActualCache(laborActual)
-        //TODO Need handling when case offline mode
-        prepareBodyCreateLaborActual(laborActual)
-
-    }
-
-    fun updateLaborActualLocalBackup(
-        laborActualEntity: LaborActualEntity,
-        taskid: String,
-        taskdesc: String,
-        wonum: String,
-        woId: String,
-        labor: String,
-        craft: String,
-        startDateForMaximo: String,
-        endDateForMaximo: String,
-        skillLevel: String,
-        startDate: String,
-        startTime: String,
-        endDate: String,
-        endTime: String,
-    ) {
-
-        laborActualEntity.wonumHeader = wonum
-        laborActualEntity.workorderid = woId
-        laborActualEntity.laborcode = labor
-        laborActualEntity.craft = craft
-        laborActualEntity.startDate = startDate
-        laborActualEntity.endDate = endDate
-        laborActualEntity.statTime = startTime
-        laborActualEntity.endTime = endTime
-        laborActualEntity.startDateForMaximo = startDateForMaximo
-        laborActualEntity.endDateForMaximo = endDateForMaximo
-        laborActualEntity.skillLevel = skillLevel
-
-        if (taskid.isNotEmpty()) {
-            laborActualEntity.taskid = taskid
-            laborActualEntity.taskDescription = taskdesc
-        }
-
-        laborRepository.saveLaborActualCache(laborActualEntity)
-
-    }
-
     fun saveLaborActualLocal(
         taskid: String,
         taskdesc: String,
@@ -141,8 +49,6 @@ class LaborActualViewModel @ViewModelInject constructor(
         skillLevel: String,
         startDate: String,
         startTime: String,
-        msStartDate: Long,
-        msStartTime: Long,
     ) {
 
         val laborActual = LaborActualEntity()
@@ -154,18 +60,20 @@ class LaborActualViewModel @ViewModelInject constructor(
         laborActual.statTime = startTime
         laborActual.startDateForMaximo = startDateForMaximo
         laborActual.skillLevel = skillLevel
-        laborActual.longStartDate = msStartDate
-        laborActual.longStartTime = msStartTime
         laborActual.syncUpdate = BaseParam.APP_FALSE
+        laborActual.isLocally = BaseParam.APP_TRUE
 
-        if (taskid.isNotEmpty()) {
+        if (taskid != BaseParam.APP_NULL) {
             laborActual.taskid = taskid
             laborActual.taskDescription = taskdesc
+            laborActual.isTask = BaseParam.APP_TRUE
             val taskEntity =
                 taskRepository.findTaskByWoIdAndTaskId(woId.toInt(), taskid.toInt())
             taskEntity.whatIfNotNull {
                 laborActual.wonumTask = it.refWonum
             }
+        } else {
+            laborActual.isTask = BaseParam.APP_FALSE
         }
         laborRepository.saveLaborActualCache(laborActual)
         //TODO Need handling when case offline mode
@@ -181,10 +89,6 @@ class LaborActualViewModel @ViewModelInject constructor(
         startTime: String,
         endDate: String,
         endTime: String,
-        msStartDate: Long,
-        msEndDate: Long,
-        msStartTime: Long,
-        msEndTime: Long,
     ) {
         laborActualEntity.startDateForMaximo = startDateForMaximo
         laborActualEntity.endDateForMaximo = endDateForMaximo
@@ -192,11 +96,8 @@ class LaborActualViewModel @ViewModelInject constructor(
         laborActualEntity.endDate = endDate
         laborActualEntity.statTime = startTime
         laborActualEntity.endTime = endTime
-        laborActualEntity.longStartDate = msStartDate
-        laborActualEntity.longEndDate = msEndDate
-        laborActualEntity.longStartTime = msStartTime
-        laborActualEntity.longEndTime = msEndTime
         laborActualEntity.syncUpdate = BaseParam.APP_FALSE
+        laborActualEntity.isLocally = BaseParam.APP_TRUE
         laborRepository.saveLaborActualCache(laborActualEntity)
 
         //TODO Handling case offline mode
@@ -227,10 +128,14 @@ class LaborActualViewModel @ViewModelInject constructor(
 
         workorderid.whatIfNotNull {
             val tasklist = taskRepository.prepareBodyForCreateLaborActualWithTask(it.toInt())
-            //TODO prepare body without task
+            val labtrans = laborRepository.prepareBodyLaborActualNonTask(it)
 
             tasklist.whatIfNotNullOrEmpty { tasks ->
                 member.woactivity = tasks
+            }
+
+            labtrans.whatIfNotNullOrEmpty { labtran ->
+                member.labtrans = labtran
             }
 
             member.whatIfNotNull { preparebody ->
@@ -313,7 +218,5 @@ class LaborActualViewModel @ViewModelInject constructor(
                 }
             )
         }
-
     }
-
 }

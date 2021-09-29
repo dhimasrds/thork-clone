@@ -4,9 +4,8 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborActualEntity_
-import id.thork.app.persistence.entity.LaborPlanEntity
-import id.thork.app.persistence.entity.LaborPlanEntity_
 import io.objectbox.Box
+import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
@@ -86,12 +85,15 @@ class LaborActualDaoImp : LaborActualDao {
         return null
     }
 
-    override fun findListLaborActualbyTaskid(workorderid: String, taskid: String) : List<LaborActualEntity> {
-        return laborActualEntityBox.query().equal(LaborActualEntity_.workorderid, workorderid).equal(LaborActualEntity_.taskid, taskid).
-        build().find()
+    override fun findListLaborActualbyTaskid(
+        workorderid: String,
+        taskid: String
+    ): List<LaborActualEntity> {
+        return laborActualEntityBox.query().equal(LaborActualEntity_.workorderid, workorderid)
+            .equal(LaborActualEntity_.taskid, taskid).build().find()
     }
 
-    override fun findlaborPlanByLabtransid(
+    override fun findlaborActualByLabtransid(
         labtransid: String
     ): LaborActualEntity? {
         val laborActualEntity =
@@ -102,6 +104,15 @@ class LaborActualDaoImp : LaborActualDao {
             return it[0]
         }
         return null
+    }
+
+    override fun findListLaborActualSyncUpdateAndLocally(
+        syncUpdate: Int,
+        isLocally: Int
+    ): List<LaborActualEntity> {
+        return laborActualEntityBox.query().equal(LaborActualEntity_.syncUpdate, syncUpdate)
+            .equal(LaborActualEntity_.isLocally, isLocally)
+            .equal(LaborActualEntity_.locking, false).build().find()
     }
 
 }

@@ -16,7 +16,6 @@ import id.thork.app.pages.labor_actual.LaborActualActivity
 import id.thork.app.pages.labor_actual.create_labor_actual.CreateLaborActualActivity
 import id.thork.app.pages.labor_actual.element.LaborActualViewModel
 import id.thork.app.pages.labor_actual.element.TimePickerHelper
-import id.thork.app.pages.labor_plan.SelectCraftActivity
 import id.thork.app.pages.labor_plan.SelectLaborActivity
 import id.thork.app.pages.labor_plan.SelectTaskActivity
 import id.thork.app.persistence.entity.LaborActualEntity
@@ -113,10 +112,16 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
             startTime = StringUtils.NVL(it.statTime, BaseParam.APP_DASH)
             endDate = StringUtils.NVL(it.endDate, BaseParam.APP_DASH)
             endTime = StringUtils.NVL(it.endTime, BaseParam.APP_DASH)
-            msStartDate = it.longStartDate
-            msStartTime = it.longStartTime
-            msEndDate = it.longEndDate
-            msEndTime = it.longEndTime
+            it.startDateForMaximo.whatIfNotNull { startdate ->
+                msStartDate = DateUtils.convertDateToMillisec(it.startDate)
+                msStartTime = DateUtils.convertTimeToMillisec(it.statTime)
+            }
+
+            it.endDateForMaximo.whatIfNotNull { enddate ->
+                msEndDate = DateUtils.convertDateToMillisec(it.endDate)
+                msEndTime = DateUtils.convertTimeToMillisec(it.endTime)
+            }
+
             taskid = it.taskid
             taskdesc = it.taskDescription
 
@@ -135,7 +140,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                     tvTask.text = taskid.plus(BaseParam.APP_DASH).plus(taskdesc)
                 }
             }
-
         })
     }
 
@@ -217,14 +221,12 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                 msStartDate = cal.timeInMillis
                 calForStartDate = DateUtils.getAppDateFormatMaximo(cal.time)
                 binding.tvStartDate.error = null
-
             }
             false -> {
                 binding.tvEndDate.text = DateUtils.getAppDateFormat(cal2.time)
                 msEndDate = cal2.timeInMillis
                 calForEndDate = DateUtils.getAppDateFormatMaximo(cal2.time)
                 binding.tvEndDate.error = null
-
             }
         }
     }
@@ -256,7 +258,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
                     }
                 }
-
                 Timber.d("showTimePickerDialog longstart :%s end :%s", msStartTime, msEndTime)
             }
         })
@@ -285,6 +286,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
             if (msEndDate!! == msStartDate!! && msEndTime!! < msStartTime!!) {
                 CommonUtils.standardToast(getString(R.string.finish_time))
             } else if (msEndDate!! < msStartDate!!) {
+                Timber.tag(TAG).d("validationDateAndTime() startDate : %s, endDate : %s", msStartDate, msEndDate)
                 CommonUtils.standardToast("Finish time has to be after Start time")
             } else if (
                 msStartDate!! > currentTime ||
@@ -292,6 +294,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                 msEndDate!! > currentTime ||
                 msEndTime!! > currentTime
             ) {
+
                 CommonUtils.standardToast("Cannot input labor with future dates and times")
 
                 CommonUtils.standardToast(getString(R.string.finish_time))
@@ -377,12 +380,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         startActivityForResult(intent, BaseParam.REQUEST_CODE_TASK)
     }
 
-    private fun goToSelectCraft() {
-        val intent = Intent(this, SelectCraftActivity::class.java)
-        intent.putExtra(BaseParam.LABORCODE, binding.tvLabor.text.toString())
-        startActivityForResult(intent, BaseParam.REQUEST_CODE_CRAFT)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (resultCode) {
@@ -418,18 +415,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                             }
                         }
                     }
-
-//                    BaseParam.REQUEST_CODE_CRAFT -> {
-//                        // Handling when choose craft
-//                        data.whatIfNotNull {
-//                            val craft = it.getStringExtra(BaseParam.CRAFT_FORM)
-//                            binding.apply {
-//                                tvCraft.text = craft
-//                                tvLabor.text = BaseParam.APP_DASH
-//                                removeValidation()
-//                            }
-//                        }
-//                    }
                 }
             }
         }
@@ -492,10 +477,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
                         tvStartTime.text.toString(),
                         tvEndDate.text.toString(),
                         tvEndTime.text.toString(),
-                        msStartDate!!,
-                        msEndTime!!,
-                        msStartTime!!,
-                        msEndTime!!
                     )
                 }
             }
