@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -56,6 +57,10 @@ import id.thork.app.utils.CommonUtils
 import id.thork.app.workmanager.WorkerCoordinator
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
+import java.util.*
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -106,6 +111,8 @@ abstract class BaseActivity : AppCompatActivity() {
     private var historyAttendanceIcon: Boolean = false
     private var originWo: String? = null
     private var cookie: String? = null
+    private val scheduleTaskExecutor: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -359,6 +366,35 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun setupListener() {
     }
 
+    open fun startScheduleThread() {
+        try {
+            if (!appSession.scheduleTaskActive) {
+                appSession.scheduleTaskExecutor = scheduleTaskExecutor
+                appSession.scheduleTaskExecutor.scheduleAtFixedRate({
+                    Log.d("MainActivity", "current time  " + Date())
+
+                    // Parsing RSS feed:
+                    //myFeedParser.doSomething()
+
+                    // If you need update UI, simply do this:
+                    runOnUiThread { // update your UI component here.
+                        //myTextView.setText("refreshed")
+                    }
+                }, 0, 5, TimeUnit.SECONDS)
+                Timber.d("stopScheduleThread start :%s", appSession.scheduleTaskExecutor)
+                appSession.scheduleTaskActive = true
+            }
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+
+    }
+
+    open fun stopScheduleThread() {
+        Timber.d("stopScheduleThread kill:%s", appSession.scheduleTaskExecutor)
+        appSession.scheduleTaskActive = false
+        appSession.scheduleTaskExecutor.shutdown()
+    }
 
     open fun setupObserver() {
         Timber.tag(BaseApplication.TAG)
@@ -377,7 +413,7 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun onError() {
     }
 
-    open fun showToast(message: String){
+    open fun showToast(message: String) {
         CommonUtils.standardToast(message)
     }
 
@@ -385,6 +421,12 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onPause()
         Timber.d("StandardToast pause")
         CommonUtils.removeToast()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("StandardToast onDestroy")
+
     }
 
 

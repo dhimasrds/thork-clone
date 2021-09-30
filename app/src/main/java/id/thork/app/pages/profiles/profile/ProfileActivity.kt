@@ -132,6 +132,7 @@ class ProfileActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
 
     override fun onRightButton() {
         LocaleHelper.setLocale(this, BaseParam.APP_DEFAULT_LANG)
+        stopScheduleThread()
         viewModel.logout()
     }
 

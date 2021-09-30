@@ -204,7 +204,7 @@ object MapsUtils {
                 MarkerOptions()
                     .position(it)
                     .title("Destination")
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.node_wo))
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_work_order_foreground))
             )
         }
     }

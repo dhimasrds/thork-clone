@@ -38,6 +38,7 @@ import id.thork.app.pages.create_wo.CreateWoActivity
 import id.thork.app.pages.main.element.MainViewModel
 import id.thork.app.pages.profiles.profile.ProfileActivity
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 
@@ -75,7 +76,12 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         //Init custom dialog
         customDialogUtils = CustomDialogUtils(this)
         requestGrantPermissions()
+        Timber.d("MainActivity task :%s", appSession.scheduleTaskActive)
+        startScheduleThread()
+
     }
+
+
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationMain
@@ -113,7 +119,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, CustomDialogUtils.Dia
         when (view?.id) {
             R.id.iv_map -> {
                 val bottomNavigationView = binding.bottomNavigationMain
-                bottomNavigationView.setSelectedItemId(R.id.nav_graph_map);
+                bottomNavigationView.selectedItemId = R.id.nav_graph_map
             }
         }
     }
