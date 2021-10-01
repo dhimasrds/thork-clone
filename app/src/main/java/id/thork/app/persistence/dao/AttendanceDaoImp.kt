@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AttendanceEntity
 import id.thork.app.persistence.entity.AttendanceEntity_
@@ -14,7 +15,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 16/06/2021
  * Jakarta, Indonesia.
  */
-class AttendanceDaoImp : AttendanceDao {
+class AttendanceDaoImp : AttendanceDao, BaseDao() {
     val TAG = AttendanceDaoImp::class.java.name
 
     var attendanceEntityBox: Box<AttendanceEntity>

@@ -1,11 +1,11 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.CraftMasterEntity
 import id.thork.app.persistence.entity.CraftMasterEntity_
 import io.objectbox.Box
-import io.objectbox.query.PropertyQuery
 import timber.log.Timber
 import java.util.*
 
@@ -13,7 +13,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 03/08/2021
  * Jakarta, Indonesia.
  */
-class CraftMasterDaoImp : CraftMasterDao {
+class CraftMasterDaoImp : CraftMasterDao, BaseDao() {
     val TAG = CraftMasterDaoImp::class.java.name
 
     var craftMasterEntityBox: Box<CraftMasterEntity>
@@ -71,8 +71,9 @@ class CraftMasterDaoImp : CraftMasterDao {
         return null
     }
 
-    override fun getCraft() : Array<out String>? {
-        return craftMasterEntityBox.query().build().property(CraftMasterEntity_.craft).distinct().findStrings()
+    override fun getCraft(): Array<out String>? {
+        return craftMasterEntityBox.query().build().property(CraftMasterEntity_.craft).distinct()
+            .findStrings()
 
     }
 }

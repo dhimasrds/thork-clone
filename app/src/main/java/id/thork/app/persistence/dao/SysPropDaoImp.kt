@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.SysPropEntity
 import id.thork.app.persistence.entity.SysPropEntity_
@@ -12,7 +13,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 28/04/21
  * Jakarta, Indonesia.
  */
-class SysPropDaoImp : SysPropDao {
+class SysPropDaoImp : SysPropDao, BaseDao() {
     val TAG = SysPropDaoImp::class.java.name
 
     var sysPropEntityBox: Box<SysPropEntity>

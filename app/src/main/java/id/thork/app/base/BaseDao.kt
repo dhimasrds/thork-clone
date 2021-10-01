@@ -12,13 +12,17 @@
 
 package id.thork.app.base
 
+import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
-import id.thork.app.persistence.dao.WpmaterialDaoImp
+import id.thork.app.persistence.dao.WoCacheDao
+import id.thork.app.persistence.dao.WoCacheDaoImp
 import id.thork.app.persistence.entity.BaseEntity
 import timber.log.Timber
 import java.util.*
 
 abstract class BaseDao {
+
+    var woCacheDao: WoCacheDao = WoCacheDaoImp()
     private val TAG = BaseDao::class.java.name
 
     protected fun addUpdateInfo(baseEntity: BaseEntity, username: String?) {
@@ -33,5 +37,14 @@ abstract class BaseDao {
         )
         baseEntity.updatedDate = Date()
         baseEntity.updatedBy = username
+    }
+
+    protected fun updateChangeDateWo(woid: Int, username: String?) {
+        val wo = woCacheDao.findWoByWoId(woid)
+        wo.whatIfNotNull {
+            it.changeDateLocal = Date()
+
+            woCacheDao.createWoCache(it, username)
+        }
     }
 }

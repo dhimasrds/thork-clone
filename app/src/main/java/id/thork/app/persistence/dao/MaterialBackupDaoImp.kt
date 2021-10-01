@@ -1,5 +1,6 @@
 package id.thork.app.persistence.dao
 
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MaterialBackupEntity
 import id.thork.app.persistence.entity.MaterialBackupEntity_
@@ -10,7 +11,7 @@ import io.objectbox.kotlin.equal
  * Created by Raka Putra on 3/4/21
  * Jakarta, Indonesia.
  */
-class MaterialBackupDaoImp : MaterialBackupDao {
+class MaterialBackupDaoImp : MaterialBackupDao,BaseDao() {
 
     var materialBackupEntityBox: Box<MaterialBackupEntity>
 

@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborPlanEntity
 import id.thork.app.persistence.entity.LaborPlanEntity_
@@ -13,7 +14,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 29/07/2021
  * Jakarta, Indonesia.
  */
-class LaborPlanDaoImp : LaborPlanDao {
+class LaborPlanDaoImp : LaborPlanDao,BaseDao() {
     val TAG = LaborPlanDaoImp::class.java.name
 
     var laborPlanEntityBox: Box<LaborPlanEntity>
@@ -47,6 +48,7 @@ class LaborPlanDaoImp : LaborPlanDao {
     override fun createLaborPlanCache(laborPlanEntity: LaborPlanEntity, username: String?) {
         addUpdateInfo(laborPlanEntity, username)
         laborPlanEntityBox.put(laborPlanEntity)
+        updateChangeDateWo(laborPlanEntity.workorderid!!.toInt(), username)
 
     }
 

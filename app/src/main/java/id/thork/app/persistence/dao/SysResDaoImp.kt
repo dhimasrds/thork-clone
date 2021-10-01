@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.SysResEntity
 import id.thork.app.persistence.entity.SysResEntity_
@@ -11,7 +12,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 06/05/2021
  * Jakarta, Indonesia.
  */
-class SysResDaoImp : SysResDao {
+class SysResDaoImp : SysResDao,BaseDao() {
     var sysResEntityBox: Box<SysResEntity>
 
     init {

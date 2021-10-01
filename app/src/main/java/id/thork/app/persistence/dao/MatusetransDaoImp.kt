@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MatusetransEntity
 import id.thork.app.persistence.entity.MatusetransEntity_
@@ -13,7 +14,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 28/05/2021
  * Jakarta, Indonesia.
  */
-class MatusetransDaoImp : MatusetransDao {
+class MatusetransDaoImp : MatusetransDao,BaseDao() {
     val TAG = MatusetransDaoImp::class.java.name
 
     var matusetransEntityBox: Box<MatusetransEntity>
@@ -42,6 +43,7 @@ class MatusetransDaoImp : MatusetransDao {
     ) {
         addUpdateInfo(matusetransEntity, username)
         matusetransEntityBox.put(matusetransEntity)
+        updateChangeDateWo(matusetransEntity.workorderId!!.toInt(), username)
     }
 
     override fun remove() {

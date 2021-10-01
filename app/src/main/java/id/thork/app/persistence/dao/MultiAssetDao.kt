@@ -9,7 +9,7 @@ import id.thork.app.persistence.entity.MultiAssetEntity
 interface MultiAssetDao {
     fun save(multiAssetEntity: MultiAssetEntity, username: String)
     fun remove()
-    fun saveListMultiAsset(multiAssetEntityList: List<MultiAssetEntity>): List<MultiAssetEntity>
+    fun saveListMultiAsset(multiAssetEntityList: List<MultiAssetEntity>,username: String): List<MultiAssetEntity>
     fun findListMultiAssetByParent(parent: String): List<MultiAssetEntity>
     fun findAllMultiAsset(): List<MultiAssetEntity>
     fun findMultiAssetByAssetnum(assetnum: String): MultiAssetEntity?

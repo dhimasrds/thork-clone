@@ -24,12 +24,17 @@ class MaterialActualDaoImp : MaterialActualDao, BaseDao() {
     override fun save(materialActualEntity: MaterialActualEntity, username: String) {
         addUpdateInfo(materialActualEntity, username)
         materialActualEntityBox.put(materialActualEntity)
+        updateChangeDateWo(materialActualEntity.workorderId!!, username)
     }
 
     override fun save(
         materialList: List<MaterialActualEntity>,
         username: String
     ): List<MaterialActualEntity> {
+        materialList.forEach {
+            addUpdateInfo(it,username)
+            updateChangeDateWo(it.workorderId!!.toInt(),username)
+        }
         materialActualEntityBox.put(materialList)
         return materialList
     }

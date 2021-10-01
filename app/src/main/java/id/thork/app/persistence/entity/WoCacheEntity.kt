@@ -24,6 +24,7 @@ data class WoCacheEntity(
     var latitude : Double? = null,
     var longitude: Double? = null,
     var changeDate: String? = null,
+    var changeDateLocal: Date? = null,
     var reportDateUTCTime: Date? = null,
     var reportString: String? = null,
     var externalREFID: String? = null

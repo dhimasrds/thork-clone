@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.ObjectBox.boxStore
 import id.thork.app.persistence.entity.WoCacheEntity
@@ -31,7 +32,9 @@ class WoCacheDaoImp : WoCacheDao {
 
     override fun createWoCache(woCacheEntity: WoCacheEntity, username: String?): WoCacheEntity {
         addUpdateInfo(woCacheEntity, username)
+        woCacheEntity.changeDateLocal = Date()
         woCacheEntityBox.put(woCacheEntity)
+//        updateChangeDateWo(woCacheEntity.woId!!.toInt(),username)
         return woCacheEntity
     }
 
@@ -72,6 +75,13 @@ class WoCacheDaoImp : WoCacheDao {
     override fun findWoByWonum(wonum: String): WoCacheEntity? {
         val woCacheEntity: List<WoCacheEntity> =
             woCacheEntityBox.query().equal(WoCacheEntity_.wonum, wonum).build().find()
+        woCacheEntity.whatIfNotNullOrEmpty { return woCacheEntity[0] }
+        return null
+    }
+
+    override fun findWoByWoId(woid: Int): WoCacheEntity? {
+        val woCacheEntity: List<WoCacheEntity> =
+            woCacheEntityBox.query().equal(WoCacheEntity_.woId, woid).build().find()
         woCacheEntity.whatIfNotNullOrEmpty { return woCacheEntity[0] }
         return null
     }

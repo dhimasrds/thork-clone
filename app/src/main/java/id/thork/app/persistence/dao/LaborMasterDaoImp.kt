@@ -1,11 +1,10 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborMasterEntity
 import id.thork.app.persistence.entity.LaborMasterEntity_
-import id.thork.app.persistence.entity.LaborPlanEntity
-import id.thork.app.persistence.entity.LaborPlanEntity_
 import io.objectbox.Box
 import timber.log.Timber
 import java.util.*
@@ -14,7 +13,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 03/08/2021
  * Jakarta, Indonesia.
  */
-class LaborMasterDaoImp : LaborMasterDao {
+class LaborMasterDaoImp : LaborMasterDao, BaseDao() {
     val TAG = LaborMasterDaoImp::class.java.name
 
     var laborMasterEntityBox: Box<LaborMasterEntity>

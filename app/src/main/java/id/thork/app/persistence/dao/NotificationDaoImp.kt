@@ -13,12 +13,13 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.NotificationEntity
 import io.objectbox.Box
 import java.util.*
 
-class NotificationDaoImp : NotificationDao {
+class NotificationDaoImp : NotificationDao, BaseDao() {
     var notificationEntityBox: Box<NotificationEntity>
 
     init {

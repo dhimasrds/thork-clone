@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.TaskEntity
 import id.thork.app.persistence.entity.TaskEntity_
@@ -13,7 +14,7 @@ import java.util.*
  * Created by Raka Putra on 6/23/21
  * Jakarta, Indonesia.
  */
-class TaskDaoImp : TaskDao {
+class TaskDaoImp : TaskDao, BaseDao() {
     val TAG = TaskDaoImp::class.java.name
 
     var taskEntityBox: Box<TaskEntity>
@@ -46,6 +47,7 @@ class TaskDaoImp : TaskDao {
         taskEntityBox.put(
             taskEntity
         )
+        updateChangeDateWo(taskEntity.woId!!, username)
 
     }
 

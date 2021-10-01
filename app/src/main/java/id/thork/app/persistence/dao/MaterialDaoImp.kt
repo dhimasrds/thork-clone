@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MaterialEntity
 import id.thork.app.persistence.entity.MaterialEntity_
@@ -12,7 +13,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 28/05/2021
  * Jakarta, Indonesia.
  */
-class MaterialDaoImp : MaterialDao {
+class MaterialDaoImp : MaterialDao,BaseDao() {
     val TAG = MaterialDaoImp::class.java.name
 
     var materialEntityBox: Box<MaterialEntity>
@@ -71,7 +72,10 @@ class MaterialDaoImp : MaterialDao {
         return null
     }
 
-    override fun saveListMaterialMaster(materialList: List<MaterialEntity>): List<MaterialEntity> {
+    override fun saveListMaterialMaster(materialList: List<MaterialEntity> , username: String): List<MaterialEntity> {
+        materialList.forEach {
+            addUpdateInfo(it,username)
+        }
         materialEntityBox.put(materialList)
         return materialList
     }

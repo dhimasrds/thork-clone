@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.WorklogTypeEntity
 import id.thork.app.persistence.entity.WorklogTypeEntity_
@@ -12,7 +13,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 07/06/2021
  * Jakarta, Indonesia.
  */
-class WorklogTypeDaoImp : WorklogTypeDao {
+class WorklogTypeDaoImp : WorklogTypeDao,BaseDao() {
     val TAG = WorklogTypeDaoImp::class.java.name
 
     var worklogTypeEntityBox: Box<WorklogTypeEntity>

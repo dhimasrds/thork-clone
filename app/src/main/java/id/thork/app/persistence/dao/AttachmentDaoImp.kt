@@ -16,6 +16,7 @@ import com.skydoves.whatif.whatIfNotNullOrEmpty
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AttachmentEntity
 import id.thork.app.persistence.entity.AttachmentEntity_
@@ -24,7 +25,7 @@ import io.objectbox.kotlin.equal
 import timber.log.Timber
 import java.util.*
 
-class AttachmentDaoImp : AttachmentDao {
+class AttachmentDaoImp : AttachmentDao,BaseDao() {
     val TAG = AttachmentDaoImp::class.java.name
 
     private var attachmentEntityBox = ObjectBox.boxStore.boxFor(AttachmentEntity::class.java)
@@ -45,11 +46,13 @@ class AttachmentDaoImp : AttachmentDao {
         addUpdateInfo(attachmentEntity, username)
         attachmentEntityBox.put(attachmentEntity)
         saveLog(attachmentEntity, username)
+        updateChangeDateWo(attachmentEntity.workOrderId!!, username)
     }
 
     override fun save(attachmentEntities: List<AttachmentEntity>, username: String) {
         attachmentEntities.forEach {
             addUpdateInfo(it, username)
+            updateChangeDateWo(it.workOrderId!!,username)
         }
         attachmentEntityBox.put(attachmentEntities)
         saveLog(attachmentEntities, username)
