@@ -282,27 +282,32 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
     private fun validationDateAndTime() {
         val cal = Calendar.getInstance()
         val currentTime = cal.timeInMillis
+        val enddateString = DateUtils.convertDateToString(msEndDate!!)
+        val currentTimeString = DateUtils.convertDateToString(currentTime)
         if (validationEmpty()) {
             if (msEndDate!! == msStartDate!! && msEndTime!! < msStartTime!!) {
                 CommonUtils.standardToast(getString(R.string.finish_time))
             } else if (msEndDate!! < msStartDate!!) {
-                Timber.tag(TAG).d("validationDateAndTime() startDate : %s, endDate : %s", msStartDate, msEndDate)
-                CommonUtils.standardToast("Finish time has to be after Start time")
+                Timber.tag(TAG).d(
+                    "validationDateAndTime() startDate : %s, endDate : %s",
+                    msStartDate,
+                    msEndDate
+                )
+                CommonUtils.standardToast(getString(R.string.finish_time))
             } else if (
                 msStartDate!! > currentTime ||
-                msStartTime!! > currentTime ||
-                msEndDate!! > currentTime ||
-                msEndTime!! > currentTime
+                msStartTime!! > currentTime
             ) {
-
-                CommonUtils.standardToast("Cannot input labor with future dates and times")
-
                 CommonUtils.standardToast(getString(R.string.finish_time))
+            } else if (  msEndDate!! > currentTime) {
+                CommonUtils.standardToast(getString(R.string.cannot_input_labor))
+            }
+            else if (msEndTime!! > currentTime && enddateString.equals(currentTimeString)) {
+                CommonUtils.standardToast(getString(R.string.cannot_input_labor))
             } else {
                 convertDateFormat()
                 dialogSaveLaborActual()
             }
-
         }
     }
 
@@ -495,6 +500,16 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
     override fun onMiddleButton() {
         TODO("Not yet implemented")
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        navigateToLaborActual()
+    }
+
+    override fun goToPreviousActivity() {
+        super.goToPreviousActivity()
+        navigateToLaborActual()
     }
 
 }

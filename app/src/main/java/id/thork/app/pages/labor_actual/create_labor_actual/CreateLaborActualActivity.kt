@@ -199,11 +199,11 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
     private fun goToAnotherAct() {
         binding.apply {
             selectCraft.setOnClickListener {
-                isCraft = true
-                goToSelectLabor()
+//                isCraft = true
+                goToSelectLabor(true)
             }
             selectLabor.setOnClickListener {
-                goToSelectLabor()
+                goToSelectLabor(false)
             }
             selectTask.setOnClickListener {
                 goToSelectTask()
@@ -264,7 +264,7 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
         }
     }
 
-    private fun goToSelectLabor() {
+    private fun goToSelectLabor(isCraft : Boolean) {
         Timber.d("goToSelectLabor :%s", isCraft)
         if (isCraft) {
             val intent = Intent(this, SelectLaborActivity::class.java)
@@ -398,6 +398,11 @@ class CreateLaborActualActivity : BaseActivity(), CustomDialogUtils.DialogAction
 
     override fun onBackPressed() {
         super.onBackPressed()
-        finish()
+        navigateToLaborActual()
+    }
+
+    override fun goToPreviousActivity() {
+        super.goToPreviousActivity()
+        navigateToLaborActual()
     }
 }

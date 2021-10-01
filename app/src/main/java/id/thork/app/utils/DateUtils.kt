@@ -106,6 +106,12 @@ object DateUtils {
         return sdf.format(date.time)
     }
 
+    fun convertDateToString(millisec: Long) : String {
+        val c = Date(millisec)
+        val sdf = SimpleDateFormat(APP_DATE_FORMAT)
+        return sdf.format(c.time)
+    }
+
 
     /**
      * HEADER ATTENDANCE

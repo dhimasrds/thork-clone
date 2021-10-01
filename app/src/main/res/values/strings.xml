@@ -609,6 +609,9 @@
     <string name="start_date_history">Your Start date or End cannot be empty</string>
     <string name="field_cannot_be_empty">field cannot be empty</string>
     <string name="finish_time">Finish time has to be after Start time</string>
+    <string name="cannot_input_labor">Cannot input labor with future dates and times</string>
+
+
 
 
 </resources>

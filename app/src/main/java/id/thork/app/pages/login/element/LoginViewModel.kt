@@ -117,6 +117,7 @@ class LoginViewModel @ViewModelInject constructor(
         userEntity.whatIfNotNull {
             if (!userEntity?.username.equals(username)) {
                 _error.postValue(resourceProvider.getString(R.string.username_invalid))
+                _progressVisible.postValue(false)
                 return
             }
         }
@@ -133,6 +134,7 @@ class LoginViewModel @ViewModelInject constructor(
                 }, onError = {
                     Timber.tag(TAG).i("loginCookie() error: %s", it)
                     _error.postValue(it)
+                    _progressVisible.postValue(false)
                 })
         }
     }
@@ -157,14 +159,16 @@ class LoginViewModel @ViewModelInject constructor(
                         }
                         else -> {
                             _error.postValue(it)
+                            _progressVisible.postValue(false)
                         }
                     }
                 },
                 onException = {
                     Timber.tag(TAG).i("fetchUserData() error: %s", it)
                     _error.postValue(it)
+                    _progressVisible.postValue(false)
                 })
-            _progressVisible.postValue(false)
+//            _progressVisible.postValue(false)
         }
     }
 
