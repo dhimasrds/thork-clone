@@ -21,7 +21,7 @@ class LoginClient @Inject constructor(
     suspend fun loginByPerson(select: String, where: String) =
         loginApi.loginByPerson(LEAN, select, where)
 
-    suspend fun login(maxauth: String) = loginApi.login(maxauth)
+    suspend fun login(maxauth: String) = loginApi.login(maxauth, LEAN)
 
     suspend fun logout(cookie: String, maxauth: String) = loginApi.logout(cookie, maxauth)
 

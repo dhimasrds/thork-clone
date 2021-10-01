@@ -7,19 +7,19 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 class Error {
-    @SerializedName("oslc:statusCode")
+    @SerializedName("statusCode")
     @Expose
     var oslcStatusCode: String? = null
 
-    @SerializedName("spi:reasonCode")
+    @SerializedName("reasonCode")
     @Expose
     var spiReasonCode: String? = null
 
-    @SerializedName("oslc:message")
+    @SerializedName("message")
     @Expose
     var oslcMessage: String? = null
 
-    @SerializedName("oslc:extendedError")
+    @SerializedName("extendedError")
     @Expose
     var oslcExtendedError: ExtendedError? = null
 }

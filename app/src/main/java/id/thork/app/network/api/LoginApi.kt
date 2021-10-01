@@ -22,7 +22,8 @@ interface LoginApi {
     @POST("maximo/oslc/login")
     suspend fun login(
         @Header("maxauth") maxAuth: String?,
-    ): ApiResponse<LoginCookie>
+        @Query("lean") lean: Int = 1,
+        ): ApiResponse<LoginCookie>
 
     @POST("maximo/oslc/logout")
     suspend fun logout(
