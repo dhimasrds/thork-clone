@@ -169,8 +169,6 @@ class LoginRepository constructor(
                             else -> message()
                         }
                         onError(errorText)
-                    } else {
-                        onError(message())
                     }
                 },
                 whatIfNot = {
