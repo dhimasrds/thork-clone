@@ -322,7 +322,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
                 tvStartTime.error = "Cannot be empty"
 
-                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
+                    CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvEndDate.text.isNullOrBlank()) {
 
