@@ -30,6 +30,7 @@ class WpmaterialDaoImp : WpmaterialDao, BaseDao() {
     ) {
         addUpdateInfo(wpmaterialEntity, username)
         wpmaterialEntityBox.put(wpmaterialEntity)
+        updateChangeDateWo(wpmaterialEntity.workorderId!!, username)
     }
 
     override fun delete(wpmaterialEntity: WpmaterialEntity) {

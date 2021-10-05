@@ -67,7 +67,9 @@ class MaterialRepository @Inject constructor(
     }
 
     fun saveListItemMaster(materialList: List<MaterialEntity>): List<MaterialEntity> {
-        return materialDao.saveListMaterialMaster(materialList)
+        return materialDao.saveListMaterialMaster(materialList,
+            appSession.userEntity.username.toString()
+        )
     }
 
     fun removeItemMaster() {

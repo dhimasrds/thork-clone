@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.AssetEntity
 import id.thork.app.persistence.entity.AssetEntity_
@@ -12,7 +13,7 @@ import java.util.*
  * Created by Raka Putra on 5/11/21
  * Jakarta, Indonesia.
  */
-class AssetDaoImp : AssetDao {
+class AssetDaoImp : AssetDao,BaseDao() {
     val TAG = AssetDaoImp::class.java.name
 
     var assetEntityBox: Box<AssetEntity>

@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.WorklogEntity
 import id.thork.app.persistence.entity.WorklogEntity_
@@ -13,7 +14,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 07/06/2021
  * Jakarta, Indonesia.
  */
-class WorklogDaoImp : WorklogDao {
+class WorklogDaoImp : WorklogDao,BaseDao() {
     val TAG = WorklogDaoImp::class.java.name
 
     var worklogEntityBox: Box<WorklogEntity>
@@ -42,6 +43,7 @@ class WorklogDaoImp : WorklogDao {
     ) {
         addUpdateInfo(worklogEntity, username)
         worklogEntityBox.put(worklogEntity)
+        updateChangeDateWo(worklogEntity.workorderid!!.toInt(), username)
     }
 
     override fun remove() {
@@ -49,6 +51,9 @@ class WorklogDaoImp : WorklogDao {
     }
 
     override fun saveListWorklog(worklogList: List<WorklogEntity>): List<WorklogEntity> {
+        worklogList.forEach {
+
+        }
         worklogEntityBox.put(worklogList)
         return worklogList
     }

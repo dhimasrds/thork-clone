@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.LaborActualEntity
 import id.thork.app.persistence.entity.LaborActualEntity_
@@ -13,7 +14,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 30/07/2021
  * Jakarta, Indonesia.
  */
-class LaborActualDaoImp : LaborActualDao {
+class LaborActualDaoImp : LaborActualDao, BaseDao() {
     val TAG = LaborActualDaoImp::class.java.name
 
     var laborActualEntityBox: Box<LaborActualEntity>
@@ -43,6 +44,8 @@ class LaborActualDaoImp : LaborActualDao {
     override fun createLaborActualCache(laborActualEntity: LaborActualEntity, username: String?) {
         addUpdateInfo(laborActualEntity, username)
         laborActualEntityBox.put(laborActualEntity)
+        updateChangeDateWo(laborActualEntity.workorderid!!.toInt(), username)
+
 
     }
 

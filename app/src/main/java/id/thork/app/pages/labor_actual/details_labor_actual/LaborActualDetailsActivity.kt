@@ -25,6 +25,7 @@ import id.thork.app.utils.StringUtils
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.time.days
 
 class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActionListener {
     val TAG = CreateLaborActualActivity::class.java.name
@@ -236,7 +237,6 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         val cal = Calendar.getInstance()
         val h = cal.get(Calendar.HOUR_OF_DAY)
         val m = cal.get(Calendar.MINUTE)
-
         timePicker.showDialog(h, m, object : TimePickerHelper.Callback {
             @SuppressLint("SetTextI18n")
             override fun onTimeSelected(hourOfDay: Int, minute: Int) {
@@ -311,6 +311,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
         }
     }
 
+
     private fun validationEmpty(): Boolean {
         binding.apply {
             if (tvLabor.text.toString().isBlank()) {
@@ -329,7 +330,7 @@ class LaborActualDetailsActivity : BaseActivity(), CustomDialogUtils.DialogActio
 
                 tvStartTime.error = "Cannot be empty"
 
-                CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
+                    CommonUtils.standardToast(getString(R.string.field_cannot_be_empty))
                 return false
             } else if (tvEndDate.text.isNullOrBlank()) {
 

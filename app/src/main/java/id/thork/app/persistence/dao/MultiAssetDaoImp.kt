@@ -1,6 +1,7 @@
 package id.thork.app.persistence.dao
 
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+import id.thork.app.base.BaseDao
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.persistence.entity.MultiAssetEntity
 import id.thork.app.persistence.entity.MultiAssetEntity_
@@ -12,7 +13,7 @@ import java.util.*
  * Created by M.Reza Sulaiman on 17/05/2021
  * Jakarta, Indonesia.
  */
-class MultiAssetDaoImp : MultiAssetDao {
+class MultiAssetDaoImp : MultiAssetDao,BaseDao() {
     val TAG = MultiAssetDaoImp::class.java.name
 
     var multiAssetEntityBox: Box<MultiAssetEntity>
@@ -47,7 +48,10 @@ class MultiAssetDaoImp : MultiAssetDao {
         multiAssetEntityBox.removeAll()
     }
 
-    override fun saveListMultiAsset(multiAssetEntityList: List<MultiAssetEntity>): List<MultiAssetEntity> {
+    override fun saveListMultiAsset(multiAssetEntityList: List<MultiAssetEntity>, username: String): List<MultiAssetEntity> {
+        multiAssetEntityList.forEach {
+            addUpdateInfo(it, username)
+        }
         multiAssetEntityBox.put(multiAssetEntityList)
         return multiAssetEntityList
     }
