@@ -201,5 +201,7 @@ dependencies {
     implementation "com.github.dhaval2404:imagepicker:$rootProject.imagePickerVersion"
     implementation "com.github.HBiSoft:PickiT:$rootProject.pickItVersion"
 
+    //Analytic
+    implementation 'com.flurry.android:analytics:13.0.1@aar'
 }
 apply plugin: 'io.objectbox'
