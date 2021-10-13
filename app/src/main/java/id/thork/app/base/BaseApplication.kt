@@ -15,6 +15,7 @@ import android.app.Application
 import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.flurry.android.FlurryAgent
 import dagger.hilt.android.HiltAndroidApp
 import id.thork.app.initializer.ObjectBox
 import id.thork.app.initializer.TimberInitializer
@@ -44,6 +45,9 @@ class BaseApplication : Application(), Configuration.Provider{
 
         super.onCreate()
         context = applicationContext
+        FlurryAgent.Builder()
+            .withLogEnabled(true)
+            .build(this, "5GZ8RX8DRFVJ2SJWMBFW")
         TimberInitializer.init()
         ObjectBox.init(this)
     }
